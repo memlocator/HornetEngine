@@ -72,10 +72,10 @@ namespace Engine
 			Vector3 Resolution;
 			float SelectionRayDistance = 10000;
 
-			bool SnapsToGrid = false;
+			bool SnapsToGrid = true;
 			float MinimumObjectSize = 0.01f;
-			float GridLength = 1;
-			float SnappingAngle = PI / 4.f;
+			float GridLength = 0.5f;
+			float SnappingAngle = PI / 16.f;
 
 			bool IsLocalSpace = false;
 			bool ObjectsShareHandles = true;

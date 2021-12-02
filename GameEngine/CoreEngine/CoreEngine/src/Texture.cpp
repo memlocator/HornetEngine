@@ -5,6 +5,10 @@
 #include "Graphics.h"
 #include "FrameBuffer.h"
 
+#define STB_IMAGE_IMPLEMENTATION  
+
+#include <stb_image.h>
+
 Dimensions::operator std::string()
 {
 	std::stringstream out;
@@ -86,7 +90,7 @@ namespace GraphicsEngine
 		InternalFormat = internalFormat;
 		Format = format;
 
-		SoilTexture = true;
+		StbTexture = true;
 		InvertedY = true;
 		IsDXT5nm = isDXT5;
 
@@ -94,6 +98,8 @@ namespace GraphicsEngine
 		int blockSize = 16;
 		unsigned int linearSize;
 		unsigned int mipMapCount;
+
+		int channels = 0;
 
 		if (isDXT5)
 		{
@@ -157,7 +163,7 @@ namespace GraphicsEngine
 			}
 		}
 		else
-			PixelData = SOIL_load_image(fileName.c_str(), (int*)&Size.Width, (int*)&Size.Height, 0, SOIL_LOAD_RGBA);
+			PixelData = stbi_load(fileName.c_str(), (int*)&Size.Width, (int*)&Size.Height, &channels, 4);
 
 		if (PixelData == nullptr)
 			throw fileName + ": failed to load image\n";
@@ -211,8 +217,8 @@ namespace GraphicsEngine
 
 		if (PixelData != nullptr)
 		{
-			if (SoilTexture && !IsDXT5nm)
-				SOIL_free_image_data(PixelData);
+			if (StbTexture && !IsDXT5nm)
+				stbi_image_free(PixelData);
 			else if (!IsDXT5nm)
 				delete PixelData;
 			else
@@ -262,8 +268,8 @@ namespace GraphicsEngine
 	{
 		if (PixelData != nullptr)
 		{
-			if (SoilTexture && !IsDXT5nm)
-				SOIL_free_image_data(PixelData);
+			if (StbTexture && !IsDXT5nm)
+				stbi_image_free(PixelData);
 			else if (!IsDXT5nm)
 				delete PixelData;
 			else
@@ -275,8 +281,9 @@ namespace GraphicsEngine
 	{
 		int resWidth;
 		int resHeight;
+		int channels;
 
-		unsigned char* data = SOIL_load_image(fileName.c_str(), &resWidth, &resHeight, 0, SOIL_LOAD_RGBA);
+		unsigned char* data = stbi_load(fileName.c_str(), &resWidth, &resHeight, &channels, 4);
 
 		if (data == nullptr)
 			return;
@@ -295,7 +302,7 @@ namespace GraphicsEngine
 
 		glBindTexture(GL_TEXTURE_2D, 0); CheckGLErrors();
 
-		SOIL_free_image_data(PixelData);
+		stbi_image_free(PixelData);
 	}
 
 	GLuint Texture::GetTextureID() const

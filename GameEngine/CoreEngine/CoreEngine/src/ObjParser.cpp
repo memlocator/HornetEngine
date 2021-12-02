@@ -107,15 +107,15 @@ void ObjParser::Parse(const std::string& filePath)
 
 				if (vertex.Normal == -1)
 				{
-					vertex.Normal = Normals.size();
+					vertex.Normal = int(Normals.size());
 					Normals.push_back(normal);
 				}
 
 				if (vertex.Color == -1)
-					vertex.Color = Colors.size();
+					vertex.Color = int(Colors.size());
 
 				if (vertex.UV == -1)
-					vertex.UV = UVs.size();
+					vertex.UV = int(UVs.size());
 			}
 		}
 

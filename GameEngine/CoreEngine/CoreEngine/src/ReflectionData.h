@@ -8,6 +8,23 @@
 
 typedef void(*VoidFunction)(int);
 
+template <int PointerSize>
+struct PointerType;
+
+template <>
+struct PointerType<4>
+{
+	typedef unsigned int Type;
+};
+
+template <>
+struct PointerType<8>
+{
+	typedef unsigned long long Type;
+};
+
+typedef PointerType<sizeof(nullptr)>::Type PointerInt;
+
 namespace Engine
 {
 	class Object;
@@ -51,7 +68,7 @@ public:
 		friend class ReflectionData;
 	
 	private:
-		int Offset = 0;
+		PointerInt Offset = 0;
 	};
 
 	struct FunctionOverloadData : public Data

@@ -363,6 +363,11 @@ namespace Engine
 			}
 		}
 
+		float round(float value, float increment)
+		{
+			return std::ceil(value / increment + 0.5f) * increment;
+		}
+
 		void SelectionHandlesOperation::UpdateObject(int index, float handleValue)
 		{
 			MovingObjectData& object = MovingObjects[index];
@@ -376,13 +381,15 @@ namespace Engine
 
 			if (HandleType == Enum::SelectionHandleType::Move || HandleType == Enum::SelectionHandleType::Resize)
 			{
-				Vector3 movementAxis = object.ParentInverseTransformation * (handleValue * HandleAxis);
+				Vector3 movementAxis = object.ParentInverseTransformation * (round(handleValue, GridLength) * HandleAxis);
 
 				if (HandleType == Enum::SelectionHandleType::Move)
 					object.ObjectTransform->SetTransformation(Matrix3(movementAxis) * object.InitialTransformation);
 				else
 				{
 					Vector3 scale(1, 1, 1);
+
+					float minimumObjectSize = std::max(round(MinimumObjectSize, 0.5f * GridLength), 0.5f * GridLength);
 
 					if (MovingInLocalSpace)
 					{
@@ -395,7 +402,7 @@ namespace Engine
 						else if (CurrentMovementHandle == SelectedAxis::AxisZ || CurrentMovementHandle == SelectedAxis::AxisNegativeZ)
 							axisSize = 0.5f * object.InitialTransformation.FrontVector().Length() * MovingBox.GetSize().Z;
 					
-						float newAxisSize = std::max(axisSize + 0.5f * handleValue, MinimumObjectSize);
+						float newAxisSize = round(std::max(axisSize + 0.5f * handleValue, 0.5f * minimumObjectSize), 0.5f * GridLength);
 
 						movementAxis = object.ParentInverseTransformation * ((newAxisSize - axisSize) * HandleAxis);
 
@@ -420,7 +427,7 @@ namespace Engine
 						else if (CurrentMovementHandle == SelectedAxis::AxisZ || CurrentMovementHandle == SelectedAxis::AxisNegativeZ)
 							axisSize = boxSize.Z;
 
-						float newAxisSize = std::max(axisSize + handleValue, MinimumObjectSize);
+						float newAxisSize = round(std::max(axisSize + handleValue, minimumObjectSize), GridLength);
 
 						float axisScaleShift = newAxisSize / axisSize;
 
@@ -448,23 +455,29 @@ namespace Engine
 			else
 			{
 				Matrix3 rotation;
+				float angle = round(handleValue, SnappingAngle);
 
 				if (CurrentMovementHandle == SelectedAxis::AxisX)
-					rotation.RotatePitch(handleValue);
+					rotation.RotatePitch(angle);
 
 				if (CurrentMovementHandle == SelectedAxis::AxisY)
-					rotation.RotateYaw(handleValue);
+					rotation.RotateYaw(angle);
 
 				if (CurrentMovementHandle == SelectedAxis::AxisZ)
-					rotation.RotateRoll(-handleValue);
+					rotation.RotateRoll(-angle);
 
 				if (MovingInLocalSpace)
 				{
-					Matrix3 transformation = object.InitialTransformation;
+					Matrix3 objectRotation;
 
-					transformation.SetTranslation(Vector3());
+					objectRotation.ExtractRotation(object.InitialTransformation, object.InitialTransformation.Translation());
 
-					object.ObjectTransform->SetTransformation(rotation.SetTranslation(object.InitialTransformation.Translation()) * transformation);
+					Matrix3 objectScale = Matrix3::NewScale(object.InitialTransformation.ExtractScale());
+					
+					//transformation.SetTranslation(Vector3());
+
+					//object.ObjectTransform->SetTransformation(rotation.SetTranslation(object.InitialTransformation.Translation()) * transformation);
+					object.ObjectTransform->SetTransformation(objectRotation* rotation * objectScale);
 				}
 				else
 				{

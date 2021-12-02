@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "SOIL.h"
 extern "C" {
 #include "glew.h"
 }
@@ -95,7 +94,7 @@ namespace GraphicsEngine
 		GLuint TextureID = 0;
 		Dimensions Size;
 		unsigned char* PixelData = nullptr;
-		bool SoilTexture = false;
+		bool StbTexture = false;
 
 		Instantiable;
 

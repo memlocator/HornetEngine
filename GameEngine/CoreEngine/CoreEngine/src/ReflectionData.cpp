@@ -111,7 +111,7 @@ void ReflectionData::AddMember(const std::string& memberName, const ReflectionDa
 	member->ReadOnly = readOnly;
 	member->IsStatic = IsLibrary || isStatic;
 	member->Archivable = archivable;
-	member->Offset = int((char*)data - (char*)nullptr);
+	member->Offset = PointerInt((char*)data - (char*)nullptr);
 	member->TypeID = type->ID;
 	member->TypeName = type->Name;
 	member->Type = type;

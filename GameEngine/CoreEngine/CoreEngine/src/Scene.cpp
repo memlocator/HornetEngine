@@ -506,7 +506,7 @@ namespace GraphicsEngine
 
 				Programs::PhongForward->SetMaterial(material);
 
-				for (int i = queue.TransparentObjectsStart; i < int(queue.QueuedObjects.size()); ++i)
+				for (int i = int(queue.TransparentObjectsStart); i < int(queue.QueuedObjects.size()); ++i)
 				{
 
 					queue.QueuedObjects[i]->Draw(nullptr);

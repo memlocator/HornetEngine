@@ -706,7 +706,7 @@ coroutine.wrap(function()
 	while true do
 		local delta = wait()
 		
-		--print(math.floor(10/delta)/10, delta)
+		print(math.floor(10/delta)/10, delta)
 		
 		time = time + delta
 		

@@ -87,7 +87,7 @@ namespace Engine
 		{
 			Normals.clear();
 
-			int size = Vertices.size();
+			int size = int(Vertices.size());
 
 			for (int i = 0; i < size; ++i)
 			{
@@ -101,7 +101,7 @@ namespace Engine
 		{
 			Center.Set(0, 0);
 
-			int size = Vertices.size();
+			int size = int(Vertices.size());
 
 			for (VertexVector::iterator i = Vertices.begin(); i != Vertices.end(); ++i)
 				Center += 1.0f / size * *i;

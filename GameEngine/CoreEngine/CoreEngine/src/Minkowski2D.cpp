@@ -45,8 +45,8 @@ namespace Engine
 		{
 			VertexVector result;
 
-			int size1 = collider1.Vertices.size();
-			int size2 = collider2.Vertices.size();
+			int size1 = int(collider1.Vertices.size());
+			int size2 = int(collider2.Vertices.size());
 
 			for (VertexVector::const_iterator i = collider2.Vertices.begin(); i != collider2.Vertices.end(); ++i)
 				for (VertexVector::const_iterator j = collider1.Vertices.begin(); j != collider1.Vertices.end(); ++j)
@@ -86,7 +86,7 @@ namespace Engine
 
 		bool MeshContainsPoint(const VertexVector& mesh, const Vector3& point)
 		{
-			int size = mesh.size();
+			int size = int(mesh.size());
 
 			for (int i = 0; i < size; ++i)
 				if ((point - mesh[i]) * RightNormal(mesh[(i + 1) % size] - mesh[i]) > 0)
@@ -97,8 +97,8 @@ namespace Engine
 
 		void MinkowskiDifference::Calculate(const ColliderData& collider1, const ColliderData& collider2)
 		{
-			int size1 = collider1.Vertices.size();
-			int size2 = collider2.Vertices.size();
+			int size1 = int(collider1.Vertices.size());
+			int size2 = int(collider2.Vertices.size());
 			int resultSize = size1 + size2;
 
 			Vertices.resize(0);
@@ -139,7 +139,7 @@ namespace Engine
 
 		bool MinkowskiDifference::Colliding()
 		{
-			int size = Vertices.size();
+			int size = int(Vertices.size());
 
 			for (int i = 0; i < size; ++i)
 				if (Vertices[i] * Normals[i] < 0)
@@ -150,7 +150,7 @@ namespace Engine
 
 		Vector3 MinkowskiDifference::MinimumTranslationVector()
 		{
-			int size = Vertices.size();
+			int size = int(Vertices.size());
 
 			float closestDistance = Normals[0] * Vertices[0];
 			Vector3 closestVector = closestDistance * Normals[0];
@@ -173,7 +173,7 @@ namespace Engine
 		{
 			CircleRadius = radius;
 
-			int size = collider.Vertices.size();
+			int size = int(collider.Vertices.size());
 
 			Vertices.resize(0);
 			Normals.resize(0);
@@ -215,7 +215,7 @@ namespace Engine
 
 		Vector3 CircleMinkowskiDifference::MinimumTranslationVector(int circle)
 		{
-			int size = Vertices.size();
+			int size = int(Vertices.size());
 
 			if (circle != -1)
 				return GetCircleMinimumTranslationVector(Vertices[circle] - CircleRadius * Normals[circle - 1], CircleRadius);
@@ -241,7 +241,7 @@ namespace Engine
 
 		Vector3 MinimumTranslationVector(const ColliderData& mesh, const Vector3& point)
 		{
-			int size = mesh.Vertices.size();
+			int size = int(mesh.Vertices.size());
 
 			float closestDistance = mesh.Normals[0] * (mesh.Vertices[0] - point);
 			Vector3 closestVector = closestDistance * mesh.Normals[0];
@@ -292,7 +292,7 @@ namespace Engine
 
 		int GetEntrySide(const ColliderData& mesh, const Vector3& point, const Vector3& vector, float& distance)
 		{
-			int size = mesh.Vertices.size();
+			int size = int(mesh.Vertices.size());
 
 			for (int i = 0; i < size; ++i)
 			{
@@ -314,7 +314,7 @@ namespace Engine
 
 		int GetEntrySideFromStart(const ColliderData& mesh, const Vector3& point, const Vector3& vector, float& distance, int startIndex)
 		{
-			int size = mesh.Vertices.size();
+			int size = int(mesh.Vertices.size());
 
 			int i = startIndex;
 
@@ -363,7 +363,7 @@ namespace Engine
 
 		Vector3 GetVelocityOffsetClockwise(const ColliderData& mesh, Vector3 velocity, int entrySide, Vector3 entryPoint)
 		{
-			int size = mesh.Vertices.size();
+			int size = int(mesh.Vertices.size());
 			int i = entrySide;
 			Vector3 offset;
 
@@ -379,7 +379,7 @@ namespace Engine
 
 		Vector3 GetVelocityOffsetCounterClockwise(const ColliderData& mesh, Vector3 velocity, int entrySide, Vector3 entryPoint)
 		{
-			int size = mesh.Vertices.size();
+			int size = int(mesh.Vertices.size());
 			int i = entrySide;
 			Vector3 offset;
 
@@ -395,7 +395,7 @@ namespace Engine
 
 		Vector3 GetVelocityOffset(const ColliderData& mesh, Vector3 velocity, int entrySide, Vector3 entryPoint, bool clockwise)
 		{
-			int size = mesh.Vertices.size();
+			int size = int(mesh.Vertices.size());
 			int i = entrySide;
 			Vector3 offset;
 
@@ -457,7 +457,7 @@ namespace Engine
 
 		Vector3 GetVelocityOffset(ColliderInfoVector& differences, ColliderInfoVector::iterator& mesh, Vector3& velocity, int entrySide, Vector3& entryPoint, bool clockwise, ColliderInfoVector::iterator& hitObject, int& hitSide)
 		{
-			int size = mesh->Collider->Vertices.size();
+			int size = int(mesh->Collider->Vertices.size());
 			int i = entrySide;
 			Vector3 offset;
 			Vector3 lastEntryPoint = entryPoint;
@@ -557,7 +557,7 @@ namespace Engine
 		{
 			for (ColliderVector::const_iterator i = differences.begin(); i != differences.end(); ++i)
 			{
-				int size = i->Vertices.size();
+				int size = int(i->Vertices.size());
 
 				for (int j = 0; j < size; ++j)
 					if (i->Normals[j] * velocity < 0)

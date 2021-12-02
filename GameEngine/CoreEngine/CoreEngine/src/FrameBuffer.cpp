@@ -171,7 +171,7 @@ namespace GraphicsEngine
 	{
 		if (AttachmentTextures.size() <= attachmentSlot)
 		{
-			int size = AttachmentTextures.size();
+			int size = int(AttachmentTextures.size());
 			AttachmentTextures.resize(attachmentSlot + 1);
 			AttachmentSlots.resize(attachmentSlot + 1);
 		}
@@ -201,7 +201,7 @@ namespace GraphicsEngine
 
 	void FrameBuffer::BindAttachments()
 	{
-		glDrawBuffers(AttachmentSlots.size(), AttachmentSlots.data()); CheckGLErrors();
+		glDrawBuffers(GLsizei(AttachmentSlots.size()), AttachmentSlots.data()); CheckGLErrors();
 	}
 
 	void FrameBuffer::ClearTextures()

@@ -130,7 +130,7 @@ void MeshData::Initialize(const ObjParser* parser)
 				index = reference->second;
 			else
 			{
-				index = VertexBuffer.size();
+				index = int(VertexBuffer.size());
 
 				VertexData vertex;
 
@@ -305,7 +305,7 @@ void MeshData::GenerateVertexNormals(const MeshData* meshData)
 		vertex1.Position = meshVertex.Position;
 		vertex1.Normal = meshVertex.Normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex1);
 
 		VertexData vertex2;
@@ -313,7 +313,7 @@ void MeshData::GenerateVertexNormals(const MeshData* meshData)
 		vertex2.Position = meshVertex.Position + 0.25f * vertex1.Normal;
 		vertex2.Normal = meshVertex.Normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex2);
 
 		compareVector(Minimum, Maximum, vertex1.Position);
@@ -337,7 +337,7 @@ void MeshData::GenerateFaceNormals(const MeshData* meshData)
 		vertex1.Position = point;
 		vertex1.Normal = normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex1);
 
 		VertexData vertex2;
@@ -345,7 +345,7 @@ void MeshData::GenerateFaceNormals(const MeshData* meshData)
 		vertex2.Position = point + 0.25f * normal;
 		vertex2.Normal = normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex2);
 
 		compareVector(Minimum, Maximum, vertex1.Position);
@@ -364,7 +364,7 @@ void MeshData::GenerateTBNDebug(const MeshData* meshData)
 		vertex1.Position = meshVertex.Position;
 		vertex1.Normal = meshVertex.Normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex1);
 
 		VertexData vertex2;
@@ -372,12 +372,12 @@ void MeshData::GenerateTBNDebug(const MeshData* meshData)
 		vertex2.Position = meshVertex.Position + 0.125f * meshData->GetSize().Y * vertex1.Normal;
 		vertex2.Normal = meshVertex.Normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex2);
 
 		VertexData vertex3 = vertex1;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex3);
 
 		VertexData vertex4;
@@ -385,12 +385,12 @@ void MeshData::GenerateTBNDebug(const MeshData* meshData)
 		vertex4.Position = meshVertex.Position + 0.125f * meshData->GetSize().Y * meshVertex.BVector.Unit();
 		vertex4.Normal = meshVertex.Normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex4);
 
 		VertexData vertex5 = vertex1;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex5);
 
 		VertexData vertex6;
@@ -398,7 +398,7 @@ void MeshData::GenerateTBNDebug(const MeshData* meshData)
 		vertex6.Position = meshVertex.Position + 0.125f * meshData->GetSize().Y * meshVertex.TVector.Unit();
 		vertex6.Normal = meshVertex.Normal;
 
-		IndexBuffer.push_back(VertexBuffer.size());
+		IndexBuffer.push_back(int(VertexBuffer.size()));
 		VertexBuffer.push_back(vertex6);
 
 		compareVector(Minimum, Maximum, vertex1.Position);
