@@ -67,6 +67,20 @@ namespace Engine
 			);
 		);
 
+		Bind_Function(GetObjectID,
+
+			Document("");
+			Function_Overload
+			(
+				Document("");
+				Overload_Returns(int);
+
+				Overload_Parameters();
+
+				Bind_Parameters(GetObjectID);
+			);
+		);
+
 		Bind_Function(GetTypeName,
 
 			Document("Gets the name of the underlying type of the object.");
