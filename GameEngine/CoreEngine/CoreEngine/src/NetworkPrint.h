@@ -14,15 +14,16 @@ namespace Engine
             void Initialize() {};
             void Update(float) {}
 
-            Instantiable;
-            Inherits_Class(Object);
-
-            Reflected(Printer);
-
             void print(std::string str)
             {
                 std::cout << "Print from C++: " << str << std::endl;
             }
+
+
+            Instantiable;
+            Inherits_Class(Object);
+
+            Reflected(Printer);
         };
     }
     

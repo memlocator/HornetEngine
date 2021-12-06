@@ -231,6 +231,8 @@ namespace Engine
 		Register_Class(GraphicsEngine::CubicBezierUpdater);
 		Register_Class(DebugDraw);
 		Register_Class(GraphicsEngine::RayTracer);
+		
+		Register_Class(Engine::NetworkPrint::Printer);
 
 		Register_Enum(SelectionHandleType);
 
