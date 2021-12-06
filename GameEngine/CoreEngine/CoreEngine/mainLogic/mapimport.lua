@@ -642,6 +642,21 @@ selectionOperation.Resolution = Vector3(resolution.Width, resolution.Height)
 selection.Parent = selectionOperation
 selectionOperation.Parent = level
 
+local explorerSource = GameObject("LuaSource")
+explorerSource.Name = "ExplorerSource"
+explorerSource:LoadSource("./assets/scripts/explorer.lua")
+
+local explorerScript = GameObject("LuaScript")
+explorerScript.Name = "ExplorerScript"
+explorerScript:SetSource(explorerSource)
+explorerScript.Parent = scene
+
+explorerSource.Parent = explorerScript
+
+explorerScript:Run()
+
+print(explorerScript)
+
 coroutine.wrap(function()
 	print(pcall(function()
 	local userInput = Engine.GameWindow.UserInput
@@ -706,7 +721,7 @@ coroutine.wrap(function()
 	while true do
 		local delta = wait()
 		
-		print(math.floor(10/delta)/10, delta)
+		--print(math.floor(10/delta)/10, delta)
 		
 		time = time + delta
 		

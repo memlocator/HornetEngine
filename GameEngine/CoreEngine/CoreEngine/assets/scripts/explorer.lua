@@ -1,155 +1,138 @@
-function create(type, parent, properties)
-	local object = GameObject(type)
-	
-	for name, value in pairs(properties) do
-		object[name] = value
-	end
-	
-	object.Parent = parent
-	
-	return object
-end
+local stack = {}
 
-local createStructure
+local resolution = GameObject.FrameBuffer.WindowSize
 
-function createStructure(meta, parent)
-	local object = create(meta.Class, parent, meta.Properties)
-	
-	for i,child in pairs(meta.Children) do
-		createStructure(child, object)
-	end
-	
-	return object
-end
+local screen = GameObject("DeviceTransform")
+screen.Size = DeviceVector(0, resolution.Width, 0, resolution.Height)
+screen.Parent = Engine
 
-local types = {
-	string = function(data)
-		return data
-	end,
-	float = tonumber,
-	double = tonumber,
-	int = tonumber,
-	long = tonumber,
-	short = tonumber,
-	char = tonumber,
-}
+local ui = GameObject("InterfaceDrawOperation")
+ui.CurrentScreen = screen
+ui.RenderAutomatically = true
+ui.Parent = screen
 
-function makeData(meta, data)
-	local dataType = type(data)
+local explorerTransform = GameObject("DeviceTransform")
+explorerTransform.Size = DeviceVector(0.2, 0, 1, 0)
+explorerTransform.Position = DeviceVector(0.8, 0, 0, 0)
+explorerTransform.Parent = screen
+
+local fonts = GameObject("Fonts")
+fonts.Parent = Engine
+
+local sans = GameObject("Font")
+sans.Name = "Sans"
+sans:Load("assets/fonts/Sans", "Sans")
+sans.Parent = fonts
+
+local renderedObjects = 0
+local itemHeight = 20
+local tabWidth = 20
+
+function AllocateItem(name)
+	renderedObjects = renderedObjects + 1
 	
-	if dataType == "string" then
-		--[[print("type", meta.Name)
-		for i,v in pairs(meta) do
-			print("", i,v)
-		end]]
+	local objectTransform, displayTransform
+	local width = tabWidth * (#stack - 1)
+	
+	if explorerTransform:GetChildren() < renderedObjects then
+		objectTransform = GameObject("DeviceTransform")
+		objectTransform.Size = DeviceVector(1, 0, 0, itemHeight)
+		objectTransform.Position = DeviceVector(0, 0, 0, (renderedObjects - 1) * itemHeight)
+		objectTransform.Parent = explorerTransform
 		
-		if meta.IsEnum then
-			return Enum[meta.Name:sub(6)][data]
-		end
+		local backgroundAppearance = GameObject("Appearance")
+		backgroundAppearance.Parent = objectTransform
+		backgroundAppearance.Color = RGBA(0, 0, 0, 0.5)
+
+		local backgroundCanvas = GameObject("ScreenCanvas")
+		backgroundCanvas.Appearance = backgroundAppearance
+		backgroundCanvas.Parent = objectTransform
 		
-		return types[meta.Name](data)
+		displayTransform = GameObject("DeviceTransform")
+		displayTransform.Parent = objectTransform
+		displayTransform.Name = "DisplayTransform"
+		
+		local appearance = GameObject("Appearance")
+		appearance.Parent = displayTransform
+		appearance.Color = RGBA(1, 1, 1, 1)
+
+		local canvas = GameObject("ScreenCanvas")
+		canvas.Appearance = appearance
+		canvas.Parent = displayTransform
+		
+		local splitterTransform = GameObject("DeviceTransform")
+		splitterTransform.Parent = objectTransform
+		splitterTransform.Size = DeviceVector(1, -20, 0, 2)
+		splitterTransform.Position = DeviceVector(0, 10, 1, -1)
+		
+		local splitterAppearance = GameObject("Appearance")
+		splitterAppearance.Parent = splitterTransform
+		splitterAppearance.Color = RGBA(0.8, 0.8, 0.8, 0.4)
+
+		local splitterCanvas = GameObject("ScreenCanvas")
+		splitterCanvas.Appearance = splitterAppearance
+		splitterCanvas.Parent = splitterTransform
+		
+		print("name: ", name)
+		
+		local text = GameObject.Text.Create(sans, canvas, "DisplayText", name)
+		text.FontSize = DeviceAxis(0, 19)
 	else
-		--print(dataType, data)
+		objectTransform = explorerTransform:Get(renderedObjects - 1)
 		
-		local args = {}
-		
-		if #data ~= 0 then
-			for i, value in ipairs(data) do
-				--print("\tarray", i, value)
-				for i,v in pairs(meta.Functions[meta.Name]) do print(i,v) end
-				
-				args[i] = makeData(value)
-			end
-		end
-		
-		local value = _G[meta.Name](table.unpack(args))
-		
-		if #data == 0 then
-			for name, innerData in pairs(data) do
-				--print("inner: ",name, innerData)
-				value[name] = makeData(meta.Members[name].Type, innerData)
-			end
-		end
-		
-		return value
-	end
-end
-
-function createInstance(objectType, parent, properties)
-	local object = GameObject(objectType)
-	local members = Meta[objectType].Members
-	
-	--print(objectType)
-	
-	for name, value in pairs(properties) do
-		--print("\tproperty", name, value)
-		object[name] = makeData(members[name].Type, value)
+		displayTransform = objectTransform.DisplayTransform
 	end
 	
-	object.Parent = parent
-	
-	return object
+	displayTransform.Size = DeviceVector(1, -width, 1, 0)
+	displayTransform.Position = DeviceVector(0, width, 0, 0)
 end
 
-local createArchetype
-
-function createArchetype(meta, parent)
-	local object = createInstance(meta.Class, parent, meta.Properties)
-	
-	for i,child in pairs(meta.Children) do
-		createArchetype(child, object)
+function PushObject(object)
+	if renderedObjects > 1000 or #stack > 1 then
+		return
 	end
 	
-	return object
-end
-
-local archetypes = {
-	Explorer = json.decode("./assets/json/explorer.json", true)
-}
-local empty = {}
-
-function archetype(namespace, name)
-	if not (archetypes[namespace] or empty)[name] then
-		error("attempt to create instance of nonexistant archetype '"..(namespace or "").."."..(name or "").."'")
+	local item = {
+		Object = object,
+		Children = object:GetChildren(),
+		CurrentChild = 1
+	}
+	
+	print(("%s%s (%d)"):format(("   "):rep(#stack), object.Name, object:GetObjectID()))
+	
+	stack[#stack + 1] = item
+	
+	if object == screen then
+		item.CurrentChild = 1 + item.Children
+		
+		return Advance()
 	end
 	
-	return createArchetype(archetypes[namespace][name])
+	AllocateItem(object.Name)
 end
 
-function initialize(screen)
-	wait()
-	--[[local button = createStructure {
-		Class = "DeviceTransform",
-		Properties = {
-			Name = "ButtonTransform",
-			Size = DeviceVector(0, 200, 0, 200),
-			Position = DeviceVector(0.5, 0, 0.5, 0)
-		},
-		Children = {
-			
-		}
-	}]]
+function Advance()
+	if #stack == 0 then return end
 	
-	--local screen2 = 
+	local top = stack[#stack]
 	
-	local button = archetype("Explorer", "Button")
-	button.ScreenCanvas.Button.Hover = button.ScreenCanvas.Button.HoverAppearance
-	button.ScreenCanvas.Button.Idle = button.ScreenCanvas.Button.IdleAppearance
-	button.ScreenCanvas.Button.Pressed = button.ScreenCanvas.Button.PressedAppearance
-	button.ScreenCanvas.Button.Binding = button.InputSubscriber:Subscribe(Engine.GameWindow.UserInput:GetInput(Enum.InputCode.MouseLeft))
-	button.Parent = screen
-
-	--[[print(button.Parent, button, button:GetChildren())
-	for i=1,button:GetChildren() do
-		local v = button:Get(i-1)
-		print("",i,v, v ~= nil and v:GetChildren())
-		for a=1,v:GetChildren() do
-			local c = v:Get(a-1)
-			print("\t",a,c, c:GetChildren())
-		end
-	end]]
+	if top.CurrentChild > top.Children then
+		stack[#stack] = nil
+		
+		return Advance()
+	end
+	
+	PushObject(top.Object:Get(top.CurrentChild - 1))
+	
+	top.CurrentChild = top.CurrentChild + 1
 end
 
-return coroutine.wrap(function(screen)
-	print(pcall(initialize, screen))
-end)
+PushObject(Engine)
+
+while #stack > 0 do
+	Advance()
+end
+
+for i = explorerTransform:GetChildren(), renderedObjects + 1, -1 do
+	explorerTransform:Get(i - 1).Parent = nil
+end

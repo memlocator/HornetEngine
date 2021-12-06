@@ -138,6 +138,16 @@ namespace GraphicsEngine
 		return ((const DeviceTransform*)this)->ContainsPoint(point);
 	}
 
+	Dimensions GetBufferResolution()
+	{
+		std::shared_ptr<FrameBuffer> attached = FrameBuffer::GetAttachedBuffer();
+
+		if (attached != nullptr)
+			return attached->GetSize();
+
+		return FrameBuffer::WindowSize;
+	}
+
 	bool DeviceTransform::HasMoved() const
 	{
 		if (Size != LastSize || Position != LastPosition || Rotation != LastRotation || AnchorPoint != LastAnchorPoint || RotationAnchor != LastRotationAnchor)
@@ -195,7 +205,11 @@ namespace GraphicsEngine
 			parentTransformation = parent->GetTransformation();
 		}
 		else
-			parentSize.Set(float(FrameBuffer::WindowSize.Width), float(FrameBuffer::WindowSize.Height));
+		{
+			Dimensions size = GetBufferResolution();
+
+			parentSize.Set(float(size.Width), float(size.Height));
+		}
 
 		AbsoluteSize = Vector3(
 			parentSize.X * Size.X.Scale + Size.X.Offset,

@@ -28,6 +28,8 @@ mono_crash.*
 x64/
 x86/
 !/GameEngine/CoreEngine/dependencies/**
+!/GameEngine/x64/
+!/GameEngine/x64/**
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/

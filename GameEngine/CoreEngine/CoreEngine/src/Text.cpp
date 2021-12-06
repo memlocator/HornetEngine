@@ -74,6 +74,8 @@ namespace GraphicsEngine
 
 		ContentsBuffer->DrawTo();
 
+		TextTransform->UpdateTransformation();
+
 		Graphics::SetClearColor(RGBA(0, 0, 0, 0)); CheckGLErrors();
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT); CheckGLErrors();
 		CharacterTransform->AnchorPoint = DeviceVector(0, 0, 0, 0);
