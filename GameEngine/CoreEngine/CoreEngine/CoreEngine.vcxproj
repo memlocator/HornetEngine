@@ -271,6 +271,7 @@
     <ClCompile Include="src\Model.meta.cpp" />
     <ClCompile Include="src\ModelAsset.cpp" />
     <ClCompile Include="src\ModelAsset.meta.cpp" />
+    <ClCompile Include="src\NetworkPrint.meta.cpp" />
     <ClCompile Include="src\OBB.cpp" />
     <ClCompile Include="src\OBB.meta.cpp" />
     <ClCompile Include="src\Object.cpp" />
@@ -390,6 +391,7 @@
     <ClInclude Include="src\InputContext.h" />
     <ClInclude Include="src\InputSubscriber.h" />
     <ClInclude Include="src\LightBuffer.h" />
+    <ClInclude Include="src\NetworkPrint.h" />
     <ClInclude Include="src\Packet.h" />
     <ClInclude Include="src\PhysicalMaterial.h" />
     <ClInclude Include="src\RayAcceleration.h" />

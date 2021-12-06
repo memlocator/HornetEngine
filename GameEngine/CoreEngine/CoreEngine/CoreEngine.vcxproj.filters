@@ -810,6 +810,9 @@
     <ClCompile Include="src\EngineException.cpp">
       <Filter>Source Files\Source\Engine\Exceptions</Filter>
     </ClCompile>
+    <ClCompile Include="src\NetworkPrint.meta.cpp">
+      <Filter>Source Files\Source\Networking\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">
@@ -1231,6 +1234,9 @@
     </ClInclude>
     <ClInclude Include="src\EngineException.h">
       <Filter>Source Files\Source\Engine\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NetworkPrint.h">
+      <Filter>Source Files\Source\Networking\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

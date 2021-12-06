@@ -86,6 +86,8 @@
 #include "SelectionHandlesOperation.h"
 #include "Selection.h"
 
+#include "NetworkPrint.h"
+
 #define Register_Type(typeName) typeName::TypeData::Initialize();
 #define Register_Class(typeName) typeName::ObjectData::Initialize();
 
