@@ -657,6 +657,18 @@ explorerScript:Run()
 
 print(explorerScript)
 
+--
+local hostSource = GameObject("LuaSource")
+hostSource.Name = "hostSource"
+hostSource:LoadSource("./assets/scripts/networkHost.lua")
+local networkHostScript = GameObject("LuaScript")
+networkHostScript.Name = "networkHostScript"
+networkHostScript:SetSource(hostSource)
+networkHostScript.Parent = scene
+hostSource.Parent = networkHostScript
+networkHostScript:Run()
+--
+
 coroutine.wrap(function()
 	print(pcall(function()
 	local userInput = Engine.GameWindow.UserInput

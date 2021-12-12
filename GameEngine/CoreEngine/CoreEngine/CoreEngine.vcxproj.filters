@@ -1240,12 +1240,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="game.lua">
-      <Filter>Source Files\LuaScripts</Filter>
-    </None>
-    <None Include="assets\scripts\particleFactory.lua">
-      <Filter>Source Files\LuaScripts</Filter>
-    </None>
     <None Include="assets\json\assets.json">
       <Filter>Source Files\Json</Filter>
     </None>
@@ -1257,6 +1251,12 @@
     </None>
     <None Include="src\Connection.meta.cpp">
       <Filter>Source Files\Source\Networking\Objects</Filter>
+    </None>
+    <None Include="mainLogic\mapimport.lua">
+      <Filter>Source Files\LuaScripts</Filter>
+    </None>
+    <None Include="assets\scripts\networkHost.lua">
+      <Filter>Source Files\LuaScripts</Filter>
     </None>
   </ItemGroup>
 </Project>

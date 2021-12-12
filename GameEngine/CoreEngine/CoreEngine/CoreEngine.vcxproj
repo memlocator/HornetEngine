@@ -71,19 +71,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\fmod;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\fmod;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(SolutionDir)CoreEngine\dependencies\include\asio\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\fmod\;$(SolutionDir)CoreEngine\dependencies\lib\glew\glew_release\Win32\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs32\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\fmod;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\fmod;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(SolutionDir)CoreEngine\dependencies\include\asio\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\fmod\;$(SolutionDir)CoreEngine\dependencies\lib\glew\glew_release\Win32\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs32\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\asio\;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\glew\Release\x64\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs64\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\asio\;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\glew\Release\x64\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs64\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -517,8 +517,11 @@
     <None Include="assets\json\assets.json" />
     <None Include="assets\json\particleEffects\rain.json" />
     <None Include="assets\json\particleEffects\shipEngine.json" />
-    <None Include="assets\scripts\particleFactory.lua" />
-    <None Include="game.lua" />
+    <None Include="assets\scripts\networkHost.lua" />
+    <None Include="mainLogic\mapimport.lua">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
     <None Include="src\Connection.meta.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

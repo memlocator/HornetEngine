@@ -88,6 +88,8 @@
 
 #include "NetworkPrint.h"
 
+#include "Socket.h"
+
 #define Register_Type(typeName) typeName::TypeData::Initialize();
 #define Register_Class(typeName) typeName::ObjectData::Initialize();
 
