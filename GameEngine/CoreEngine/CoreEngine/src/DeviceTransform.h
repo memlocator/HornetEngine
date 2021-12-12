@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "DeviceVector.h"
 #include "Alignment.h"
+#include "TaskScheduler.h"
 
 namespace GraphicsEngine
 {
@@ -57,6 +58,8 @@ namespace GraphicsEngine
 		bool IsEnabled() const;
 
 		void UpdateTransformation();
+
+		Event<> TransformChanged;
 
 	private:
 		float LastRotation = 0;

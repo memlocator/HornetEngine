@@ -813,6 +813,18 @@
     <ClCompile Include="src\NetworkPrint.meta.cpp">
       <Filter>Source Files\Source\Networking\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\ExplorerDisplaySettings.cpp">
+      <Filter>Source Files\Source\Editor\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ExplorerDisplaySettings.meta.cpp">
+      <Filter>Source Files\Source\Editor\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScrollBar.cpp">
+      <Filter>Source Files\Source\Graphics\Objects\Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScrollBar.meta.cpp">
+      <Filter>Source Files\Source\Graphics\Objects\Screen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">
@@ -1237,6 +1249,12 @@
     </ClInclude>
     <ClInclude Include="src\NetworkPrint.h">
       <Filter>Source Files\Source\Networking\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ExplorerDisplaySettings.h">
+      <Filter>Source Files\Source\Editor\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScrollBar.h">
+      <Filter>Source Files\Source\Graphics\Objects\Screen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

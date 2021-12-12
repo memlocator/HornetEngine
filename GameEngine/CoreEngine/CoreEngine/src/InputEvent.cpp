@@ -266,8 +266,9 @@ void InputHandler::ProcessEvent(SDL_Event& event)
 
 		break;
 	case SDL_MOUSEWHEEL:
-		Inputs[Enum::InputCode::MouseWheel].Delta.Set(float(event.wheel.x), float(event.wheel.y));
-		Inputs[Enum::InputCode::MouseWheel].Delta *= event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED ? -1.0f : 1.0f;
+		ResetWheel = false;
+		Inputs[Enum::InputCode::MouseWheel].Position.Set(float(event.wheel.x), float(event.wheel.y));
+		Inputs[Enum::InputCode::MouseWheel].Position *= event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED ? -1.0f : 1.0f;
 		EventQueue.push_back(InputEvent{ Enum::InputCode::MouseWheel, Enum::InputState::Changed });
 
 		break;
@@ -298,6 +299,14 @@ void InputHandler::SetInputState(InputObject& input, bool state)
 
 void InputHandler::FlushQueue()
 {
+	if (ResetWheel && Inputs[Enum::InputCode::MouseWheel].Position != Vector3())
+	{
+		Inputs[Enum::InputCode::MouseWheel].Position = Vector3();
+		EventQueue.push_back(InputEvent{ Enum::InputCode::MouseWheel, Enum::InputState::Changed });
+	}
+
+	ResetWheel = true;
+
 	for (int i = 0; i < int(EventQueue.size()); ++i)
 	{
 		switch (EventQueue[i].State)

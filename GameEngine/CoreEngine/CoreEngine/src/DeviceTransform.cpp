@@ -245,6 +245,8 @@ namespace GraphicsEngine
 
 		LastSize = Size;
 		LastPosition = Position;
+
+		TransformChanged.Fire();
 	}
 
 	void DeviceTransform::Draw(std::shared_ptr<Object> object, bool updateStencils)

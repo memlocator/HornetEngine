@@ -83,6 +83,8 @@ namespace Engine
 		bool DoesTick() const;
 		bool DoesObjectTick() const;
 
+		bool HasChildren() const { return !Children.empty(); }
+
 		template <typename T>
 		std::shared_ptr<T> Get(bool inherited = true);
 

@@ -109,6 +109,7 @@ private:
 
 	typedef std::vector<InputEvent> InputVector;
 
+	bool ResetWheel = true;
 	InputVector EventQueue;
 	InputObject Inputs[Enum::InputCode::Codes];
 

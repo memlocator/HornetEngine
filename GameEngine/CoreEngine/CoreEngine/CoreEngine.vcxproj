@@ -210,6 +210,8 @@
     <ClCompile Include="src\Environment.meta.cpp" />
     <ClCompile Include="src\Environments.cpp" />
     <ClCompile Include="src\Environments.meta.cpp" />
+    <ClCompile Include="src\ExplorerDisplaySettings.cpp" />
+    <ClCompile Include="src\ExplorerDisplaySettings.meta.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\Font.meta.cpp" />
     <ClCompile Include="src\Fonts.cpp" />
@@ -320,6 +322,8 @@
     <ClCompile Include="src\SceneRayCastResults.meta.cpp" />
     <ClCompile Include="src\ScreenCanvas.cpp" />
     <ClCompile Include="src\ScreenCanvas.meta.cpp" />
+    <ClCompile Include="src\ScrollBar.cpp" />
+    <ClCompile Include="src\ScrollBar.meta.cpp" />
     <ClCompile Include="src\Selection.cpp" />
     <ClCompile Include="src\Selection.meta.cpp" />
     <ClCompile Include="src\SelectionHandlesOperation.cpp" />
@@ -386,6 +390,7 @@
     <ClInclude Include="src\Connection.h" />
     <ClInclude Include="src\Dimensions.h" />
     <ClInclude Include="src\EngineException.h" />
+    <ClInclude Include="src\ExplorerDisplaySettings.h" />
     <ClInclude Include="src\GameEngine.h" />
     <ClInclude Include="src\HDRColorCorrectionOperation.h" />
     <ClInclude Include="src\InputContext.h" />
@@ -398,6 +403,7 @@
     <ClInclude Include="src\RayTracer.h" />
     <ClInclude Include="src\Reference.h" />
     <ClInclude Include="src\SceneRayCastResults.h" />
+    <ClInclude Include="src\ScrollBar.h" />
     <ClInclude Include="src\Selection.h" />
     <ClInclude Include="src\SelectionHandlesOperation.h" />
     <ClInclude Include="src\Selector.h" />
