@@ -49,6 +49,7 @@
 #include "InputSubscriber.h"
 #include "InputContext.h"
 #include "Button.h"
+#include "ScrollBar.h"
 #include "Aabb.h"
 #include "OBB.h"
 #include "Ray.h"
@@ -87,8 +88,9 @@
 #include "Selection.h"
 
 #include "NetworkPrint.h"
-
 #include "Socket.h"
+
+#include "ExplorerDisplaySettings.h"
 
 #define Register_Type(typeName) typeName::TypeData::Initialize();
 #define Register_Class(typeName) typeName::ObjectData::Initialize();
@@ -199,6 +201,8 @@ namespace Engine
 		Register_Class(GraphicsEngine::InputSubscriber);
 		Register_Class(GraphicsEngine::InputContext);
 		Register_Class(GraphicsEngine::Button);
+		Register_Enum(ScrollBarOrientation);
+		Register_Class(GraphicsEngine::ScrollBar);
 
 		Register_Type(VectorGenerator);
 		Register_Type(NumberRange);
@@ -240,6 +244,10 @@ namespace Engine
 
 		Register_Class(Editor::Selection);
 		Register_Class(Editor::SelectionHandlesOperation);
+
+		Register_Enum(HierarchyItemType);
+		Register_Type(HierarchyItem);
+		Register_Class(Editor::ExplorerDisplaySettings);
 
 		const ReflectionData::DataVector& types = ReflectionData::GetTypes();
 
