@@ -135,6 +135,8 @@ namespace Engine
 		Register_Class(Transform);
 		Register_Enum(VertexMode);
 		Register_Class(ModelAsset);
+		
+		Register_Class(Engine::Networking::Socket);
 
 		Register_Type(Aabb);
 		Register_Type(OBB);
