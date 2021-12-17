@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Object.h"
 #include "EngineException.h"
 
@@ -20,6 +21,19 @@ namespace Engine
     {
         class Socket : public Engine::Object
         {
+        private:
+            std::vector<char> readBuff;
+            
+            //Asio error handler
+            asio::error_code ec;
+            //Context - platform specific interface
+            asio::io_context context;
+            asio::ip::tcp::endpoint endpoint;
+
+            asio::ip::tcp::socket* socket = nullptr;
+            std::thread threadContext;
+
+            void unpackData(asio::ip::tcp::socket& socket);
         public:
             virtual ~Socket() {}
 

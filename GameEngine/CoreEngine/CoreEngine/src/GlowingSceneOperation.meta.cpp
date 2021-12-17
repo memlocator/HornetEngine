@@ -35,6 +35,9 @@ namespace GraphicsEngine
 		Archivable Class_Member(int, Radius);
 
 		Document("");
+		Archivable Class_Member(std::weak_ptr<FrameBuffer>, Output);
+
+		Document("");
 		Archivable Class_Member(float, Sigma);
 
 		Document("");

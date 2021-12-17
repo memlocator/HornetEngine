@@ -303,6 +303,8 @@ rayTracedAppearance.Color = RGBA(0, 0, 0, 0)
 rayTracedCanvas.Appearance = rayTracedAppearance
 rayTracedCanvas.Visible = false
 
+
+
 --[=[local skybox = GameObject("CubeMapTexture")
 skybox.Front = textures.skyFront
 skybox.Back = textures.skyBack
@@ -426,6 +428,7 @@ if true then
 		["9944765"] = Engine.Meshes.SphereHalf
 	}
 	
+	--local file = io.open("./currentMap.txt","r")
 	local file = io.open("./currentMap.txt","r")
 	local mapName = file:read()
 	file:close()
@@ -628,6 +631,37 @@ coroutine.wrap(function()
 	end
 end)()
 
+--viewport--------------------------------------------------------
+local viewframeDrawOp = GameObject("InterfaceDrawOperation")
+viewframeDrawOp.Parent = screen
+viewframeDrawOp.RenderAutomatically = true
+viewframeDrawOp.CurrentScreen = screen
+
+
+local viewframeX = resolution.Width
+local viewframeY = resolution.Height
+local viewframeDrawTexture = GameObject.Textures.Create(viewframeX, viewframeY, Enum.SampleType.Nearest, Enum.WrapType.ClampExtend, Enum.DataType.Float)
+local viewframeBuffer = GameObject.FrameBuffer.Create(viewframeX, viewframeY, viewframeDrawTexture)
+
+
+local canvasParent = GameObject("DeviceTransform")
+canvasParent.Parent = screen
+canvasParent.Size = DeviceVector(1, 0, 1, 0)
+
+local viewframeCanvas = GameObject("ScreenCanvas")
+viewframeCanvas.Parent = canvasParent
+
+local viewportAppearance = GameObject("Appearance")
+viewportAppearance.Texture = viewframeDrawTexture
+viewportAppearance.Color = RGBA(0, 0, 0, 1)
+
+viewframeCanvas.Appearance = viewportAppearance
+viewframeCanvas.Visible = true
+
+sceneDraw.Output = viewframeBuffer
+-----------------------------------------------------------------------------
+
+
 local selection = GameObject("Selection")
 
 local selectionOperation = GameObject("SelectionHandlesOperation")
@@ -656,6 +690,10 @@ explorerSource.Parent = explorerScript
 explorerScript:Run()
 
 print(explorerScript)
+
+
+
+
 
 --
 local hostSource = GameObject("LuaSource")
