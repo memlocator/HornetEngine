@@ -25,7 +25,7 @@ namespace GraphicsEngine
 
 	void InputContext::Update(float)
 	{
-		if (!Enabled && Device.expired())
+		if (!Enabled || Device.expired())
 			return;
 
 		std::shared_ptr<DeviceTransform> device = Device.lock();

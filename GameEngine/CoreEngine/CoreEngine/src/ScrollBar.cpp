@@ -3,6 +3,8 @@
 #include "DeviceTransform.h"
 #include "ScreenCanvas.h"
 #include "InputSubscriber.h"
+#include "InputContext.h"
+#include "TaskScheduler.h"
 
 namespace GraphicsEngine
 {
@@ -30,9 +32,67 @@ namespace GraphicsEngine
 		BarTransform->TransformChanged.Connect(std::bind(&ScrollBar::UpdateBarPosition, this));
 
 		BarInputSubscriber = Engine::Create<InputSubscriber>();
-		BarInputSubscriber->SetParent(This.lock());
+		BarInputSubscriber->SetParent(BarTransform);
 
+		FrameInputSubscriber = Engine::Create<InputSubscriber>();
+		FrameInputSubscriber->SetParent(FrameTransform);
 
+		SetTicks(true);
+	}
+
+	float GetAxis(const Vector3& vector, Enum::ScrollBarOrientation orientation)
+	{
+		if (orientation == Enum::ScrollBarOrientation::Horizontal)
+			return vector.X;
+
+		return vector.Y;
+	}
+
+	void ScrollBar::Update(float)
+	{
+		if (!Initialized)
+		{
+
+			std::shared_ptr<InputContext> context = GetComponent<InputContext>();
+
+			if (context == nullptr || context->InputSource.expired()) return;
+
+			Initialized = true;
+
+			std::shared_ptr<Engine::UserInput> inputSource = context->InputSource.lock();
+
+			DefaultBarGrabInput = BarInputSubscriber->Subscribe(inputSource->GetInput(Enum::InputCode::MouseLeft));
+			DefaultBarDragInput = inputSource->GetInput(Enum::InputCode::MousePosition);
+			DefaultBarScrollInput = FrameInputSubscriber->Subscribe(inputSource->GetInput(Enum::InputCode::MouseWheel));
+
+			if (BarScrollInput.expired())
+				BarScrollInput = DefaultBarScrollInput;
+
+			if (BarGrabInput.expired())
+				BarGrabInput = DefaultBarGrabInput;
+
+			if (BarDragInput.expired())
+				BarDragInput = DefaultBarDragInput;
+		}
+
+		std::shared_ptr<Engine::InputObject> barScrollInput = BarScrollInput.lock();
+
+		if (barScrollInput == nullptr)
+			return;
+
+		float scrollDelta = -barScrollInput->GetPosition().Y;
+
+		if (scrollDelta == 0) return;
+
+		float barSize = GetAxis(BarTransform->GetAbsoluteSize(), BarOrientation);
+		float frameSize = GetAxis(FrameTransform->GetAbsoluteSize(), BarOrientation);
+
+		if (std::abs(barSize - frameSize) > 1e-9f)
+		{
+			float movement = ScrollSpeed.Offset + ScrollSpeed.Scale * (ScrollRelativeToBar ? barSize : frameSize);
+			
+			SetBarPercent(BarPercent + scrollDelta * movement / (frameSize - barSize));
+		}
 	}
 
 	void ScrollBar::SetBarSize(float percent)
@@ -54,6 +114,38 @@ namespace GraphicsEngine
 		BarOrientation = orientation;
 
 		UpdateBar();
+	}
+
+	void ScrollBar::SetBarScrollInput(const std::shared_ptr<Engine::InputObject>& input)
+	{
+
+	}
+
+	void ScrollBar::SetBarGrabInput(const std::shared_ptr<Engine::InputObject>& input)
+	{
+	}
+
+	void ScrollBar::SetBarDragInput(const std::shared_ptr<Engine::InputObject>& input)
+	{
+	}
+
+	bool ScrollBar::ConnectInput(std::weak_ptr<Engine::InputObject>& inputHandle, std::shared_ptr<Connection>& connection, const std::shared_ptr<Engine::InputObject> input)
+	{
+		if (inputHandle.lock() == input) return false;
+
+		inputHandle = input;
+
+		if (connection != nullptr)
+		{
+			connection->Disconnect();
+			connection = nullptr;
+		}
+
+		if (input == nullptr) return false;
+
+		connection = std::make_shared<Connection>();
+
+		return true;
 	}
 
 	void ScrollBar::UpdateBar()

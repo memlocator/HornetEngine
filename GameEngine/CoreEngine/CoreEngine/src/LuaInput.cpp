@@ -294,7 +294,7 @@ namespace Engine
 		Name = Input->GetName();
 	}
 
-	Enum::InputType InputDevice::GetType()
+	Enum::InputType InputDevice::GetType() const
 	{
 		if (Input == nullptr)
 			throw EngineException("InputData.GetType: Attempt to use unconfigured InputData.");
@@ -302,7 +302,7 @@ namespace Engine
 		return Input->GetType();
 	}
 
-	Enum::InputCode InputDevice::GetCode()
+	Enum::InputCode InputDevice::GetCode() const
 	{
 		if (Input == nullptr)
 			throw EngineException("InputData.GetCode: Attempt to use unconfigured InputData.");
@@ -310,7 +310,7 @@ namespace Engine
 		return Input->GetCode();
 	}
 
-	Enum::BoundDevice InputDevice::GetDevice()
+	Enum::BoundDevice InputDevice::GetDevice() const
 	{
 		if (Input == nullptr)
 			throw EngineException("InputData.GetCode: Attempt to use unconfigured InputData.");

@@ -80,9 +80,9 @@ namespace Engine
 
 		void Configure(::InputObject* input);
 
-		Enum::InputType GetType();
-		Enum::InputCode GetCode();
-		Enum::BoundDevice GetDevice();
+		Enum::InputType GetType() const;
+		Enum::InputCode GetCode() const;
+		Enum::BoundDevice GetDevice() const;
 
 		static std::shared_ptr<Object> CreateInput(::InputObject* input);
 

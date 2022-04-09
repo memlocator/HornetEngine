@@ -2,9 +2,15 @@ local stack = {}
 
 local resolution = GameObject.FrameBuffer.WindowSize
 
+local inputContext = GameObject("InputContext")
+inputContext.Parent = Engine
+inputContext.InputSource = Engine.GameWindow.UserInput
+
 local screen = GameObject("DeviceTransform")
 screen.Size = DeviceVector(0, resolution.Width, 0, resolution.Height)
-screen.Parent = Engine
+screen.Parent = inputContext
+
+inputContext.Device = screen
 
 local ui = GameObject("InterfaceDrawOperation")
 ui.CurrentScreen = screen
@@ -128,7 +134,7 @@ while true do
 	
 	local wheelChange = -mouseWheel:GetPosition().Y
 	
-	explorerScrollBar.BarPercent = math.max(0, math.min(1, explorerScrollBar.BarPercent + wheelChange * scrollSpeed))
+	--explorerScrollBar.BarPercent = math.max(0, math.min(1, explorerScrollBar.BarPercent + wheelChange * scrollSpeed))
 
 	renderedObjects = 0
 	

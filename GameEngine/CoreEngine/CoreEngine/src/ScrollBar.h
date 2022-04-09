@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Object.h"
+#include "TaskScheduler.h"
+#include "DeviceVector.h"
 
 struct ScrollBarOrientationEnum
 {
@@ -32,8 +34,10 @@ namespace GraphicsEngine
 	{
 	public:
 		void Initialize();
-		void Update(float) {}
+		void Update(float);
 
+		bool ScrollRelativeToBar = true;
+		DeviceAxis ScrollSpeed = DeviceAxis(0.1f, 0);
 
 		const std::shared_ptr<DeviceTransform>& GetFrameTransform() const { return FrameTransform; }
 		const std::shared_ptr<ScreenCanvas>& GetFrameCanvas() const { return FrameCanvas; }
@@ -49,6 +53,14 @@ namespace GraphicsEngine
 		float GetBarPercent() const { return BarPercent; }
 		Enum::ScrollBarOrientation GetBarOrientation() const { return BarOrientation; }
 
+		void SetBarScrollInput(const std::shared_ptr<Engine::InputObject>& input);
+		void SetBarGrabInput(const std::shared_ptr<Engine::InputObject>& input);
+		void SetBarDragInput(const std::shared_ptr<Engine::InputObject>& input);
+
+		const std::weak_ptr<Engine::InputObject>& GetBarScrollInput() const { return BarScrollInput; }
+		const std::weak_ptr<Engine::InputObject>& GetBarGrabInput() const { return BarGrabInput; }
+		const std::weak_ptr<Engine::InputObject>& GetBarDragInput() const { return BarDragInput; }
+
 	private:
 		std::shared_ptr<DeviceTransform> FrameTransform;
 		std::shared_ptr<ScreenCanvas> FrameCanvas;
@@ -57,14 +69,23 @@ namespace GraphicsEngine
 		std::shared_ptr<ScreenCanvas> BarCanvas;
 
 		std::shared_ptr<GraphicsEngine::InputSubscriber> BarInputSubscriber;
-		std::shared_ptr<Engine::InputObject> BarScrollInput;
-		std::shared_ptr<Engine::InputObject> BarGrabInput;
-		std::shared_ptr<Engine::InputObject> BarDragInput;
+		std::shared_ptr<GraphicsEngine::InputSubscriber> FrameInputSubscriber;
+
+		std::weak_ptr<Engine::InputObject> BarScrollInput;
+		std::weak_ptr<Engine::InputObject> BarGrabInput;
+		std::weak_ptr<Engine::InputObject> BarDragInput;
+
+		std::shared_ptr<Engine::InputObject> DefaultBarScrollInput;
+		std::shared_ptr<Engine::InputObject> DefaultBarGrabInput;
+		std::shared_ptr<Engine::InputObject> DefaultBarDragInput;
 
 		float BarSize = 0.5f;
 		float BarPercent = 0;
 		Enum::ScrollBarOrientation BarOrientation = Enum::ScrollBarOrientation::Vertical;
 		bool Updating = false;
+		bool Initialized = false;
+		
+		bool ConnectInput(std::weak_ptr<Engine::InputObject>& inputHandle, std::shared_ptr<Connection>& connection, const std::shared_ptr<Engine::InputObject> input);
 
 		void UpdateBar();
 		bool UpdateBarPosition();
