@@ -147,7 +147,7 @@ namespace GraphicsEngine
 		StaticObjects.PairQuery(UpdatedLights, [this] (const AabbTree::Node* objectNode, const AabbTree::Node* lightNode)
 		{
 			SceneObjectReference* object = objectNode->GetData<SceneObjectReference>();
-			int lightIndex = int(lightNode->ClientData);
+			int lightIndex = (int)(std::uintptr_t)lightNode->ClientData;
 
 			if (!object->Reference->IsTransparent())
 				Lights[lightIndex].Watch.Insert(object, object->Reference->GetBoundingBox());
@@ -156,7 +156,7 @@ namespace GraphicsEngine
 		DynamicObjects.PairQuery(UpdatedLights, [this] (const AabbTree::Node* objectNode, const AabbTree::Node* lightNode)
 		{
 			SceneObjectReference* object = objectNode->GetData<SceneObjectReference>();
-			int lightIndex = int(lightNode->ClientData);
+			int lightIndex = (int)(std::uintptr_t)lightNode->ClientData;
 
 			if (!object->Reference->IsTransparent())
 				Lights[lightIndex].Watch.Insert(object, object->Reference->GetBoundingBox());

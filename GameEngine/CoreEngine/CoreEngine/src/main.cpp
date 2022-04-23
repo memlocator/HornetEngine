@@ -5,6 +5,22 @@ extern "C" {
 #include <Windows.h>
 }
 
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+#ifdef near
+#undef near
+#endif
+
+#ifdef far
+#undef far
+#endif
+
 #include "Object.h"
 #include "GameEngine.h"
 #include "ObjectRegistration.h"
@@ -21,6 +37,20 @@ extern "C" {
 #include "LuaSource.h"
 #include "LuaScript.h"
 #include "VoxelTriangulation.h"
+#include "EnginePackage.h"
+#include "LuaPackage.h"
+#include "NetworkingPackage.h"
+#include "PhysicsPackage.h"
+#include "TerrainPackage.h"
+#include "GraphicsScenePackage.h"
+#include "GraphicsCorePackage.h"
+#include "GraphicsUIPackage.h"
+#include "GraphicsRTPackage.h"
+#include "GraphicsDebugPackage.h"
+#include "GraphicsDataPackage.h"
+#include "GraphicsOperationPackage.h"
+#include "EditorPackage.h"
+#include "Reflection/DebugPrintMeta.h"
 
 // Add NoLua reflection tag
 // Add Object::Clone(bool deep = true)
@@ -29,6 +59,23 @@ enum ab { c };
 
 int main(int argc, char* argv[])
 {
+	Engine::Reflection::ReflectPackages<
+		Engine::Reflection::EnginePackage,
+		Engine::Reflection::LuaPackage,
+		Engine::Reflection::NetworkingPackage,
+		Engine::Reflection::PhysicsPackage,
+		Engine::Reflection::TerrainPackage,
+		Engine::Reflection::GraphicsScenePackage,
+		Engine::Reflection::GraphicsCorePackage,
+		Engine::Reflection::GraphicsUIPackage,
+		Engine::Reflection::GraphicsRTPackage,
+		Engine::Reflection::GraphicsDebugPackage,
+		Engine::Reflection::GraphicsDataPackage,
+		Engine::Reflection::GraphicsOperationPackage,
+		Engine::Reflection::EditorPackage
+	>();
+	Engine::Meta::PrintAll();
+
   // Initialization
 	try
 	{

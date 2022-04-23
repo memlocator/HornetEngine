@@ -1,61 +1,52 @@
 #include "CollisionGroup.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Enum::InteractionType;
-	using Physics::CollisionGroup;
+	namespace Reflection
+	{
+		using namespace Engine::Physics;
 
-	Enum_Definition(InteractionType,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(None);
-		
-		Document_Item("");
-		Enum_Item(Detect);
-
-		Document_Item("");
-		Enum_Item(Resolve);
-	);
-
-	Reflect_Inherited(CollisionGroup, Object,
-		Document_Class("");
-	
-		Bind_Function(AddInteraction,
-	
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<CollisionGroup>()
+		{
+			Reflect<CollisionGroup, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(std::shared_ptr<Object>, group);
+				"CollisionGroup",
+				{ "GameObject", "Physics" },
 
-					Document("");
-					Function_Parameter(LuaEnum<Enum::InteractionType>, interactionType);
-				);
+				Function(
+					"AddInteraction",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Object>&>("group"), // TODO: change type when reflection is replaced
+						Argument<Enum::InteractionType>("type")
+					).Bind<CollisionGroup, &CollisionGroup::AddInteraction>()
+				),
 
-				Bind_Parameters_No_Return(AddInteraction, group, interactionType);
+				Function(
+					"GetInteraction",
+					Overload(
+						Const,
+						Returns<Enum::InteractionType>(),
+						Argument<const std::shared_ptr<Object>&>("group")
+					).Bind<CollisionGroup, &CollisionGroup::GetInteraction>()
+				)
 			);
-		);
-		
-		Bind_Function(GetInteraction,
-	
-			Document("");
-			Function_Overload
+		}
+
+		template <>
+		void ReflectType<Enum::InteractionType>()
+		{
+			Reflect<Enum::InteractionType>::Enum
 			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::InteractionType>);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(std::shared_ptr<Object>, group);
-				);
-
-				Bind_Parameters(GetInteraction, group);
+				"InteractionType",
+				Value<Enum::InteractionType::None>("None"),
+				Value<Enum::InteractionType::Detect>("Detect"),
+				Value<Enum::InteractionType::Resolve>("Resolve")
 			);
-		);
-	);
+		}
+	}
 }

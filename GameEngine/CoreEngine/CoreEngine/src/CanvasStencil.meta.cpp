@@ -1,28 +1,33 @@
 #include "CanvasStencil.h"
 
 #include "Texture.h"
-#include "FrameBuffer.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	Reflect_Inherited(CanvasStencil, Object,
-		Document_Class("");
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-		Document("");
-		Archivable Class_Member(bool, Enabled);
-
-		Bind_Function(GetTexture,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<CanvasStencil>()
+		{
+			Reflect<CanvasStencil, Object>::Class
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<Texture>);
+				"CanvasStencil",
+				{ "GameObject" },
 
-				Overload_Parameters();
+				Member<Bind(&CanvasStencil::Enabled)>("Enabled"),
 
-				Bind_Parameters(GetTexture);
+				Function(
+					"GetTexture",
+					Overload(
+						Mutable,
+						Returns<std::shared_ptr<Texture>>()
+					).Bind<CanvasStencil, &CanvasStencil::GetTexture>()
+				)
 			);
-		);
-	);
+		}
+	}
 }

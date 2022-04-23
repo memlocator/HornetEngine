@@ -1,108 +1,77 @@
 #include "ColliderAsset.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Physics::ColliderAsset;
+	namespace Reflection
+	{
+		using namespace Engine::Physics;
 
-	Reflect_Inherited(ColliderAsset, Object,
-		Document_Class("");
-		
-		Bind_Function(ConfigureTriangleMesh,
-	
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<ColliderAsset>()
+		{
+			Reflect<ColliderAsset, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters();
+				"ColliderAsset",
+				{ "GameObject", "Physics" },
 
-				Bind_Parameters_No_Return(ConfigureTriangleMesh);
-			);
-		);
-		
-		Bind_Function(ConfigureSquareMesh,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters();
+				Function(
+					"ConfigureTriangleMesh",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ColliderAsset, &ColliderAsset::ConfigureTriangleMesh>()
+				),
 
-				Bind_Parameters_No_Return(ConfigureSquareMesh);
-			);
-		);
-		
-		Bind_Function(ConfigureOctagonMesh,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters();
+				Function(
+					"ConfigureSquareMesh",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ColliderAsset, &ColliderAsset::ConfigureSquareMesh>()
+				),
 
-				Bind_Parameters_No_Return(ConfigureOctagonMesh);
-			);
-		);
-		
-		Bind_Function(ConfigureShipMesh,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters();
+				Function(
+					"ConfigureOctagonMesh",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ColliderAsset, &ColliderAsset::ConfigureOctagonMesh>()
+				),
 
-				Bind_Parameters_No_Return(ConfigureShipMesh);
-			);
-		);
-		
-		Bind_Function(ConfigureChargerShieldMesh,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters();
+				Function(
+					"ConfigureShipMesh",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ColliderAsset, &ColliderAsset::ConfigureShipMesh>()
+				),
 
-				Bind_Parameters_No_Return(ConfigureChargerShieldMesh);
-			);
-		);
-		
-		Bind_Function(ConfigureWormHeadMesh,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters();
+				Function(
+					"ConfigureChargerShieldMesh",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ColliderAsset, &ColliderAsset::ConfigureChargerShieldMesh>()
+				),
 
-				Bind_Parameters_No_Return(ConfigureWormHeadMesh);
-			);
-		);
-		
-		Bind_Function(ConfigureWormTailMesh,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters();
+				Function(
+					"ConfigureWormHeadMesh",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ColliderAsset, &ColliderAsset::ConfigureWormHeadMesh>()
+				),
 
-				Bind_Parameters_No_Return(ConfigureWormTailMesh);
+				Function(
+					"ConfigureWormTailMesh",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ColliderAsset, &ColliderAsset::ConfigureWormTailMesh>()
+				)
 			);
-		);
-	);
+		}
+	}
 }

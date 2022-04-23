@@ -1,160 +1,100 @@
 #include "PointGenerator.h"
 
-Reflect_Type(VectorGenerator,
-	Document_Class("");
+#include "Reflection/Reflection.h"
 
-	No_Reference;
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<VectorGenerator>()
+		{
+			Reflect<VectorGenerator>::Type(
+				"VectorGenerator",
 
-	Bind_Function(Generate,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(Generate);
-		)
-	);
-);
-
-Reflect_Type(NumberRange,
-	Document_Class("");
-
-	No_Reference;
-
-	Document("");
-	Class_Member(float, Min);
-
-	Document("");
-	Class_Member(float, Max);
-
-	Bind_Function(rand,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(float);
-
-			Overload_Parameters();
-
-			Bind_Parameters(rand);
-		)
-	);
-
-	Bind_Function(Set,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, min);
-
-				Document("");
-				Function_Parameter(float, max);
+				Function(
+					"Generate",
+					Overload(
+						Mutable,
+						Returns<Vector3>()
+					).Bind<VectorGenerator, &VectorGenerator::Generate>()
+				)
 			);
+		}
 
-			Bind_Parameters_No_Return(Set, min, max);
-		)
-	);
+		template <>
+		void ReflectType<NumberRange>()
+		{
+			Reflect<NumberRange>::Type(
+				"NumberRange",
 
-	Bind_Function(NumberRange,
+				Member<Bind(&NumberRange::Min)>("Min"),
+				Member<Bind(&NumberRange::Max)>("Max"),
 
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
+				Constructor(
+					Overload(),
+					Overload(
+						Argument<float>("min")
+					),
+					Overload(
+						Argument<float>("min"),
+						Argument<float>("max")
+					)
+				),
 
-			Overload_Parameters();
+				Function(
+					"rand",
+					Overload(
+						Mutable,
+						Returns<float>()
+					).Bind<NumberRange, &NumberRange::rand>()
+				),
 
-			Bind_Constructor();
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, min);
+				Function(
+					"Set",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<float>("min"),
+						Argument<float>("max")
+					).Bind<NumberRange, &NumberRange::Set>()
+				)
 			);
+		}
 
-			Bind_Constructor(min);
-		);
+		template <>
+		void ReflectType<PointGenerator>()
+		{
+			Reflect<PointGenerator, VectorGenerator>::Type(
+				"PointGenerator",
 
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
+				Member<Bind(&PointGenerator::Position)>("Position"),
 
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, min);
-
-				Document("");
-				Function_Parameter(float, max);
+				Constructor(
+					Overload(
+						Argument<const Vector3&, Default(Vector3())>("position")
+					)
+				)
 			);
+		}
 
-			Bind_Constructor(min, max);
-		);
-	);
-);
-
-Reflect_Type(PointGenerator,
-	Document_Class("");
-
-	No_Reference;
-
-	Document("");
-	Class_Member(Vector3, Position);
-
-	Bind_Function(PointGenerator,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter_Default(Vector3, position, Vector3());
+		template <>
+		void ReflectType<UnitVectorGenerator>()
+		{
+			Reflect<UnitVectorGenerator, VectorGenerator>::Type(
+				"UnitVectorGenerator"
 			);
+		}
 
-			Bind_Constructor(position);
-		);
-	);
-);
+		template <>
+		void ReflectType<ConeUnitVectorGenerator>()
+		{
+			Reflect<ConeUnitVectorGenerator, VectorGenerator>::Type(
+				"ConeUnitVectorGenerator",
 
-Reflect_Type(UnitVectorGenerator,
-	Document_Class("");
-
-	No_Reference;
-);
-
-Reflect_Type(ConeUnitVectorGenerator,
-	Document_Class("");
-
-	No_Reference;
-
-	Document("");
-	Class_Member(Vector3, Normal);
-
-	Document("");
-	Class_Member(NumberRange, Angle);
-);
+				Member<Bind(&ConeUnitVectorGenerator::Normal)>("Normal"),
+				Member<Bind(&ConeUnitVectorGenerator::Angle)>("Angle")
+			);
+		}
+	}
+}

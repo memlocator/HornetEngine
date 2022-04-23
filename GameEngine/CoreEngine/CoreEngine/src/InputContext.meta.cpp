@@ -2,36 +2,37 @@
 
 #include "LuaInput.h"
 #include "InputSubscriber.h"
+#include "DeviceTransform.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	Reflect_Inherited(InputContext, Object,
-		Document_Class("");
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-		Document("");
-		Archivable Class_Member(bool, Enabled);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<DeviceTransform>, Device);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<Engine::UserInput>, InputSource);
-
-		Bind_Function(GetFocus,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<InputContext>()
+		{
+			Reflect<InputContext, Object>::Class
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<InputSubscriber>);
-				
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(LuaEnum<Enum::BoundDevice>, device);
-				);
+				"InputContext",
+				{ "GameObject" },
 
-				Bind_Parameters(GetFocus, device);
+				Member<Bind(&InputContext::Enabled)>("Enabled"),
+				Member<Bind(&InputContext::Device)>("Device"),
+				Member<Bind(&InputContext::InputSource)>("InputSource"),
+
+				Function(
+					"GetFocus",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<InputSubscriber>>(),
+						Argument<Enum::BoundDevice>("device")
+					).Bind<InputContext, &InputContext::GetFocus>()
+				)
 			);
-		);
-	);
+		}
+	}
 }

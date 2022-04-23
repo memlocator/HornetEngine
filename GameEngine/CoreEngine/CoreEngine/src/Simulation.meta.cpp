@@ -1,8 +1,19 @@
 #include "Simulation.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	Reflect_Inherited(Simulation, Object,
-		Document_Class("");
-	);
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Simulation>()
+		{
+			Reflect<Simulation, Object>::Class
+			(
+				"Simulation",
+				{ "GameObject" }
+			);
+		}
+	}
 }

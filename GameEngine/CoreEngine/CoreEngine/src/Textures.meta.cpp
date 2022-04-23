@@ -2,133 +2,72 @@
 
 #include "Texture.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(Textures, Object,
-		Document_Class("");
-
-		Bind_Function(Create,
-
-			Document("");
-			Static Function_Overload
+		template <>
+		void ReflectType<Textures>()
+		{
+			Reflect<Textures, Object>::Class
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<Texture>);
+				"Textures",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, width);
+				Function(
+					"Create",
+					Overload(
+						Static,
+						Returns<std::shared_ptr<Texture>>(),
+						Argument<int>("width"),
+						Argument<int>("height"),
+						Argument<GLint, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<GLint, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<GLenum, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<GLint, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<GLenum, Default(Enum::Format::RGBA)>("format"),
+						Argument<bool, Default(false)>("invertedY")
+					).Bind<&Textures::Create>(),
+					Overload(
+						Static,
+						Returns<std::shared_ptr<Texture>>(),
+						Argument<const std::string&>("fileName"),
+						Argument<GLint, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<GLint, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<GLenum, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<GLint, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<GLenum, Default(Enum::Format::RGBA)>("format")
+					).Bind<&Textures::Create>()
+				),
 
-					Document("");
-					Function_Parameter(int, height);
+				Function(
+					"Add",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Texture>&>("texture"),
+						Argument<const std::string&>("name")
+					).Bind<Textures, &Textures::Add>()
+				),
 
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::SampleType>, sampleType, Enum::SampleType::Nearest);
-					
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::WrapType>, wrapType, Enum::WrapType::Repeat);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::DataType>, dataType, Enum::DataType::UnsignedByte);
-					
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::InternalFormat>, internalFormat, Enum::InternalFormat::RGBA);
-					
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::Format>, format, Enum::Format::RGBA);
-					
-					Document("");
-					Function_Parameter_Default(bool, invertedY, false);
-				);
-
-				Static_Bind_Parameters(Create, width, height, sampleType, wrapType, dataType, internalFormat, format, invertedY);
+				Function(
+					"LoadDirectory",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("folderPath"),
+						Argument<GLint, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<GLint, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<GLenum, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<GLint, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<GLenum, Default(Enum::Format::RGBA)>("format")
+					).Bind<Textures, &Textures::LoadDirectory>()
+				)
 			);
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-			Overload_Returns(std::shared_ptr<Texture>);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, fileName);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::SampleType>, sampleType, Enum::SampleType::Nearest);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::WrapType>, wrapType, Enum::WrapType::Repeat);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::DataType>, dataType, Enum::DataType::UnsignedByte);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::InternalFormat>, internalFormat, Enum::InternalFormat::RGBA);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::Format>, format, Enum::Format::RGBA);
-				);
-
-				Bind_Parameters(Create, fileName, sampleType, wrapType, dataType, internalFormat, format);
-			);
-		);
-
-		Bind_Function(Add,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-		
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<Texture>, texture);
-
-					Document("");
-					Function_Parameter(std::string, name);
-				);
-		
-				Bind_Parameters_No_Return(Add, texture, name);
-			);
-		);
-
-		Bind_Function(LoadDirectory,
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, folderPath);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::SampleType>, sampleType, Enum::SampleType::Nearest);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::WrapType>, wrapType, Enum::WrapType::Repeat);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::DataType>, dataType, Enum::DataType::UnsignedByte);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::InternalFormat>, internalFormat, Enum::InternalFormat::RGBA);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::Format>, format, Enum::Format::RGBA);
-				);
-
-				Bind_Parameters_No_Return(LoadDirectory, folderPath, sampleType, wrapType, dataType, internalFormat, format);
-			);
-		);
-	);
+		}
+	}
 }

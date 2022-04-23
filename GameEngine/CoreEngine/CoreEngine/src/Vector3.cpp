@@ -14,11 +14,6 @@ extern "C" {
 #include <math.h>
 }
 
-// construct from coordinates
-Vector3::Vector3(float x, float y, float z, float w)
-{
-	Set(x, y, z, w);
-}
 
 // set coordinates
 Vector3& Vector3::Set(float x, float y, float z, float w)
@@ -36,7 +31,7 @@ Vector3& Vector3::Normalize()
 {
 	float length = this->Length();
 
-	if (std::abs(length) < 1e-9f)
+	if (cmath::abs(length) < 1e-9f)
 		return *this;
 
 	length = 1 / length;
@@ -80,13 +75,13 @@ float Vector3::SquareLength() const
 	return X * X + Y * Y + Z * Z + W * W;
 }
 
-Vector3& Vector3::Scale(const Vector3 & other)
+Vector3& Vector3::Scale(const Vector3& other)
 {
-  X *= other.X;
-  Y *= other.Y;
-  Z *= other.Z;
+	X *= other.X;
+	Y *= other.Y;
+	Z *= other.Z;
 
-  return *this;
+	return *this;
 }
 
 Vector3& Vector3::Scale(float x, float y, float z)
@@ -109,7 +104,7 @@ Vector3& Vector3::InvertLength()
 	return *this;
 }
 
-Vector3 Vector3::InvertedLength()
+Vector3 Vector3::InvertedLength() const
 {
 	return Vector3(*this).InvertLength();
 }
@@ -181,7 +176,7 @@ Vector3& Vector3::operator*=(float scalar)
 
 bool Vector3::Compare(float x, float y, float epsilon) const
 {
-	return abs(x - y) < epsilon;
+	return cmath::abs(x - y) < epsilon;
 }
 
 bool Vector3::operator==(const Vector3& other) const

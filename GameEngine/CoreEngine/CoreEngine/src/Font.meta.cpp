@@ -2,152 +2,82 @@
 
 #include "Texture.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
-	typedef Font::Character Character;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Type(Character,
-		Document_Class("");
-		
-		Document("");
-		Archivable Class_Member(char, Value);
-
-		Document("");
-		Archivable Class_Member(Vector3, TextOffset);
-
-		Document("");
-		Archivable Class_Member(Vector3, TextScale);
-
-		Bind_Function(Character,
-		
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Font>()
+		{
+			Reflect<Font, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters();
-			
-				Bind_Constructor();
+				"Font",
+				{ "GameObject" },
+
+				Member<Bind(&Font::SpaceWidth)>("SpaceWidth"),
+				Member<Bind(&Font::TabSpaces)>("TabSpaces"),
+
+				Function(
+					"Load",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("filePath"),
+						Argument<const std::string&>("textureName")
+					).Bind<Font, &Font::Load>()
+				),
+
+				Function(
+					"GetCharacter",
+					Overload(
+						Const,
+						Returns<const Font::Character&>(),
+						Argument<char>("character")
+					).Bind<Font, &Font::GetCharacter>()
+				),
+
+				Function(
+					"GetTexture",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<Texture>>()
+					).Bind<Font, &Font::GetTexture>()
+				)
 			);
-		
-			Document("");
-			Function_Overload
+		}
+
+		template <>
+		void ReflectType<Font::Character>()
+		{
+			Reflect<Font::Character>::Type
 			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(char, character);
+				"Character",
 
-					Document("");
-					Function_Parameter(float, aspectRatio);
-					
-					Document("");
-					Function_Parameter(Vector3, textOffset);
-					
-					Document("");
-					Function_Parameter(Vector3, textScale);
+				Member<Bind(&Font::Character::Value)>("Value"),
+				Member<Bind(&Font::Character::AspectRatio)>("AspectRatio"),
+				Member<Bind(&Font::Character::KerningLeft)>("KerningLeft"),
+				Member<Bind(&Font::Character::KerningRight)>("KerningRight"),
+				Member<Bind(&Font::Character::VerticalOffset)>("VerticalOffset"),
+				Member<Bind(&Font::Character::TextOffset)>("TextOffset"),
+				Member<Bind(&Font::Character::TextScale)>("TextScale"),
 
-					Document("");
-					Function_Parameter(float, kerningLeft);
-
-					Document("");
-					Function_Parameter(float, kerningRight);
-
-					Document("");
-					Function_Parameter(float, verticalOffset);
-				);
-			
-				Bind_Constructor(character, aspectRatio, textOffset, textScale, kerningLeft, kerningRight, verticalOffset);
+				Constructor(
+					Overload(),
+					Overload(
+						Argument<char>("character"),
+						Argument<float>("aspectRatio"),
+						Argument<const Vector3&>("textOffset"),
+						Argument<const Vector3&>("textScale"),
+						Argument<float>("kerningLeft"),
+						Argument<float>("kerningRight"),
+						Argument<float>("verticalOffset")
+					)
+				)
 			);
-		);
-	);
-
-	Reflect_Inherited(Font, Object,
-		Document_Class("");
-		
-		Document("");
-		Archivable Class_Member(float, SpaceWidth);
-
-		Document("");
-		Archivable Class_Member(int, TabSpaces);
-
-		Bind_Function(Load,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, filePath);
-
-					Document("");
-					Function_Parameter(std::string, textureName);
-				);
-
-				Bind_Parameters_No_Return(Load, filePath, textureName);
-			);
-		);
-
-		Bind_Function(GetCharacter,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Character);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(char, character);
-				);
-
-				Bind_Parameters(GetCharacter, character);
-			);
-		);
-
-		Bind_Function(GetTexture,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<Texture>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetTexture);
-			);
-		);
-
-		Bind_Function(Load,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, path);
-
-					Document("");
-					Function_Parameter(std::string, textureName);
-				);
-
-				Bind_Parameters_No_Return(Load, path, textureName);
-			);
-		);
-	);
+		}
+	}
 }

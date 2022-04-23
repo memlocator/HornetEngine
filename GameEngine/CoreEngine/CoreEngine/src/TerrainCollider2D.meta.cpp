@@ -1,10 +1,21 @@
 #include "TerrainCollider2D.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Physics::Collider2D;
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<TerrainCollider2D>()
+		{
+			Reflect<TerrainCollider2D, Physics::Collider2D>::Class
+			(
+				"TerrainCollider2D",
+				{ "GameObject" },
 
-	Reflect_Inherited(TerrainCollider2D, Collider2D,
-		Document_Class("");
-	);
+				Member<Bind(&TerrainCollider2D::Axis)>("Axis")
+			);
+		}
+	}
 }

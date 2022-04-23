@@ -1,56 +1,63 @@
 #include "Texture.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Enum::SampleType;
-	using Enum::WrapType;
-	using Enum::InternalFormat;
-	using Enum::Format;
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Enum::SampleType>()
+		{
+			Reflect<Enum::SampleType>::Enum
+			(
+				"SampleType",
+				Value<Enum::SampleType::Nearest>("Nearest"),
+				Value<Enum::SampleType::Linear>("Linear")
+			);
+		}
 
-	Enum_Definition(SampleType,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(Nearest);
-		
-		Document_Item("");
-		Enum_Item(Linear);
-	);
+		template <>
+		void ReflectType<Enum::WrapType>()
+		{
+			Reflect<Enum::WrapType>::Enum
+			(
+				"WrapType",
+				Value<Enum::WrapType::Repeat>("Repeat"),
+				Value<Enum::WrapType::ClampCutOff>("ClampCutOff"),
+				Value<Enum::WrapType::ClampExtend>("ClampExtend")
+			);
+		}
 
-	Enum_Definition(WrapType,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(Repeat);
+		template <>
+		void ReflectType<Enum::InternalFormat>()
+		{
+			Reflect<Enum::InternalFormat>::Enum
+			(
+				"InternalFormat",
+				Value<Enum::InternalFormat::RGBA>("RGBA")
+			);
+		}
 
-		Document_Item("");
-		Enum_Item(ClampCutOff);
+		template <>
+		void ReflectType<Enum::Format>()
+		{
+			Reflect<Enum::Format>::Enum
+			(
+				"Format",
+				Value<Enum::Format::RGBA>("RGBA")
+			);
+		}
 
-		Document_Item("");
-		Enum_Item(ClampExtend);
-	);
-
-	Enum_Definition(InternalFormat,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(RGBA);
-	);
-
-	Enum_Definition(Format,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(RGBA);
-	);
-
-	Enum_Definition(DataType,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(UnsignedByte);
-
-		Document_Item("");
-		Enum_Item(Float);
-	);
+		template <>
+		void ReflectType<Enum::DataType>()
+		{
+			Reflect<Enum::DataType>::Enum
+			(
+				"DataType",
+				Value<Enum::DataType::UnsignedByte>("UnsignedByte"),
+				Value<Enum::DataType::Float>("Float")
+			);
+		}
+	}
 }

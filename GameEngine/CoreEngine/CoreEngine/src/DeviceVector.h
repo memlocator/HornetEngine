@@ -8,7 +8,7 @@ public:
 	float Scale;
 	float Offset;
 
-	DeviceAxis(float scale = 0, float offset = 0) : Scale(scale), Offset(offset) {}
+	constexpr DeviceAxis(float scale = 0, float offset = 0) : Scale(scale), Offset(offset) {}
 
 	void Set(float newScale, float newOffset);
 	float Calculate(float base, float size) const;
@@ -17,6 +17,7 @@ public:
 	bool operator!=(const DeviceAxis& other) const;
 	DeviceAxis operator+(const DeviceAxis& axis) const;
 	DeviceAxis operator-(const DeviceAxis& axis) const;
+	DeviceAxis operator-() const;
 	DeviceAxis operator*(float scalar) const;
 	DeviceAxis operator/(float scalar) const;
 	DeviceAxis& operator+=(const DeviceAxis& axis);
@@ -37,8 +38,8 @@ public:
 	DeviceAxis X;
 	DeviceAxis Y;
 
-	DeviceVector(float xScale = 0, float xOffset = 0, float yScale = 0, float yOffset = 0) : X(xScale, xOffset), Y(yScale, yOffset) {}
-	DeviceVector(const DeviceAxis& x, const DeviceAxis& y) : X(x), Y(y) {}
+	constexpr DeviceVector(float xScale = 0, float xOffset = 0, float yScale = 0, float yOffset = 0) : X(xScale, xOffset), Y(yScale, yOffset) {}
+	constexpr DeviceVector(const DeviceAxis& x, const DeviceAxis& y) : X(x), Y(y) {}
 
 	void Set(float xScale, float xOffset, float yScale, float yOffset);
 	void Set(const DeviceAxis& xAxis, const DeviceAxis& yAxis);
@@ -50,6 +51,7 @@ public:
 	bool operator!=(const DeviceVector& other) const;
 	DeviceVector operator+(const DeviceVector& vector) const;
 	DeviceVector operator-(const DeviceVector& vector) const;
+	DeviceVector operator-() const;
 	DeviceVector operator*(float scalar) const;
 	DeviceVector operator/(float scalar) const;
 	DeviceVector& operator+=(const DeviceVector& vector);
@@ -74,6 +76,3 @@ DeviceVector operator*(float scalar, const DeviceVector& vector);
 std::ostream& operator<<(std::ostream& out, const DeviceAxis& axis);
 
 std::ostream& operator<<(std::ostream& out, const DeviceVector& vector);
-
-
-

@@ -1,295 +1,219 @@
 #include "DeviceVector.h"
 
-Reflect_Type(DeviceAxis,
-	Document_Class("");
+#include "Reflection/Reflection.h"
 
-	No_Reference;
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<DeviceAxis>()
+		{
+			Reflect<DeviceAxis>::Type(
+				"DeviceAxis",
 
-	Document("");
-	Read_Only Archivable Class_Member(float, Scale);
-	
-	Document("");
-	Read_Only Archivable Class_Member(float, Offset);
+				Member<Bind(&DeviceAxis::Scale)>("Scale"),
+				Member<Bind(&DeviceAxis::Offset)>("Offset"),
 
-	
-	Bind_Function(DeviceAxis,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter_Default(float, scale, 0);
-			
-				Document("");
-				Function_Parameter_Default(float, offset, 0);
-			);
-			
-			Bind_Constructor(scale, offset);
-		);
-	);
-	
-	Bind_Function(operator-,
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceAxis);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceAxis, other);
-			);
-			
-			Bind_Parameters(operator-, other);
-		);
-	);
-	
-	Bind_Function(operator+,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceAxis);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceAxis, other);
-			);
-			
-			Bind_Parameters(operator+, other);
-		);
-	);
-	
-	Bind_Function(operator*,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceAxis);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(float, scalar);
-			);
-			
-			Bind_Parameters(operator*, scalar);
-		);
-	);
-	
-	Bind_Function(operator/,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceAxis);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(float, scalar);
-			);
-			
-			Bind_Parameters(operator/, scalar);
-		);
-	);
-	
-	Bind_Function(operator==,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceAxis, other);
-			);
-			
-			Bind_Parameters(operator==, other);
-		);
-	);
-	
-	Bind_Function(operator!=,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceAxis, other);
-			);
-			
-			Bind_Parameters(operator!=, other);
-		);
-	);
-);
+				Constructor(
+					Overload(
+						Argument<float, Default(0)>("scale"),
+						Argument<float, Default(0)>("offset")
+					)
+				),
 
-Reflect_Type(DeviceVector,
-	Document_Class("");
+				Function(
+					"Set",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<float>("newScale"),
+						Argument<float>("newOffset")
+					).Bind<DeviceAxis, &DeviceAxis::Set>()
+				),
 
-	No_Reference;
+				Function(
+					"Calculate",
+					Overload(
+						Const,
+						Returns<float>(),
+						Argument<float>("base"),
+						Argument<float>("size")
+					).Bind<DeviceAxis, &DeviceAxis::Calculate>()
+				),
 
-	Document("");
-	Read_Only Archivable Class_Member(DeviceAxis, X);
-	
-	Document("");
-	Read_Only Archivable Class_Member(DeviceAxis, Y);
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const DeviceAxis&>("other")
+					).Bind < DeviceAxis, &DeviceAxis::operator==>()
+				),
 
-	
-	Bind_Function(DeviceVector,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter_Default(float, scaleX, 0);
-			
-				Document("");
-				Function_Parameter_Default(float, offsetX, 0);
+				Function(
+					"operator!=",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const DeviceAxis&>("other")
+					).Bind < DeviceAxis, &DeviceAxis::operator!=>()
+				),
 
-				Document("");
-				Function_Parameter_Default(float, scaleY, 0);
+				Function(
+					"operator+",
+					Overload(
+						Const,
+						Returns<DeviceAxis>(),
+						Argument<const DeviceAxis&>("other")
+					).Bind<DeviceAxis, &DeviceAxis::operator+>()
+				),
 
-				Document("");
-				Function_Parameter_Default(float, offsetY, 0);
+				Function(
+					"operator-",
+					Overload(
+						Const,
+						Returns<DeviceAxis>(),
+						Argument<const DeviceAxis&>("other")
+					).Bind<DeviceAxis, &DeviceAxis::operator- >(),
+					Overload(
+						Const,
+						Returns<DeviceAxis>()
+					).Bind<DeviceAxis, &DeviceAxis::operator- >()
+				),
+
+				Function(
+					"operator*",
+					Overload(
+						Const,
+						Returns<DeviceAxis>(),
+						Argument<float>("scalar")
+					).Bind<DeviceAxis, &DeviceAxis::operator*>()
+				),
+
+				Function(
+					"operator/",
+					Overload(
+						Const,
+						Returns<DeviceAxis>(),
+						Argument<float>("scalar")
+					).Bind<DeviceAxis, &DeviceAxis::operator/>()
+				)
 			);
-			
-			Bind_Constructor(scaleX, offsetX, scaleY, offsetY);
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(DeviceAxis, x);
-			
-				Document("");
-				Function_Parameter(DeviceAxis, y);
+		}
+
+		template <>
+		void ReflectType<DeviceVector>()
+		{
+			Reflect<DeviceVector>::Type(
+				"DeviceVector",
+
+				Member<Bind(&DeviceVector::X)>("X"),
+				Member<Bind(&DeviceVector::Y)>("Y"),
+
+				Constructor(
+					Overload(
+						Argument<float, Default(0)>("xScale"),
+						Argument<float, Default(0)>("xOffset"),
+						Argument<float, Default(0)>("yScale"),
+						Argument<float, Default(0)>("yOffset")
+					)
+				),
+
+				Function(
+					"Set",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<float>("xScale"),
+						Argument<float>("xOffset"),
+						Argument<float>("yScale"),
+						Argument<float>("yOffset")
+					).Bind<DeviceVector, &DeviceVector::Set>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const DeviceAxis&>("x"),
+						Argument<const DeviceAxis&>("y")
+					).Bind<DeviceVector, &DeviceVector::Set>()
+				),
+
+				Function(
+					"Calculate",
+					Overload(
+						Const,
+						Returns<Vector3>(),
+						Argument<const Vector3&>("base"),
+						Argument<const Vector3&>("size")
+					).Bind<DeviceVector, &DeviceVector::Calculate>(),
+					Overload(
+						Const,
+						Returns<Vector3>(),
+						Argument<float>("baseX"),
+						Argument<float>("sizeX"),
+						Argument<float>("baseY"),
+						Argument<float>("sizeY")
+					).Bind<DeviceVector, &DeviceVector::Calculate>()
+				),
+
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const DeviceVector&>("other")
+					).Bind<DeviceVector, &DeviceVector::operator==>()
+				),
+
+				Function(
+					"operator!=",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const DeviceVector&>("other")
+					).Bind<DeviceVector, &DeviceVector::operator!=>()
+				),
+
+				Function(
+					"operator+",
+					Overload(
+						Const,
+						Returns<DeviceVector>(),
+						Argument<const DeviceVector&>("other")
+					).Bind<DeviceVector, &DeviceVector::operator+>()
+				),
+
+				Function(
+					"operator-",
+					Overload(
+						Const,
+						Returns<DeviceVector>(),
+						Argument<const DeviceVector&>("other")
+					).Bind<DeviceVector, &DeviceVector::operator- >(),
+					Overload(
+						Const,
+						Returns<DeviceVector>()
+					).Bind<DeviceVector, &DeviceVector::operator- >()
+				),
+
+				Function(
+					"operator*",
+					Overload(
+						Const,
+						Returns<DeviceVector>(),
+						Argument<float>("scalar")
+					).Bind<DeviceVector, &DeviceVector::operator*>()
+				),
+
+				Function(
+					"operator/",
+					Overload(
+						Const,
+						Returns<DeviceVector>(),
+						Argument<float>("scalar")
+					).Bind<DeviceVector, &DeviceVector::operator/>()
+				)
 			);
-			
-			Bind_Constructor(x, y);
-		);
-	);
-	
-	Bind_Function(operator-,
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceVector);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceVector, other);
-			);
-			
-			Bind_Parameters(operator-, other);
-		);
-	);
-	
-	Bind_Function(operator+,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceVector);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceVector, other);
-			);
-			
-			Bind_Parameters(operator+, other);
-		);
-	);
-	
-	Bind_Function(operator*,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceVector);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(float, scalar);
-			);
-			
-			Bind_Parameters(operator*, scalar);
-		);
-	);
-	
-	Bind_Function(operator/,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(DeviceVector);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(float, scalar);
-			);
-			
-			Bind_Parameters(operator/, scalar);
-		);
-	);
-	
-	Bind_Function(operator==,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceVector, other);
-			);
-			
-			Bind_Parameters(operator==, other);
-		);
-	);
-	
-	Bind_Function(operator!=,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter(DeviceVector, other);
-			);
-			
-			Bind_Parameters(operator!=, other);
-		);
-	);
-);
+		}
+	}
+}

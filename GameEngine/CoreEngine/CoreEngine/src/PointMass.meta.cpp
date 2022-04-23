@@ -1,16 +1,24 @@
 #include "PointMass.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Physics::PointMass;
+	namespace Reflection
+	{
+		using namespace Engine::Physics;
 
-	Reflect_Inherited(PointMass, Object,
-		Document_Class("");
-			
-		Document("");
-		Archivable Class_Member(float, Mass);
-			
-		Document("");
-		Archivable Class_Member(Vector3, Position);
-	);
+		template <>
+		void ReflectType<PointMass>()
+		{
+			Reflect<PointMass, Object>::Class
+			(
+				"PointMass",
+				{ "GameObject", "Physics" },
+
+				Member<Bind(&PointMass::Mass)>("Mass"),
+				Member<Bind(&PointMass::Position)>("Position")
+			);
+		}
+	}
 }

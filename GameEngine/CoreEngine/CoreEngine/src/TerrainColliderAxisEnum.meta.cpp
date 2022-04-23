@@ -1,19 +1,25 @@
 #include "TerrainColliderAxisEnum.h"
 
-#include "ObjectReflection.h"
-#include "ObjectLuaType.h"
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-	Enum_Definition(TerrainColliderAxis,
-		Document_Enum("");
-		
-		Enum_Item(XYPlane);
-		Enum_Item(XZPlane);
-		Enum_Item(ZYPlane);
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Enum::TerrainColliderAxis>()
+		{
+			Reflect<Enum::TerrainColliderAxis>::Enum
+			(
+				"TestEnum",
+				Value<Enum::TerrainColliderAxis::XYPlane>("XYPlane"),
+				Value<Enum::TerrainColliderAxis::XZPlane>("XZPlane"),
+				Value<Enum::TerrainColliderAxis::ZYPlane>("ZYPlane"),
 
-		Enum_Item(YXPlane);
-		Enum_Item(ZXPlane);
-		Enum_Item(YZPlane);
-	);
+				Value<Enum::TerrainColliderAxis::YXPlane>("YXPlane"),
+				Value<Enum::TerrainColliderAxis::ZXPlane>("ZXPlane"),
+				Value<Enum::TerrainColliderAxis::YZPlane>("YZPlane")
+			);
+		}
+	}
 }

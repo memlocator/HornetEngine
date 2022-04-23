@@ -2,218 +2,128 @@
 
 #include "LuaSource.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Enum::ScriptStatus;
-
-	Enum_Definition(ScriptStatus,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(Idle);
-		
-		Document_Item("");
-		Enum_Item(Running);
-		
-		Document_Item("");
-		Enum_Item(Yielded);
-		
-		Document_Item("");
-		Enum_Item(Dead);
-	);
-
-	Reflect_Inherited(LuaScript, Object,
-		Document_Class("");
-		
-		Bind_Function(GetSource,
-
-			Document("");
-			Function_Overload
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<LuaScript>()
+		{
+			Reflect<LuaScript, Object>::Class
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<LuaSource>);
+				"LuaScript",
+				{ "GameObject" },
 
-				Overload_Parameters();
+				Function(
+					"GetSource",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<LuaSource>>()
+					).Bind<LuaScript, &LuaScript::GetSource>()
+				),
 
-				Bind_Parameters(GetSource);
+				Function(
+					"GetSourceCode",
+					Overload(
+						Const,
+						Returns<const std::string&>()
+					).Bind<LuaScript, &LuaScript::GetSourceCode>()
+				),
+
+				Function(
+					"GetVersion",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<LuaScript, &LuaScript::GetVersion>()
+				),
+
+				Function(
+					"UpToDate",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<LuaScript, &LuaScript::UpToDate>()
+				),
+
+				Function(
+					"AutoRunEnabled",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<LuaScript, &LuaScript::AutoRunEnabled>()
+				),
+
+				Function(
+					"GetStatus",
+					Overload(
+						Const,
+						Returns<Enum::ScriptStatus>()
+					).Bind<LuaScript, &LuaScript::GetStatus>()
+				),
+
+				Function(
+					"SetSource",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<LuaSource>&>("source")
+					).Bind<LuaScript, &LuaScript::SetSource>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("source")
+					).Bind<LuaScript, &LuaScript::SetSource>()
+				),
+
+				Function(
+					"SetAutoRun",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<bool>("mode")
+					).Bind<LuaScript, &LuaScript::SetAutoRun>()
+				),
+
+				Function(
+					"Run",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<LuaScript, &LuaScript::Run>()
+				),
+
+				Function(
+					"Stop",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<LuaScript, &LuaScript::Stop>()
+				),
+
+				Function(
+					"Reload",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<LuaScript, &LuaScript::Reload>()
+				)
 			);
-		);
-		
-		Bind_Function(GetSourceCode,
+		}
 
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Enum::ScriptStatus>()
+		{
+			Reflect<Enum::ScriptStatus>::Enum
 			(
-				Document("");
-				Overload_Returns(std::string);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetSourceCode);
+				"ScriptStatus",
+				Value<Enum::ScriptStatus::Idle>("Idle"),
+				Value<Enum::ScriptStatus::Running>("Running"),
+				Value<Enum::ScriptStatus::Yielded>("Yielded"),
+				Value<Enum::ScriptStatus::Dead>("Dead")
 			);
-		);
-		
-		Bind_Function(GetVersion,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetVersion);
-			);
-		);
-		
-		Bind_Function(UpToDate,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters();
-
-				Bind_Parameters(UpToDate);
-			);
-		);
-		
-		Bind_Function(AutoRunEnabled,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters();
-
-				Bind_Parameters(AutoRunEnabled);
-			);
-		);
-		
-		Bind_Function(GetStatus,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::ScriptStatus>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetStatus);
-			);
-		);
-		
-		Bind_Function(SetSource,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, source);
-				);
-
-				Bind_Parameters_No_Return(SetSource, source);
-			);
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<LuaSource>, source);
-				);
-
-				Bind_Parameters_No_Return(SetSource, source);
-			);
-		);
-		
-		Bind_Function(SetAutoRun,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(bool, mode);
-				);
-
-				Bind_Parameters_No_Return(SetAutoRun, mode);
-			);
-		);
-		
-		Bind_Function(Run,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters();
-
-				Bind_Parameters_No_Return(Run);
-			);
-		);
-		
-		Bind_Function(Stop,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters();
-
-				Bind_Parameters_No_Return(Stop);
-			);
-		);
-		
-		Bind_Function(Reload,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters();
-
-				Bind_Parameters_No_Return(Reload);
-			);
-		);
-		
-		Bind_Function(GetData,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters();
-
-				Bind_Lua_Function(GetData);
-			);
-		);
-	);
+		}
+	}
 }

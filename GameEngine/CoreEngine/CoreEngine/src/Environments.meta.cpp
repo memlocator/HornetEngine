@@ -1,8 +1,19 @@
 #include "Environments.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	Reflect_Inherited(Environments, Object,
-		Document_Class("");
-	);
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Environments>()
+		{
+			Reflect<Environments, Object>::Class
+			(
+				"Environments",
+				{ "GameObject" }
+			);
+		}
+	}
 }

@@ -1,25 +1,31 @@
 #include "RenderOperation.h"
 
-namespace GraphicsEngine
-{
-	Reflect_Inherited(RenderOperation, Object,
-		Document_Class("");
-		
-		Document("");
-		Archivable Class_Member(bool, RenderAutomatically);
+#include "Reflection/Reflection.h"
 
-		Bind_Function(Render,
-		
-			Document("");
-			Function_Overload
+namespace Engine
+{
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
+
+		template <>
+		void ReflectType<RenderOperation>()
+		{
+			Reflect<RenderOperation, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters();
-			
-				Bind_Parameters_No_Return(Render);
+				"RenderOperation",
+				{ "GameObject" },
+
+				Member<Bind(&RenderOperation::RenderAutomatically)>("RenderAutomatically"),
+
+				Function(
+					"Render",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<RenderOperation, &RenderOperation::Render>()
+				)
 			);
-		);
-	);
+		}
+	}
 }

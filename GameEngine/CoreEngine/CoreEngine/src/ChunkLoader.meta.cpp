@@ -1,125 +1,96 @@
 #include "ChunkLoader.h"
 
+#include "Terrain.h"
+
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-    Reflect_Inherited(ChunkLoader, Object,
-        Document_Class("");
-
-        Document("");
-        Archivable Class_Member(std::weak_ptr<Terrain>, Target);
-
-		Document("");
-		Archivable Class_Member(LuaEnum < Enum::ChunkLoaderShape>, Shape);
-
-		Bind_Function(GetCellCoordinates,
-		
-			Document("");
-			Function_Overload
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<ChunkLoader>()
+		{
+			Reflect<ChunkLoader, Object>::Class
 			(
-				Document("");
-				Overload_Returns(Vector3);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetCellCoordinates);
-			);
-		);
+				"ChunkLoader",
+				{ "GameObject" },
 
-		Bind_Function(GetChunkCoordinates,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, chunk);
-				);
-			
-				Bind_Parameters(GetChunkCoordinates, chunk);
-			);
+				Member<Bind(&ChunkLoader::Shape)>("Shape"),
+				Member<Bind(&ChunkLoader::Target)>("Target"),
 
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetChunkCoordinates);
-			);
-		);
+				Function(
+					"SetRange",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Coordinates&>("range")
+					).Bind<ChunkLoader, &ChunkLoader::SetRange>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("range")
+					).Bind<ChunkLoader, &ChunkLoader::SetRange>()
+				),
 
-		Bind_Function(GetRange,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetRange);
-			);
-		);
+				Function(
+					"GetRange",
+					Overload(
+						Const,
+						Returns<Coordinates>()
+					).Bind<ChunkLoader, &ChunkLoader::GetRange>()
+				),
 
-		Bind_Function(SetRange,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, range);
-				);
-			
-				Bind_Parameters_No_Return(SetRange, range);
-			);
-		);
+				Function(
+					"GetCellCoordinates",
+					Overload(
+						Const,
+						Returns<Coordinates>()
+					).Bind<ChunkLoader, &ChunkLoader::GetCellCoordinates>()
+				),
 
-		Bind_Function(GetChunkStatus,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::ChunkStatus>);
-			
-				Overload_Parameters
-				(
-					Document("");
-				Function_Parameter(Vector3, chunk);
-				);
-			
-				Bind_Parameters(GetChunkStatus, chunk);
-			);
-		);
+				Function(
+					"GetChunkCoordinates",
+					Overload(
+						Const,
+						Returns<Coordinates>(),
+						Argument<const Coordinates&, Default(Coordinates())>("chunk")
+					).Bind<ChunkLoader, &ChunkLoader::GetChunkCoordinates>(),
+					Overload(
+						Const,
+						Returns<Coordinates>(),
+						Argument<const Vector3&>("chunk")
+					).Bind<ChunkLoader, &ChunkLoader::GetChunkCoordinates>()
+				),
 
-		Bind_Function(GetLocalChunkStatus,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::ChunkStatus>);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, chunk);
-				);
-			
-				Bind_Parameters(GetLocalChunkStatus, chunk);
+				Function(
+					"GetChunkStatus",
+					Overload(
+						Const,
+						Returns<Enum::ChunkStatus>(),
+						Argument<const Coordinates&, Default(Coordinates())>("chunk")
+					).Bind<ChunkLoader, &ChunkLoader::GetChunkStatus>(),
+					Overload(
+						Const,
+						Returns<Enum::ChunkStatus>(),
+						Argument<const Vector3&>("chunk")
+					).Bind<ChunkLoader, &ChunkLoader::GetChunkStatus>()
+				),
+
+				Function(
+					"GetLocalChunkStatus",
+					Overload(
+						Const,
+						Returns<Enum::ChunkStatus>(),
+						Argument<const Coordinates&, Default(Coordinates())>("chunk")
+					).Bind<ChunkLoader, &ChunkLoader::GetLocalChunkStatus>(),
+					Overload(
+						Const,
+						Returns<Enum::ChunkStatus>(),
+						Argument<const Vector3&>("chunk")
+					).Bind<ChunkLoader, &ChunkLoader::GetLocalChunkStatus>()
+				)
 			);
-		);
-    );
+		}
+	}
 }

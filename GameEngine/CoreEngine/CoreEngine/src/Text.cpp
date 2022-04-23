@@ -35,7 +35,7 @@ namespace GraphicsEngine
 		CharacterTransform->SetParent(TextTransform);
 	}
 
-	void Text::Draw(const std::shared_ptr<FrameBuffer> output)
+	void Text::Draw(const std::shared_ptr<FrameBuffer>& output)
 	{
 		std::shared_ptr<DeviceTransform> transform = GetComponent<DeviceTransform>();
 

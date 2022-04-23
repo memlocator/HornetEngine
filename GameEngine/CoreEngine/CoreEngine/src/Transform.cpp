@@ -265,7 +265,7 @@ namespace Engine
 		Transformation = (Matrix3(rotation) * Transformation).SetTranslation(translation);
 	}
 
-	void Transform::Rotate(const Vector3 axis, float angle)
+	void Transform::Rotate(const Vector3& axis, float angle)
 	{
 		Vector3 translation = Transformation.Translation();
 

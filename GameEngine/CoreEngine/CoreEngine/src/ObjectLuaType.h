@@ -54,7 +54,7 @@ namespace Engine
 					else if (lua_isnil(*LuaState, index))
 						return nullptr;
 					else
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Object", Lua::GetType(*LuaState, index));
+						::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Object", ::Lua::GetType(*LuaState, index));
 
 					return nullptr;
 				};
@@ -83,7 +83,7 @@ namespace Engine
 					else if (HasDefaultValue && (lua_gettop(*LuaState) < index || !lua_isnil(*LuaState, index)))
 						return DefaultValue;
 					else
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Object", Lua::GetType(*LuaState, index));
+						::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Object", ::Lua::GetType(*LuaState, index));
 
 					return nullptr;
 				};
@@ -112,7 +112,7 @@ namespace Engine
 					else if (HasDefaultValue && (lua_gettop(*LuaState) < index || !lua_isnil(*LuaState, index)))
 						return DefaultValue;
 					else
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Object", Lua::GetType(*LuaState, index));
+						::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Object", ::Lua::GetType(*LuaState, index));
 
 					return nullptr;
 				};
@@ -193,8 +193,8 @@ namespace Engine
 							return LuaEnumType(type.Items.find(i->second)->second.Value);
 						else
 						{
-							Lua::SetErrorMessage("Attempt to use invalid enum item '" + std::string(item) + "' of enum type '" + EnumTypeName() + "'");
-							Lua::Error(*LuaState);
+							::Lua::SetErrorMessage("Attempt to use invalid enum item '" + std::string(item) + "' of enum type '" + EnumTypeName() + "'");
+							::Lua::Error(*LuaState);
 						}
 					}
 					else if (lua_isuserdata(*LuaState, index))
@@ -203,17 +203,17 @@ namespace Engine
 
 						if (data == nullptr)
 						{
-							Lua::SetErrorMessage("Received nil value userdata for " + name);
-							Lua::Error(*LuaState);
+							::Lua::SetErrorMessage("Received nil value userdata for " + name);
+							::Lua::Error(*LuaState);
 						}
 
 						if (data->Meta != nullptr && data->Meta->IsEnum && data->Meta->ParentName == name)
 							return LuaEnumType(*((int*)data->Meta->GetMember("Value")->GetLocation(nullptr)));
 						else
-							Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, ("Enum." + name).c_str(), Lua::GetType(*LuaState, index));
+							::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, ("Enum." + name).c_str(), ::Lua::GetType(*LuaState, index));
 					}
 					else if (!HasDefaultValue || !(lua_gettop(*LuaState) < index || !lua_isnil(*LuaState, index)))
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, ("Enum." + name).c_str(), Lua::GetType(*LuaState, index));
+						::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, ("Enum." + name).c_str(), ::Lua::GetType(*LuaState, index));
 
 					return DefaultValue;
 				};

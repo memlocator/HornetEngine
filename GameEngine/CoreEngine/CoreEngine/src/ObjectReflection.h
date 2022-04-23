@@ -599,16 +599,16 @@ Define_Type(typeName,\
 				\
 				if (object->Data == nullptr)\
 				{\
-					Lua::SetErrorMessage("Attempt to pass in static object to type '" + std::string(#typeName) + "'");\
-					Lua::Error(*LuaState);\
+					::Lua::SetErrorMessage("Attempt to pass in static object to type '" + std::string(#typeName) + "'");\
+					::Lua::Error(*LuaState);\
 				}\
 				else if (object->Meta != type)\
-					Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, #typeName, object->Meta->Name.c_str(), FuncName);\
+					::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, #typeName, object->Meta->Name.c_str(), FuncName);\
 				\
 				return *reinterpret_cast<typeName*>(object->Data);\
 			}\
 			else\
-				Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, #typeName, Lua::GetType(*LuaState, index), FuncName);\
+				::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, #typeName, ::Lua::GetType(*LuaState, index), FuncName);\
 			\
 			throw "shut up, compiler";\
 		}\
@@ -632,8 +632,8 @@ Define_Type(typeName,\
 			}\
 			catch (std::string& err)\
 			{\
-				Lua::SetErrorMessage(err);\
-				Lua::Error(*LuaState);\
+				::Lua::SetErrorMessage(err);\
+				::Lua::Error(*LuaState);\
 			}\
 		}\
 	)\
@@ -706,11 +706,11 @@ isReadOnly = false;
 		\
 		if (binding.Overloads.size() == 0)\
 		{\
-			Lua::SetErrorMessage("Function '" + binding.Name + "' of type '" + binding.ParentName + "' has 0 overloads");\
-			Lua::Error(lua);\
+			::Lua::SetErrorMessage("Function '" + binding.Name + "' of type '" + binding.ParentName + "' has 0 overloads");\
+			::Lua::Error(lua);\
 		}\
 		else\
-			Lua::BadArgumentError(lua, 1, binding.Overloads[0]->Parameters[0].TypeName.c_str(), Lua::GetType(lua, 2), #funcName);\
+			::Lua::BadArgumentError(lua, 1, binding.Overloads[0]->Parameters[0].TypeName.c_str(), ::Lua::GetType(lua, 2), #funcName);\
 		\
 		return 0;\
 	};\
@@ -813,8 +813,8 @@ Callback = [](lua_State* lua) -> int\
 	}\
 	catch(std::string& error)\
 	{\
-		Lua::SetErrorMessage(error);\
-		Lua::Error(lua);\
+		::Lua::SetErrorMessage(error);\
+		::Lua::Error(lua);\
 	}\
 	\
 	return returnOperation.ReturnValues;\
@@ -835,8 +835,8 @@ Callback = [](lua_State* lua) -> int\
 	}\
 	catch(std::string& error)\
 	{\
-		Lua::SetErrorMessage(error);\
-		Lua::Error(lua);\
+		::Lua::SetErrorMessage(error);\
+		::Lua::Error(lua);\
 	}\
 	\
 	return returnOperation.ReturnValues;\
@@ -862,8 +862,8 @@ Callback = [](lua_State* lua) -> int\
 	}\
 	catch(std::string& error)\
 	{\
-		Lua::SetErrorMessage(error);\
-		Lua::Error(lua);\
+		::Lua::SetErrorMessage(error);\
+		::Lua::Error(lua);\
 	}\
 	\
 	return returnOperation.ReturnValues;\
@@ -890,8 +890,8 @@ Callback = [](lua_State* lua) -> int\
 	}\
 	catch (std::string& error)\
 	{\
-		Lua::SetErrorMessage(error); \
-		Lua::Error(lua); \
+		::Lua::SetErrorMessage(error); \
+		::Lua::Error(lua); \
 	}\
 	\
 	return returnOperation.ReturnValues;\
@@ -913,8 +913,8 @@ Callback = [](lua_State* lua) -> int\
 	}\
 	catch(std::string& error)\
 	{\
-		Lua::SetErrorMessage(error);\
-		Lua::Error(lua);\
+		::Lua::SetErrorMessage(error);\
+		::Lua::Error(lua);\
 	}\
 	\
 	return returnOperation.ReturnValues;\
@@ -936,8 +936,8 @@ Callback = [](lua_State* lua) -> int\
 	}\
 	catch(std::string& error)\
 	{\
-		Lua::SetErrorMessage(error);\
-		Lua::Error(lua);\
+		::Lua::SetErrorMessage(error);\
+		::Lua::Error(lua);\
 	}\
 	\
 	return returnOperation.ReturnValues;\
@@ -961,8 +961,8 @@ Callback = [](lua_State* lua) -> int\
 	}\
 	catch(std::string& error)\
 	{\
-		Lua::SetErrorMessage(error);\
-		Lua::Error(lua);\
+		::Lua::SetErrorMessage(error);\
+		::Lua::Error(lua);\
 	}\
 	\
 	return returnOperation.ReturnValues;\

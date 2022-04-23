@@ -1,61 +1,58 @@
 #include "Material.h"
 
-namespace GraphicsEngine
+#include "Texture.h"
+
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(Material, Object,
-		Document_Class("");
-		
-		Document("");
-		Archivable Class_Member(RGBA, Diffuse);
+		template <>
+		void ReflectType<Material>()
+		{
+			Reflect<Material, Object>::Class
+			(
+				"Material",
+				{ "GameObject" },
 
-		Document("");
-		Archivable Class_Member(RGBA, Specular);
+				Member<Bind(&Material::Diffuse)>("Diffuse"),
+				Member<Bind(&Material::Specular)>("Specular"),
+				Member<Bind(&Material::Ambient)>("Ambient"),
+				Member<Bind(&Material::Emission)>("Emission"),
+				Member<Bind(&Material::Shininess)>("Shininess"),
 
-		Document("");
-		Archivable Class_Member(RGBA, Ambient);
+				Member<Bind(&Material::TextureColor)>("TextureColor"),
+				Member<Bind(&Material::BlendTexture)>("BlendTexture"),
+				Member<Bind(&Material::UVScale)>("UVScale"),
+				Member<Bind(&Material::UVOffset)>("UVOffset"),
+				Member<Bind(&Material::BoxScale)>("BoxScale"),
+				Member<Bind(&Material::CubeMapped)>("CubeMapped"),
+				Member<Bind(&Material::FlipCubeMapV)>("FlipCubeMapV"),
+				Member<Bind(&Material::CompressedNormalMap)>("CompressedNormalMap"),
+				Member<Bind(&Material::UseOffsetMap)>("UseOffsetMap"),
 
-		Document("");
-		Archivable Class_Member(RGBA, Emission);
+				Member<Bind(&Material::NormalMap)>("NormalMap"),
+				Member<Bind(&Material::SpecularMap)>("SpecularMap"),
+				Member<Bind(&Material::GlowMap)>("GlowMap"),
+				Member<Bind(&Material::CubeMapTop)>("CubeMapTop"),
+				Member<Bind(&Material::CubeMapBottom)>("CubeMapBottom"),
+				Member<Bind(&Material::CubeMapLeft)>("CubeMapLeft"),
+				Member<Bind(&Material::CubeMapRight)>("CubeMapRight"),
+				Member<Bind(&Material::CubeMapFront)>("CubeMapFront"),
+				Member<Bind(&Material::CubeMapBack)>("CubeMapBack"),
+				Member<Bind(&Material::DiffuseTexture)>("DiffuseTexture"),
 
-		Document("");
-		Archivable Class_Member(int, Shininess);
-
-		Document("");
-		Archivable Class_Member(bool, BlendTexture);
-
-		Document("");
-		Archivable Class_Member(bool, CubeMapped);
-
-		Document("");
-		Archivable Class_Member(bool, FlipCubeMapV);
-
-		Document("");
-		Archivable Class_Member(bool, CompressedNormalMap);
-
-		Document("");
-		Archivable Class_Member(bool, UseOffsetMap);
-
-		Document("");
-		Archivable Class_Member(RGBA, TextureColor);
-
-		Document("");
-		Archivable Class_Member(Vector3, UVScale);
-
-		Document("");
-		Archivable Class_Member(Vector3, UVOffset);
-
-		Document("");
-		Archivable Class_Member(Vector3, BoxScale);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<Texture>, DiffuseTexture);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<Texture>, NormalMap);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<Texture>, SpecularMap);
-	);
+				Function(
+					"GetMaterialId",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<Material, &Material::GetMaterialId>()
+				)
+			);
+		}
+	}
 }

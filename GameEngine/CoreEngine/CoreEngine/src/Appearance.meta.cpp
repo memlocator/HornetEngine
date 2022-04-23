@@ -1,26 +1,30 @@
 #include "Appearance.h"
 
-namespace GraphicsEngine
+#include "Texture.h"
+
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	Reflect_Inherited(Appearance, Object,
-		Document_Class("");
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-		Document("");
-		Archivable Class_Member(bool, BlendTexture);
+		template <>
+		void ReflectType<Appearance>()
+		{
+			Reflect<Appearance, Object>::Class
+			(
+				"Appearance",
+				{ "GameObject" },
 
-		Document("");
-		Archivable Class_Member(RGBA, Color);
-
-		Document("");
-		Archivable Class_Member(RGBA, TextureColor);
-
-		Document("");
-		Archivable Class_Member(Vector3, UVScale);
-
-		Document("");
-		Archivable Class_Member(Vector3, UVOffset);
-
-		Document("");
-		Archivable Class_Member(std::shared_ptr<GraphicsEngine::Texture>, Texture);
-	);
+				Member<Bind(&Appearance::BlendTexture)>("BlendTexture"),
+				Member<Bind(&Appearance::Color)>("Color"),
+				Member<Bind(&Appearance::TextureColor)>("TextureColor"),
+				Member<Bind(&Appearance::UVScale)>("UVScale"),
+				Member<Bind(&Appearance::UVOffset)>("UVOffset"),
+				Member<Bind(&Appearance::Texture)>("Texture")
+			);
+		}
+	}
 }

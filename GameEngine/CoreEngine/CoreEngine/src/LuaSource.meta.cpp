@@ -1,104 +1,79 @@
 #include "LuaSource.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	Reflect_Inherited(LuaSource, Object,
-		Document_Class("");
-		
-		Bind_Function(GetPath,
-
-			Document("");
-			Function_Overload
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<LuaSource>()
+		{
+			Reflect<LuaSource, Object>::Class
 			(
-				Document("");
-				Overload_Returns(std::string);
+				"LuaSource",
+				{ "GameObject" },
 
-				Overload_Parameters();
+				Function(
+					"GetPath",
+					Overload(
+						Const,
+						Returns<const std::string&>()
+					).Bind<LuaSource, &LuaSource::GetPath>()
+				),
 
-				Bind_Parameters(GetPath);
+				Function(
+					"LoadSource",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("path")
+					).Bind<LuaSource, &LuaSource::LoadSource>()
+				),
+
+				Function(
+					"LoadSource",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("path")
+					).Bind<LuaSource, &LuaSource::LoadSource>()
+				),
+
+				Function(
+					"SaveSource",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("path")
+					).Bind<LuaSource, &LuaSource::SaveSource>()
+				),
+
+				Function(
+					"SetSource",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("source")
+					).Bind<LuaSource, &LuaSource::SetSource>()
+				),
+
+				Function(
+					"GetSource",
+					Overload(
+						Const,
+						Returns<const std::string&>()
+					).Bind<LuaSource, &LuaSource::GetSource>()
+				),
+
+				Function(
+					"GetVersion",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<LuaSource, &LuaSource::GetVersion>()
+				)
 			);
-		);
-		
-		Bind_Function(LoadSource,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, path);
-				);
-
-				Bind_Parameters_No_Return(LoadSource, path);
-			);
-		);
-		
-		Bind_Function(SaveSource,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, path);
-				);
-
-				Bind_Parameters_No_Return(SaveSource, path);
-			);
-		);
-		
-		Bind_Function(SetSource,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, source);
-				);
-
-				Bind_Parameters_No_Return(SetSource, source);
-			);
-		);
-		
-		Bind_Function(GetSource,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::string);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetSource);
-			);
-		);
-		
-		Bind_Function(GetVersion,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetVersion);
-			);
-		);
-	);
+		}
+	}
 }

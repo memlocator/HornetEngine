@@ -2,28 +2,16 @@
 
 #include <limits>
 
-float minf(float a, float b)
-{
-	return a < b ? a : b;
-}
-
-float maxf(float a, float b)
-{
-	return a > b ? a : b;
-}
-
-const float infinity = std::numeric_limits<float>::max();
-
 bool Ray::Intersects(const Aabb& box, float& t, float epsilon) const
 {
-	float tMax = infinity;
+	float tMax = std::numeric_limits<float>::max();;
 	float tMin = -tMax;
 
 	if (!(
 		IntersectsAxis(Start.X, Direction.X, box.Min.X, box.Max.X, tMin, tMax, epsilon) &&
 		IntersectsAxis(Start.Y, Direction.Y, box.Min.Y, box.Max.Y, tMin, tMax, epsilon) &&
 		IntersectsAxis(Start.Z, Direction.Z, box.Min.Z, box.Max.Z, tMin, tMax, epsilon)
-	) || tMax < 0)
+		) || tMax < 0)
 		return false;
 
 	t = std::max(0.f, tMin);

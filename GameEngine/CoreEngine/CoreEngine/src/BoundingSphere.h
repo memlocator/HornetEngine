@@ -19,9 +19,9 @@ public:
 	float Radius = 0;
 	Vector3 Center;
 
-	BoundingSphere(float radius = 0, const Vector3& center = Vector3()) : Radius(radius), Center(center) {}
+	constexpr BoundingSphere(float radius = 0, const Vector3& center = Vector3()) : Radius(radius), Center(center) {}
 
-	bool Contains(const Vector3& point);
+	bool Contains(const Vector3& point) const;
 	void ExpandByPoint(const Vector3& point);
 
 	static BoundingSphere ComputeCentroid(const MeshData::VertexVector& vertices);

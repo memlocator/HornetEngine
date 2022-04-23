@@ -4,6 +4,7 @@
 #include "Matrix3.h"
 #include "ObjectReflection.h"
 #include "Plane.h"
+#include "ConstMath.h"
 
 class Aabb
 {
@@ -27,7 +28,11 @@ public:
 	Vector3 Min;
 	Vector3 Max;
 
-	Aabb(const Vector3& min = Vector3(0, 0, 0, 1), const Vector3& max = Vector3(0, 0, 0, 1));
+	constexpr Aabb(const Vector3& min = Vector3(0, 0, 0, 1), const Vector3& max = Vector3(0, 0, 0, 1)) : Min(min), Max(max)
+	{
+		Min.W = 1;
+		Max.W = 1;
+	}
 
 	Aabb& Expand(const Vector3& point);
 	bool ContainsPoint(const Vector3& point) const;
@@ -58,4 +63,31 @@ namespace Enum
 namespace Engine
 {
 	Define_Value_Type(Aabb);
+}
+
+// Helper functions
+namespace {
+	constexpr Vector3 MinVector(const Vector3& lhs, const Vector3& rhs)
+	{
+		Vector3 minVector;
+
+		for (unsigned i = 0; i < 3; ++i)
+		{
+			minVector[i] = (lhs[i] < rhs[i]) ? lhs[i] : rhs[i];
+		}
+
+		return minVector;
+	}
+
+	constexpr Vector3 MaxVector(const Vector3& lhs, const Vector3& rhs)
+	{
+		Vector3 maxVector;
+
+		for (unsigned i = 0; i < 3; ++i)
+		{
+			maxVector[i] = (lhs[i] > rhs[i]) ? lhs[i] : rhs[i];
+		}
+
+		return maxVector;
+	}
 }

@@ -28,7 +28,7 @@ namespace GraphicsEngine
 		void Initialize();
 		void Update(float) {}
 
-		void Draw(const std::shared_ptr<FrameBuffer> output = nullptr);
+		void Draw(const std::shared_ptr<FrameBuffer>& output = nullptr);
 
 		void SetText(const std::string& text);
 		std::string GetText() const;

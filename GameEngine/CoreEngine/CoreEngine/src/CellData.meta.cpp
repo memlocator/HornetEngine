@@ -1,20 +1,35 @@
 #include "CellData.h"
 
-using Engine::CellData;
+#include "TerrainMaterial.h"
+#include "Voxel.h"
 
-Reflect_Type(CellData,
-	Document_Class(
-		""
-	);
+#include "Reflection/Reflection.h"
 
-	No_Reference;
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<CellData>()
+		{
+			Reflect<CellData>::Type
+			(
+				"CellData",
+				{ "GameObject" },
 
-	Document("");
-	Read_Only Archivable Class_Member(float, Occupancy);
+				Member<Bind(&CellData::Occupancy)>("Occupancy"),
+				Member<Bind(&CellData::MaterialType)>("MaterialType"),
+				Member<Bind(&CellData::VoxelData)>("VoxelData"),
 
-	Document("");
-	Read_Only Archivable Class_Member(std::shared_ptr<TerrainMaterial>, MaterialType);
-
-	Document("");
-	Read_Only Archivable Class_Member(std::shared_ptr<Voxel>, VoxelData);
-);
+				Constructor(
+					Overload(),
+					Overload(
+						Argument<float>("occupancy"),
+						Argument<const std::shared_ptr<TerrainMaterial>&>("material"),
+						Argument<const std::shared_ptr<Voxel>&>("voxel")
+					)
+				)
+			);
+		}
+	}
+}

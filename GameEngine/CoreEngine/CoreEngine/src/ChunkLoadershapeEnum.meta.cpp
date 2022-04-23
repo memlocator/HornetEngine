@@ -1,17 +1,23 @@
 #include "ChunkLoaderShapeEnum.h"
 
-#include "ObjectReflection.h"
-#include "ObjectLuaType.h"
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-	Enum_Definition(ChunkLoaderShape,
-		Document_Enum("");
-		
-		Enum_Item(Box);
-		Enum_Item(Sphere);
-		Enum_Item(CylinderX);
-		Enum_Item(CylinderY);
-		Enum_Item(CylinderZ);
-	);
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Enum::ChunkLoaderShape>()
+		{
+			Reflect<Enum::ChunkLoaderShape>::Enum
+			(
+				"ChunkLoaderShape",
+				Value<Enum::ChunkLoaderShape::Box>("Box"),
+				Value<Enum::ChunkLoaderShape::Sphere>("Sphere"),
+				Value<Enum::ChunkLoaderShape::CylinderX>("CylinderX"),
+				Value<Enum::ChunkLoaderShape::CylinderY>("CylinderY"),
+				Value<Enum::ChunkLoaderShape::CylinderZ>("CylinderZ")
+			);
+		}
+	}
 }

@@ -1,159 +1,128 @@
 #include "Texture.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(Texture, Object,
-		Document_Class("");
-
-		Bind_Function(Load,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Texture>()
+		{
+			Reflect<Texture, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
+				"Texture",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, width);
+				Function(
+					"Resize",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("width"),
+						Argument<int>("height")
+					).Bind<Texture, &Texture::Resize>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<Dimensions>("size")
+					).Bind<Texture, &Texture::Resize>()
+				),
 
-					Document("");
-					Function_Parameter(int, height);
+				Function(
+					"Load",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("width"),
+						Argument<int>("height"),
+						Argument<GLint, Default(GL_NEAREST)>("sampleType"),
+						Argument<GLint, Default(GL_REPEAT)>("wrapType"),
+						Argument<GLenum, Default(GL_UNSIGNED_BYTE)>("dataType"),
+						Argument<GLint, Default(GL_RGBA)>("internalFormat"),
+						Argument<GLenum, Default(GL_RGBA)>("format"),
+						Argument<bool, Default(false)>("invertedY")
+					).Bind<Texture, &Texture::Load>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("fileName"),
+						Argument<GLint, Default(GL_NEAREST)>("sampleType"),
+						Argument<GLint, Default(GL_REPEAT)>("wrapType"),
+						Argument<GLenum, Default(GL_UNSIGNED_BYTE)>("dataType"),
+						Argument<GLint, Default(GL_RGBA)>("internalFormat"),
+						Argument<GLenum, Default(GL_RGBA)>("format"),
+						Argument<bool, Default(false)>("isDXT5")
+					).Bind<Texture, &Texture::Load>()
+				),
 
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::SampleType>, sampleType, Enum::SampleType::Nearest);
+				Function(
+					"GetTextureID",
+					Overload(
+						Const,
+						Returns<GLuint>()
+					).Bind<Texture, &Texture::GetTextureID>()
+				),
 
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::WrapType>, wrapType, Enum::WrapType::Repeat);
+				Function(
+					"GetWidth",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<Texture, &Texture::GetWidth>()
+				),
 
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::DataType>, dataType, Enum::DataType::UnsignedByte);
+				Function(
+					"GetHeight",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<Texture, &Texture::GetHeight>()
+				),
 
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::InternalFormat>, internalFormat, Enum::InternalFormat::RGBA);
+				Function(
+					"GetResolution",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Texture, &Texture::GetResolution>()
+				),
 
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::Format>, format, Enum::Format::RGBA);
-					
-					Document("");
-					Function_Parameter_Default(bool, invertedY, false);
-				);
+				Function(
+					"GetPixel",
+					Overload(
+						Const,
+						Returns<RGBA>(),
+						Argument<int>("x"),
+						Argument<int>("y")
+					).Bind<Texture, &Texture::GetPixel>()
+				),
 
-				Bind_Parameters_No_Return(Load, width, height, sampleType, wrapType, dataType, internalFormat, format, invertedY);
+				Function(
+					"HasInvertedY",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<Texture, &Texture::HasInvertedY>()
+				),
+
+				Function(
+					"LoadPiece",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("fileName"),
+						Argument<int>("x"),
+						Argument<int>("y"),
+						Argument<int>("width"),
+						Argument<int>("height"),
+						Argument<GLenum, Default(GL_UNSIGNED_BYTE)>("dataType"),
+						Argument<GLenum, Default(GL_RGBA)>("format")
+					).Bind<Texture, &Texture::LoadPiece>()
+				)
 			);
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, fileName);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::SampleType>, sampleType, Enum::SampleType::Nearest);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::WrapType>, wrapType, Enum::WrapType::Repeat);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::DataType>, dataType, Enum::DataType::UnsignedByte);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::InternalFormat>, internalFormat, Enum::InternalFormat::RGBA);
-
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::Format>, format, Enum::Format::RGBA);
-					
-					Document("");
-					Function_Parameter_Default(bool, isDXT5, false);
-				);
-
-				Bind_Parameters_No_Return(Load, fileName, sampleType, wrapType, dataType, internalFormat, format, isDXT5);
-			);
-		);
-
-		Bind_Function(GetWidth,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-		
-				Overload_Parameters();
-		
-				Bind_Parameters(GetWidth);
-			);
-		);
-
-		Bind_Function(GetHeight,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-		
-				Overload_Parameters();
-		
-				Bind_Parameters(GetHeight);
-			);
-		);
-
-		Bind_Function(GetResolution,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-		
-				Overload_Parameters();
-		
-				Bind_Parameters(GetResolution);
-			);
-		);
-
-		Bind_Function(GetPixel,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(RGBA);
-		
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, x);
-
-					Document("");
-					Function_Parameter(int, y);
-				);
-		
-				Bind_Parameters(GetPixel, x, y);
-			);
-		);
-
-		Bind_Function(HasInvertedY,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-		
-				Overload_Parameters();
-		
-				Bind_Parameters(HasInvertedY);
-			);
-		);
-	);
+		}
+	}
 }

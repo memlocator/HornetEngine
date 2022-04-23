@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+
 #include "Vector3.h"
 #include "Aabb.h"
 #include "ObjectReflection.h"
@@ -10,8 +12,8 @@ public:
 	Vector3 Start;
 	Vector3 Direction;
 
-	Ray() {}
-	Ray(const Vector3& start, const Vector3& direction) : Start(start), Direction(direction) {}
+	constexpr Ray() {}
+	constexpr Ray(const Vector3& start, const Vector3& direction) : Start(start), Direction(direction) {}
 
 	bool Intersects(const Aabb& box, float& t, float epsilon = 1e-5f) const;
 

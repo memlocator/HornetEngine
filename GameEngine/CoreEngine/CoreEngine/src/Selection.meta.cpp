@@ -1,11 +1,21 @@
 #include "Selection.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	namespace Editor
+	namespace Reflection
 	{
-		Reflect_Inherited(Selection, Object,
-			Document_Class("");
-		);
+		using namespace Editor;
+
+		template <>
+		void ReflectType<Selection>()
+		{
+			Reflect<Selection, Object>::Class
+			(
+				"Selection",
+				{ "GameObject" }
+			);
+		}
 	}
 }

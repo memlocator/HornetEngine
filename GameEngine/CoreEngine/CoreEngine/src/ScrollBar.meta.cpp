@@ -2,228 +2,169 @@
 
 #include "DeviceTransform.h"
 #include "ScreenCanvas.h"
+#include "LuaInput.h"
+
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-    Enum_Definition(ScrollBarOrientation,
-        Document_Enum("");
-        
-        Enum_Item(Vertical);
-        Enum_Item(Horizontal);
-    );
-}
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-namespace GraphicsEngine
-{
-	using Engine::Object;
-
-	Reflect_Inherited(ScrollBar, Object,
-		Document_Class("");
-
-		Bind_Function(GetFrameTransform,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Enum::ScrollBarOrientation>()
+		{
+			Reflect<Enum::ScrollBarOrientation>::Enum
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<DeviceTransform>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetFrameTransform);
+				"ScrollBarOrientation",
+				Value<Enum::ScrollBarOrientation::Vertical>("Vertical"),
+				Value<Enum::ScrollBarOrientation::Horizontal>("Horizontal")
 			);
-		);
+		}
 
-		Bind_Function(GetFrameCanvas,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<ScrollBar>()
+		{
+			Reflect<ScrollBar, Object>::Class
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<ScreenCanvas>);
+				"ScrollBar",
+				{ "GameObject" },
 
-				Overload_Parameters();
+				Function(
+					"GetFrameTransform",
+					Overload(
+						Const,
+						Returns<const std::shared_ptr<DeviceTransform>&>()
+					).Bind<ScrollBar, &ScrollBar::GetFrameTransform>()
+				),
 
-				Bind_Parameters(GetFrameCanvas);
+				Function(
+					"GetFrameCanvas",
+					Overload(
+						Const,
+						Returns<const std::shared_ptr<ScreenCanvas>&>()
+					).Bind<ScrollBar, &ScrollBar::GetFrameCanvas>()
+				),
+
+				Function(
+					"GetBarTransform",
+					Overload(
+						Const,
+						Returns<const std::shared_ptr<DeviceTransform>&>()
+					).Bind<ScrollBar, &ScrollBar::GetBarTransform>()
+				),
+
+				Function(
+					"GetBarCanvas",
+					Overload(
+						Const,
+						Returns<const std::shared_ptr<ScreenCanvas>&>()
+					).Bind<ScrollBar, &ScrollBar::GetBarCanvas>()
+				),
+
+				Function(
+					"SetBarSize",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<float>("percent")
+					).Bind<ScrollBar, &ScrollBar::SetBarSize>()
+				),
+
+				Function(
+					"SetBarPercent",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<float>("percent")
+					).Bind<ScrollBar, &ScrollBar::SetBarPercent>()
+				),
+
+				Function(
+					"SetBarOrientation",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<Enum::ScrollBarOrientation>("orientation")
+					).Bind<ScrollBar, &ScrollBar::SetBarOrientation>()
+				),
+
+				Function(
+					"GetBarSize",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<ScrollBar, &ScrollBar::GetBarSize>()
+				),
+
+				Function(
+					"GetBarPercent",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<ScrollBar, &ScrollBar::GetBarPercent>()
+				),
+
+				Function(
+					"GetBarOrientation",
+					Overload(
+						Const,
+						Returns<Enum::ScrollBarOrientation>()
+					).Bind<ScrollBar, &ScrollBar::GetBarOrientation>()
+				),
+
+				Function(
+					"SetBarScrollInput",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Engine::InputObject>&>("input")
+					).Bind<ScrollBar, &ScrollBar::SetBarScrollInput>()
+				),
+
+				Function(
+					"SetBarGrabInput",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Engine::InputObject>&>("input")
+					).Bind<ScrollBar, &ScrollBar::SetBarGrabInput>()
+				),
+
+				Function(
+					"SetBarDragInput",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Engine::InputObject>&>("input")
+					).Bind<ScrollBar, &ScrollBar::SetBarDragInput>()
+				),
+
+				Function(
+					"GetBarScrollInput",
+					Overload(
+						Const,
+						Returns<const std::weak_ptr<Engine::InputObject>&>()
+					).Bind<ScrollBar, &ScrollBar::GetBarScrollInput>()
+				),
+
+				Function(
+					"GetBarGrabInput",
+					Overload(
+						Const,
+						Returns<const std::weak_ptr<Engine::InputObject>&>()
+					).Bind<ScrollBar, &ScrollBar::GetBarGrabInput>()
+				),
+
+				Function(
+					"GetBarDragInput",
+					Overload(
+						Const,
+						Returns<const std::weak_ptr<Engine::InputObject>&>()
+					).Bind<ScrollBar, &ScrollBar::GetBarDragInput>()
+				)
 			);
-		);
-		Bind_Function(GetBarTransform,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<DeviceTransform>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetBarTransform);
-			);
-		);
-
-		Bind_Function(GetBarCanvas,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<ScreenCanvas>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetBarCanvas);
-			);
-		);
-
-		Bind_Function(SetBarSize,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(float, percent);
-				);
-
-				Bind_Parameters_No_Return(SetBarSize, percent);
-			);
-		);
-
-		Bind_Function(SetBarPercent,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(float, percent);
-				);
-
-				Bind_Parameters_No_Return(SetBarPercent, percent);
-			);
-		);
-
-		Bind_Function(SetBarOrientation,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(LuaEnum<Enum::ScrollBarOrientation>, orientation);
-				);
-
-				Bind_Parameters_No_Return(SetBarOrientation, orientation);
-			);
-		);
-
-		Bind_Function(GetBarSize,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(float);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetBarSize);
-			);
-		);
-
-		Bind_Function(GetBarPercent,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(float);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetBarPercent);
-			);
-		);
-
-		Bind_Function(GetBarOrientation,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::ScrollBarOrientation>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetBarOrientation);
-			);
-		);
-
-		Document("");
-		Register_Lua_Property(FrameTransform,
-			Property_Getter(GetFrameTransform, std::shared_ptr<DeviceTransform>);
-			
-			Property_Setters();
-		);
-
-		Document("");
-		Register_Lua_Property(FrameCanvas,
-			Property_Getter(GetFrameCanvas, std::shared_ptr<ScreenCanvas>);
-			
-			Property_Setters();
-		);
-
-		Document("");
-		Register_Lua_Property(BarTransform,
-			Property_Getter(GetBarTransform, std::shared_ptr<DeviceTransform>);
-			
-			Property_Setters();
-		);
-
-		Document("");
-		Register_Lua_Property(BarCanvas,
-			Property_Getter(GetBarCanvas, std::shared_ptr<ScreenCanvas>);
-			
-			Property_Setters();
-		);
-
-		Document("");
-		Register_Lua_Property(BarSize,
-			Property_Getter(GetBarSize, float);
-			
-			Property_Setters(
-				Bind_Setter(SetBarSize, float);
-			);
-		);
-
-		Document("");
-		Register_Lua_Property(BarPercent,
-			Property_Getter(GetBarPercent, float);
-			
-			Property_Setters(
-				Bind_Setter(SetBarPercent, float);
-			);
-		);
-
-		Document("");
-		Register_Lua_Property(BarOrientation,
-			Property_Getter(GetBarOrientation, LuaEnum<Enum::ScrollBarOrientation>);
-			
-			Property_Setters(
-				Bind_Setter(SetBarOrientation, LuaEnum<Enum::ScrollBarOrientation>);
-			);
-		);
-	);
+		}
+	}
 }

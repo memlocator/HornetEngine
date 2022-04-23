@@ -51,7 +51,7 @@ namespace Engine
 		Quaternion GetOrientation();
 		void SetOrientation(const Quaternion& orientation);
 		void Rotate(const Quaternion& rotation);
-		void Rotate(const Vector3 axis, float angle);
+		void Rotate(const Vector3& axis, float angle);
 
 		Vector3 GetEulerAngles() const;
 		Vector3 GetEulerAngles();

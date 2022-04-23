@@ -1,28 +1,27 @@
 #include "Socket.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-    namespace Networking
-    {
-        using Engine::Object;
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Networking::Socket>()
+		{
+			Reflect<Networking::Socket, Object>::Class
+			(
+				"Socket",
+				{ "GameObject", "Networking" },
 
-        Reflect_Inherited(Socket, Object,
-            Bind_Function(Create,
-
-                Document("");
-        Function_Overload
-        (
-            Document("");
-        Returns_Nothing;
-
-        Overload_Parameters();
-
-        Bind_Parameters_No_Return(Create);
-        );
-        );
-
-
-        );
-    }
-
+				Function(
+					"Create",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<Networking::Socket, &Networking::Socket::Create>()
+				)
+			);
+		}
+	}
 }

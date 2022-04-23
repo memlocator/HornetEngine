@@ -1,87 +1,168 @@
 #include "Light.h"
 
-namespace GraphicsEngine
+#include "FrameBuffer.h"
+
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(Light, Object,
-		Document_Class("");
-		
-		Document("");
-		Archivable Class_Member(bool, Enabled);
-
-		Document("");
-		Archivable Class_Member(bool, ShadowDebugView);
-
-		Document("");
-		Archivable Class_Member(float, Brightness);
-
-		Document("");
-		Archivable Class_Member(Vector3, Attenuation);
-
-		Document("");
-		Archivable Class_Member(Vector3, Position);
-
-		Document("");
-		Archivable Class_Member(Vector3, Direction);
-
-		Document("");
-		Archivable Class_Member(RGBA, Diffuse);
-
-		Document("");
-		Archivable Class_Member(RGBA, Specular);
-
-		Document("");
-		Archivable Class_Member(RGBA, Ambient);
-
-		Document("");
-		Archivable Class_Member(float, InnerRadius);
-
-		Document("");
-		Archivable Class_Member(float, OuterRadius);
-
-		Document("");
-		Archivable Class_Member(int, SpotlightFalloff);
-
-		Document("");
-		Archivable Class_Member(LuaEnum<Enum::LightType>, Type);
-
-		Bind_Function(SetShadowsEnabled,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Light>()
+		{
+			Reflect<Light, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
+				"Light",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(bool, enabled);
+				Member<Bind(&Light::ShadowDebugView)>("ShadowDebugView"),
+				Member<Bind(&Light::Enabled)>("Enabled"),
+				Member<Bind(&Light::Brightness)>("Brightness"),
+				Member<Bind(&Light::Attenuation)>("Attenuation"),
+				Member<Bind(&Light::Position)>("Position"),
+				Member<Bind(&Light::Direction)>("Direction"),
+				Member<Bind(&Light::Diffuse)>("Diffuse"),
+				Member<Bind(&Light::Specular)>("Specular"),
+				Member<Bind(&Light::Ambient)>("Ambient"),
+				Member<Bind(&Light::InnerRadius)>("InnerRadius"),
+				Member<Bind(&Light::OuterRadius)>("OuterRadius"),
+				Member<Bind(&Light::SpotlightFalloff)>("SpotlightFalloff"),
+				Member<Bind(&Light::Type)>("Type"),
 
-					Document("");
-					Function_Parameter_Default(int, width, 128);
+				Function(
+					"GetRadius",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<Light, &Light::GetRadius>()
+				),
 
-					Document("");
-					Function_Parameter_Default(int, height, 128);
-				);
+				Function(
+					"GetAttenuationOffset",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<Light, &Light::GetAttenuationOffset>()
+				),
 
-				Bind_Parameters_No_Return(SetShadowsEnabled, enabled, width, height);
+				Function(
+					"RecomputeRadius",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<Light, &Light::RecomputeRadius>()
+				),
+
+				Function(
+					"GetShadowMapSize",
+					Overload(
+						Const,
+						Returns<Dimensions>()
+					).Bind<Light, &Light::GetShadowMapSize>()
+				),
+
+				Function(
+					"SetShadowsEnabled",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<bool>("enabled"),
+						Argument<int, Default(128)>("width"),
+						Argument<int, Default(128)>("height")
+					).Bind<Light, &Light::SetShadowsEnabled>()
+				),
+
+				Function(
+					"AreShadowsEnabled",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<Light, &Light::AreShadowsEnabled>()
+				),
+
+				Function(
+					"GetShadowMap",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<FrameBuffer>>(),
+						Argument<Enum::LightDirection>("map")
+					).Bind<Light, &Light::GetShadowMap>()
+				),
+
+				Function(
+					"GetBoundingBox",
+					Overload(
+						Const,
+						Returns<Aabb>()
+					).Bind<Light, &Light::GetBoundingBox>()
+				),
+
+				Function(
+					"ComputeSpotlightBoundingBox",
+					Overload(
+						Const,
+						Returns<Aabb>()
+					).Bind<Light, &Light::ComputeSpotlightBoundingBox>()
+				),
+
+				Function(
+					"GetShadowMapTransformation",
+					Overload(
+						Const,
+						Returns<const Matrix3&>()
+					).Bind<Light, &Light::GetShadowMapTransformation>()
+				),
+
+				Function(
+					"GetShadowMapInverseTransformation",
+					Overload(
+						Const,
+						Returns<const Matrix3&>()
+					).Bind<Light, &Light::GetShadowMapInverseTransformation>()
+				),
+
+				Function(
+					"ComputeRadius",
+					Overload(
+						Static,
+						Returns<float>(),
+						Argument<float>("a"),
+						Argument<float>("b"),
+						Argument<float>("c"),
+						Argument<float>("value")
+					).Bind<&Light::ComputeRadius>()
+				)
 			);
-		);
+		}
 
-		Bind_Function(AreShadowsEnabled,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Enum::LightType>()
+		{
+			Reflect<Enum::LightType>::Enum
 			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters();
-
-				Bind_Parameters(AreShadowsEnabled);
+				"LightType",
+				Value<Enum::LightType::Directional>("Directional"),
+				Value<Enum::LightType::Point>("Point"),
+				Value<Enum::LightType::Spot>("Spot")
 			);
-		);
-	);
+		}
+
+		template <>
+		void ReflectType<Enum::LightDirection>()
+		{
+			Reflect<Enum::LightDirection>::Enum
+			(
+				"LightDirection",
+				Value<Enum::LightDirection::Right>("Right"),
+				Value<Enum::LightDirection::Left>("Left"),
+				Value<Enum::LightDirection::Top>("Top"),
+				Value<Enum::LightDirection::Bottom>("Bottom"),
+				Value<Enum::LightDirection::Front>("Front"),
+				Value<Enum::LightDirection::Back>("Back")
+			);
+		}
+	}
 }

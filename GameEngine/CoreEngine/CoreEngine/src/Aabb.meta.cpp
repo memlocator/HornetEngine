@@ -1,65 +1,105 @@
 #include "Aabb.h"
 
-#include "ModelAsset.h"
+#include "Reflection/Reflection.h"
 
-Reflect_Type(Aabb,
-	Document_Class(
-		""
-	);
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Aabb>()
+		{
+			Reflect<Aabb>::Type(
+				"Aabb",
 
-	No_Reference;
-	
-	Document("");
-	Read_Only Archivable Class_Member(Vector3, Min);
-	
-	Document("");
-	Read_Only Archivable Class_Member(Vector3, Max);
+				Member<Bind(&Aabb::Min)>("Min"),
+				Member<Bind(&Aabb::Max)>("Max"),
 
-	Bind_Function(Aabb,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter_Default(Vector3, min, Vector3());
+				Constructor(
+					Overload(
+						Argument<const Vector3&, Default(Vector3())>("min"),
+						Argument<const Vector3&, Default(Vector3())>("max")
+					)
+				),
 
-				Document("");
-				Function_Parameter_Default(Vector3, max, Vector3());
+				Function(
+					"GetCenter",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Aabb, &Aabb::GetCenter>()
+				),
+
+				Function(
+					"GetSize",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Aabb, &Aabb::GetSize>()
+				),
+
+				Function(
+					"ContainsPoint",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Vector3&>("point")
+					).Bind<Aabb, &Aabb::ContainsPoint>()
+				),
+
+				Function(
+					"Intersects",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Aabb&>("box")
+					).Bind<Aabb, &Aabb::Intersects>()//,
+					//Overload(
+					//	Const,
+					//	Returns<Enum::IntersectionType>(),
+					//	Argument<const Plane&>("plane"),
+					//	Argument<float, Default(1e-5f)>("epsilon")
+					//).Bind<Aabb, &Aabb::Intersects>()
+				),
+
+				Function(
+					"InRange",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<float>("x"),
+						Argument<float>("min"),
+						Argument<float>("max")
+					).Bind<Aabb, &Aabb::InRange>()
+				),
+
+				Function(
+					"Transform",
+					Overload(
+						Const,
+						Returns<Aabb>(),
+						Argument<const Matrix3&>("transformation")
+					).Bind<Aabb, &Aabb::Transform>()
+				),
+
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Aabb&>("other")
+					).Bind<Aabb, &Aabb::operator==>()
+				),
+
+				Function(
+					"operator!=",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Aabb&>("other")
+					).Bind<Aabb, &Aabb::operator!=>()
+				)
 			);
-
-			Bind_Constructor(min, max);
-		);
-	);
-	
-	Bind_Function(GetCenter,
-		
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-			
-			Overload_Parameters();
-			
-			Bind_Parameters(GetCenter);
-		);
-	);
-
-	Bind_Function(GetSize,
-		
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-			
-			Overload_Parameters();
-			
-			Bind_Parameters(GetSize);
-		);
-	);
-);
+		}
+	}
+}

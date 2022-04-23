@@ -1,47 +1,28 @@
 #include "Ray.h"
 
-Reflect_Type(Ray,
-	Document_Class(
-		""
-	);
+#include "Reflection/Reflection.h"
 
-	No_Reference;
-	
-	Document("");
-	Read_Only Archivable Class_Member(Vector3, Start);
-	
-	Document("");
-	Read_Only Archivable Class_Member(Vector3, Direction);
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Ray>()
+		{
+			Reflect<Ray>::Type(
+				"Ray",
 
-	Bind_Function(Ray,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters();
+				Member<Bind(&Ray::Start)>("Start"),
+				Member<Bind(&Ray::Direction)>("Direction"),
 
-			Bind_Constructor();
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, start);
-
-				Document("");
-				Function_Parameter(Vector3, direction);
+				Constructor(
+					Overload(),
+					Overload(
+						Argument<const Vector3&>("start"),
+						Argument<const Vector3&>("direction")
+					)
+				)
 			);
-
-			Bind_Constructor(start, direction);
-		);
-	);
-);
+		}
+	}
+}

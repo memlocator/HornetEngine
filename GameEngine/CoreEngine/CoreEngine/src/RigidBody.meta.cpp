@@ -2,178 +2,122 @@
 
 #include "PointMass.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Physics::RigidBody;
+	namespace Reflection
+	{
+		using namespace Engine::Physics;
 
-	Reflect_Inherited(RigidBody, Object,
-		Document_Class("");
-			
-		Document("");
-		Archivable Class_Member(Vector3, Velocity);
-
-		Document("");
-		Archivable Class_Member(Vector3, Torque);
-		
-		Bind_Function(AddForce,
-	
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<RigidBody>()
+		{
+			Reflect<RigidBody, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(Vector3, force);
+				"Object",
+				{ "GameObject", "Physics"},
 
-					Document("");
-					Function_Parameter_Default(Vector3, position, Vector3());
-				);
+				Member<Bind(&RigidBody::Velocity)>("Velocity"),
+				Member<Bind(&RigidBody::Torque)>("Torque"),
 
-				Bind_Parameters_No_Return(AddForce, force, position);
+				Function(
+					"AddForce",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("force"),
+						Argument<const Vector3&, Default(Vector3())>("position")
+					).Bind<RigidBody, &RigidBody::AddForce>()
+				),
+
+				Function(
+					"GetForceCount",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<RigidBody, &RigidBody::GetForceCount>()
+				),
+
+				Function(
+					"GetForce",
+					Overload(
+						Const,
+						Returns<Vector3>(),
+						Argument<int>("index")
+					).Bind<RigidBody, &RigidBody::GetForce>()
+				),
+
+				Function(
+					"GetPointMassCount",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<RigidBody, &RigidBody::GetPointMassCount>()
+				),
+
+				Function(
+					"GetPointMass",
+					Overload(
+						Mutable,
+						Returns<std::shared_ptr<PointMass>>(),
+						Argument<int>("index")
+					).Bind<RigidBody, &RigidBody::GetPointMass>()
+				),
+
+				Function(
+					"GetMass",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<RigidBody, &RigidBody::GetMass>()
+				),
+
+				Function(
+					"GetCenterOfMass",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<RigidBody, &RigidBody::GetCenterOfMass>()
+				),
+
+				Function(
+					"ProcessDisplacement",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("displacement"),
+						Argument<const Vector3&, Default(Vector3())>("position")
+					).Bind<RigidBody, &RigidBody::ProcessDisplacement>()
+				),
+
+				Function(
+					"AddMass",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<PointMass>&>("mass")
+					).Bind<RigidBody, &RigidBody::AddMass>()
+				),
+
+				Function(
+					"RemoveMass",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<PointMass>&>("mass")
+					).Bind<RigidBody, &RigidBody::RemoveMass>()
+				),
+
+				Function(
+					"HasMass",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const std::shared_ptr<PointMass>&>("mass")
+					).Bind<RigidBody, &RigidBody::HasMass>()
+				)
 			);
-		);
-		
-		Bind_Function(GetForceCount,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-	
-				Overload_Parameters();
-
-				Bind_Parameters(GetForceCount);
-			);
-		);
-		
-		Bind_Function(GetForce,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(int, index);
-				);
-
-				Bind_Parameters(GetForce, index);
-			);
-		);
-		
-		Bind_Function(GetPointMassCount,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-	
-				Overload_Parameters();
-
-				Bind_Parameters(GetPointMassCount);
-			);
-		);
-		
-		Bind_Function(GetPointMass,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<PointMass>);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(int, index);
-				);
-
-				Bind_Parameters(GetPointMass, index);
-			);
-		);
-		
-		Bind_Function(GetMass,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(float);
-	
-				Overload_Parameters();
-
-				Bind_Parameters(GetMass);
-			);
-		);
-		
-		Bind_Function(GetCenterOfMass,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-	
-				Overload_Parameters();
-
-				Bind_Parameters(GetCenterOfMass);
-			);
-		);
-		
-		Bind_Function(AddMass,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(std::shared_ptr<PointMass>, mass);
-				);
-
-				Bind_Parameters_No_Return(AddMass, mass);
-			);
-		);
-		
-		Bind_Function(RemoveMass,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(std::shared_ptr<PointMass>, mass);
-				);
-
-				Bind_Parameters_No_Return(RemoveMass, mass);
-			);
-		);
-		
-		Bind_Function(HasMass,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(std::shared_ptr<PointMass>, mass);
-				);
-
-				Bind_Parameters(HasMass, mass);
-			);
-		);
-	);
+		}
+	}
 }

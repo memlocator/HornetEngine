@@ -1,11 +1,25 @@
 #include "InterfaceDrawOperation.h"
 
-namespace GraphicsEngine
-{
-	Reflect_Inherited(InterfaceDrawOperation, RenderOperation,
-		Document_Class("");
+#include "DeviceTransform.h"
 
-		Document("");
-		Archivable Class_Member(std::weak_ptr<DeviceTransform>, CurrentScreen);
-	);
+#include "Reflection/Reflection.h"
+
+namespace Engine
+{
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
+
+		template <>
+		void ReflectType<InterfaceDrawOperation>()
+		{
+			Reflect<InterfaceDrawOperation, RenderOperation>::Class
+			(
+				"InterfaceDrawOperation",
+				{ "GameObject" },
+
+				Member<Bind(&InterfaceDrawOperation::CurrentScreen)>("CurrentScreen")
+			);
+		}
+	}
 }

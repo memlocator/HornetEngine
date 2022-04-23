@@ -1,230 +1,235 @@
 #include "Terrain.h"
 
+#include "TerrainMaterial.h"
+#include "Chunk.h"
+#include "Voxel.h"
+#include "Camera.h"
+
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-    Reflect_Inherited(Terrain, Object,
-        Document_Class("");
-
-        Document("");
-        Archivable Class_Member(std::string, DataDirectory);
-
-		Bind_Function(GetCell,
-		
-			Document("");
-			Function_Overload
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Terrain>()
+		{
+			Reflect<Terrain, Object>::Class
 			(
-				Document("");
-				Overload_Returns(CellData);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-				);
-			
-				Bind_Parameters(GetCell, cell);
+				"Terrain",
+				{ "GameObject" },
+
+				Member<Bind(&Terrain::DataDirectory)>("DataDirectory"),
+
+				Function(
+					"CanLoadChunk",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Coordinates&>("chunk")
+					).Bind<Terrain, &Terrain::CanLoadChunk>(),
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Vector3&>("chunk")
+					).Bind<Terrain, &Terrain::CanLoadChunk>()
+				),
+
+				Function(
+					"LoadChunk",
+					Overload(
+						Mutable,
+						Returns<std::shared_ptr<Chunk>>(),
+						Argument<const Coordinates&>("chunk")
+					).Bind<Terrain, &Terrain::LoadChunk>()
+				),
+
+				Function(
+					"UnloadChunk",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Coordinates&>("chunk")
+					).Bind<Terrain, &Terrain::UnloadChunk>()
+				),
+
+				Function(
+					"GetMaterial",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<TerrainMaterial>>(),
+						Argument<unsigned short>("id")
+					).Bind<Terrain, &Terrain::GetMaterial>()
+				),
+
+				Function(
+					"GetChunkPath",
+					Overload(
+						Const,
+						Returns<std::string>(),
+						Argument<const Coordinates&>("chunk")
+					).Bind<Terrain, &Terrain::GetChunkPath>()
+				),
+
+				Function(
+					"GetChunkStatus",
+					Overload(
+						Const,
+						Returns<Enum::ChunkStatus>(),
+						Argument<const Coordinates&>("chunk")
+					).Bind<Terrain, &Terrain::GetChunkStatus>(),
+					Overload(
+						Const,
+						Returns<Enum::ChunkStatus>(),
+						Argument<const Vector3&>("chunk")
+					).Bind<Terrain, &Terrain::GetChunkStatus>()
+				),
+
+				Function(
+					"GetChunkCoordinates",
+					Overload(
+						Const,
+						Returns<Coordinates>(),
+						Argument<const Coordinates&>("cell")
+					).Bind<Terrain, &Terrain::GetChunkCoordinates>(),
+					Overload(
+						Const,
+						Returns<Coordinates>(),
+						Argument<const Vector3&>("cell")
+					).Bind<Terrain, &Terrain::GetChunkCoordinates>()
+				),
+
+				Function(
+					"GetCellCoordinates",
+					Overload(
+						Const,
+						Returns<Coordinates>(),
+						Argument<const Coordinates&>("chunk")
+					).Bind<Terrain, &Terrain::GetCellCoordinates>(),
+					Overload(
+						Const,
+						Returns<Coordinates>(),
+						Argument<const Vector3&>("chunk")
+					).Bind<Terrain, &Terrain::GetCellCoordinates>()
+				),
+
+				Function(
+					"SetCell",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Coordinates&>("cell"),
+						Argument<const CellData&>("data")
+					).Bind<Terrain, &Terrain::SetCell>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Coordinates&>("cell"),
+						Argument<float>("occupancy"),
+						Argument<const std::shared_ptr<TerrainMaterial>&>("material"),
+						Argument<const std::shared_ptr<Voxel>&>("voxel")
+					).Bind<Terrain, &Terrain::SetCell>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("cell"),
+						Argument<const CellData&>("data")
+					).Bind<Terrain, &Terrain::SetCell>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("cell"),
+						Argument<float>("occupancy"),
+						Argument<const std::shared_ptr<TerrainMaterial>&>("material"),
+						Argument<const std::shared_ptr<Voxel>&>("voxel")
+					).Bind<Terrain, &Terrain::SetCell>()
+				),
+
+				Function(
+					"SetOccupancy",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Coordinates&>("chunk"),
+						Argument<float>("occupancy")
+					).Bind<Terrain, &Terrain::SetOccupancy>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("chunk"),
+						Argument<float>("occupancy")
+					).Bind<Terrain, &Terrain::SetOccupancy>()
+				),
+
+				Function(
+					"SetMaterial",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Coordinates&>("chunk"),
+						Argument<const std::shared_ptr<TerrainMaterial>&>("material")
+					).Bind<Terrain, &Terrain::SetMaterial>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("chunk"),
+						Argument<const std::shared_ptr<TerrainMaterial>&>("material")
+					).Bind<Terrain, &Terrain::SetMaterial>()
+				),
+
+				Function(
+					"SetData",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Coordinates&>("chunk"),
+						Argument<const std::shared_ptr<Voxel>&>("data")
+					).Bind<Terrain, &Terrain::SetData>(),
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("chunk"),
+						Argument<const std::shared_ptr<Voxel>&>("data")
+					).Bind<Terrain, &Terrain::SetData>()
+				),
+
+				Function(
+					"Draw",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<bool>("drawLiquid"),
+						Argument<const std::shared_ptr<GraphicsEngine::Camera>&>("targetCamera")
+					).Bind<Terrain, &Terrain::Draw>()
+				),
+
+				Function(
+					"GetChunk",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<Chunk>>(),
+						Argument<const Vector3&>("chunk")
+					).Bind<Terrain, &Terrain::GetChunk>()
+				),
+
+				Function(
+					"GetChunkFromCell",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<Chunk>>(),
+						Argument<const Vector3&>("cell")
+					).Bind<Terrain, &Terrain::GetChunkFromCell>()
+				),
+
+				Function(
+					"GetCell",
+					Overload(
+						Const,
+						Returns<CellData>(),
+						Argument<const Vector3&>("cell")
+					).Bind<Terrain, &Terrain::GetCell>()
+				)
 			);
-		);
-
-		Bind_Function(GetMaterialID,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(unsigned short);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-				);
-			
-				Bind_Parameters(GetMaterialID, cell);
-			);
-		);
-
-		Bind_Function(CanLoadChunk,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, chunk);
-				);
-			
-				Bind_Parameters(CanLoadChunk, chunk);
-			);
-		);
-
-		Bind_Function(GetChunkStatus,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::ChunkStatus>);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, chunk);
-				);
-			
-				Bind_Parameters(GetChunkStatus, chunk);
-			);
-		);
-
-		Bind_Function(GetChunkCoordinates,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-				);
-			
-				Bind_Parameters(GetChunkCoordinates, cell);
-			);
-		);
-
-		Bind_Function(GetCellCoordinates,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-				);
-			
-				Bind_Parameters(GetCellCoordinates, cell);
-			);
-		);
-
-		Bind_Function(SetCell,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-
-					Document("");
-					Function_Parameter(CellData, data);
-				);
-			
-				Bind_Parameters_No_Return(SetCell, cell, data);
-			);
-		);
-
-		Bind_Function(SetCell,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-
-					Document("");
-					Function_Parameter(float, occupancy);
-
-					Document("");
-					Function_Parameter(std::shared_ptr<TerrainMaterial>, material);
-
-					Document("");
-					Function_Parameter(std::shared_ptr<Voxel>, data);
-				);
-			
-				Bind_Parameters_No_Return(SetCell, cell, occupancy, material, data);
-			);
-		);
-
-		Bind_Function(SetOccupancy,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-
-					Document("");
-					Function_Parameter(float, occupancy);
-				);
-			
-				Bind_Parameters_No_Return(SetOccupancy, cell, occupancy);
-			);
-		);
-
-		Bind_Function(SetMaterial,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-
-					Document("");
-					Function_Parameter(std::shared_ptr<TerrainMaterial>, material);
-				);
-			
-				Bind_Parameters_No_Return(SetMaterial, cell, material);
-			);
-		);
-
-		Bind_Function(SetData,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, cell);
-
-					Document("");
-					Function_Parameter(std::shared_ptr<Voxel>, data);
-				);
-			
-				Bind_Parameters_No_Return(SetData, cell, data);
-			);
-		);
-    );
+		}
+	}
 }

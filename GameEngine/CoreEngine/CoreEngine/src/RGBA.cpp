@@ -1,12 +1,5 @@
 #include "RGBA.h"
 
-RGBA::RGBA(unsigned int color)
-{
-	R = float((color >> 24) & 0xFF) / 255.0f;
-	G = float((color >> 16) & 0xFF) / 255.0f;
-	B = float((color >> 8) & 0xFF) / 255.0f;
-	A = float(color & 0xFF) / 255.0f;
-}
 
 RGBA& RGBA::Set(float r, float g, float b, float a)
 {
@@ -48,26 +41,12 @@ unsigned int RGBA::ABGR() const
 		);
 }
 
-RGBA::operator std::string() const
-{
-	std::stringstream out;
-
-	out << *this;
-
-	return out.str();
-}
-
-std::ostream& operator<<(std::ostream& out, const RGBA& color)
-{
-	return out << "{ R: " << color.R << ", G: " << color.G << ", B: " << color.B << ", A: " << color.A << " }";
-}
-
-bool RGBA::operator==(const RGBA& color)
+bool RGBA::operator==(const RGBA& color) const
 {
 	return (R == color.R) && (G == color.G) && (B == color.B) && (A == color.A);
 }
 
-bool RGBA::operator!=(const RGBA& color)
+bool RGBA::operator!=(const RGBA& color) const
 {
 	return !(*this == color);
 }
@@ -92,4 +71,18 @@ RGBA& RGBA::operator=(const RGBA& other)
 	Set(other.R, other.G, other.B, other.A);
 
 	return *this;
+}
+
+RGBA::operator std::string() const
+{
+	std::stringstream out;
+
+	out << *this;
+
+	return out.str();
+}
+
+std::ostream& operator<<(std::ostream& out, const RGBA& color)
+{
+	return out << "{ R: " << color.R << ", G: " << color.G << ", B: " << color.B << ", A: " << color.A << " }";
 }

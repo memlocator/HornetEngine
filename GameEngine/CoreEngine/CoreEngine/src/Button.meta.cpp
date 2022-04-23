@@ -1,23 +1,30 @@
 #include "Button.h"
 
-namespace GraphicsEngine
+#include "Appearance.h"
+#include "InputSubscriber.h"
+
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	Reflect_Inherited(Button, Object,
-		Document_Class("");
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-		Document("");
-		Class_Member(std::shared_ptr<Appearance>, Hover);
+		template <>
+		void ReflectType<Button>()
+		{
+			Reflect<Button, Object>::Class
+			(
+				"Button",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(std::shared_ptr<Appearance>, Pressed);
-
-		Document("");
-		Class_Member(std::shared_ptr<Appearance>, Idle);
-
-		Document("");
-		Class_Member(std::weak_ptr<InputSubscription>, Binding);
-
-		Document("");
-		Class_Member(LuaEnum<Enum::BoundDevice>, Device);
-	);
+				Member<Bind(&Button::Hover)>("Hover"),
+				Member<Bind(&Button::Pressed)>("Pressed"),
+				Member<Bind(&Button::Idle)>("Idle"),
+				Member<Bind(&Button::Binding)>("Binding"),
+				Member<Bind(&Button::Device)>("Device")
+			);
+		}
+	}
 }

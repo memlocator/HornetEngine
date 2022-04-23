@@ -1,94 +1,74 @@
 #include "HDRColorCorrectionOperation.h"
 
+#include "Texture.h"
 #include "FrameBuffer.h"
+
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-	using Enum::LuminescenceMode;
-	using Enum::RangeFittingMode;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Enum_Definition(LuminescenceMode,
-		Document_Enum("");
-
-		Document_Item("");
-		Enum_Item(Photometric);
-
-		Document_Item("");
-		Enum_Item(Digital);
-
-		Document_Item("");
-		Enum_Item(DigitalAccurate);
-	);
-
-	Enum_Definition(RangeFittingMode,
-		Document_Enum("");
-
-		Document_Item("");
-		Enum_Item(Exposure);
-
-		Document_Item("");
-		Enum_Item(Burnout);
-
-		Document_Item("");
-		Enum_Item(Reinhard);
-	);
-}
-
-namespace GraphicsEngine
-{
-	Reflect_Inherited(HDRColorCorrectionOperation, RenderOperation,
-		Document_Class("");
-
-		Document("");
-		Archivable Class_Member(LuaEnum<Enum::LuminescenceMode>, LuminescenceType);
-
-		Document("");
-		Archivable Class_Member(LuaEnum<Enum::RangeFittingMode>, RangeFittingType);
-
-		Document("");
-		Archivable Class_Member(float, Exposure);
-
-		Document("");
-		Archivable Class_Member(float, BurnoutCutoff);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<class Texture>, Input);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<class FrameBuffer>, Output);
-
-		Bind_Function(GetLuminescenceBuffer,
-		
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Enum::LuminescenceMode>()
+		{
+			Reflect<Enum::LuminescenceMode>::Enum
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<FrameBuffer>);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetLuminescenceBuffer);
+				"LuminescenceMode",
+				Value<Enum::LuminescenceMode::Photometric>("Photometric"),
+				Value<Enum::LuminescenceMode::Digital>("Digital"),
+				Value<Enum::LuminescenceMode::DigitalAccurate>("DigitalAccurate")
 			);
-		);
+		}
 
-		Bind_Function(Resize,
-		
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Enum::RangeFittingMode>()
+		{
+			Reflect<Enum::RangeFittingMode>::Enum
 			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(int, width);
-
-					Document("");
-					Function_Parameter(int, height);
-				);
-			
-				Bind_Parameters_No_Return(Resize, width, height);
+				"RangeFittingMode",
+				Value<Enum::RangeFittingMode::Exposure>("Exposure"),
+				Value<Enum::RangeFittingMode::Burnout>("Burnout"),
+				Value<Enum::RangeFittingMode::Reinhard>("Reinhard")
 			);
-		);
-	);
+		}
+
+		template <>
+		void ReflectType<HDRColorCorrectionOperation>()
+		{
+			Reflect<HDRColorCorrectionOperation, RenderOperation>::Class
+			(
+				"HDRColorCorrectionOperation",
+				{ "GameObject" },
+
+				Member<Bind(&HDRColorCorrectionOperation::LuminescenceType)>("LuminescenceType"),
+				Member<Bind(&HDRColorCorrectionOperation::RangeFittingType)>("RangeFittingType"),
+				Member<Bind(&HDRColorCorrectionOperation::Exposure)>("Exposure"),
+				Member<Bind(&HDRColorCorrectionOperation::BurnoutCutoff)>("BurnoutCutoff"),
+
+				Member<Bind(&HDRColorCorrectionOperation::Input)>("Input"),
+				Member<Bind(&HDRColorCorrectionOperation::Output)>("Output"),
+
+				Function(
+					"GetLuminescenceBuffer",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<FrameBuffer>>()
+					).Bind<HDRColorCorrectionOperation, &HDRColorCorrectionOperation::GetLuminescenceBuffer>()
+				),
+
+				Function(
+					"Resize",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("width"),
+						Argument<int>("height")
+					).Bind<HDRColorCorrectionOperation, &HDRColorCorrectionOperation::Resize>()
+				)
+			);
+		}
+	}
 }

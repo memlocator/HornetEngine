@@ -1,42 +1,50 @@
 #include "SceneRayCastResults.h"
 
-#include "Object.h"
+#include "Material.h"
 
-Reflect_Type(SceneRayCastResults,
-	Document_Class("");
-		
-	Document("");
-	Archivable Class_Member(float, Distance);
+#include "Reflection/Reflection.h"
 
-	Document("");
-	Archivable Class_Member(float, Reflectivity);
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<SceneRayCastResults>()
+		{
+			Reflect<SceneRayCastResults>::Type
+			(
+				"SceneRayCastResults",
 
-	Document("");
-	Archivable Class_Member(Vector3, Intersection);
+				Member<Bind(&SceneRayCastResults::Distance)>("Distance"),
+				Member<Bind(&SceneRayCastResults::Reflectivity)>("Reflectivity"),
+				Member<Bind(&SceneRayCastResults::Intersection)>("Intersection"),
+				Member<Bind(&SceneRayCastResults::Normal)>("Normal"),
+				Member<Bind(&SceneRayCastResults::Color)>("Color"),
+				Member<Bind(&SceneRayCastResults::GlowColor)>("GlowColor"),
+				//Member<Bind(&SceneRayCastResults::MaterialProperties)>("MaterialProperties"),
+				Member<Bind(&SceneRayCastResults::Hit)>("Hit"),
 
-	Document("");
-	Archivable Class_Member(Vector3, Normal);
+				Constructor(
+					Overload()
+				),
 
-	Document("");
-	Archivable Class_Member(Vector3, Color);
+				Function(
+					"operator<",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const SceneRayCastResults&>("other")
+					).Bind<SceneRayCastResults, &SceneRayCastResults::operator<>()
+				),
 
-	Document("");
-	Archivable Class_Member(Vector3, GlowColor);
-
-	Document("");
-	Archivable Class_Member(std::shared_ptr<Engine::Object>, Hit);
-	
-	Bind_Function(operator string,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::string);
-
-			Overload_Parameters();
-
-			Bind_Parameters(operator std::string);
-		);
-	);
-);
+				Function(
+					"operator string",
+					Overload(
+						Const,
+						Returns<std::string>()
+					).Bind<SceneRayCastResults, &SceneRayCastResults::operator std::string>()
+				)
+			);
+		}
+	}
+}

@@ -1,55 +1,56 @@
 #include "GameWindow.h"
 
-namespace GraphicsEngine
+#include "LuaInput.h"
+
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(GameWindow, Object,
-		Document_Class("");
-		
-		Bind_Function(GetRefreshRate,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<GameWindow>()
+		{
+			Reflect<GameWindow, Object>::Class
 			(
-				Document("");
-				Overload_Returns(int);
+				"GameWindow",
+				{ "GameObject" },
 
-				Overload_Parameters();
+				Function(
+					"GetInput",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<Engine::UserInput>>()
+					).Bind<GameWindow, &GameWindow::GetInput>()
+				),
 
-				Bind_Parameters(GetRefreshRate);
+				Function(
+					"GetRefreshRate",
+					Overload(
+						Mutable,
+						Returns<int>()
+					).Bind<GameWindow, &GameWindow::GetRefreshRate>()
+				),
+
+				Function(
+					"GetResolution",
+					Overload(
+						Mutable,
+						Returns<Vector3>()
+					).Bind<GameWindow, &GameWindow::GetResolution>()
+				),
+
+				Function(
+					"SetMousePosition",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("position")
+					).Bind<GameWindow, &GameWindow::SetMousePosition>()
+				)
 			);
-		);
-		
-		Bind_Function(GetResolution,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetResolution);
-			);
-		);
-		
-		Bind_Function(SetMousePosition,
-
-			Document("");
-			Function_Overload
-			(
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(Vector3, mousePosition);
-				);
-
-				Bind_Parameters_No_Return(SetMousePosition, mousePosition);
-			);
-		);
-	);
+		}
+	}
 }

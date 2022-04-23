@@ -1,247 +1,131 @@
 #include "DeviceTransform.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	using Enum::Alignment;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Enum_Definition(Alignment,
-		Document_Enum("");
-		
-		Document_Item("");
-		Enum_Item(Minimum);
-		
-		Document_Item("");
-		Enum_Item(Center);
-
-		Document_Item("");
-		Enum_Item(Maximum);
-	);
-}
-
-namespace GraphicsEngine
-{
-	Reflect_Inherited(DeviceTransform, Object,
-		Document_Class("");
-
-		Document("");
-		Archivable Class_Member(bool, Enabled);
-
-		Document("");
-		Archivable Class_Member(bool, Visible);
-
-		Document("");
-		Archivable Class_Member(bool, InheritTransformation);
-
-		Document("");
-		Archivable Class_Member(float, AspectRatio);
-
-		Document("");
-		Archivable Class_Member(float, Rotation);
-		
-		Document("");
-		Archivable Class_Member(DeviceVector, Size);
-
-		Document("");
-		Archivable Class_Member(DeviceVector, Position);
-
-		Document("");
-		Archivable Class_Member(DeviceVector, AnchorPoint);
-
-		Document("");
-		Archivable Class_Member(DeviceVector, RotationAnchor);
-
-		Bind_Function(GetTransformation,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<DeviceTransform>()
+		{
+			Reflect<DeviceTransform, Object>::Class
 			(
-				Document("");
-				Overload_Returns(Matrix3);
+				"DeviceTransform",
+				{ "GameObject" },
 
-				Overload_Parameters();
+				Member<Bind(&DeviceTransform::Enabled)>("Enabled"),
+				Member<Bind(&DeviceTransform::Visible)>("Visible"),
+				Member<Bind(&DeviceTransform::InheritTransformation)>("InheritTransformation"),
+				Member<Bind(&DeviceTransform::AspectRatio)>("AspectRatio"),
+				Member<Bind(&DeviceTransform::Rotation)>("Rotation"),
+				Member<Bind(&DeviceTransform::Size)>("Size"),
+				Member<Bind(&DeviceTransform::Position)>("Position"),
+				Member<Bind(&DeviceTransform::AnchorPoint)>("AnchorPoint"),
+				Member<Bind(&DeviceTransform::RotationAnchor)>("RotationAnchor"),
 
-				Bind_Parameters(GetTransformation);
+				Function(
+					"GetTransformation",
+					Overload(
+						Mutable,
+						Returns<Matrix3>()
+					).Bind<DeviceTransform, &DeviceTransform::GetTransformation>()
+				),
+
+				Function(
+					"GetInverseTransformation",
+					Overload(
+						Mutable,
+						Returns<Matrix3>()
+					).Bind<DeviceTransform, &DeviceTransform::GetInverseTransformation>()
+				),
+
+				Function(
+					"GetAbsoluteSize",
+					Overload(
+						Mutable,
+						Returns<Vector3>()
+					).Bind<DeviceTransform, &DeviceTransform::GetAbsoluteSize>()
+				),
+
+				Function(
+					"GetAbsolutePosition",
+					Overload(
+						Mutable,
+						Returns<Vector3>(),
+						Argument<const DeviceVector&, Default(DeviceVector())>("point")
+					).Bind<DeviceTransform, &DeviceTransform::GetAbsolutePosition>()
+				),
+
+				Function(
+					"GetLocalPosition",
+					Overload(
+						Mutable,
+						Returns<Vector3>(),
+						Argument<const DeviceVector&, Default(DeviceVector())>("point")
+					).Bind<DeviceTransform, &DeviceTransform::GetLocalPosition>()
+				),
+
+				Function(
+					"GetResolution",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<DeviceTransform, &DeviceTransform::GetResolution>()
+				),
+
+				Function(
+					"ContainsLocalPoint",
+					Overload(
+						Mutable,
+						Returns<bool>(),
+						Argument<const Vector3&>("point")
+					).Bind<DeviceTransform, &DeviceTransform::ContainsLocalPoint>()
+				),
+
+				Function(
+					"ContainsPoint",
+					Overload(
+						Mutable,
+						Returns<bool>(),
+						Argument<const Vector3&>("point")
+					).Bind<DeviceTransform, &DeviceTransform::ContainsPoint>()
+				),
+
+				Function(
+					"HasMoved",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<DeviceTransform, &DeviceTransform::HasMoved>()
+				),
+
+				Function(
+					"IsVisible",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<DeviceTransform, &DeviceTransform::IsVisible>()
+				),
+
+				Function(
+					"IsEnabled",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<DeviceTransform, &DeviceTransform::IsEnabled>()
+				),
+
+				Function(
+					"UpdateTransformation",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<DeviceTransform, &DeviceTransform::UpdateTransformation>()
+				)
 			);
-		);
-
-		Bind_Function(GetInverseTransformation,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Matrix3);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetInverseTransformation);
-			);
-		);
-
-		Bind_Function(GetAbsoluteSize,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetAbsoluteSize);
-			);
-		);
-
-		Bind_Function(GetAbsolutePosition,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-
-				Overload_Parameters(
-					Document("");
-					Function_Parameter_Default(DeviceVector, point, DeviceVector(0, 0, 0, 0));
-				);
-
-				Bind_Parameters(GetAbsolutePosition, point);
-			);
-		);
-
-		Bind_Function(GetLocalPosition,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(DeviceVector, point);
-				);
-
-				Bind_Parameters(GetLocalPosition, point);
-			);
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(Vector3, point);
-				);
-
-				Bind_Parameters(GetLocalPosition, point);
-			);
-		);
-
-		Bind_Function(GetResolution,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetResolution);
-			);
-		);
-
-		Bind_Function(ContainsLocalPoint,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(Vector3, point);
-				);
-
-				Bind_Parameters(ContainsLocalPoint, point);
-			);
-		);
-
-		Bind_Function(ContainsPoint,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(Vector3, point);
-				);
-
-				Bind_Parameters(ContainsPoint, point);
-			);
-		);
-
-		Bind_Function(HasMoved,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters();
-
-				Bind_Parameters(HasMoved);
-			);
-		);
-
-		Bind_Function(IsVisible,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters();
-
-				Bind_Parameters(IsVisible);
-			);
-		);
-
-		Bind_Function(IsEnabled,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters();
-
-				Bind_Parameters(IsEnabled);
-			);
-		);
-
-		Bind_Function(UpdateTransformation,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters();
-
-				Bind_Parameters_No_Return(UpdateTransformation);
-			);
-		);
-	);
+		}
+	}
 }

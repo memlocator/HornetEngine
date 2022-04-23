@@ -1,204 +1,176 @@
 #include "GameEngine.h"
 
+#include "GameWindow.h"
+
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	Reflect_Type(ProcessArguments,
-		Document_Class("");
-
-		No_Reference;
-
-		Bind_Function(GetArguments,
-			Document("");
-			Function_Overload
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<GameEngine>()
+		{
+			Reflect<GameEngine, Object>::Class
 			(
-				Overload_Returns(int);
+				"GameEngine",
+				{ "GameObject" },
 
-				Overload_Parameters();
+				Function(
+					"GetPrimaryWindow",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<GraphicsEngine::GameWindow>>()
+					).Bind<GameEngine, &GameEngine::GetPrimaryWindow>()
+				),
+				
+				Function(
+					"SetPrimaryWindow",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<GraphicsEngine::GameWindow>&>("primaryWindow")
+					).Bind<GameEngine, &GameEngine::SetPrimaryWindow>()
+				),
 
-				Bind_Parameters(GetArguments);
+				Function(
+					"GetArguments",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<GameEngine, &GameEngine::GetArguments>()
+				),
+
+				Function(
+					"GetArgument",
+					Overload(
+						Const,
+						Returns<std::string>(),
+						Argument<int>("index")
+					).Bind<GameEngine, &GameEngine::GetArgument>()
+				),
+
+				Function(
+					"HasArgumentFlag",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const std::string&>("name")
+					).Bind<GameEngine, &GameEngine::HasArgumentFlag>()
+				),
+
+				Function(
+					"GetArgumentValue",
+					Overload(
+						Const,
+						Returns<std::string>(),
+						Argument<const std::string&>("name")
+					).Bind<GameEngine, &GameEngine::GetArgumentValue>()
+				),
+
+				Function(
+					"SpawnProcess",
+					Overload(
+						Const,
+						Returns<int>(),
+						Argument<const std::string&>("scriptPath"),
+						Argument<const ProcessArguments&>("arguments")
+					).Bind<GameEngine, &GameEngine::SpawnProcess>()
+				),
+
+				Function(
+					"CreateWindow",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<GraphicsEngine::GameWindow>>(),
+						Argument<const std::string&>("name"),
+						Argument<const std::string&>("title")
+					).Bind<GameEngine, &GameEngine::CreateWindow>()
+				),
+				
+				Function(
+					"CreateConsole",
+					Overload(
+						Const,
+						Returns<void>(),
+						Argument<const std::string&>("name"),
+						Argument<const std::string&>("title")
+					).Bind<GameEngine, &GameEngine::CreateConsole>()
+				)
 			);
-		);
+		}
 
-		Bind_Function(GetArgument,
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<ProcessArguments>()
+		{
+			Reflect<ProcessArguments>::Type
 			(
-				Overload_Returns(std::string);
+				"ProcessArguments",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, index);
-				);
+				Function(
+					"GetArguments",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<ProcessArguments, &ProcessArguments::GetArguments>()
+				),
 
-				Bind_Parameters(GetArgument, index);
+				Function(
+					"GetArgument",
+					Overload(
+						Const,
+						Returns<std::string>(),
+						Argument<int>("index")
+					).Bind<ProcessArguments, &ProcessArguments::GetArgument>()
+				),
+
+				Function(
+					"HasArgumentFlag",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const std::string&>("name")
+					).Bind<ProcessArguments, &ProcessArguments::HasArgumentFlag>()
+				),
+
+				Function(
+					"GetArgumentValue",
+					Overload(
+						Const,
+						Returns<std::string>(),
+						Argument<const std::string&>("name")
+					).Bind<ProcessArguments, &ProcessArguments::GetArgumentValue>()
+				),
+
+				Function(
+					"PushArgument",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("argument")
+					).Bind<ProcessArguments, &ProcessArguments::PushArgument>()
+				),
+
+				Function(
+					"InsertArgumentFlag",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("name")
+					).Bind<ProcessArguments, &ProcessArguments::InsertArgumentFlag>()
+				),
+
+				Function(
+					"InsertArgument",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("name"),
+						Argument<const std::string&>("value")
+					).Bind<ProcessArguments, &ProcessArguments::InsertArgument>()
+				)
 			);
-		);
-
-		Bind_Function(HasArgumentFlag,
-			Document("");
-			Function_Overload
-			(
-				Overload_Returns(bool);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, name);
-				);
-
-				Bind_Parameters(HasArgumentFlag, name);
-			);
-		);
-
-		Bind_Function(GetArgumentValue,
-			Document("");
-			Function_Overload
-			(
-				Overload_Returns(std::string);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, name);
-				);
-
-				Bind_Parameters(GetArgumentValue, name);
-			);
-		);
-
-		Bind_Function(PushArgument,
-			Document("");
-			Function_Overload
-			(
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, argument);
-				);
-
-				Bind_Parameters_No_Return(PushArgument, argument);
-			);
-		);
-
-		Bind_Function(InsertArgumentFlag,
-			Document("");
-			Function_Overload
-			(
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, name);
-				);
-
-				Bind_Parameters_No_Return(InsertArgumentFlag, name);
-			);
-		);
-
-		Bind_Function(InsertArgument,
-			Document("");
-			Function_Overload
-			(
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, name);
-
-					Document("");
-					Function_Parameter(std::string, value);
-				);
-
-				Bind_Parameters_No_Return(InsertArgument, name, value);
-			);
-		);
-	);
-
-	Reflect_Inherited(GameEngine, Object,
-		Document_Class("");
-
-		Bind_Function(GetArguments,
-			Document("");
-			Function_Overload
-			(
-				Overload_Returns(int);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetArguments);
-			);
-		);
-
-		Bind_Function(GetArgument,
-			Document("");
-			Function_Overload
-			(
-				Overload_Returns(std::string);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, index);
-				);
-
-				Bind_Parameters(GetArgument, index);
-			);
-		);
-
-		Bind_Function(HasArgumentFlag,
-			Document("");
-			Function_Overload
-			(
-				Overload_Returns(bool);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, name);
-				);
-
-				Bind_Parameters(HasArgumentFlag, name);
-			);
-		);
-
-		Bind_Function(GetArgumentValue,
-			Document("");
-			Function_Overload
-			(
-				Overload_Returns(std::string);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, name);
-				);
-
-				Bind_Parameters(GetArgumentValue, name);
-			);
-		);
-
-		Bind_Function(SpawnProcess,
-			Document("");
-			Function_Overload
-			(
-				Overload_Returns(int);
-		
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, path);
-					
-					Document("");
-					Function_Parameter_Default(ProcessArguments, processArguments, ProcessArguments());
-				);
-		
-				Bind_Parameters(SpawnProcess, path, processArguments);
-			);
-		);
-	);
+		}
+	}
 }

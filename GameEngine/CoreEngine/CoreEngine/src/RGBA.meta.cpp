@@ -1,174 +1,103 @@
 #include "RGBA.h"
 
-Reflect_Type(RGBA,
-	Document_Class(
-		""
-	);
+#include "Reflection/Reflection.h"
 
-	No_Reference;
-	
-	Document("");
-	Read_Only Archivable Class_Member(float, R);
-	
-	Document("");
-	Read_Only Archivable Class_Member(float, G);
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<RGBA>()
+		{
+			Reflect<RGBA>::Type(
+				"RGBA",
 
-	Document("");
-	Read_Only Archivable Class_Member(float, B);
+				Member<Bind(&RGBA::R)>("R"),
+				Member<Bind(&RGBA::G)>("G"),
+				Member<Bind(&RGBA::B)>("B"),
+				Member<Bind(&RGBA::A)>("A"),
 
-	Document("");
-	Read_Only Archivable Class_Member(float, A);
+				Constructor(
+					Overload(),
+					Overload(
+						Argument<float>("r"),
+						Argument<float>("g"),
+						Argument<float>("b"),
+						Argument<float, Default(1.0f)>("a")
+					),
+					Overload(
+						Argument<const Vector3&>("vector")
+					)
+				),
 
-	Bind_Function(RGBA,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters();
+				Function(
+					"Lerp",
+					Overload(
+						Const,
+						Returns<RGBA>(),
+						Argument<const RGBA&>("end"),
+						Argument<float>("t")
+					).Bind<RGBA, &RGBA::Lerp>()
+				),
 
-			Bind_Constructor();
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, r);
-	
-				Document("");
-				Function_Parameter(float, g);
-	
-				Document("");
-				Function_Parameter(float, b);
-	
-				Document("");
-				Function_Parameter_Default(float, a, 1);
+				Function(
+					"ARGB",
+					Overload(
+						Const,
+						Returns<unsigned int>()
+					).Bind<RGBA, &RGBA::ARGB>()
+				),
+
+				Function(
+					"ABGR",
+					Overload(
+						Const,
+						Returns<unsigned int>()
+					).Bind<RGBA, &RGBA::ABGR>()
+				),
+
+				Function(
+					"Integer",
+					Overload(
+						Const,
+						Returns<unsigned int>()
+					).Bind<RGBA, &RGBA::operator unsigned int>()
+				),
+
+				Function(
+					"Vector",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<RGBA, &RGBA::operator Vector3>()
+				),
+
+				Function(
+					"operator string",
+					Overload(
+						Const,
+						Returns<std::string>()
+					).Bind<RGBA, &RGBA::operator std::string>()
+				),
+
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const RGBA&>("other")
+					).Bind<RGBA, &RGBA::operator==>()
+				),
+
+				Function(
+					"operator!=",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const RGBA&>("other")
+					).Bind < RGBA, &RGBA::operator!=>()
+				)
 			);
-
-			Bind_Constructor(r, g, b, a);
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-		
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(unsigned int, colorHex);
-			);
-
-			Bind_Constructor(colorHex);
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, vector);
-			);
-
-			Bind_Constructor(vector);
-		);
-	);
-	
-	Bind_Function(Lerp,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(RGBA);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(RGBA, end);
-	
-				Document("");
-				Function_Parameter(float, t);
-			);
-			
-			Bind_Parameters(Lerp, end, t);
-		);
-	);
-	
-	Bind_Function(operator==,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(RGBA, other);
-			);
-			
-			Bind_Parameters(operator==, other);
-		);
-	);
-	
-	Bind_Function(operator!=,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(RGBA, other);
-			);
-			
-			Bind_Parameters(operator!=, other);
-		);
-	);
-	
-	Bind_Function(Vector,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-	
-			Overload_Parameters();
-			
-			Bind_Parameters(operator Vector3);
-		);
-	);
-	
-	Bind_Function(operator string,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::string);
-
-			Overload_Parameters();
-
-			Bind_Parameters(operator std::string);
-		);
-	);
-);
+		}
+	}
+}

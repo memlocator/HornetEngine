@@ -1,161 +1,94 @@
 #include "SelectionHandlesOperation.h"
 
 #include "Selection.h"
-#include "LuaInput.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "LuaInput.h"
+
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-	Enum_Definition(SelectionHandleType,
-		Document_Enum("");
-		
-		Enum_Item(Move);
-		Enum_Item(Resize);
-		Enum_Item(Rotate);
-	);
-
-	namespace Editor
+	namespace Reflection
 	{
-		using GraphicsEngine::RenderOperation;
+		using namespace Editor;
 
-		Reflect_Inherited(SelectionHandlesOperation, RenderOperation,
-			Document_Class("");
+		template <>
+		void ReflectType<Enum::SelectionHandleType>()
+		{
+			Reflect<Enum::SelectionHandleType>::Enum
+			(
+				"SelectionHandleType",
+				Value<Enum::SelectionHandleType::Move>("Move"),
+				Value<Enum::SelectionHandleType::Resize>("Resize"),
+				Value<Enum::SelectionHandleType::Rotate>("Rotate")
+			);
+		}
 
-			Document("");
-			Archivable Class_Member(bool, IsActive);
-			
-			Document("");
-			Archivable Class_Member(bool, DrawSelectionBox);
-			
-			Document("");
-			Archivable Class_Member(bool, DrawHandles);
-			
-			Document("");
-			Archivable Class_Member(Vector3, Resolution);
+		template <>
+		void ReflectType<SelectionHandlesOperation>()
+		{
+			Reflect<SelectionHandlesOperation, GraphicsEngine::RenderOperation>::Class
+			(
+				"SelectionHandlesOperation",
+				{ "GameObject" },
 
-			Document("");
-			Archivable Class_Member(float, SelectionRayDistance);
+				Member<Bind(&SelectionHandlesOperation::IsActive)>("IsActive"),
+				Member<Bind(&SelectionHandlesOperation::DrawSelectionBox)>("DrawSelectionBox"),
+				Member<Bind(&SelectionHandlesOperation::DrawHandles)>("DrawHandles"),
+				Member<Bind(&SelectionHandlesOperation::Resolution)>("Resolution"),
+				Member<Bind(&SelectionHandlesOperation::SelectionRayDistance)>("SelectionRayDistance"),
 
-			Document("");
-			Archivable Class_Member(bool, SnapsToGrid);
+				Member<Bind(&SelectionHandlesOperation::SnapsToGrid)>("SnapsToGrid"),
+				Member<Bind(&SelectionHandlesOperation::MinimumObjectSize)>("MinimumObjectSize"),
+				Member<Bind(&SelectionHandlesOperation::GridLength)>("GridLength"),
+				Member<Bind(&SelectionHandlesOperation::SnappingAngle)>("SnappingAngle"),
 
-			Document("");
-			Archivable Class_Member(float, MinimumObjectSize);
+				Member<Bind(&SelectionHandlesOperation::IsLocalSpace)>("IsLocalSpace"),
+				Member<Bind(&SelectionHandlesOperation::ObjectsShareHandles)>("ObjectsShareHandles"),
+				Member<Bind(&SelectionHandlesOperation::HandleType)>("HandleType"),
 
-			Document("");
-			Archivable Class_Member(float, GridLength);
-			
-			Document("");
-			Archivable Class_Member(float, SnappingAngle);
-			
-			Document("");
-			Archivable Class_Member(bool, IsLocalSpace);
-			
-			Document("");
-			Archivable Class_Member(bool, ObjectsShareHandles);
-			
-			Document("");
-			Archivable Class_Member(LuaEnum<Enum::SelectionHandleType>, HandleType);
-			
-			Document("");
-			Archivable Class_Member(RGBA, BoxColor);
-			
-			Document("");
-			Archivable Class_Member(RGBA, HoverBoxColor);
-			
-			Document("");
-			Archivable Class_Member(RGBA, HandleColorX);
-			
-			Document("");
-			Archivable Class_Member(RGBA, HandleColorY);
-			
-			Document("");
-			Archivable Class_Member(RGBA, HandleColorZ);
+				Member<Bind(&SelectionHandlesOperation::BoxColor)>("BoxColor"),
+				Member<Bind(&SelectionHandlesOperation::HoverBoxColor)>("HoverBoxColor"),
+				Member<Bind(&SelectionHandlesOperation::HandleColorX)>("HandleColorX"),
+				Member<Bind(&SelectionHandlesOperation::HandleColorY)>("HandleColorY"),
+				Member<Bind(&SelectionHandlesOperation::HandleColorZ)>("HandleColorZ"),
 
-			Document("");
-			Archivable Class_Member(RGBA, HoverHandleColorX);
+				Member<Bind(&SelectionHandlesOperation::HoverHandleColorX)>("HoverHandleColorX"),
+				Member<Bind(&SelectionHandlesOperation::HoverHandleColorY)>("HoverHandleColorY"),
+				Member<Bind(&SelectionHandlesOperation::HoverHandleColorZ)>("HoverHandleColorZ"),
 
-			Document("");
-			Archivable Class_Member(RGBA, HoverHandleColorY);
+				Member<Bind(&SelectionHandlesOperation::ArrowHandleMinSize)>("ArrowHandleMinSize"),
+				Member<Bind(&SelectionHandlesOperation::ArrowHandleScaling)>("ArrowHandleScaling"),
+				Member<Bind(&SelectionHandlesOperation::ArrowHandleMinOffset)>("ArrowHandleMinOffset"),
+				Member<Bind(&SelectionHandlesOperation::ArrowHandleScaledOffset)>("ArrowHandleScaledOffset"),
 
-			Document("");
-			Archivable Class_Member(RGBA, HoverHandleColorZ);
+				Member<Bind(&SelectionHandlesOperation::SphereHandleMinSize)>("SphereHandleMinSize"),
+				Member<Bind(&SelectionHandlesOperation::SphereHandleScaling)>("SphereHandleScaling"),
+				Member<Bind(&SelectionHandlesOperation::SphereHandleMinOffset)>("SphereHandleMinOffset"),
+				Member<Bind(&SelectionHandlesOperation::SphereHandleScaledOffset)>("SphereHandleScaledOffset"),
 
-			Document("");
-			Archivable Class_Member(float, ArrowHandleMinSize);
+				Member<Bind(&SelectionHandlesOperation::ActiveSelection)>("ActiveSelection"),
+				Member<Bind(&SelectionHandlesOperation::TargetScene)>("TargetScene"),
+				Member<Bind(&SelectionHandlesOperation::CurrentCamera)>("CurrentCamera"),
 
-			Document("");
-			Archivable Class_Member(float, ArrowHandleScaling);
+				Member<Bind(&SelectionHandlesOperation::MousePosition)>("MousePosition"),
+				Member<Bind(&SelectionHandlesOperation::SelectButton)>("SelectButton"),
+				Member<Bind(&SelectionHandlesOperation::DragButton)>("DragButton"),
+				Member<Bind(&SelectionHandlesOperation::ResetButton)>("ResetButton"),
+				Member<Bind(&SelectionHandlesOperation::RequiredModifierKey)>("RequiredModifierKey"),
+				Member<Bind(&SelectionHandlesOperation::RequiredDragModifierKey)>("RequiredDragModifierKey"),
+				Member<Bind(&SelectionHandlesOperation::MultiSelectModifierKey)>("MultiSelectModifierKey"),
 
-			Document("");
-			Archivable Class_Member(float, ArrowHandleMinOffset);
+				Member<Bind(&SelectionHandlesOperation::MoveToolKey)>("MoveToolKey"),
+				Member<Bind(&SelectionHandlesOperation::ResizeToolKey)>("ResizeToolKey"),
+				Member<Bind(&SelectionHandlesOperation::RotateToolKey)>("RotateToolKey"),
+				Member<Bind(&SelectionHandlesOperation::ToggleEnabledKey)>("ToggleEnabledKey"),
+				Member<Bind(&SelectionHandlesOperation::SelectToolKey)>("SelectToolKey"),
 
-			Document("");
-			Archivable Class_Member(float, ArrowHandleScaledOffset);
-
-			Document("");
-			Archivable Class_Member(float, SphereHandleMinSize);
-
-			Document("");
-			Archivable Class_Member(float, SphereHandleScaling);
-
-			Document("");
-			Archivable Class_Member(float, SphereHandleMinOffset);
-
-			Document("");
-			Archivable Class_Member(float, SphereHandleScaledOffset);
-			
-			Document("");
-			Archivable Class_Member(std::weak_ptr<Selection>, ActiveSelection);
-			
-			Document("");
-			Archivable Class_Member(std::weak_ptr<GraphicsEngine::Scene>, TargetScene);
-			
-			Document("");
-			Archivable Class_Member(std::weak_ptr<GraphicsEngine::Camera>, CurrentCamera);
-			
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, MousePosition);
-			
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, SelectButton);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, DragButton);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, ResetButton);
-			
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, RequiredModifierKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, RequiredDragModifierKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, MultiSelectModifierKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, MoveToolKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, ResizeToolKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, RotateToolKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, ToggleEnabledKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, SelectToolKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, ToggleLocalSpaceKey);
-
-			Document("");
-			Archivable Class_Member(std::weak_ptr<InputObject>, ToggleGroupSelectKey);
-		);
+				Member<Bind(&SelectionHandlesOperation::ToggleLocalSpaceKey)>("ToggleLocalSpaceKey"),
+				Member<Bind(&SelectionHandlesOperation::ToggleGroupSelectKey)>("ToggleGroupSelectKey")
+			);
+		}
 	}
 }

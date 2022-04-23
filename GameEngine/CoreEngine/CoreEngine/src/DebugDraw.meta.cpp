@@ -1,119 +1,78 @@
 #include "DebugDraw.h"
 
-#include "Model.h"
-#include "Transform.h"
+#include "ModelAsset.h"
+#include "Material.h"
+#include "Scene.h"
 
-using Engine::Object;
+#include "Reflection/Reflection.h"
 
-Reflect_Inherited(DebugDraw, Object,
-	Document_Class("");
-	
-	Class_Member(std::weak_ptr<Engine::ModelAsset>, LineAsset);
-	Class_Member(std::weak_ptr<Engine::ModelAsset>, TriangleAsset);
-	Class_Member(std::weak_ptr<GraphicsEngine::Material>, MaterialProperties);
-
-	Bind_Function(GetScene,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::shared_ptr<GraphicsEngine::Scene>);
-	
-			Overload_Parameters();
-
-			Bind_Parameters(GetScene);
-		);
-	);
-
-	Bind_Function(Reset,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters();
-
-			Bind_Parameters_No_Return(Reset);
-		);
-	);
-
-	Bind_Function(Clear,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters();
-
-			Bind_Parameters_No_Return(Clear);
-		);
-	);
-
-	Bind_Function(DrawLine,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<DebugDraw>()
+		{
+			Reflect<DebugDraw, Object>::Class
 			(
-				Document("");
-				Function_Parameter(Vector3, point1);
+				"DebugDraw",
+				{ "GameObject" },
 
-				Document("");
-				Function_Parameter(Vector3, point2);
+				Member<Bind(&DebugDraw::LineAsset)>("LineAsset"),
+				Member<Bind(&DebugDraw::TriangleAsset)>("TriangleAsset"),
+				Member<Bind(&DebugDraw::MaterialProperties)>("MaterialProperties"),
 
-				Document("");
-				Function_Parameter_Default(RGBA, color, 0xFFFFFFFF);
+				Function(
+					"GetScene",
+					Overload(
+						Mutable,
+						Returns<std::shared_ptr<GraphicsEngine::Scene>>()
+					).Bind<DebugDraw, &DebugDraw::GetScene>()
+				),
 
-				Document("");
-				Function_Parameter_Default(float, thickness, 0.1f);
+				Function(
+					"Reset",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<DebugDraw, &DebugDraw::Reset>()
+				),
 
-				Document("");
-				Function_Parameter_Default(bool, glows, false);
+				Function(
+					"Clear",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<DebugDraw, &DebugDraw::Clear>()
+				),
+
+				Function(
+					"DrawLine",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("point1"),
+						Argument<const Vector3&>("point2"),
+						Argument<const RGBA&, Default(RGBA(0xFFFFFFFF))>("color"),
+						Argument<float, Default(0.1f)>("thickness"),
+						Argument<bool, Default(false)>("glows")
+					).Bind<DebugDraw, &DebugDraw::DrawLine>()
+				),
+
+				Function(
+					"DrawTriangle",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("point1"),
+						Argument<const Vector3&>("point2"),
+						Argument<const Vector3&>("point3"),
+						Argument<const RGBA&, Default(RGBA(0xFFFFFFFF))>("color"),
+						Argument<float, Default(0.1f)>("thickness"),
+						Argument<bool, Default(false)>("glows")
+					).Bind<DebugDraw, &DebugDraw::DrawTriangle>()
+				)
 			);
-
-			Bind_Parameters_No_Return(DrawLine, point1, point2, color, thickness, glows);
-		);
-	);
-
-	Bind_Function(DrawTriangle,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, point1);
-
-				Document("");
-				Function_Parameter(Vector3, point2);
-
-				Document("");
-				Function_Parameter(Vector3, point3);
-
-				Document("");
-				Function_Parameter_Default(RGBA, color, 0xFFFFFFFF);
-
-				Document("");
-				Function_Parameter_Default(float, thickness, 0.1f);
-
-				Document("");
-				Function_Parameter_Default(bool, glows, false);
-			);
-
-			Bind_Parameters_No_Return(DrawTriangle, point1, point2, point3, color, thickness, glows);
-		);
-	);
-);
+		}
+	}
+}

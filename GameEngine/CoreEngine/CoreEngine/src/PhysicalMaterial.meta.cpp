@@ -1,33 +1,29 @@
-#pragma once
-
 #include "PhysicalMaterial.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(PhysicalMaterial, Object,
-		Document_Class("");
+		template <>
+		void ReflectType<PhysicalMaterial>()
+		{
+			Reflect<PhysicalMaterial, Object>::Class
+			(
+				"PhysicalMaterial",
+				{ "GameObject" },
 
-		Document("");
-		Archivable Class_Member(RGBA, Albedo);
-
-		Document("");
-		Archivable Class_Member(float, Roughness);
-
-		Document("");
-		Archivable Class_Member(float, Metalness);
-
-		Document("");
-		Archivable Class_Member(float, RefractiveIndex);
-
-		Document("");
-		Archivable Class_Member(float, Transparency);
-
-		Document("");
-		Archivable Class_Member(float, Translucency);
-
-		Document("");
-		Archivable Class_Member(float, Emission);
-	);
+				Member<Bind(&PhysicalMaterial::Albedo)>("Albedo"),
+				Member<Bind(&PhysicalMaterial::Roughness)>("Roughness"),
+				Member<Bind(&PhysicalMaterial::Metalness)>("Metalness"),
+				Member<Bind(&PhysicalMaterial::RefractiveIndex)>("RefractiveIndex"),
+				Member<Bind(&PhysicalMaterial::Transparency)>("Transparency"),
+				Member<Bind(&PhysicalMaterial::Translucency)>("Translucency"),
+				Member<Bind(&PhysicalMaterial::Emission)>("Emission")
+			);
+		}
+	}
 }

@@ -6,6 +6,26 @@
 #include "MeshLoader.h"
 #include "ModelAsset.h"
 
+bool BoundingSphere::Contains(const Vector3& point) const
+{
+	return (point - Center).SquareLength() <= Radius * Radius;
+}
+
+void BoundingSphere::ExpandByPoint(const Vector3& point)
+{
+	Vector3 diff = point - Center;
+	float length = diff.SquareLength();
+
+	if (length <= Radius * Radius)
+		return;
+
+	length = sqrtf(length);
+	diff *= 1 / length;
+
+	Center = 0.5f * (Center - Radius * diff + point);
+	Radius = 0.5f * (length + Radius);
+}
+
 BoundingSphere BoundingSphere::ComputeCentroid(const std::shared_ptr<Engine::ModelAsset>& model)
 {
 	int meshID = model->GetMeshID();
@@ -32,26 +52,6 @@ BoundingSphere BoundingSphere::ComputePCA(const std::shared_ptr<Engine::ModelAss
 	int meshID = model->GetMeshID();
 
 	return ComputePCA(MeshLoader::GetMeshData(meshID)->VertexBuffer);
-}
-
-bool BoundingSphere::Contains(const Vector3& point)
-{
-	return (point - Center).SquareLength() <= Radius * Radius;
-}
-
-void BoundingSphere::ExpandByPoint(const Vector3& point)
-{
-	Vector3 diff = point - Center;
-	float length = diff.SquareLength();
-
-	if (length <= Radius * Radius)
-		return;
-
-	length = sqrtf(length);
-	diff *= 1 / length;
-
-	Center = 0.5f * (Center - Radius * diff + point);
-	Radius = 0.5f * (length + Radius);
 }
 
 BoundingSphere BoundingSphere::ComputeCentroid(const MeshData::VertexVector& vertices)
@@ -150,7 +150,7 @@ BoundingSphere BoundingSphere::ComputeRitter(const MeshData::VertexVector& verti
 	Vector3 bound1;
 	Vector3 bound2;
 
-	if (lengthX > lengthY&& lengthX > lengthZ)
+	if (lengthX > lengthY && lengthX > lengthZ)
 	{
 		bound1 = vertices[minX].Position;
 		bound2 = vertices[maxX].Position;
@@ -176,13 +176,13 @@ BoundingSphere BoundingSphere::ComputeRitter(const MeshData::VertexVector& verti
 
 namespace
 {
-	inline void trySwap(int* x, int* y)
+	constexpr inline void trySwap(int* x, int* y)
 	{
-		if (*x > * y)
+		if (*x > *y)
 			std::swap(*x, *y);
 	}
 
-	void fastSort(int* data)
+	constexpr void fastSort(int* data)
 	{
 		trySwap(data + 1, data + 2);
 		trySwap(data + 0, data + 2);
@@ -198,7 +198,7 @@ namespace
 		trySwap(data + 2, data + 3);
 	}
 
-	int removeDuplicates(int* data)
+	constexpr int removeDuplicates(int* data)
 	{
 		int next = 0;
 		int current = 0;
@@ -208,7 +208,7 @@ namespace
 			if (data[next] != data[current])
 			{
 				data[current] = data[next];
-				
+
 				++current;
 			}
 
@@ -325,7 +325,7 @@ BoundingSphere BoundingSphere::ComputeExactSphere(const MeshData::VertexVector& 
 			else if (distance <= radiusSquared)
 			{
 				std::swap(indices[i], indices[indexCount - 1]);
-				
+
 				--indexCount;
 			}
 		}
@@ -357,7 +357,7 @@ BoundingSphere BoundingSphere::ComputePCA(const MeshData::VertexVector& vertices
 	Vector3 axis;
 	Vector3 eigenValues = eigenData.EigenValues;
 
-	if (eigenValues.X > eigenValues.Y&& eigenValues.X > eigenValues.Z)
+	if (eigenValues.X > eigenValues.Y && eigenValues.X > eigenValues.Z)
 		axis = eigenData.Axis1;
 	else if (eigenValues.Y > eigenValues.X && eigenValues.Y > eigenValues.Z)
 		axis = eigenData.Axis2;

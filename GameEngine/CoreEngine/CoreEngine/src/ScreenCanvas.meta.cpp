@@ -1,14 +1,26 @@
 #include "ScreenCanvas.h"
 
-namespace GraphicsEngine
-{
-	Reflect_Inherited(ScreenCanvas, Object,
-		Document_Class("");
+#include "Appearance.h"
 
-		Document("");
-		Archivable Class_Member(bool, Visible);
-		
-		Document("");
-		Archivable Class_Member(std::weak_ptr<GraphicsEngine::Appearance>, Appearance);
-	);
+#include "Reflection/Reflection.h"
+
+namespace Engine
+{
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
+
+		template <>
+		void ReflectType<ScreenCanvas>()
+		{
+			Reflect<ScreenCanvas, Object>::Class
+			(
+				"ScreenCanvas",
+				{ "GameObject" },
+
+				Member<Bind(&ScreenCanvas::Visible)>("Visible"),
+				Member<Bind(&ScreenCanvas::Appearance)>("Appearance")
+			);
+		}
+	}
 }

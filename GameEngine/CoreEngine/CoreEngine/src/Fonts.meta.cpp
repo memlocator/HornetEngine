@@ -1,11 +1,21 @@
 #include "Fonts.h"
 
-namespace GraphicsEngine
-{
-	using Engine::Object;
+#include "Reflection/Reflection.h"
 
-	Reflect_Inherited(Fonts, Object,
-		Document_Class("");
-		
-	);
+namespace Engine
+{
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
+
+		template <>
+		void ReflectType<Fonts>()
+		{
+			Reflect<Fonts, Object>::Class
+			(
+				"Fonts",
+				{ "GameObject" }
+			);
+		}
+	}
 }

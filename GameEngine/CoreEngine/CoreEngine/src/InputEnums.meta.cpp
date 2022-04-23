@@ -1,155 +1,173 @@
 #include "LuaInput.h"
 
-#include "ObjectReflection.h"
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-	Enum_Definition(InputCode,
-		Document_Enum("");
-		
-		Enum_Item(MouseLeft);
-		Enum_Item(MouseRight);
-		Enum_Item(MouseMiddle);
-		Enum_Item(MouseWheel);
-		Enum_Item(MousePosition);
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Enum::InputCode>()
+		{
+			Reflect<Enum::InputCode>::Enum
+			(
+				"InputCode",
 
-		Enum_Item(NumpadZero);
-		Enum_Item(NumpadOne);
-		Enum_Item(NumpadTwo);
-		Enum_Item(NumpadThree);
-		Enum_Item(NumpadFour);
-		Enum_Item(NumpadFive);
-		Enum_Item(NumpadSix);
-		Enum_Item(NumpadSeven);
-		Enum_Item(NumpadEight);
-		Enum_Item(NumpadNine);
+				Value<Enum::InputCode::MouseLeft>("MouseLeft"),
+				Value<Enum::InputCode::MouseRight>("MouseRight"),
+				Value<Enum::InputCode::MouseMiddle>("MouseMiddle"),
+				Value<Enum::InputCode::MouseWheel>("MouseWheel"),
+				Value<Enum::InputCode::MousePosition>("MousePosition"),
 
-		Enum_Item(NumpadSlash);
-		Enum_Item(NumpadAstrisk);
-		Enum_Item(NumpadHyphen);
-		Enum_Item(NumpadPlus);
-		Enum_Item(NumpadEnter);
-		Enum_Item(NumpadPeriod);
+				Value<Enum::InputCode::NumpadZero>("NumpadZero"),
+				Value<Enum::InputCode::NumpadOne>("NumpadOne"),
+				Value<Enum::InputCode::NumpadTwo>("NumpadTwo"),
+				Value<Enum::InputCode::NumpadThree>("NumpadThree"),
+				Value<Enum::InputCode::NumpadFour>("NumpadFour"),
+				Value<Enum::InputCode::NumpadFive>("NumpadFive"),
+				Value<Enum::InputCode::NumpadSix>("NumpadSix"),
+				Value<Enum::InputCode::NumpadSeven>("NumpadSeven"),
+				Value<Enum::InputCode::NumpadEight>("NumpadEight"),
+				Value<Enum::InputCode::NumpadNine>("NumpadNine"),
 
-		Enum_Item(BracketOpen);
-		Enum_Item(BracketClose);
-		Enum_Item(Backslash);
-		Enum_Item(Semicolon);
-		Enum_Item(Apostrophe);
-		Enum_Item(Comma);
-		Enum_Item(Period);
-		Enum_Item(Slash);
-		Enum_Item(GraveAccent);
-		Enum_Item(Hyphen);
-		Enum_Item(Equals);
+				Value<Enum::InputCode::NumpadSlash>("NumpadSlash"),
+				Value<Enum::InputCode::NumpadAstrisk>("NumpadAstrisk"),
+				Value<Enum::InputCode::NumpadHyphen>("NumpadHyphen"),
+				Value<Enum::InputCode::NumpadPlus>("NumpadPlus"),
+				Value<Enum::InputCode::NumpadEnter>("NumpadEnter"),
+				Value<Enum::InputCode::NumpadPeriod>("NumpadPeriod"),
 
-		Enum_Item(Space);
+				Value<Enum::InputCode::BracketOpen>("BracketOpen"),
+				Value<Enum::InputCode::BracketClose>("BracketClose"),
+				Value<Enum::InputCode::Backslash>("Backslash"),
+				Value<Enum::InputCode::Semicolon>("Semicolon"),
+				Value<Enum::InputCode::Apostrophe>("Apostrophe"),
+				Value<Enum::InputCode::Comma>("Comma"),
+				Value<Enum::InputCode::Period>("Period"),
+				Value<Enum::InputCode::Slash>("Slash"),
+				Value<Enum::InputCode::GraveAccent>("GraveAccent"),
+				Value<Enum::InputCode::Hyphen>("Hyphen"),
+				Value<Enum::InputCode::Equals>("Equals"),
 
-		Enum_Item(F1);
-		Enum_Item(F2);
-		Enum_Item(F3);
-		Enum_Item(F4);
-		Enum_Item(F5);
-		Enum_Item(F6);
-		Enum_Item(F7);
-		Enum_Item(F8);
-		Enum_Item(F9);
-		Enum_Item(F10);
-		Enum_Item(F11);
-		Enum_Item(F12);
+				Value<Enum::InputCode::Space>("Space"),
 
-		Enum_Item(Zero);
-		Enum_Item(One);
-		Enum_Item(Two);
-		Enum_Item(Three);
-		Enum_Item(Four);
-		Enum_Item(Five);
-		Enum_Item(Six);
-		Enum_Item(Seven);
-		Enum_Item(Eight);
-		Enum_Item(Nine);
+				Value<Enum::InputCode::F1>("F1"),
+				Value<Enum::InputCode::F2>("F2"),
+				Value<Enum::InputCode::F3>("F3"),
+				Value<Enum::InputCode::F4>("F4"),
+				Value<Enum::InputCode::F5>("F5"),
+				Value<Enum::InputCode::F6>("F6"),
+				Value<Enum::InputCode::F7>("F7"),
+				Value<Enum::InputCode::F8>("F8"),
+				Value<Enum::InputCode::F9>("F9"),
+				Value<Enum::InputCode::F10>("F10"),
+				Value<Enum::InputCode::F11>("F11"),
+				Value<Enum::InputCode::F12>("F12"),
 
-		Enum_Item(Escape);
-		Enum_Item(Tab);
-		Enum_Item(CapsLock);
-		Enum_Item(LeftShift);
-		Enum_Item(RightShift);
-		Enum_Item(LeftControl);
-		Enum_Item(RightControl);
-		Enum_Item(LeftAlt);
-		Enum_Item(RightAlt);
-		Enum_Item(Enter);
-		Enum_Item(Backspace);
-		Enum_Item(Insert);
-		Enum_Item(DeleteButton);
-		Enum_Item(Home);
-		Enum_Item(End);
-		Enum_Item(PageUp);
-		Enum_Item(PageDown);
-		Enum_Item(NumLock);
+				Value<Enum::InputCode::Zero>("Zero"),
+				Value<Enum::InputCode::One>("One"),
+				Value<Enum::InputCode::Two>("Two"),
+				Value<Enum::InputCode::Three>("Three"),
+				Value<Enum::InputCode::Four>("Four"),
+				Value<Enum::InputCode::Five>("Five"),
+				Value<Enum::InputCode::Six>("Six"),
+				Value<Enum::InputCode::Seven>("Seven"),
+				Value<Enum::InputCode::Eight>("Eight"),
+				Value<Enum::InputCode::Nine>("Nine"),
 
-		Enum_Item(UpArrow);
-		Enum_Item(DownArrow);
-		Enum_Item(LeftArrow);
-		Enum_Item(RightArrow);
+				Value<Enum::InputCode::Escape>("Escape"),
+				Value<Enum::InputCode::Tab>("Tab"),
+				Value<Enum::InputCode::CapsLock>("CapsLock"),
+				Value<Enum::InputCode::LeftShift>("LeftShift"),
+				Value<Enum::InputCode::RightShift>("RightShift"),
+				Value<Enum::InputCode::LeftControl>("LeftControl"),
+				Value<Enum::InputCode::RightControl>("RightControl"),
+				Value<Enum::InputCode::LeftAlt>("LeftAlt"),
+				Value<Enum::InputCode::RightAlt>("RightAlt"),
+				Value<Enum::InputCode::Enter>("Enter"),
+				Value<Enum::InputCode::Backspace>("Backspace"),
+				Value<Enum::InputCode::Insert>("Insert"),
+				Value<Enum::InputCode::DeleteButton>("DeleteButton"),
+				Value<Enum::InputCode::Home>("Home"),
+				Value<Enum::InputCode::End>("End"),
+				Value<Enum::InputCode::PageUp>("PageUp"),
+				Value<Enum::InputCode::PageDown>("PageDown"),
+				Value<Enum::InputCode::NumLock>("NumLock"),
 
-		Enum_Item(A);
-		Enum_Item(B);
-		Enum_Item(C);
-		Enum_Item(D);
-		Enum_Item(E);
-		Enum_Item(F);
-		Enum_Item(G);
-		Enum_Item(H);
-		Enum_Item(I);
-		Enum_Item(J);
-		Enum_Item(K);
-		Enum_Item(L);
-		Enum_Item(M);
-		Enum_Item(N);
-		Enum_Item(O);
-		Enum_Item(P);
-		Enum_Item(Q);
-		Enum_Item(R);
-		Enum_Item(S);
-		Enum_Item(T);
-		Enum_Item(U);
-		Enum_Item(V);
-		Enum_Item(W);
-		Enum_Item(X);
-		Enum_Item(Y);
-		Enum_Item(Z);
+				Value<Enum::InputCode::UpArrow>("UpArrow"),
+				Value<Enum::InputCode::DownArrow>("DownArrow"),
+				Value<Enum::InputCode::LeftArrow>("LeftArrow"),
+				Value<Enum::InputCode::RightArrow>("RightArrow"),
 
-		Enum_Item(Codes);
-	);
+				Value<Enum::InputCode::A>("A"),
+				Value<Enum::InputCode::B>("B"),
+				Value<Enum::InputCode::C>("C"),
+				Value<Enum::InputCode::D>("D"),
+				Value<Enum::InputCode::E>("E"),
+				Value<Enum::InputCode::F>("F"),
+				Value<Enum::InputCode::G>("G"),
+				Value<Enum::InputCode::H>("H"),
+				Value<Enum::InputCode::I>("I"),
+				Value<Enum::InputCode::J>("J"),
+				Value<Enum::InputCode::K>("K"),
+				Value<Enum::InputCode::L>("L"),
+				Value<Enum::InputCode::M>("M"),
+				Value<Enum::InputCode::N>("N"),
+				Value<Enum::InputCode::O>("O"),
+				Value<Enum::InputCode::P>("P"),
+				Value<Enum::InputCode::Q>("Q"),
+				Value<Enum::InputCode::R>("R"),
+				Value<Enum::InputCode::S>("S"),
+				Value<Enum::InputCode::T>("T"),
+				Value<Enum::InputCode::U>("U"),
+				Value<Enum::InputCode::V>("V"),
+				Value<Enum::InputCode::W>("W"),
+				Value<Enum::InputCode::X>("X"),
+				Value<Enum::InputCode::Y>("Y"),
+				Value<Enum::InputCode::Z>("Z"),
 
-	Enum_Definition(InputType,
-		Document_Enum("");
-		
-		Enum_Item(Button);
-		Enum_Item(Point);
-	);
+				Value<Enum::InputCode::Codes>("Codes")
+			);
+		}
 
-	Enum_Definition(InputState,
-		Document_Enum("");
-		
-		Enum_Item(Began);
-		Enum_Item(Changed);
-		Enum_Item(Ended);
+		template <>
+		void ReflectType<Enum::InputType>()
+		{
+			Reflect<Enum::InputType>::Enum
+			(
+				"InputType",
+				Value<Enum::InputType::Button>("Button"),
+				Value<Enum::InputType::Point>("Point")
+			);
+		}
 
-		Enum_Item(Idle);
-		Enum_Item(Active);
+		template <>
+		void ReflectType<Enum::InputState>()
+		{
+			Reflect<Enum::InputState>::Enum
+			(
+				"InputState",
+				Value<Enum::InputState::Began>("Began"),
+				Value<Enum::InputState::Changed>("Changed"),
+				Value<Enum::InputState::Ended>("Ended"),
 
-		Enum_Item(None);
-	);
+				Value<Enum::InputState::Idle>("Idle"),
+				Value<Enum::InputState::Active>("Active"),
 
-	Enum_Definition(BoundDevice,
-		Document_Enum("");
-		
-		Enum_Item(Any);
+				Value<Enum::InputState::None>("None")
+			);
+		}
 
-		Enum_Item(Mouse1);
-
-		Enum_Item(Input1);
-	);
+		template <>
+		void ReflectType<Enum::BoundDevice>()
+		{
+			Reflect<Enum::BoundDevice>::Enum
+			(
+				"BoundDevice",
+				Value<Enum::BoundDevice::Any>("Any"),
+				Value<Enum::BoundDevice::Mouse1>("Mouse1"),
+				Value<Enum::BoundDevice::Input1>("Input1")
+			);
+		}
+	}
 }

@@ -1,134 +1,127 @@
 #include "PhysicsEnvironment.h"
 
-#include "Collider2D.h"
+#include "Terrain2DCollider.h"
+
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-	Reflect_Type(RayCastResults,
-		Document_Class("");
+	namespace Reflection
+	{
+		using namespace Engine::Physics;
 
-		No_Reference;
-		
-		Bind_Function(GetCount,
-	
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<RayCastResults>()
+		{
+			Reflect<RayCastResults>::Type
 			(
-				Document("");
-				Overload_Returns(int);
-	
-				Overload_Parameters();
+				"RayCastResults",
 
-				Bind_Parameters(GetCount);
+				Constructor(
+					Overload()
+				),
+
+				Function(
+					"GetCount",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<RayCastResults, &RayCastResults::GetCount>()
+				),
+
+				Function(
+					"GetHit",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<Collider2D>>(),
+						Argument<int>("index")
+					).Bind<RayCastResults, &RayCastResults::GetHit>()
+				),
+
+				Function(
+					"GetDistance",
+					Overload(
+						Const,
+						Returns<float>(),
+						Argument<int>("index")
+					).Bind<RayCastResults, &RayCastResults::GetDistance>()
+				),
+
+				Function(
+					"GetNormal",
+					Overload(
+						Const,
+						Returns<Vector3>(),
+						Argument<int>("index")
+					).Bind<RayCastResults, &RayCastResults::GetNormal>()
+				),
+
+				Function(
+					"Push",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Collider2D>&>("collider"),
+						Argument<float>("distance"),
+						Argument<const Vector3&>("normal")
+					).Bind<RayCastResults, &RayCastResults::Push>()
+				)
 			);
-		);
-		
-		Bind_Function(GetHit,
-	
-			Document("");
-			Function_Overload
+		}
+
+		template <>
+		void ReflectType<PhysicsEnvironment>()
+		{
+			Reflect<PhysicsEnvironment, Object>::Class
 			(
-				Document("");
-				Overload_Returns(std::shared_ptr<Collider2D>);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(int, index);
-				);
+				"PhysicsEnvironment",
+				{ "GameObject", "Physics" },
 
-				Bind_Parameters(GetHit, index);
+				Function(
+					"AddObject",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Collider2D>&>("collider")
+					).Bind<PhysicsEnvironment, &PhysicsEnvironment::AddObject>()
+				),
+
+				Function(
+					"RemoveObject",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Collider2D>&>("collider")
+					).Bind<PhysicsEnvironment, &PhysicsEnvironment::RemoveObject>()
+				),
+
+				Function(
+					"AddTerrain",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Terrain2DCollider>&>("collider")
+					).Bind<PhysicsEnvironment, &PhysicsEnvironment::AddTerrain>()
+				),
+
+				Function(
+					"RemoveTerrain",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Terrain2DCollider>&>("collider")
+					).Bind<PhysicsEnvironment, &PhysicsEnvironment::RemoveTerrain>()
+				),
+
+				Function(
+					"CastRay",
+					Overload(
+						Mutable,
+						Returns<RayCastResults>(),
+						Argument<const Ray&>("ray")
+					).Bind<PhysicsEnvironment, &PhysicsEnvironment::CastRay>()
+				)
 			);
-		);
-		
-		Bind_Function(GetDistance,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(float);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(int, index);
-				);
-
-				Bind_Parameters(GetDistance, index);
-			);
-		);
-		
-		Bind_Function(GetNormal,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(int, index);
-				);
-
-				Bind_Parameters(GetNormal, index);
-			);
-		);
-	);
-
-	using Physics::PhysicsEnvironment;
-
-	Reflect_Inherited(PhysicsEnvironment, Object,
-		Document_Class("");
-		
-		Bind_Function(AddObject,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(std::shared_ptr<Collider2D>, collider);
-				);
-
-				Bind_Parameters_No_Return(AddObject, collider);
-			);
-		);
-		
-		Bind_Function(RemoveObject,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(std::shared_ptr<Collider2D>, collider);
-				);
-
-				Bind_Parameters_No_Return(RemoveObject, collider);
-			);
-		);
-		
-		Bind_Function(CastRay,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(RayCastResults);
-	
-				Overload_Parameters(
-					Document("");
-					Function_Parameter(Ray, ray);
-				);
-
-				Bind_Parameters(CastRay, ray);
-			);
-		);
-	);
+		}
+	}
 }

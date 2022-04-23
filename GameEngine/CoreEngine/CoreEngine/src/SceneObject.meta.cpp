@@ -1,61 +1,134 @@
 #include "Scene.h"
 
+#include "PhysicalMaterial.h"
+#include "Camera.h"
 #include "Material.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(SceneObject, Object,
-		Document_Class("");
-		
-		//Document("");
-		//Archivable Class_Member(std::weak_ptr<Material>, MaterialProperties);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<PhysicalMaterial>, PhysicalMaterialProperties);
-
-		Document("");
-		Archivable Class_Member(bool, Visible);
-
-		Bind_Function(SetMaterial,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<SceneObject>()
+		{
+			Reflect<SceneObject, Object>::Class
 			(
-				Returns_Nothing;
-					
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<Material>, transformation);
-				);
+				"SceneObject",
+				{ "GameObject" },
 
-				Bind_Parameters_No_Return(SetMaterial, transformation);
+				Member<Bind(&SceneObject::Visible)>("Visible"),
+				Member<Bind(&SceneObject::PhysicalMaterialProperties)>("PhysicalMaterialProperties"),
+
+				Function(
+					"GetBoundingBox",
+					Overload(
+						Const,
+						Returns<Aabb>()
+					).Bind<SceneObject, &SceneObject::GetBoundingBox>()
+				),
+
+				Function(
+					"GetLocalBoundingBox",
+					Overload(
+						Const,
+						Returns<Aabb>()
+					).Bind<SceneObject, &SceneObject::GetLocalBoundingBox>()
+				),
+
+				Function(
+					"GetTransformation",
+					Overload(
+						Const,
+						Returns<Matrix3>()
+					).Bind<SceneObject, &SceneObject::GetTransformation>()
+				),
+
+				Function(
+					"GetInverseTransformation",
+					Overload(
+						Const,
+						Returns<Matrix3>()
+					).Bind<SceneObject, &SceneObject::GetInverseTransformation>()
+				),
+
+				Function(
+					"HasMoved",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<SceneObject, &SceneObject::HasMoved>()
+				),
+
+				Function(
+					"IsStatic",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<SceneObject, &SceneObject::IsStatic>()
+				),
+
+				Function(
+					"Draw",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Camera>&>("camera")
+					).Bind<SceneObject, &SceneObject::Draw>()
+				),
+
+				Function(
+					"IsTransparent",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<SceneObject, &SceneObject::IsTransparent>()
+				),
+
+				Function(
+					"UseDepthBuffer",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<SceneObject, &SceneObject::UseDepthBuffer>()
+				),
+
+				Function(
+					"GetMeshId",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<SceneObject, &SceneObject::GetMeshId>()
+				),
+
+				Function(
+					"GetMeshId",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<SceneObject, &SceneObject::GetMeshId>()
+				),
+
+				Function(
+					"SetMaterial",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Material>&>("material")
+					).Bind<SceneObject, &SceneObject::SetMaterial>()
+				),
+
+				Function(
+					"GetMaterial",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<Material>>()
+					).Bind<SceneObject, &SceneObject::GetMaterial>()
+				)
 			);
-		);
-
-		Bind_Function(GetMaterial,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<Material>);
-					
-				Overload_Parameters();
-
-				Bind_Parameters(GetMaterial);
-			);
-		);
-
-		Document("");
-		Register_Lua_Property(MaterialProperties,
-			Property_Getter(GetMaterial, std::shared_ptr<Material>);
-			
-			Property_Setters(
-				Bind_Setter(SetMaterial, std::shared_ptr<Material>);
-			);
-		);
-	);
+		}
+	}
 }

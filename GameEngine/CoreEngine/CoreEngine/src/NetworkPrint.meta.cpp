@@ -1,32 +1,28 @@
 #include "NetworkPrint.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-    namespace NetworkPrint 
-    {
-        using Engine::Object;
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<NetworkPrint::Printer> ()
+		{
+			Reflect<NetworkPrint::Printer, Object>::Class
+			(
+				"Printer",
+				{ "GameObject", "NetworkPrint" },
 
-        Reflect_Inherited(Printer, Object,
-               Bind_Function(print,
-        
-                Document("");
-                Function_Overload
-                (
-                    Document("");
-                    Returns_Nothing;
-        
-                    Overload_Parameters
-                    (
-                        Document("");
-                        Function_Parameter(std::string, s);
-                    );
-        
-                    Bind_Parameters_No_Return(print, s);
-                );
-            );
-
-
-        );
-    }
-    
+				Function(
+					"print",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<std::string>("str")
+					).Bind<NetworkPrint::Printer, &NetworkPrint::Printer::print>()
+				)
+			);
+		}
+	}
 }

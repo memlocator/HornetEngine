@@ -1,16 +1,22 @@
 #include "ChunkStatusEnum.h"
 
-#include "ObjectReflection.h"
-#include "ObjectLuaType.h"
+#include "Reflection/Reflection.h"
 
 namespace Engine
 {
-	Enum_Definition(ChunkStatus,
-		Document_Enum("");
-		
-		Enum_Item(Unloaded);
-		Enum_Item(NotGenerated);
-		Enum_Item(Loading);
-		Enum_Item(Loaded);
-	);
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Enum::ChunkStatus>()
+		{
+			Reflect<Enum::ChunkStatus>::Enum
+			(
+				"ChunkLoaderShape",
+				Value<Enum::ChunkStatus::Unloaded>("Unloaded"),
+				Value<Enum::ChunkStatus::NotGenerated>("NotGenerated"),
+				Value<Enum::ChunkStatus::Loading>("Loading"),
+				Value<Enum::ChunkStatus::Loaded>("Loaded")
+			);
+		}
+	}
 }

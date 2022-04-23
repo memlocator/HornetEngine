@@ -1,10 +1,21 @@
 #include "Materials.h"
 
-namespace GraphicsEngine
-{
-	using Engine::Object;
+#include "Reflection/Reflection.h"
 
-	Reflect_Inherited(Materials, Object,
-		Document_Class("");
-	);
+namespace Engine
+{
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
+
+		template <>
+		void ReflectType<Materials>()
+		{
+			Reflect<Materials, Object>::Class
+			(
+				"Materials",
+				{ "GameObject" }
+			);
+		}
+	}
 }

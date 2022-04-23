@@ -1,46 +1,57 @@
 #include "Dimensions.h"
 
-Reflect_Type(Dimensions,
-	Document_Class("");
-		
-	Document("");
-	Archivable Class_Member(unsigned int, Width);
+#include "Reflection/Reflection.h"
 
-	Document("");
-	Archivable Class_Member(unsigned int, Height);
-
-	Bind_Function(Dimensions,
-		
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-			
-			Overload_Parameters
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Dimensions>()
+		{
+			Reflect<Dimensions>::Type
 			(
-				Document("");
-				Function_Parameter_Default(unsigned int, width, 0);
-					
-				Document("");
-				Function_Parameter_Default(unsigned int, height, 0);
-			);
-			
-			Bind_Constructor(width, height);
-		);
-	);
+				"Dimensions",
 
-	Bind_Function(operator string,
-		
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::string);
-			
-			Overload_Parameters();
-			
-			Bind_Parameters(operator std::string);
-		);
-	);
-);
+				Member<Bind(&Dimensions::Width)>("Width"),
+				Member<Bind(&Dimensions::Height)>("Height"),
+
+				Constructor(
+					Overload(
+						Argument<unsigned int, Default(0)>("width"),
+						Argument<unsigned int, Default(0)>("height")
+					),
+					Overload(
+						Argument<const Vector3&>("size")
+					)
+				),
+
+				Function(
+					"operator string",
+					Overload(
+						Const,
+						Returns<std::string>()
+					).Bind<Dimensions, &Dimensions::operator std::string>()
+				),
+
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Dimensions&>("other")
+					).Bind<Dimensions, &Dimensions::operator==>()
+				),
+
+				Function(
+					"operator!=",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Dimensions&>("other")
+					).Bind<Dimensions, &Dimensions::operator!=>()
+				)
+			);
+		}
+	}
+}

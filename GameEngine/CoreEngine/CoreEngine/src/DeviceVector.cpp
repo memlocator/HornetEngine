@@ -1,5 +1,6 @@
 #include "DeviceVector.h"
 
+
 void DeviceAxis::Set(float newScale, float newOffset)
 {
 	Scale = newScale;
@@ -29,6 +30,11 @@ DeviceAxis DeviceAxis::operator+(const DeviceAxis& axis) const
 DeviceAxis DeviceAxis::operator-(const DeviceAxis& axis) const
 {
 	return DeviceAxis(Scale - axis.Scale, Offset - axis.Offset);
+}
+
+DeviceAxis DeviceAxis::operator-() const
+{
+	return DeviceAxis(-Scale, -Offset);
 }
 
 DeviceAxis DeviceAxis::operator*(float scalar) const
@@ -123,6 +129,11 @@ DeviceVector DeviceVector::operator+(const DeviceVector& vector) const
 DeviceVector DeviceVector::operator-(const DeviceVector& vector) const
 {
 	return DeviceVector(X - vector.X, Y - vector.Y);
+}
+
+DeviceVector DeviceVector::operator-() const
+{
+	return DeviceVector(-X, -Y);
 }
 
 DeviceVector DeviceVector::operator*(float scalar) const

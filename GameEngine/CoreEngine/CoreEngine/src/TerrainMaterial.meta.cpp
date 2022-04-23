@@ -1,8 +1,27 @@
 #include "TerrainMaterial.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-    Reflect_Inherited(TerrainMaterial, Object,
-        Document_Class("");
-    );
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<TerrainMaterial>()
+		{
+			Reflect<TerrainMaterial, Object>::Class
+			(
+				"TerrainMaterial",
+				{ "GameObject" },
+
+				Function(
+					"GetID",
+					Overload(
+						Const,
+						Returns<unsigned short>()
+					).Bind<TerrainMaterial, &TerrainMaterial::GetID>()
+				)
+			);
+		}
+	}
 }

@@ -176,9 +176,9 @@ namespace Engine
 		const char* GetName(Enum::InputCode code);
 		std::shared_ptr<InputDevice> GetInput(Enum::InputCode code);
 
-		std::shared_ptr<InputObject> InputBegan;
-		std::shared_ptr<InputObject> InputChanged;
-		std::shared_ptr<InputObject> InputEnded;
+		Event<const std::shared_ptr<InputObject>&> InputBegan;
+		Event<const std::shared_ptr<InputObject>&> InputChanged;
+		Event<const std::shared_ptr<InputObject>&> InputEnded;
 
 	private:
 		typedef std::vector<std::weak_ptr<InputDevice>> InputVector;

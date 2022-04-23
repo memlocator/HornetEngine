@@ -1,155 +1,111 @@
 #include "ModelAsset.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	Reflect_Inherited(ModelAsset, Object,
-		Document_Class("");
-		
-		Bind_Function(GetMeshID,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-	
-				Overload_Parameters();
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-				Bind_Parameters(GetMeshID);
-			);
-		);
-		
-		Bind_Function(IsCore,
-	
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<ModelAsset>()
+		{
+			Reflect<ModelAsset, Object>::Class
 			(
-				Document("");
-				Overload_Returns(bool);
-	
-				Overload_Parameters();
+				"ModelAsset",
+				{ "GameObject" },
 
-				Bind_Parameters(IsCore);
-			);
-		);
-		
-		Bind_Function(GetMinimumCorner,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-	
-				Overload_Parameters();
+				Function(
+					"GetMeshID",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<ModelAsset, &ModelAsset::GetMeshID>()
+				),
 
-				Bind_Parameters(GetMinimumCorner);
-			);
-		);
-		
-		Bind_Function(GetMaximumCorner,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-	
-				Overload_Parameters();
+				Function(
+					"IsCore",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<ModelAsset, &ModelAsset::IsCore>()
+				),
 
-				Bind_Parameters(GetMaximumCorner);
-			);
-		);
-		
-		Bind_Function(GetCenter,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-	
-				Overload_Parameters();
+				Function(
+					"IsLoaded",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<ModelAsset, &ModelAsset::IsLoaded>()
+				),
 
-				Bind_Parameters(GetCenter);
-			);
-		);
-		
-		Bind_Function(GetSize,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(Vector3);
-	
-				Overload_Parameters();
+				Function(
+					"IsDying",
+					Overload(
+						Const,
+						Returns<bool>()
+					).Bind<ModelAsset, &ModelAsset::IsDying>()
+				),
 
-				Bind_Parameters(GetSize);
-			);
-		);
-		
-		Bind_Function(IsLoaded,
-	
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-	
-				Overload_Parameters();
+				Function(
+					"GetMinimumCorner",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<ModelAsset, &ModelAsset::GetMinimumCorner>()
+				),
 
-				Bind_Parameters(IsLoaded);
+				Function(
+					"GetMaximumCorner",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<ModelAsset, &ModelAsset::GetMaximumCorner>()
+				),
+
+				Function(
+					"GetCenter",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<ModelAsset, &ModelAsset::GetCenter>()
+				),
+
+				Function(
+					"GetSize",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<ModelAsset, &ModelAsset::GetSize>()
+				),
+
+				Function(
+					"Load",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::string&>("path"),
+						Argument<Enum::VertexMode, Default(Enum::VertexMode::Seperate)>("mode")
+					).Bind<ModelAsset, &ModelAsset::Load>()
+				),
+
+				Function(
+					"Unload",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ModelAsset, &ModelAsset::Unload>()
+				),
+
+				Function(
+					"Release",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ModelAsset, &ModelAsset::Release>()
+				)
 			);
-		);
-		
-		Bind_Function(Load,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-		
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, path);
-		
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::VertexMode>, mode, Enum::VertexMode::Seperate);
-				);
-		
-				Bind_Parameters_No_Return(Load, path, mode);
-			);
-		);
-		
-		Bind_Function(Unload,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-		
-				Overload_Parameters();
-		
-				Bind_Parameters_No_Return(Unload);
-			);
-		);
-		
-		Bind_Function(Release,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-		
-				Overload_Parameters();
-		
-				Bind_Parameters_No_Return(Release);
-			);
-		);
-	);
+		}
+	}
 }

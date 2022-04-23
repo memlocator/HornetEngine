@@ -16,27 +16,74 @@ class Matrix3
 public:
 	float Data[4][4] = { {} };
 
-	Matrix3();
-	Matrix3(float x, float y, float z);
-	Matrix3(const Vector3& vector);
-	Matrix3(const Vector3& position, const Vector3& right, const Vector3& up, const Vector3& front);
+	constexpr Matrix3()
+	{
+		Identity();
+	}
+	constexpr Matrix3(float x, float y, float z)
+	{
+		Translate(x, y, z);
+	}
+	constexpr Matrix3(const Vector3& vector)
+	{
+		Translate(vector);
+	}
+	constexpr Matrix3(const Vector3& position, const Vector3& right, const Vector3& up, const Vector3& front)
+	{
+		SetVectors(position, right, up, front);
+	}
 	Matrix3(const Vector3& position, const Vector3& direction, const Vector3& globalUp = Vector3(0, 1, 0));
-	Matrix3(const Matrix3& mat)
+	constexpr Matrix3(const Matrix3& mat)
 	{
 		for (int i = 0; i < 16; ++i)
 			Data[i % 4][i / 4] = mat.Data[i % 4][i / 4];
 	}
 
-	Matrix3& Identity();
+	constexpr Matrix3& Identity()
+	{
+		for (int i = 0; i < 16; i++)
+			Data[i % 4][i / 4] = i % 4 == i / 4;
+
+		return *this;
+	}
 	Matrix3& Transpose();
-	Matrix3& SetVectors(const Vector3& position, const Vector3& right, const Vector3& up, const Vector3& front);
+	constexpr Matrix3& SetVectors(const Vector3& position, const Vector3& right, const Vector3& up, const Vector3& front)
+	{
+		Translate(position);
+
+		Data[0][0] = right.X;
+		Data[1][0] = right.Y;
+		Data[2][0] = right.Z;
+
+		Data[0][1] = up.X;
+		Data[1][1] = up.Y;
+		Data[2][1] = up.Z;
+
+		Data[0][2] = front.X;
+		Data[1][2] = front.Y;
+		Data[2][2] = front.Z;
+
+		return *this;
+	}
 	Matrix3& SetRight(const Vector3& vector);
 	Matrix3& SetUp(const Vector3& vector);
 	Matrix3& SetFront(const Vector3& vector);
 	Matrix3& SetTranslation(const Vector3& vector);
 	Matrix3& SetTransformedTranslation(const Vector3& vector);
-	Matrix3& Translate(float x, float y, float z);
-	Matrix3& Translate(const Vector3& vector);
+	constexpr Matrix3& Translate(float x, float y, float z)
+	{
+		Identity();
+
+		Data[0][3] = x;
+		Data[1][3] = y;
+		Data[2][3] = z;
+
+		return *this;
+	}
+	constexpr Matrix3& Translate(const Vector3& vector)
+	{
+		return Translate(vector.X, vector.Y, vector.Z);
+	}
 	Matrix3& Scale(float x, float y, float z);
 	Matrix3& Scale(const Vector3& vector);
 	Matrix3& RotateAxis(const Vector3& axis, float theta);
@@ -208,5 +255,14 @@ namespace Engine
 	};
 }
 
-Matrix3 operator*(float scalar, const Matrix3& rhs);
+constexpr Matrix3 operator*(float scalar, const Matrix3& matrix)
+{
+	Matrix3 result;
+
+	for (int x = 0; x < 3; ++x)
+		for (int y = 0; y < 3; ++y)
+			result.Data[y][x] = scalar * matrix.Data[y][x];
+
+	return result;
+}
 std::ostream& operator<<(std::ostream& out, const Matrix3& matrix);

@@ -4,47 +4,15 @@
 
 #include "MeshLoader.h"
 
-// Helper functions
-namespace {
-  Vector3 MinVector(const Vector3& lhs, const Vector3& rhs)
-  {
-    Vector3 minVector;
-
-    for (unsigned i = 0; i < 3; ++i)
-    {
-      minVector[i] = (lhs[i] < rhs[i]) ? lhs[i] : rhs[i];
-    }
-
-    return minVector;
-  }
-
-  Vector3 MaxVector(const Vector3& lhs, const Vector3& rhs)
-  {
-    Vector3 maxVector;
-
-    for (unsigned i = 0; i < 3; ++i)
-    {
-      maxVector[i] = (lhs[i] > rhs[i]) ? lhs[i] : rhs[i];
-    }
-
-    return maxVector;
-  }
-}
-
-Aabb::Aabb(const Vector3& min, const Vector3& max) : Min(min), Max(max)
-{
-	Min.W = 1;
-	Max.W = 1;
-}
 
 Aabb& Aabb::Expand(const Vector3& point)
 {
-	Min.X = std::min(Min.X, point.X);
-	Min.Y = std::min(Min.Y, point.Y);
-	Min.Z = std::min(Min.Z, point.Z);
-	Max.X = std::max(Max.X, point.X);
-	Max.Y = std::max(Max.Y, point.Y);
-	Max.Z = std::max(Max.Z, point.Z);
+	Min.X = cmath::min(Min.X, point.X);
+	Min.Y = cmath::min(Min.Y, point.Y);
+	Min.Z = cmath::min(Min.Z, point.Z);
+	Max.X = cmath::max(Max.X, point.X);
+	Max.Y = cmath::max(Max.Y, point.Y);
+	Max.Z = cmath::max(Max.Z, point.Z);
 
 	return *this;
 }
@@ -55,7 +23,7 @@ bool Aabb::ContainsPoint(const Vector3& point) const
 		InRange(point.X, Min.X, Max.X) &&
 		InRange(point.Y, Min.Y, Max.Y) &&
 		InRange(point.Z, Min.Z, Max.Z)
-	);
+		);
 }
 
 bool Aabb::Intersects(const Aabb& box) const
@@ -86,22 +54,22 @@ typename Enum::IntersectionType Aabb::Intersects(const Plane& plane, float epsil
 	Vector3 normal = plane;
 	Vector3 absNormal;
 
-	absNormal.X = std::abs(normal.X);
-	absNormal.Y = std::abs(normal.Y);
-	absNormal.Z = std::abs(normal.Z);
-	
+	absNormal.X = cmath::abs(normal.X);
+	absNormal.Y = cmath::abs(normal.Y);
+	absNormal.Z = cmath::abs(normal.Z);
+
 	normal.W = 0;
 
 	float projectionRadius = halfExtent * absNormal;
 	float centerProjectionRadius = normal * center - plane.W;
 
-	if (std::abs(centerProjectionRadius) <= projectionRadius)
-			return Enum::IntersectionType::Overlaps;
+	if (cmath::abs(centerProjectionRadius) <= projectionRadius)
+		return Enum::IntersectionType::Overlaps;
 	else if (centerProjectionRadius > 0)
 		return Enum::IntersectionType::Inside;
 	else
 		return Enum::IntersectionType::Outside;
-	
+
 }
 
 void Aabb::Compute(const std::vector<Vector3>& points)

@@ -1,332 +1,283 @@
 #include "ParticleEmitter.h"
 
-#include "Camera.h"
-#include "Scene.h"
 #include "ModelAsset.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(EmitterConfig, Object,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(RGBA, Color);
-
-		Document("");
-		Class_Member(RGBA, GlowColor);
-
-		Document("");
-		Class_Member(Vector3, UVScale);
-
-		Document("");
-		Class_Member(Vector3, UVOffset);
-
-		Document("");
-		Class_Member(Vector3, BoxScale);
-
-		Document("");
-		Class_Member(bool, CubeMapped);
-
-		Document("");
-		Class_Member(bool, CompressedNormalMap);
-	);
-
-	Reflect_Inherited(ParticleEmitter, SceneObject,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(bool, Enabled);
-
-		Document("");
-		Class_Member(int, EmitCount);
-
-		Document("");
-		Class_Member(float, EmitRate);
-
-		Document("");
-		Class_Member(std::weak_ptr<Engine::ModelAsset>, Asset);
-
-		Bind_Function(SetConfigure,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<EmitterConfig>()
+		{
+			Reflect<EmitterConfig, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
+				"EmitterConfig",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<EmitterConfig>, configuration);
-				);
+				Member<Bind(&EmitterConfig::Color)>("Color"),
+				Member<Bind(&EmitterConfig::Color)>("GlowColor"),
+				Member<Bind(&EmitterConfig::Color)>("UVScale"),
+				Member<Bind(&EmitterConfig::Color)>("UVOffset"),
+				Member<Bind(&EmitterConfig::Color)>("BoxScale"),
+				Member<Bind(&EmitterConfig::Color)>("CubeMapped"),
+				Member<Bind(&EmitterConfig::Color)>("CompressedNormalMap")
+			);
+		}
 
-				Bind_Parameters_No_Return(SetConfigure, configuration);
-			)
-		);
-
-		Bind_Function(SetMaxParticles,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<ParticleEmitter>()
+		{
+			Reflect<ParticleEmitter, SceneObject>::Class
 			(
-				Document("");
-				Returns_Nothing;
+				"ParticleEmitter",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, count);
-				);
+				Member<Bind(&ParticleEmitter::Enabled)>("Enabled"),
+				Member<Bind(&ParticleEmitter::EmitCount)>("EmitCount"),
+				Member<Bind(&ParticleEmitter::EmitRate)>("EmitRate"),
 
-				Bind_Parameters_No_Return(SetMaxParticles, count);
-			)
-		);
+				Member<Bind(&ParticleEmitter::Asset)>("Asset"),
 
-		Bind_Function(FireParticles,
+				Function(
+					"SetMaxParticles",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("count")
+					).Bind<ParticleEmitter, &ParticleEmitter::SetMaxParticles>()
+				),
 
-			Document("");
-			Function_Overload
+				Function(
+					"FireParticles",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("count"),
+						Argument<float, Default(0.0f)>("delta")
+					).Bind<ParticleEmitter, &ParticleEmitter::FireParticles>()
+				),
+
+				Function(
+					"SetConfigure",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<EmitterConfig>&>("config")
+					).Bind<ParticleEmitter, &ParticleEmitter::SetConfigure>()
+				)
+			);
+		}
+
+		template <>
+		void ReflectType<ParticleConfiguration>()
+		{
+			Reflect<ParticleConfiguration, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
+				"ParticleConfiguration",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, count);
+				Function(
+					"AttachTo",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<ParticleEmitter>&>("emitter")
+					).Bind<ParticleConfiguration, &ParticleConfiguration::AttachTo>()
+				),
 
-					Document("");
-					Function_Parameter_Default(float, delta, 0);
-				);
+				Function(
+					"RelativeVector",
+					Overload(
+						Const,
+						Returns<Vector3>(),
+						Argument<const Vector3&>("emitter")
+					).Bind<ParticleConfiguration, &ParticleConfiguration::RelativeVector>()
+				),
 
-				Bind_Parameters_No_Return(FireParticles, count, delta);
-			)
-		);
-	);
+				Function(
+					"GetMomentum",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<ParticleConfiguration, &ParticleConfiguration::GetMomentum>()
+				)
+			);
+		}
 
-	Reflect_Inherited(ParticleConfiguration, Object,
-		Document_Class("");
-
-		Bind_Function(AttachTo,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<DirectionalParticleSpawner>()
+		{
+			Reflect<DirectionalParticleSpawner, ParticleConfiguration>::Class
 			(
-				Document("");
-				Returns_Nothing;
+				"DirectionalParticleSpawner",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<ParticleEmitter>, emitter);
-				);
+				Member<Bind(&DirectionalParticleSpawner::Speed)>("Speed"),
+				Member<Bind(&DirectionalParticleSpawner::Lifetime)>("Lifetime"),
+				Member<Bind(&DirectionalParticleSpawner::Scale)>("Scale"),
 
-				Bind_Parameters_No_Return(AttachTo, emitter);
-			)
-		);
-	);
+				Member<Bind(&DirectionalParticleSpawner::Size)>("Size"),
+				Member<Bind(&DirectionalParticleSpawner::Position)>("Position"),
+				Member<Bind(&DirectionalParticleSpawner::DirectionGenerator)>("DirectionGenerator")
+			);
+		}
 
-	Reflect_Inherited(DirectionalParticleSpawner, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(NumberRange, Speed);
+		template <>
+		void ReflectType<RisingParticleSpawner>()
+		{
+			Reflect<RisingParticleSpawner, ParticleConfiguration>::Class
+			(
+				"RisingParticleSpawner",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(NumberRange, Lifetime);
+				Member<Bind(&RisingParticleSpawner::Speed)>("Speed"),
+				Member<Bind(&RisingParticleSpawner::Lifetime)>("Lifetime"),
+				Member<Bind(&RisingParticleSpawner::Scale)>("Scale"),
 
-		Document("");
-		Class_Member(NumberRange, Scale);
+				Member<Bind(&RisingParticleSpawner::Size)>("Size"),
+				Member<Bind(&RisingParticleSpawner::Position)>("Position"),
+				Member<Bind(&RisingParticleSpawner::Direction)>("Direction"),
 
-		Document("");
-		Class_Member(Vector3, Size);
+				Member<Bind(&RisingParticleSpawner::DirectionGenerator)>("DirectionGenerator"),
 
-		Document("");
-		Class_Member(Vector3, Position);
+				Member<Bind(&RisingParticleSpawner::Radius)>("Radius")
+			);
+		}
 
-		Document("");
-		Class_Member(UnitVectorGenerator, DirectionGenerator);
-	);
+		template <>
+		void ReflectType<PlanarParticleSpawner>()
+		{
+			Reflect<PlanarParticleSpawner, ParticleConfiguration>::Class
+			(
+				"PlanarParticleSpawner",
+				{ "GameObject" },
 
-	Reflect_Inherited(RisingParticleSpawner, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(NumberRange, Speed);
+				Member<Bind(&PlanarParticleSpawner::Distance1)>("Distance1"),
+				Member<Bind(&PlanarParticleSpawner::Distance2)>("Distance2"),
+				Member<Bind(&PlanarParticleSpawner::Speed)>("Speed"),
+				Member<Bind(&PlanarParticleSpawner::Lifetime)>("Lifetime"),
+				Member<Bind(&PlanarParticleSpawner::Scale)>("Scale"),
 
-		Document("");
-		Class_Member(NumberRange, Lifetime);
+				Member<Bind(&PlanarParticleSpawner::Axis1)>("Axis1"),
+				Member<Bind(&PlanarParticleSpawner::Axis2)>("Axis2"),
+				Member<Bind(&PlanarParticleSpawner::Size)>("Size"),
+				Member<Bind(&PlanarParticleSpawner::Position)>("Position")
+			);
+		}
 
-		Document("");
-		Class_Member(NumberRange, Scale);
+		template <>
+		void ReflectType<LineParticleSpawner>()
+		{
+			Reflect<LineParticleSpawner, ParticleConfiguration>::Class
+			(
+				"LineParticleSpawner",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(Vector3, Size);
+				Member<Bind(&LineParticleSpawner::Speed)>("Speed"),
+				Member<Bind(&LineParticleSpawner::Lifetime)>("Lifetime"),
+				Member<Bind(&LineParticleSpawner::Scale)>("Scale"),
 
-		Document("");
-		Class_Member(Vector3, Position);
+				Member<Bind(&LineParticleSpawner::Point1)>("Point1"),
+				Member<Bind(&LineParticleSpawner::Point2)>("Point2"),
+				Member<Bind(&LineParticleSpawner::Size)>("Size"),
+				Member<Bind(&LineParticleSpawner::Direction)>("Direction")
+			);
+		}
 
-		Document("");
-		Class_Member(Vector3, Direction);
+		template <>
+		void ReflectType<RingParticleSpawner>()
+		{
+			Reflect<RingParticleSpawner, ParticleConfiguration>::Class
+			(
+				"RingParticleSpawner",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(UnitVectorGenerator, DirectionGenerator);
+				Member<Bind(&RingParticleSpawner::Speed)>("Speed"),
+				Member<Bind(&RingParticleSpawner::Lifetime)>("Lifetime"),
+				Member<Bind(&RingParticleSpawner::Scale)>("Scale"),
+				Member<Bind(&RingParticleSpawner::Radius)>("Radius"),
+				Member<Bind(&RingParticleSpawner::Angle)>("Angle"),
 
-		Document("");
-		Class_Member(float, Radius);
-	);
+				Member<Bind(&RingParticleSpawner::Position)>("Position"),
+				Member<Bind(&RingParticleSpawner::Size)>("Size"),
+				Member<Bind(&RingParticleSpawner::Normal)>("Normal")
+			);
+		}
 
-	Reflect_Inherited(PlanarParticleSpawner, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(NumberRange, Distance1);
-		
-		Document("");
-		Class_Member(NumberRange, Distance2);
-		
-		Document("");
-		Class_Member(NumberRange, Speed);
+		template <>
+		void ReflectType<ConeParticleSpawner>()
+		{
+			Reflect<ConeParticleSpawner, ParticleConfiguration>::Class
+			(
+				"ConeParticleSpawner",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(NumberRange, Lifetime);
+				Member<Bind(&ConeParticleSpawner::Speed)>("Speed"),
+				Member<Bind(&ConeParticleSpawner::Lifetime)>("Lifetime"),
+				Member<Bind(&ConeParticleSpawner::Scale)>("Scale"),
+				Member<Bind(&ConeParticleSpawner::Angle)>("Angle"),
 
-		Document("");
-		Class_Member(NumberRange, Scale);
+				Member<Bind(&ConeParticleSpawner::Position)>("Position"),
+				Member<Bind(&ConeParticleSpawner::Size)>("Size"),
+				Member<Bind(&ConeParticleSpawner::Normal)>("Normal")
+			);
+		}
 
-		Document("");
-		Class_Member(Vector3, Axis1);
+		template <>
+		void ReflectType<GravityParticleUpdater>()
+		{
+			Reflect<GravityParticleUpdater, ParticleConfiguration>::Class
+			(
+				"GravityParticleUpdater",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(Vector3, Axis2);
+				Member<Bind(&GravityParticleUpdater::Force)>("Force")
+			);
+		}
 
-		Document("");
-		Class_Member(Vector3, Size);
+		template <>
+		void ReflectType<DragParticleUpdater>()
+		{
+			Reflect<DragParticleUpdater, ParticleConfiguration>::Class
+			(
+				"DragParticleUpdater",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(Vector3, Position);
-	);
+				Member<Bind(&DragParticleUpdater::DragFactor)>("DragFactor")
+			);
+		}
 
-	Reflect_Inherited(LineParticleSpawner, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(NumberRange, Speed);
+		template <>
+		void ReflectType<DampenedForceUpdater>()
+		{
+			Reflect<DampenedForceUpdater, ParticleConfiguration>::Class
+			(
+				"DampenedForceUpdater",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(NumberRange, Lifetime);
+				Member<Bind(&DampenedForceUpdater::DragFactor)>("DragFactor"),
+				Member<Bind(&DampenedForceUpdater::Force)>("Force")
+			);
+		}
 
-		Document("");
-		Class_Member(NumberRange, Scale);
+		template <>
+		void ReflectType<CubicBezierUpdater>()
+		{
+			Reflect<CubicBezierUpdater, ParticleConfiguration>::Class
+			(
+				"DampenedForceUpdater",
+				{ "GameObject" },
 
-		Document("");
-		Class_Member(Vector3, Point1);
-
-		Document("");
-		Class_Member(Vector3, Point2);
-
-		Document("");
-		Class_Member(Vector3, Size);
-
-		Document("");
-		Class_Member(Vector3, Direction);
-	);
-
-	Reflect_Inherited(RingParticleSpawner, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(NumberRange, Speed);
-
-		Document("");
-		Class_Member(NumberRange, Lifetime);
-
-		Document("");
-		Class_Member(NumberRange, Scale);
-
-		Document("");
-		Class_Member(NumberRange, Radius);
-
-		Document("");
-		Class_Member(NumberRange, Angle);
-
-		Document("");
-		Class_Member(Vector3, Position);
-
-		Document("");
-		Class_Member(Vector3, Normal);
-
-		Document("");
-		Class_Member(Vector3, Size);
-	);
-
-	Reflect_Inherited(ConeParticleSpawner, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(NumberRange, Speed);
-
-		Document("");
-		Class_Member(NumberRange, Lifetime);
-
-		Document("");
-		Class_Member(NumberRange, Scale);
-
-		Document("");
-		Class_Member(NumberRange, Angle);
-
-		Document("");
-		Class_Member(Vector3, Position);
-
-		Document("");
-		Class_Member(Vector3, Normal);
-
-		Document("");
-		Class_Member(Vector3, Size);
-	);
-
-	Reflect_Inherited(GravityParticleUpdater, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(Vector3, Force);
-	);
-
-	Reflect_Inherited(DragParticleUpdater, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(float, DragFactor);
-	);
-
-	Reflect_Inherited(DampenedForceUpdater, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(float, DragFactor);
-
-		Document("");
-		Class_Member(Vector3, Force);
-	);
-
-	Reflect_Inherited(CubicBezierUpdater, ParticleConfiguration,
-		Document_Class("");
-		
-		Document("");
-		Class_Member(Vector3, Start);
-
-		Document("");
-		Class_Member(Vector3, Control1);
-
-		Document("");
-		Class_Member(Vector3, Control2);
-
-		Document("");
-		Class_Member(Vector3, End);
-
-		Document("");
-		Class_Member(float, FinishThreshold);
-	);
+				Member<Bind(&CubicBezierUpdater::Start)>("Start"),
+				Member<Bind(&CubicBezierUpdater::Control1)>("Control1"),
+				Member<Bind(&CubicBezierUpdater::Control2)>("Control2"),
+				Member<Bind(&CubicBezierUpdater::End)>("End"),
+				Member<Bind(&CubicBezierUpdater::FinishThreshold)>("FinishThreshold")
+			);
+		}
+	}
 }

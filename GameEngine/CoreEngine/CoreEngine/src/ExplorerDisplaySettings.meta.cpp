@@ -1,88 +1,78 @@
 #include "ExplorerDisplaySettings.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-    Enum_Definition(HierarchyItemType,
-        Document_Enum("");
-        
-        Enum_Item(GameObject);
-        Enum_Item(HiddenChildren);
-        Enum_Item(InternalChildren);
-        Enum_Item(None);
-    );
-
-
-	Reflect_Type(HierarchyItem,
-		Document_Class("");
-
-		Document("");
-		Archivable Class_Member(int, HierarchyDepth);
-
-		Document("");
-		Archivable Class_Member(LuaEnum<Enum::HierarchyItemType>, ItemType);
-
-		Document("");
-		Archivable Class_Member(std::shared_ptr<Object>, FocusedItem);
-
-		Document("");
-		Archivable Class_Member(std::shared_ptr<Object>, ParentItem);
-	);
-
-	namespace Editor
+	namespace Reflection
 	{
-		Reflect_Inherited(ExplorerDisplaySettings, Object,
-			Document_Class("");
+		using namespace Editor;
 
-			Bind_Function(UpdateHierarchy,
-		
-				Document("");
-				Function_Overload
-				(
-					Returns_Nothing;
-					
-					Overload_Parameters();
-		
-					Bind_Parameters_No_Return(UpdateHierarchy);
-				);
+		template <>
+		void ReflectType<Enum::HierarchyItemType>()
+		{
+			Reflect<Enum::HierarchyItemType>::Enum
+			(
+				"HierarchyItemType",
+				Value<Enum::HierarchyItemType::GameObject>("Value0"),
+				Value<Enum::HierarchyItemType::HiddenChildren>("Value1"),
+				Value<Enum::HierarchyItemType::InternalChildren>("Value2"),
+
+				Value<Enum::HierarchyItemType::None>("AllValues")
 			);
+		}
 
-			Bind_Function(GetObjectInHierarchy,
-		
-				Document("");
-				Function_Overload
-				(
-					Document("");
-					Overload_Returns(HierarchyItem);
-					
-					Overload_Parameters
-					(
-						Document("");
-						Function_Parameter(int, displayedObjects);
+		template <>
+		void ReflectType<HierarchyItem>()
+		{
+			Reflect<HierarchyItem>::Type
+			(
+				"HierarchyItem",
 
-						Document("");
-						Function_Parameter(float, scrollPercent);
-
-						Document("");
-						Function_Parameter(int, index);
-					);
-		
-					Bind_Parameters(GetObjectInHierarchy, displayedObjects, scrollPercent, index);
-				);
+				Member<Bind(&HierarchyItem::HierarchyDepth)>("HierarchyDepth"),
+				Member<Bind(&HierarchyItem::ItemType)>("ItemType"),
+				Member<Bind(&HierarchyItem::FocusedItem)>("FocusedItem"),
+				Member<Bind(&HierarchyItem::ParentItem)>("ParentItem")
 			);
+		}
 
-			Bind_Function(GetHierarchyItems,
-		
-				Document("");
-				Function_Overload
-				(
-					Document("");
-					Overload_Returns(int);
-					
-					Overload_Parameters();
-		
-					Bind_Parameters(GetHierarchyItems);
-				);
+		template <>
+		void ReflectType<ExplorerDisplaySettings>()
+		{
+			Reflect<ExplorerDisplaySettings, Object>::Class
+			(
+				"ExplorerDisplaySettings",
+				{ "GameObject" },
+
+				Member<Bind(&ExplorerDisplaySettings::MaxDepth)>("MaxDepth"),
+
+				Function(
+					"UpdateHierarchy",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<ExplorerDisplaySettings, &ExplorerDisplaySettings::UpdateHierarchy>()
+				),
+
+				Function(
+					"GetObjectInHierarchy",
+					Overload(
+						Mutable,
+						Returns<HierarchyItem>(),
+						Argument<int>("displayedObjects"),
+						Argument<float>("scrollPercent"),
+						Argument<int>("index")
+					).Bind<ExplorerDisplaySettings, &ExplorerDisplaySettings::GetObjectInHierarchy>()
+				),
+
+				Function(
+					"GetHierarchyItems",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<ExplorerDisplaySettings, &ExplorerDisplaySettings::GetHierarchyItems>()
+				)
 			);
-		);
+		}
 	}
 }

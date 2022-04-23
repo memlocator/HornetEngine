@@ -9,7 +9,7 @@
 
 #include <stb_image.h>
 
-Dimensions::operator std::string()
+Dimensions::operator std::string() const
 {
 	std::stringstream out;
 

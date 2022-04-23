@@ -34,7 +34,7 @@ namespace Engine
 					else if (HasDefaultValue)
 						return DefaultValue;
 					else
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "bool", Lua::GetType(*LuaState, index));
+						::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "bool", ::Lua::GetType(*LuaState, index));
 
 					return false;
 				};
@@ -97,7 +97,7 @@ namespace Engine
 					else if (HasDefaultValue)
 						return DefaultValue;
 					else
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "number", Lua::GetType(*LuaState, index));
+						::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "number", ::Lua::GetType(*LuaState, index));
 
 					return 0;
 				};
@@ -198,7 +198,7 @@ namespace Engine
 					else if (HasDefaultValue)
 						return DefaultValue;
 					else
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "string", Lua::GetType(*LuaState, index));
+						::Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "string", ::Lua::GetType(*LuaState, index));
 
 					return "";
 				};

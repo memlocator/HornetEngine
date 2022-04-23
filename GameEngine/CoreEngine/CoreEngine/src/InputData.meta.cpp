@@ -1,245 +1,278 @@
 #include "LuaInput.h"
 
+#include "Reflection/Reflection.h"
+
 namespace Engine
 {
-	Reflect_Inherited(InputObject, Object,
-		Document_Class("");
-
-		Bind_Function(GetState,
-
-			Document("");
-			Function_Overload
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<InputObject>()
+		{
+			Reflect<InputObject, Object>::Class
 			(
-				Document("");
-				Overload_Returns(bool);
+				"InputObject",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::BoundDevice>, device, Enum::BoundDevice::Any);
-				);
+				Function(
+					"GetState",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<Enum::BoundDevice, Default(Enum::BoundDevice::Any)>("device")
+					).Bind<InputObject, &InputObject::GetState>()
+				),
 
-				Bind_Parameters(GetState, device);
+				Function(
+					"GetStateChanged",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<Enum::BoundDevice, Default(Enum::BoundDevice::Any)>("device")
+					).Bind<InputObject, &InputObject::GetStateChanged>()
+				),
+
+				Function(
+					"GetStateEnum",
+					Overload(
+						Const,
+						Returns<Enum::InputState>(),
+						Argument<Enum::BoundDevice, Default(Enum::BoundDevice::Any)>("device")
+					).Bind<InputObject, &InputObject::GetStateEnum>()
+				),
+
+				Function(
+					"GetPosition",
+					Overload(
+						Const,
+						Returns<const Vector3&>(),
+						Argument<Enum::BoundDevice, Default(Enum::BoundDevice::Any)>("device")
+					).Bind<InputObject, &InputObject::GetPosition>()
+				),
+
+				Function(
+					"GetDelta",
+					Overload(
+						Const,
+						Returns<const Vector3&>(),
+						Argument<Enum::BoundDevice, Default(Enum::BoundDevice::Any)>("device")
+					).Bind<InputObject, &InputObject::GetDelta>()
+				),
+
+				Function(
+					"GetType",
+					Overload(
+						Const,
+						Returns<Enum::InputType>()
+					).Bind<InputObject, &InputObject::GetType>()
+				),
+
+				Function(
+					"GetCode",
+					Overload(
+						Const,
+						Returns<Enum::InputCode>()
+					).Bind<InputObject, &InputObject::GetCode>()
+				),
+
+				Function(
+					"GetDevice",
+					Overload(
+						Const,
+						Returns<Enum::BoundDevice>()
+					).Bind<InputObject, &InputObject::GetDevice>()
+				)//,
+
+				//Event(
+				//	"Began",
+				//	Argument<const std::shared_ptr<InputObject>&>("input")
+				//).Bind<&InputObject::Began>(),
+				//
+				//Event(
+				//	"Changed",
+				//	Argument<const std::shared_ptr<InputObject>&>("input")
+				//).Bind<&InputObject::Changed>(),
+				//
+				//Event(
+				//	"Ended",
+				//	Argument<const std::shared_ptr<InputObject>&>("input")
+				//).Bind<&InputObject::Ended>()
 			);
-		);
+		}
 
-		Bind_Function(GetStateChanged,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<InputDevice>()
+		{
+			Reflect<InputDevice, InputObject>::Class
 			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::BoundDevice>, device, Enum::BoundDevice::Any);
-				);
-
-				Bind_Parameters(GetStateChanged, device);
+				"InputDevice",
+				{ "GameObject" }
 			);
-		);
+		}
 
-		Bind_Function(GetStateEnum,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<InputBinding>()
+		{
+			Reflect<InputBinding, InputObject>::Class
 			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::InputState>);
+				"InputBinding",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::BoundDevice>, device, Enum::BoundDevice::Any);
-				);
+				Member<Bind(&InputBinding::BindingMode)>("BindingMode"),
 
-				Bind_Parameters(GetStateEnum, device);
+				Function(
+					"Bind",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<InputObject>&>("input")
+					).Bind<InputBinding, &InputBinding::Bind>()
+				),
+
+				Function(
+					"Unbind",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<InputObject>&>("input")
+					).Bind<InputBinding, &InputBinding::Unbind>()
+				),
+
+				Function(
+					"GetBindings",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<InputBinding, &InputBinding::GetBindings>()
+				),
+
+				Function(
+					"GetBinding",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<InputObject>>(),
+						Argument<int>("index")
+					).Bind<InputBinding, &InputBinding::GetBinding>()
+				),
+
+				Function(
+					"IsBound",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const std::shared_ptr<InputObject>&>("input")
+					).Bind<InputBinding, &InputBinding::IsBound>()
+				)
 			);
-		);
+		}
 
-		Bind_Function(GetPosition,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<UserInput>()
+		{
+			Reflect<UserInput, Object>::Class
 			(
-				Document("");
-				Overload_Returns(Vector3);
+				"UserInput",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::BoundDevice>, device, Enum::BoundDevice::Any);
-				);
+				Function(
+					"GetState",
+					Overload(
+						Mutable,
+						Returns<bool>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetState>()
+				),
 
-				Bind_Parameters(GetPosition, device);
+				Function(
+					"GetStateChanged",
+					Overload(
+						Mutable,
+						Returns<bool>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetStateChanged>()
+				),
+
+				Function(
+					"GetStateEnum",
+					Overload(
+						Mutable,
+						Returns<Enum::InputState>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetStateEnum>()
+				),
+
+				Function(
+					"GetPosition",
+					Overload(
+						Mutable,
+						Returns<const Vector3&>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetPosition>()
+				),
+
+				Function(
+					"GetDelta",
+					Overload(
+						Mutable,
+						Returns<const Vector3&>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetDelta>()
+				),
+
+				Function(
+					"GetType",
+					Overload(
+						Mutable,
+						Returns<Enum::InputType>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetType>()
+				),
+
+				Function(
+					"GetName",
+					Overload(
+						Mutable,
+						Returns<const char*>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetName>()
+				),
+
+				Function(
+					"GetInput",
+					Overload(
+						Mutable,
+						Returns<std::shared_ptr<InputDevice>>(),
+						Argument<Enum::InputCode>("code")
+					).Bind<UserInput, &UserInput::GetInput>()
+				)//,
+
+				//Event(
+				//	"Began",
+				//	Argument<const std::shared_ptr<InputObject>&>("input")
+				//).Bind<&InputObject::Began>(),
+				//
+				//Event(
+				//	"Changed",
+				//	Argument<const std::shared_ptr<InputObject>&>("input")
+				//).Bind<&InputObject::Changed>(),
+				//
+				//Event(
+				//	"Ended",
+				//	Argument<const std::shared_ptr<InputObject>&>("input")
+				//).Bind<&InputObject::Ended>()
 			);
-		);
+		}
 
-		Bind_Function(GetDelta,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<Enum::InputMode>()
+		{
+			Reflect<Enum::InputMode>::Enum
 			(
-				Document("");
-				Overload_Returns(Vector3);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter_Default(LuaEnum<Enum::BoundDevice>, device, Enum::BoundDevice::Any);
-				);
-
-				Bind_Parameters(GetDelta, device);
+				"InputMode",
+				Value<Enum::InputMode::Or>("Or"),
+				Value<Enum::InputMode::And>("And"),
+				Value<Enum::InputMode::Xor>("Xor")
 			);
-		);
-
-		Bind_Function(GetType,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::InputType>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetType);
-			);
-		);
-
-		Bind_Function(GetCode,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::InputCode>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetCode);
-			);
-		);
-
-		Bind_Function(GetDevice,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(LuaEnum<Enum::BoundDevice>);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetDevice);
-			);
-		);
-	);
-
-	Reflect_Inherited(InputDevice, InputObject,
-		Document_Class("");
-	);
-
-	Reflect_Inherited(InputBinding, InputObject,
-		Document_Class("");
-
-		Document("");
-		Class_Member(LuaEnum<Enum::InputMode>, BindingMode);
-		
-		Bind_Function(Bind,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<InputObject>, input);
-				);
-
-				Bind_Parameters_No_Return(Bind, input);
-			);
-		);
-		
-		Bind_Function(Unbind,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<InputObject>, input);
-				);
-
-				Bind_Parameters_No_Return(Unbind, input);
-			);
-		);
-
-		Bind_Function(GetBindings,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-
-				Overload_Parameters();
-
-				Bind_Parameters(GetBindings);
-			);
-		);
-
-		Bind_Function(GetBinding,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<InputObject>);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, index);
-				);
-
-				Bind_Parameters(GetBinding, index);
-			);
-		);
-
-		Bind_Function(IsBound,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<InputObject>, input);
-				);
-
-				Bind_Parameters(IsBound, input);
-			);
-		);
-	);
-
-	Enum_Definition(InputMode,
-		Document_Enum("");
-		
-		Enum_Item(Or);
-		Enum_Item(And);
-		Enum_Item(Xor);
-	);
-}	
+		}
+	}
+}

@@ -1,307 +1,190 @@
 #include "Quaternion.h"
 
-Reflect_Type(Quaternion,
-	Document_Class(
-		""
-	);
+#include "Reflection/Reflection.h"
 
-	No_Reference;
-	
-	Document("");
-	Read_Only Archivable Class_Member(float, W);
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Quaternion>()
+		{
+			Reflect<Quaternion>::Type(
+				"Quaternion",
 
-	Document("");
-	Read_Only Archivable Class_Member(float, X);
-	
-	Document("");
-	Read_Only Archivable Class_Member(float, Y);
-	
-	Document("");
-	Read_Only Archivable Class_Member(float, Z);
-	
-	Bind_Function(Quaternion,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter_Default(float, w, 0);
-			
-				Document("");
-				Function_Parameter_Default(float, x, 0);
-			
-				Document("");
-				Function_Parameter_Default(float, y, 0);
-			
-				Document("");
-				Function_Parameter_Default(float, z, 0);
+				Member<Bind(&Quaternion::X)>("X"),
+				Member<Bind(&Quaternion::Y)>("Y"),
+				Member<Bind(&Quaternion::Z)>("Z"),
+				Member<Bind(&Quaternion::W)>("W"),
+
+				Constructor(
+					Overload(
+						Argument<float, Default(0)>("w"),
+						Argument<float, Default(0)>("x"),
+						Argument<float, Default(0)>("y"),
+						Argument<float, Default(0)>("z")
+					),
+
+					Overload(
+						Argument<const Vector3&>("vector")
+					),
+
+					Overload(
+						Argument<const Vector3&>("axis"),
+						Argument<float>("angle")
+					),
+
+					Overload(
+						Argument<float>("w"),
+						Argument<const Vector3&>("vector")
+					),
+					Overload(
+						Argument<const Matrix3&>("matrix")
+					)
+				),
+
+				Function(
+					"Inverse",
+					Overload(
+						Const,
+						Returns<Quaternion>()
+					).Bind<Quaternion, &Quaternion::Inverse>()
+				),
+
+				Function(
+					"Slerp",
+					Overload(
+						Const,
+						Returns<Quaternion>(),
+						Argument<const Quaternion&>("destination"),
+						Argument<float>("t")
+					).Bind<Quaternion, &Quaternion::Slerp>()
+				),
+
+				Function(
+					"operator*",
+					Overload(
+						Const,
+						Returns<Quaternion>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::operator*>()
+				),
+
+				Function(
+					"Matrix",
+					Overload(
+						Const,
+						Returns<Matrix3>()
+					).Bind<Quaternion, &Quaternion::Matrix>()
+				),
+
+				Function(
+					"Cross",
+					Overload(
+						Const,
+						Returns<Quaternion>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::Cross>()
+				),
+
+				Function(
+					"Unit",
+					Overload(
+						Const,
+						Returns<Quaternion>()
+					).Bind<Quaternion, &Quaternion::Unit>()
+				),
+
+				Function(
+					"Length",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<Quaternion, &Quaternion::Length>()
+				),
+
+				Function(
+					"SquareLength",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<Quaternion, &Quaternion::SquareLength>()
+				),
+
+				Function(
+					"Dot",
+					Overload(
+						Const,
+						Returns<float>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::Dot>()
+				),
+
+				Function(
+					"operator-",
+					Overload(
+						Const,
+						Returns<Quaternion>()
+					).Bind<Quaternion, &Quaternion::operator- >(),
+					Overload(
+						Const,
+						Returns<Quaternion>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::operator- >()
+				),
+
+				Function(
+					"operator+",
+					Overload(
+						Const,
+						Returns<Quaternion>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::operator+>()
+				),
+
+				Function(
+					"operator*",
+					Overload(
+						Const,
+						Returns<Quaternion>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::operator*>()
+				),
+
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::operator==>()
+				),
+
+				Function(
+					"operator!=",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Quaternion&>("other")
+					).Bind<Quaternion, &Quaternion::operator!=>()
+				),
+
+				Function(
+					"Vector",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Quaternion, &Quaternion::operator Vector3>()
+				),
+
+				Function(
+					"operator string",
+					Overload(
+						Const,
+						Returns<std::string>()
+					).Bind<Quaternion, &Quaternion::operator std::string>()
+				)
 			);
-			
-			Bind_Constructor(w, x, y, z);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, vector);
-			);
-			
-			Bind_Constructor(vector);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, axis);
-
-				Document("");
-				Function_Parameter(float, angle);
-			);
-			
-			Bind_Constructor(axis, angle);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, w);
-			
-				Document("");
-				Function_Parameter(Vector3, vector);
-			);
-			
-			Bind_Constructor(w, vector);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Matrix3, matrix);
-			);
-			
-			Bind_Constructor(matrix);
-		);
-	);
-
-	Bind_Function(Invert,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Quaternion);
-
-			Overload_Parameters();
-
-			Bind_Parameters(Invert);
-		);
-	);
-
-	Bind_Function(Slerp,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Quaternion);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Quaternion, destination);
-
-				Document("");
-				Function_Parameter(float, t);
-			);
-
-			Bind_Parameters(Slerp, destination, t);
-		);
-	);
-
-	Bind_Function(Matrix,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(Matrix);
-		);
-	);
-
-	Bind_Function(Vector,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(operator Vector3);
-		);
-	);
-
-	Bind_Function(operator*,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Quaternion);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Quaternion, other);
-			);
-
-			Bind_Parameters(operator*, other);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Quaternion);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, scalar);
-			);
-
-			Bind_Parameters(operator*, scalar);
-		);
-	);
-
-	Bind_Function(operator-,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Quaternion);
-
-			Overload_Parameters();
-
-			Bind_Parameters(operator-);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Quaternion);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Quaternion, other);
-			);
-
-			Bind_Parameters(operator-, other);
-		);
-	);
-
-	Bind_Function(operator+,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Quaternion);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Quaternion, other);
-			);
-
-			Bind_Parameters(operator+, other);
-		);
-	);
-
-	Bind_Function(operator==,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Quaternion, other);
-			);
-
-			Bind_Parameters(operator==, other);
-		);
-	);
-
-	Bind_Function(operator!=,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(bool);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Quaternion, other);
-			);
-
-			Bind_Parameters(operator!=, other);
-		);
-	);
-	
-	Bind_Function(operator string,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::string);
-
-			Overload_Parameters();
-
-			Bind_Parameters(operator std::string);
-		);
-	);
-);
+		}
+	}
+}

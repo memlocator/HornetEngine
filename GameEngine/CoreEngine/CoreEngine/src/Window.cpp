@@ -4,6 +4,14 @@ extern "C" {
 #include <Windows.h>
 }
 
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
 #define GL3_PROTOTYPES 1
 extern "C" {
 #include <glew.h>

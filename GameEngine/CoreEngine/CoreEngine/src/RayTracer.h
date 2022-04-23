@@ -14,9 +14,9 @@
 #include "SceneRayCastResults.h"
 #include "RayAcceleration.h"
 
-#define USE_SANITY_CHECKS
+#define USE_SANITY_CHECKS 0
 
-#ifdef USE_SANITY_CHECKS
+#if USE_SANITY_CHECKS
 #define CHECK_VALUE(value) ValidateData(value, __FILE__, __LINE__)
 #else
 #define CHECK_VALUE(value) value

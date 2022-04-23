@@ -1,49 +1,46 @@
 #include "CubeMap.h"
 
 #include "FrameBuffer.h"
+#include "Texture.h"
 
-using Engine::Object;
+#include "Reflection/Reflection.h"
 
-Reflect_Inherited(CubeMapTexture, Object,
-	Document_Class("");
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<CubeMapTexture>()
+		{
+			Reflect<CubeMapTexture, Object>::Class
+			(
+				"CubeMapTexture",
+				{ "GameObject" },
 
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::Texture>, Front);
+				Member<Bind(&CubeMapTexture::Front)>("Front"),
+				Member<Bind(&CubeMapTexture::Back)>("Back"),
+				Member<Bind(&CubeMapTexture::Left)>("Left"),
+				Member<Bind(&CubeMapTexture::Right)>("Right"),
+				Member<Bind(&CubeMapTexture::Top)>("Top"),
+				Member<Bind(&CubeMapTexture::Bottom)>("Bottom")
+			);
+		}
 
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::Texture>, Back);
+		template <>
+		void ReflectType<CubeMapBuffer>()
+		{
+			Reflect<CubeMapBuffer, Object>::Class
+			(
+				"CubeMapBuffer",
+				{ "GameObject" },
 
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::Texture>, Left);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::Texture>, Right);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::Texture>, Top);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::Texture>, Bottom);
-);
-
-Reflect_Inherited(CubeMapBuffer, Object,
-	Document_Class("");
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::FrameBuffer>, Front);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::FrameBuffer>, Back);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::FrameBuffer>, Left);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::FrameBuffer>, Right);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::FrameBuffer>, Top);
-
-	Document("");
-	Archivable Class_Member(std::weak_ptr<GraphicsEngine::FrameBuffer>, Bottom);
-);
+				Member<Bind(&CubeMapBuffer::Front)>("Front"),
+				Member<Bind(&CubeMapBuffer::Back)>("Back"),
+				Member<Bind(&CubeMapBuffer::Left)>("Left"),
+				Member<Bind(&CubeMapBuffer::Right)>("Right"),
+				Member<Bind(&CubeMapBuffer::Top)>("Top"),
+				Member<Bind(&CubeMapBuffer::Bottom)>("Bottom")
+			);
+		}
+	}
+}

@@ -1,109 +1,45 @@
 #include "BoundingSphere.h"
 
-#include "ModelAsset.h"
+#include "Reflection/Reflection.h"
 
-Reflect_Type(BoundingSphere,
-	Document_Class(
-		""
-	);
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<BoundingSphere>()
+		{
+			Reflect<BoundingSphere>::Type(
+				"Aabb",
 
-	No_Reference;
-	
-	Document("");
-	Read_Only Archivable Class_Member(float, Radius);
-	
-	Document("");
-	Read_Only Archivable Class_Member(Vector3, Center);
+				Member<Bind(&BoundingSphere::Radius)>("Radius"),
+				Member<Bind(&BoundingSphere::Center)>("Center"),
 
-	Bind_Function(BoundingSphere,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-	
-			Overload_Parameters(
-				Document("");
-				Function_Parameter_Default(float, radius, 0);
+				Constructor(
+					Overload(
+						Argument<float, Default(0)>("radius"),
+						Argument<const Vector3&, Default(Vector3())>("center")
+					)
+				),
 
-				Document("");
-				Function_Parameter_Default(Vector3, center, Vector3());
-			);
+				Function(
+					"Contains",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Vector3&>("point")
+					).Bind<BoundingSphere, &BoundingSphere::Contains>()
+				),
 
-			Bind_Constructor(radius, center);
-		);
-	);
-	
-	Bind_Function(ComputeCentroid,
-	
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(BoundingSphere);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(std::shared_ptr<Engine::ModelAsset>, model);
+				Function(
+					"ExpandByPoint",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const Vector3&>("point")
+					).Bind<BoundingSphere, &BoundingSphere::ExpandByPoint>()
+				)
 			);
-			
-			Bind_Parameters(ComputeCentroid, model);
-		);
-	);
-	
-	Bind_Function(ComputeRitter,
-	
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(BoundingSphere);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(std::shared_ptr<Engine::ModelAsset>, model);
-			);
-			
-			Bind_Parameters(ComputeRitter, model);
-		);
-	);
-	
-	Bind_Function(ComputeLarson,
-	
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(BoundingSphere);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(std::shared_ptr<Engine::ModelAsset>, model);
-			);
-			
-			Bind_Parameters(ComputeLarson, model);
-		);
-	);
-	
-	Bind_Function(ComputePCA,
-	
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(BoundingSphere);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(std::shared_ptr<Engine::ModelAsset>, model);
-			);
-			
-			Bind_Parameters(ComputePCA, model);
-		);
-	);
-);
+		}
+	}
+}

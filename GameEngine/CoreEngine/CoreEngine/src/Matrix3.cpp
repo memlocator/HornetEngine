@@ -14,37 +14,10 @@ extern "C" {
 #include <math.h>
 }
 
-Matrix3::Matrix3()
-{
-	Identity();
-}
-
-Matrix3::Matrix3(float x, float y, float z)
-{
-	Translate(x, y, z);
-}
-
-Matrix3::Matrix3(const Vector3& vector)
-{
-	Translate(vector);
-}
-
-Matrix3::Matrix3(const Vector3& position, const Vector3& right, const Vector3& up, const Vector3& front)
-{
-	SetVectors(position, right, up, front);
-}
 
 Matrix3::Matrix3(const Vector3& position, const Vector3& direction, const Vector3& globalUp)
 {
 	Face(position, direction, globalUp);
-}
-
-Matrix3& Matrix3::Identity()
-{
-	for (int i = 0; i < 16; i++)
-		Data[i % 4][i / 4] = i % 4 == i / 4;
-
-	return *this;
 }
 
 Matrix3& Matrix3::Transpose()
@@ -59,25 +32,6 @@ Matrix3& Matrix3::Transpose()
 			Data[y][x] = temp;
 		}
 	}
-
-	return *this;
-}
-
-Matrix3& Matrix3::SetVectors(const Vector3& position, const Vector3& right, const Vector3& up, const Vector3& front)
-{
-	Translate(position);
-
-	Data[0][0] = right.X;
-	Data[1][0] = right.Y;
-	Data[2][0] = right.Z;
-
-	Data[0][1] = up.X;
-	Data[1][1] = up.Y;
-	Data[2][1] = up.Z;
-
-	Data[0][2] = front.X;
-	Data[1][2] = front.Y;
-	Data[2][2] = front.Z;
 
 	return *this;
 }
@@ -125,22 +79,6 @@ Matrix3& Matrix3::SetTransformedTranslation(const Vector3& vector)
 	Data[2][3] = vector.X * Data[2][0] + vector.Y * Data[2][1] + vector.Z * Data[2][2];
 
 	return *this;
-}
-
-Matrix3& Matrix3::Translate(float x, float y, float z)
-{
-	Identity();
-
-	Data[0][3] = x;
-	Data[1][3] = y;
-	Data[2][3] = z;
-
-	return *this;
-}
-
-Matrix3& Matrix3::Translate(const Vector3& vector)
-{
-	return Translate(vector.X, vector.Y, vector.Z);
 }
 
 Matrix3& Matrix3::Scale(float x, float y, float z)
@@ -381,7 +319,7 @@ float Matrix3::Det() const
 	return Data[0][0] * Det(1, 2, 1, 2) - Data[0][1] * Det(1, 2, 0, 2) + Data[0][2] * Det(1, 2, 0, 1);
 }
 
-Matrix3 Matrix3::operator+(const Matrix3 &other) const
+Matrix3 Matrix3::operator+(const Matrix3& other) const
 {
 	Matrix3 result;
 
@@ -392,7 +330,7 @@ Matrix3 Matrix3::operator+(const Matrix3 &other) const
 	return result;
 }
 
-Matrix3 Matrix3::operator-(const Matrix3 &other) const
+Matrix3 Matrix3::operator-(const Matrix3& other) const
 {
 	Matrix3 result;
 
@@ -426,7 +364,7 @@ Matrix3 Matrix3::operator*(float scalar) const
 	return result;
 }
 
-float Matrix3::ComponentMultiplication(const Matrix3 &other, int y, int x) const
+float Matrix3::ComponentMultiplication(const Matrix3& other, int y, int x) const
 {
 	return Data[y][0] * other.Data[0][x] + Data[y][1] * other.Data[1][x] + Data[y][2] * other.Data[2][x] + Data[y][3] * other.Data[3][x];
 }
@@ -468,7 +406,7 @@ float Matrix3::ComponentMultiplicationNoAffine(const Matrix3& other, int y, int 
 }
 
 //overloaded multiplication operator
-Matrix3 Matrix3::operator*(const Matrix3 &other) const
+Matrix3 Matrix3::operator*(const Matrix3& other) const
 {
 	Matrix3 results;
 
@@ -499,7 +437,7 @@ Matrix3 Matrix3::operator*(const Matrix3 &other) const
 }
 
 // transform a vector
-Vector3 Matrix3::operator*(const Vector3 &other) const
+Vector3 Matrix3::operator*(const Vector3& other) const
 {
 	return Vector3(
 		other.X * Data[0][0] + other.Y * Data[0][1] + other.Z * Data[0][2] + other.W * Data[0][3],
@@ -520,7 +458,7 @@ const float* Matrix3::operator[](int row) const
 }
 
 // assignment
-Matrix3& Matrix3::operator=(const Matrix3 &other)
+Matrix3& Matrix3::operator=(const Matrix3& other)
 {
 	for (int x = 0; x < 4; ++x)
 		for (int y = 0; y < 4; ++y)
@@ -530,7 +468,7 @@ Matrix3& Matrix3::operator=(const Matrix3 &other)
 }
 
 // addition assignment
-Matrix3& Matrix3::operator+=(const Matrix3 &other)
+Matrix3& Matrix3::operator+=(const Matrix3& other)
 {
 	for (int x = 0; x < 3; ++x)
 		for (int y = 0; y < 3; ++y)
@@ -540,7 +478,7 @@ Matrix3& Matrix3::operator+=(const Matrix3 &other)
 }
 
 // subtraction assignment
-Matrix3& Matrix3::operator-=(const Matrix3 &other)
+Matrix3& Matrix3::operator-=(const Matrix3& other)
 {
 	for (int x = 0; x < 3; ++x)
 		for (int y = 0; y < 3; ++y)
@@ -550,7 +488,7 @@ Matrix3& Matrix3::operator-=(const Matrix3 &other)
 }
 
 // transformation assignment
-Matrix3& Matrix3::operator*=(const Matrix3 &other)
+Matrix3& Matrix3::operator*=(const Matrix3& other)
 {
 	*this = *this * other;
 
@@ -569,7 +507,7 @@ Matrix3& Matrix3::operator*=(float scalar)
 
 bool Matrix3::Compare(float x, float y, float epsilon)
 {
-	return abs(x - y) < epsilon;
+	return cmath::abs(x - y) < epsilon;
 }
 
 bool Matrix3::operator==(const Matrix3& other) const
@@ -585,18 +523,6 @@ bool Matrix3::operator==(const Matrix3& other) const
 bool Matrix3::operator!=(const Matrix3& other) const
 {
 	return !(*this == other);
-}
-
-// scalar multiply
-Matrix3 operator*(float scalar, const Matrix3& matrix)
-{
-	Matrix3 result;
-		
-	for (int x = 0; x < 3; ++x)
-		for (int y = 0; y < 3; ++y)
-			result.Data[y][x] = scalar * matrix.Data[y][x];
-		
-	return result;
 }
 
 Matrix3::operator std::string() const

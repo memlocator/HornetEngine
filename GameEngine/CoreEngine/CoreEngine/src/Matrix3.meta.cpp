@@ -1,577 +1,292 @@
 #include "Matrix3.h"
 
-Reflect_Type(Matrix3,
-	Document_Class(
-		"A 3x3 matrix with an extra axis in each direction for affine transformations. "
-	);
+#include "Reflection/Reflection.h"
 
-	No_Reference;
+namespace Engine
+{
+	namespace Reflection
+	{
+		template <>
+		void ReflectType<Matrix3>()
+		{
+			Reflect<Matrix3>::Type(
+				"Matrix3",
 
-	Bind_Function(Matrix3,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
+				Constructor(
+					Overload(),
+					Overload(
+						Argument<float>("x"),
+						Argument<float>("y"),
+						Argument<float>("z")
+					),
+					Overload(
+						Argument<const Vector3&>("vector")
+					),
+					Overload(
+						Argument<const Vector3&>("position"),
+						Argument<const Vector3&>("right"),
+						Argument<const Vector3&>("up"),
+						Argument<const Vector3&>("front")
+					)
+				),
 
-			Overload_Parameters();
+				Function(
+					"Transposed",
+					Overload(
+						Const,
+						Returns<Matrix3>()
+					).Bind<Matrix3, &Matrix3::Transposed>()
+				),
 
-			Bind_Constructor();
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-		
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter_Default(float, x, 0);
-		
-				Document("");
-				Function_Parameter_Default(float, y, 0);
-		
-				Document("");
-				Function_Parameter_Default(float, z, 0);
+				Function(
+					"Inverted",
+					Overload(
+						Const,
+						Returns<Matrix3>()
+					).Bind<Matrix3, &Matrix3::Inverted>()
+				),
+
+				Function(
+					"Rotation",
+					Overload(
+						Const,
+						Returns<Matrix3>(),
+						Argument<const Vector3&, Default(Vector3())>("newTranslation")
+					).Bind<Matrix3, &Matrix3::Rotation>()
+				),
+
+				Function(
+					"TransformedAround",
+					Overload(
+						Const,
+						Returns<Matrix3>(),
+						Argument<const Vector3&>("point")
+					).Bind<Matrix3, &Matrix3::TransformedAround>()
+				),
+
+				Function(
+					"RightVector",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Matrix3, &Matrix3::RightVector>()
+				),
+
+				Function(
+					"UpVector",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Matrix3, &Matrix3::UpVector>()
+				),
+
+				Function(
+					"FrontVector",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Matrix3, &Matrix3::FrontVector>()
+				),
+
+				Function(
+					"Translation",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Matrix3, &Matrix3::Translation>()
+				),
+
+				Function(
+					"ExtractScale",
+					Overload(
+						Const,
+						Returns<Vector3>()
+					).Bind<Matrix3, &Matrix3::ExtractScale>()
+				),
+
+				Function(
+					"Det",
+					Overload(
+						Const,
+						Returns<float>()
+					).Bind<Matrix3, &Matrix3::Det>()
+				),
+
+				Function(
+					"operator+",
+					Overload(
+						Const,
+						Returns<Matrix3>(),
+						Argument<const Matrix3&>("other")
+					).Bind<Matrix3, &Matrix3::operator+>()
+				),
+
+				Function(
+					"operator-",
+					Overload(
+						Const,
+						Returns<Matrix3>(),
+						Argument<const Matrix3&>("other")
+					).Bind<Matrix3, &Matrix3::operator- >(),
+					Overload(
+						Const,
+						Returns<Matrix3>()
+					).Bind<Matrix3, &Matrix3::operator- >()
+				),
+
+				Function(
+					"operator*",
+					Overload(
+						Const,
+						Returns<Matrix3>(),
+						Argument<const Matrix3&>("other")
+					).Bind<Matrix3, &Matrix3::operator*>(),
+					Overload(
+						Const,
+						Returns<Matrix3>(),
+						Argument<float>("scalar")
+					).Bind<Matrix3, &Matrix3::operator*>(),
+					Overload(
+						Const,
+						Returns<Vector3>(),
+						Argument<const Vector3&>("vector")
+					).Bind<Matrix3, &Matrix3::operator*>()
+				),
+
+				Function(
+					"FullMultiply",
+					Overload(
+						Const,
+						Returns<Matrix3>(),
+						Argument<const Matrix3&>("other")
+					).Bind<Matrix3, &Matrix3::FullMultiply>()
+				),
+
+				Function(
+					"operator string",
+					Overload(
+						Const,
+						Returns<std::string>()
+					).Bind<Matrix3, &Matrix3::operator std::string>()
+				),
+
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Matrix3&>("other")
+					).Bind<Matrix3, &Matrix3::operator==>()
+				),
+
+				Function(
+					"operator!=",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const Matrix3&>("other")
+					).Bind<Matrix3, &Matrix3::operator!=>()
+				),
+
+				Function(
+					"NewScale",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<float>("x"),
+						Argument<float>("y"),
+						Argument<float>("z")
+					).Bind<&Matrix3::NewScale>(),
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<const Vector3&>("vector")
+					).Bind<&Matrix3::NewScale>()
+				),
+
+				Function(
+					"AxisRotation",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<const Vector3&>("axis"),
+						Argument<float>("theta")
+					).Bind<&Matrix3::AxisRotation>()
+				),
+
+				Function(
+					"PitchRotation",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<float>("theta")
+					).Bind<&Matrix3::PitchRotation>()
+				),
+
+				Function(
+					"YawRotation",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<float>("theta")
+					).Bind<&Matrix3::YawRotation>()
+				),
+
+				Function(
+					"RollRotation",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<float>("theta")
+					).Bind<&Matrix3::RollRotation>()
+				),
+
+				Function(
+					"EulerAnglesRotation",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<float>("pitch"),
+						Argument<float>("yaw"),
+						Argument<float>("roll")
+					).Bind<&Matrix3::EulerAnglesRotation>()
+				),
+
+				Function(
+					"EulerAnglesYawRotation",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<float>("yaw"),
+						Argument<float>("pitch"),
+						Argument<float>("roll")
+					).Bind<&Matrix3::EulerAnglesYawRotation>()
+				),
+
+				Function(
+					"NewProjection",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<float>("distance"),
+						Argument<float>("nearPlane"),
+						Argument<float>("farPlane"),
+						Argument<float>("width"),
+						Argument<float>("height")
+					).Bind<&Matrix3::NewProjection>()
+				),
+
+				Function(
+					"Facing",
+					Overload(
+						Static,
+						Returns<Matrix3>(),
+						Argument<const Vector3&>("position"),
+						Argument<const Vector3&>("direction"),
+						Argument<const Vector3&, Default(Vector3(0, 1, 0))>("globalUp")
+					).Bind<&Matrix3::Facing>()
+				)
 			);
-		
-			Bind_Constructor(x, y, z);
-		);
-		
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-		
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, vector);
-			);
-		
-			Bind_Constructor(vector);
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, position);
-
-				Document("");
-				Function_Parameter(Vector3, right);
-
-				Document("");
-				Function_Parameter(Vector3, up);
-
-				Document("");
-				Function_Parameter(Vector3, front);
-			);
-
-			Bind_Constructor(position, right, up, front);
-		);
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Returns_Nothing;
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, position);
-
-				Document("");
-				Function_Parameter(Vector3, direction);
-
-				Document("");
-				Function_Parameter_Default(Vector3, globalUp, Vector3(0, 1, 0));
-			);
-
-			Bind_Constructor(position, direction, globalUp);
-		);
-	);
-	
-	Bind_Function(Transposed,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(Transposed);
-		);
-	);
-	
-	Bind_Function(Inverted,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(Inverted);
-		);
-	);
-	
-	Bind_Function(Rotation,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter_Default(Vector3, newTranslation, Vector3());
-			);
-
-			Bind_Parameters(Rotation, newTranslation);
-		);
-	);
-	
-	Bind_Function(TransformedAround,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, point);
-			);
-
-			Bind_Parameters(TransformedAround, point);
-		);
-	);
-	
-	Bind_Function(RightVector,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(RightVector);
-		);
-	);
-	
-	Bind_Function(UpVector,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(UpVector);
-		);
-	);
-	
-	Bind_Function(FrontVector,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(FrontVector);
-		);
-	);
-	
-	Bind_Function(Translation,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(Translation);
-		);
-	);
-	
-	Bind_Function(ExtractScale,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(ExtractScale);
-		);
-	);
-	
-	Bind_Function(Det,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(float);
-
-			Overload_Parameters();
-
-			Bind_Parameters(Det);
-		);
-	);
-	
-	Bind_Function(operator+,
-	
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Matrix3, other);
-			);
-	
-			Bind_Parameters(operator+, other);
-		);
-	);
-	
-	Bind_Function(operator-,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-		
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Matrix3, other);
-			);
-		
-			Bind_Parameters(operator-, other);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters();
-
-			Bind_Parameters(operator-);
-		);
-	);
-	
-	Bind_Function(operator*,
-		
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-		
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Matrix3, other);
-			);
-		
-			Bind_Parameters(operator*, other);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Vector3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, other);
-			);
-
-			Bind_Parameters(operator*, other);
-		);
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, other);
-			);
-
-			Bind_Parameters(operator*, other);
-		);
-	);
-	
-	Bind_Function(NewScale,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, x);
-
-				Document("");
-				Function_Parameter(float, y);
-
-				Document("");
-				Function_Parameter(float, z);
-			);
-
-			Static_Bind_Parameters(NewScale, x, y, z);
-		);
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, vector);
-			);
-
-			Static_Bind_Parameters(NewScale, vector);
-		);
-	);
-	
-	Bind_Function(AxisRotation,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, axis);
-
-				Document("");
-				Function_Parameter(float, theta);
-			);
-
-			Static_Bind_Parameters(AxisRotation, axis, theta);
-		);
-	);
-	
-	Bind_Function(PitchRotation,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, theta);
-			);
-
-			Static_Bind_Parameters(PitchRotation, theta);
-		);
-	);
-	
-	Bind_Function(YawRotation,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, theta);
-			);
-
-			Static_Bind_Parameters(YawRotation, theta);
-		);
-	);
-	
-	Bind_Function(RollRotation,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, theta);
-			);
-
-			Static_Bind_Parameters(RollRotation, theta);
-		);
-	);
-	
-	Bind_Function(EulerAnglesRotation,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, pitch);
-
-				Document("");
-				Function_Parameter(float, yaw);
-
-				Document("");
-				Function_Parameter(float, roll);
-			);
-
-			Static_Bind_Parameters(EulerAnglesRotation, pitch, yaw, roll);
-		);
-	);
-	
-	Bind_Function(EulerAnglesYawRotation,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, yaw);
-
-				Document("");
-				Function_Parameter(float, pitch);
-
-				Document("");
-				Function_Parameter(float, roll);
-			);
-
-			Static_Bind_Parameters(EulerAnglesRotation, yaw, pitch, roll);
-		);
-	);
-	
-	Bind_Function(NewProjection,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(float, distance);
-
-				Document("");
-				Function_Parameter(float, near);
-
-				Document("");
-				Function_Parameter(float, far);
-
-				Document("");
-				Function_Parameter(float, width);
-
-				Document("");
-				Function_Parameter(float, height);
-			);
-
-			Static_Bind_Parameters(NewProjection, distance, near, far, width, height);
-		);
-	);
-	
-	Bind_Function(Facing,
-
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(Matrix3);
-
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(Vector3, position);
-
-				Document("");
-				Function_Parameter(Vector3, direction);
-
-				Document("");
-				Function_Parameter_Default(Vector3, globalUp, Vector3(0, 1, 0));
-			);
-
-			Static_Bind_Parameters(Facing, position, direction, globalUp);
-		);
-	);
-	
-	Bind_Function(operator string,
-
-		Document("");
-		Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::string);
-
-			Overload_Parameters();
-
-			Bind_Parameters(operator std::string);
-		);
-	);
-);
+		}
+	}
+}

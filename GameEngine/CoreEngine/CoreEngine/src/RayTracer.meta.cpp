@@ -1,178 +1,103 @@
 #include "RayTracer.h"
 
-#include "Texture.h"
 #include "Scene.h"
+#include "Texture.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	using Engine::Object;
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-	Reflect_Inherited(RayTracer, Object,
-		Document_Class("");
-
-		Document("");
-		Archivable Class_Member(int, BatchWidth);
-
-		Document("");
-		Archivable Class_Member(int, BatchHeight);
-
-		Document("");
-		Archivable Class_Member(int, MaxBounces);
-
-		Document("");
-		Archivable Class_Member(int, Samples);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<Scene>, CurrentScene);
-
-		Bind_Function(SetMaxThreads,
-		
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<RayTracer>()
+		{
+			Reflect<RayTracer, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, maxThreads);
-				);
-			
-				Bind_Parameters_No_Return(SetMaxThreads, maxThreads);
+				"RayTracer",
+				{ "GameObject" },
+
+				Member<Bind(&RayTracer::BatchWidth)>("BatchWidth"),
+				Member<Bind(&RayTracer::BatchHeight)>("BatchHeight"),
+				Member<Bind(&RayTracer::MaxBounces)>("MaxBounces"),
+				Member<Bind(&RayTracer::Samples)>("Samples"),
+				Member<Bind(&RayTracer::CurrentScene)>("CurrentScene"),
+
+				Function(
+					"SetMaxThreads",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("maxThreads")
+					).Bind<RayTracer, &RayTracer::SetMaxThreads>()
+				),
+
+				Function(
+					"GetMaxThreads",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<RayTracer, &RayTracer::GetMaxThreads>()
+				),
+
+				Function(
+					"GetHardwareThreads",
+					Overload(
+						Const,
+						Returns<int>()
+					).Bind<RayTracer, &RayTracer::GetHardwareThreads>()
+				),
+
+				Function(
+					"Configure",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("width"),
+						Argument<int>("height")
+					).Bind<RayTracer, &RayTracer::Configure>()
+				),
+
+				Function(
+					"SetViewport",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("minX"),
+						Argument<int>("minY"),
+						Argument<int>("maxX"),
+						Argument<int>("maxY")
+					).Bind<RayTracer, &RayTracer::SetViewport>()
+				),
+
+				Function(
+					"Render",
+					Overload(
+						Mutable,
+						Returns<void>()
+					).Bind<RayTracer, &RayTracer::Render>()
+				),
+
+				Function(
+					"DrawTo",
+					Overload(
+						Const,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Texture>&>("texture")
+					).Bind<RayTracer, &RayTracer::DrawTo>()
+				),
+
+				Function(
+					"Save",
+					Overload(
+						Const,
+						Returns<void>(),
+						Argument<const std::string&>("filePath")
+					).Bind<RayTracer, &RayTracer::Save>()
+				)
 			);
-		);
-
-		Bind_Function(GetMaxThreads,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-			
-				Overload_Parameters
-				(
-				);
-			
-				Bind_Parameters(GetMaxThreads);
-			);
-		);
-
-		Bind_Function(GetHardwareThreads,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(int);
-			
-				Overload_Parameters
-				(
-				);
-			
-				Bind_Parameters(GetHardwareThreads);
-			);
-		);
-
-		Bind_Function(Configure,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, width);
-
-					Document("");
-					Function_Parameter(int, height);
-				);
-			
-				Bind_Parameters_No_Return(Configure, width, height);
-			);
-		);
-
-		Bind_Function(SetViewport,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, minX);
-
-					Document("");
-					Function_Parameter(int, minY);
-
-					Document("");
-					Function_Parameter(int, maxX);
-
-					Document("");
-					Function_Parameter(int, maxY);
-				);
-			
-				Bind_Parameters_No_Return(SetViewport, minX, minY, maxX, maxY);
-			);
-		);
-
-		Bind_Function(Render,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-				);
-			
-				Bind_Parameters_No_Return(Render);
-			);
-		);
-
-		Bind_Function(DrawTo,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<Texture>, texture);
-				);
-			
-				Bind_Parameters_No_Return(DrawTo, texture);
-			);
-		);
-
-		Bind_Function(Save,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::string, filePath);
-				);
-			
-				Bind_Parameters_No_Return(Save, filePath);
-			);
-		);
-	);
+		}
+	}
 }

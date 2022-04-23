@@ -2,47 +2,38 @@
 
 #include "ModelAsset.h"
 
-using Engine::Object;
+#include "Reflection/Reflection.h"
 
-Reflect_Inherited(MeshLoader, Object,
-	Document_Class("");
-	
-	Bind_Function(NewAsset,
-	
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::shared_ptr<Engine::ModelAsset>);
-	
-			Overload_Parameters
+namespace Engine
+{
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
+
+		template <>
+		void ReflectType<MeshLoader>()
+		{
+			Reflect<MeshLoader, Object>::Class
 			(
-				Document("");
-				Function_Parameter(std::string, name);
-			);
-			
-			Static_Bind_Parameters(NewAsset, name);
-		);
-	
-		Document("");
-		Static Function_Overload
-		(
-			Document("");
-			Overload_Returns(std::shared_ptr<Engine::ModelAsset>);
-	
-			Overload_Parameters
-			(
-				Document("");
-				Function_Parameter(std::string, name);
+				"MeshLoader",
+				{ "GameObject" },
 
-				Document("");
-				Function_Parameter(std::string, path);
-
-				Document("");
-				Function_Parameter_Default(LuaEnum<Enum::VertexMode>, mode, Enum::VertexMode::Seperate);
+				Function(
+					"NewAsset",
+					Overload(
+						Static,
+						Returns<std::shared_ptr<Engine::ModelAsset>>(),
+						Argument<const std::string&>("name")
+					).Bind<&MeshLoader::NewAsset>(),
+					Overload(
+						Static,
+						Returns<std::shared_ptr<Engine::ModelAsset>>(),
+						Argument<const std::string&>("name"),
+						Argument<const std::string&>("path"),
+						Argument<Enum::VertexMode, Default(Enum::VertexMode::Seperate)>("mode")
+					).Bind<&MeshLoader::NewAsset>()
+				)
 			);
-			
-			Static_Bind_Parameters(NewAsset, name, path, mode);
-		);
-	);
-);
+		}
+	}
+}

@@ -1,83 +1,67 @@
 #include "InputSubscriber.h"
 
-namespace GraphicsEngine
+#include "LuaInput.h"
+
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	Reflect_Inherited(InputSubscription, InputObject,
-		Document_Class("");
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-		Bind_Function(HasFocus,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<InputSubscription>()
+		{
+			Reflect<InputSubscription, InputObject>::Class
 			(
-				Document("");
-				Overload_Returns(bool);
+				"InputSubscription",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(LuaEnum<Enum::BoundDevice>, device);
-				);
-
-				Bind_Parameters(HasFocus, device);
+				Function(
+					"HasFocus",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<Enum::BoundDevice>("device")
+					).Bind<InputSubscription, &InputSubscription::HasFocus>()
+				),
+				Function(
+					"Subscribe",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Engine::InputObject>&>("device")
+					).Bind<InputSubscription, &InputSubscription::Subscribe>()
+				)
 			);
-		);
+		}
 
-		Bind_Function(Subscribe,
-
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<InputSubscriber>()
+		{
+			Reflect<InputSubscriber, Object>::Class
 			(
-				Document("");
-				Returns_Nothing;
+				"InputSubscriber",
+				{ "GameObject" },
 
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<Engine::InputObject>, input);
-				);
-
-				Bind_Parameters_No_Return(Subscribe, input);
+				Function(
+					"HasFocus",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<Enum::BoundDevice>("device")
+					).Bind<InputSubscriber, &InputSubscriber::HasFocus>()
+				),
+				Function(
+					"Subscribe",
+					Overload(
+						Mutable,
+						Returns<std::shared_ptr<InputSubscription>>(),
+						Argument<const std::shared_ptr<Engine::InputObject>&>("device")
+					).Bind<InputSubscriber, &InputSubscriber::Subscribe>()
+				)
 			);
-		);
-	);
-	Reflect_Inherited(InputSubscriber, Object,
-		Document_Class("");
-
-		Bind_Function(HasFocus,
-
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(bool);
-
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(LuaEnum<Enum::BoundDevice>, device);
-				);
-
-				Bind_Parameters(HasFocus, device);
-			);
-		);
-
-		Bind_Function(Subscribe,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<InputSubscription>);
-		
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<Engine::InputObject>, input);
-				);
-		
-				Bind_Parameters(Subscribe, input);
-			);
-		);
-	);
+		}
+	}
 }

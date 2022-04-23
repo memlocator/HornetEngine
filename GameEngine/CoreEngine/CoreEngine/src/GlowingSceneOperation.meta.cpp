@@ -1,181 +1,121 @@
 #include "GlowingSceneOperation.h"
 
+#include "CubeMap.h"
+#include "FrameBuffer.h"
+#include "Light.h"
 #include "HDRColorCorrectionOperation.h"
+#include "Texture.h"
+#include "Scene.h"
 
-namespace GraphicsEngine
+#include "Reflection/Reflection.h"
+
+namespace Engine
 {
-	Reflect_Inherited(GlowingSceneOperation, RenderOperation,
-		Document_Class("");
+	namespace Reflection
+	{
+		using namespace GraphicsEngine;
 
-		Document("");
-		Archivable Class_Member(bool, WaterEnabled);
-
-		Document("");
-		Archivable Class_Member(bool, Detatch);
-
-		Document("");
-		Archivable Class_Member(bool, DrawSkyBox);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<CubeMapTexture>, SkyBox);
-
-		Document("");
-		Archivable Class_Member(float, SkyBrightness);
-
-		Document("");
-		Archivable Class_Member(float, SkyBackgroundBrightness);
-
-		Document("");
-		Archivable Class_Member(RGBA, SkyColor);
-
-		Document("");
-		Archivable Class_Member(RGBA, SkyBackgroundColor);
-
-		Document("");
-		Archivable Class_Member(int, Radius);
-
-		Document("");
-		Archivable Class_Member(std::weak_ptr<FrameBuffer>, Output);
-
-		Document("");
-		Archivable Class_Member(float, Sigma);
-
-		Document("");
-		Archivable Class_Member(Vector3, Resolution);
-
-		Document("");
-		Archivable Class_Member(Matrix3, Transform);
-
-		Bind_Function(Configure,
-		
-			Document("");
-			Function_Overload
+		template <>
+		void ReflectType<GlowingSceneOperation>()
+		{
+			Reflect<GlowingSceneOperation, RenderOperation>::Class
 			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(int, width);
-					
-					Document("");
-					Function_Parameter(int, height);
+				"GlowingSceneOperation",
+				{ "GameObject" },
 
-					Document("");
-					Function_Parameter(std::shared_ptr<Scene>, scene);
+				Member<Bind(&GlowingSceneOperation::WaterEnabled)>("WaterEnabled"),
+				Member<Bind(&GlowingSceneOperation::Detatch)>("Detatch"),
+				Member<Bind(&GlowingSceneOperation::DrawSkyBox)>("DrawSkyBox"),
+				Member<Bind(&GlowingSceneOperation::SkyBox)>("SkyBox"),
+				Member<Bind(&GlowingSceneOperation::SkyBrightness)>("SkyBrightness"),
+				Member<Bind(&GlowingSceneOperation::SkyBackgroundBrightness)>("SkyBackgroundBrightness"),
+				Member<Bind(&GlowingSceneOperation::SkyColor)>("SkyColor"),
+				Member<Bind(&GlowingSceneOperation::SkyBackgroundColor)>("SkyBackgroundColor"),
+				Member<Bind(&GlowingSceneOperation::Radius)>("Radius"),
+				Member<Bind(&GlowingSceneOperation::Sigma)>("Sigma"),
+				Member<Bind(&GlowingSceneOperation::Resolution)>("Resolution"),
+				Member<Bind(&GlowingSceneOperation::Transform)>("Transform"),
+				Member<Bind(&GlowingSceneOperation::Output)>("Output"),
+				Member<Bind(&GlowingSceneOperation::DebugViewLight)>("DebugViewLight"),
 
-					Document("");
-					Function_Parameter_Default(std::shared_ptr<FrameBuffer>, output, nullptr);
-				);
-			
-				Bind_Parameters_No_Return(Configure, width, height, scene);
+				Function(
+					"Configure",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<int>("width"),
+						Argument<int>("height"),
+						Argument<const std::shared_ptr<Scene>&>("scene"),
+						Argument<const std::shared_ptr<FrameBuffer>&>("output")
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::Configure>()
+				),
+
+				Function(
+					"SetScene",
+					Overload(
+						Mutable,
+						Returns<void>(),
+						Argument<const std::shared_ptr<Scene>&>("scene")
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::SetScene>()
+				),
+
+				Function(
+					"GetSceneBuffer",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<FrameBuffer>>()
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::GetSceneBuffer>()
+				),
+
+				//Function(
+				//	"GetLuminescenceBuffer",
+				//	Overload(
+				//		Const,
+				//		Returns<std::shared_ptr<FrameBuffer>>()
+				//	).Bind<GlowingSceneOperation, &GlowingSceneOperation::GetLuminescenceBuffer>()
+				//),
+
+				Function(
+					"GetLightingBuffer",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<FrameBuffer>>()
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::GetLightingBuffer>()
+				),
+
+				Function(
+					"GetHorizontalPass",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<FrameBuffer>>()
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::GetHorizontalPass>()
+				),
+
+				Function(
+					"GetVerticalPass",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<FrameBuffer>>()
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::GetVerticalPass>()
+				),
+
+				Function(
+					"GenerateNormalMap",
+					Overload(
+						Mutable,
+						Returns<std::shared_ptr<Texture>>(),
+						Argument<const std::shared_ptr<Texture>&>("heightMap")
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::GenerateNormalMap>()
+				),
+
+				Function(
+					"GetHDRColorCorrection",
+					Overload(
+						Const,
+						Returns<std::shared_ptr<HDRColorCorrectionOperation>>()
+					).Bind<GlowingSceneOperation, &GlowingSceneOperation::GetHDRColorCorrection>()
+				)
 			);
-		);
-
-		Bind_Function(GenerateNormalMap,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<Texture>);
-			
-				Overload_Parameters
-				(
-					Document("");
-					Function_Parameter(std::shared_ptr<Texture>, heightMap);
-				);
-			
-				Bind_Parameters(GenerateNormalMap, heightMap);
-			);
-		);
-
-		Bind_Function(SetScene,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Returns_Nothing;
-			
-				Overload_Parameters
-				(
-					Function_Parameter(std::shared_ptr<Scene>, scene)
-				);
-			
-				Bind_Parameters_No_Return(SetScene, scene);
-			);
-		);
-
-		Bind_Function(GetSceneBuffer,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<FrameBuffer>);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetSceneBuffer);
-			);
-		);
-
-		Bind_Function(GetHDRColorCorrection,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<HDRColorCorrectionOperation>);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetHDRColorCorrection);
-			);
-		);
-
-		Bind_Function(GetLightingBuffer,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<FrameBuffer>);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetLightingBuffer);
-			);
-		);
-
-		Bind_Function(GetHorizontalPass,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<FrameBuffer>);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetHorizontalPass);
-			);
-		);
-
-		Bind_Function(GetVerticalPass,
-		
-			Document("");
-			Function_Overload
-			(
-				Document("");
-				Overload_Returns(std::shared_ptr<FrameBuffer>);
-			
-				Overload_Parameters();
-			
-				Bind_Parameters(GetVerticalPass);
-			);
-		);
-	);
+		}
+	}
 }

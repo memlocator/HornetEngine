@@ -1,5 +1,63 @@
 #include "Quaternion.h"
 
+Quaternion::Quaternion(const Vector3& axis, float angle)
+{
+	*this = sinf(0.5f * angle) * Vector3(axis.X, axis.Y, axis.Z, 0).Normalize() + Vector3(0, 0, 0, cosf(0.5f * angle));
+}
+
+Quaternion::operator std::string() const
+{
+	std::stringstream out;
+
+	out << *this;
+
+	return out.str();
+}
+
+std::ostream& operator<<(std::ostream& out, const Quaternion& quaternion)
+{
+	return out << "( " << quaternion.W << " + " << quaternion.X << "i + " << quaternion.Y << "j + " << quaternion.Z << "k )";
+}
+
+
+// returns the length of the vector
+float Quaternion::Length() const
+{
+	return sqrtf(SquareLength());
+}
+
+// normalizes the vector
+Quaternion& Quaternion::Normalize()
+{
+	float length = 1 / this->Length();
+	W *= length;
+	X *= length;
+	Y *= length;
+	Z *= length;
+
+	return *this;
+}
+
+Matrix3 Quaternion::Matrix() const
+{
+	float xx = X * X;
+	float yy = Y * Y;
+	float zz = Z * Z;
+	float xz = X * Z;
+	float xy = X * Y;
+	float yz = Y * Z;
+	float wx = W * X;
+	float wy = W * Y;
+	float wz = W * Z;
+
+	return Matrix3(
+		Vector3(0, 0, 0, 1),
+		Vector3(1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy)).Normalize(),
+		Vector3(2 * (xy - wz), 1 - 2 * (xx + zz), 2 * (yz + wx)).Normalize(),
+		Vector3(2 * (xz + wy), 2 * (yz - wx), 1 - 2 * (xx + yy)).Normalize()
+	);
+}
+
 Quaternion::Quaternion(const Matrix3& matrix)
 {
 	float traceW = matrix[0][0] + matrix[1][1] + matrix[2][2];
@@ -63,6 +121,7 @@ Quaternion::Quaternion(const Matrix3& matrix)
 	Normalize();
 }
 
+
 Quaternion& Quaternion::Invert()
 {
 	X *= -1;
@@ -77,23 +136,23 @@ Quaternion Quaternion::Slerp(const Quaternion& destination, float t) const
 
 	float halfCos = Dot(destination);
 	float scalar = 1;
-	
+
 	if (halfCos >= 1 || halfCos <= -1)
 		return *this;
 	else if (halfCos < 0)
 		scalar = -1;
 
 	halfCos *= scalar;
-	
+
 	float halfTheta = acosf(halfCos);
 	float halfSin = sqrtf(1 - halfCos * halfCos);
-	
+
 	if (halfSin < 1e-3f && halfSin > -1e-3f)
 		return 0.5f * (*this + scalar * destination);
-	
+
 	float ratioA = sinf((1 - t) * halfTheta) / halfSin;
 	float ratioB = scalar * sinf(t * halfTheta) / halfSin;
-	
+
 	return (ratioA * *this + ratioB * destination).Normalize();
 }
 
@@ -107,37 +166,6 @@ Quaternion Quaternion::operator*(const Quaternion& rhs) const
 	);
 }
 
-Matrix3 Quaternion::Matrix() const
-{
-	float xx = X * X;
-	float yy = Y * Y;
-	float zz = Z * Z;
-	float xz = X * Z;
-	float xy = X * Y;
-	float yz = Y * Z;
-	float wx = W * X;
-	float wy = W * Y;
-	float wz = W * Z;
-
-	return Matrix3(
-		Vector3(0, 0, 0, 1),
-		Vector3(1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy)).Normalize(),
-		Vector3(2 * (xy - wz), 1 - 2 * (xx + zz), 2 * (yz + wx)).Normalize(),
-		Vector3(2 * (xz + wy), 2 * (yz - wx), 1 - 2 * (xx + yy)).Normalize()
-	);
-}
-
-// normalizes the vector
-Quaternion& Quaternion::Normalize()
-{
-	float length = 1 / this->Length();
-	W *= length;
-	X *= length;
-	Y *= length;
-	Z *= length;
-
-	return *this;
-}
 
 // calculates the cross product between two vectors
 Quaternion Quaternion::Cross(const Quaternion& other) const
@@ -152,12 +180,6 @@ Quaternion Quaternion::Cross(const Quaternion& other) const
 Quaternion Quaternion::Unit() const
 {
 	return Quaternion(*this).Normalize();
-}
-
-// returns the length of the vector
-float Quaternion::Length() const
-{
-	return sqrtf(SquareLength());
 }
 
 // returns the square length of the vector
@@ -230,21 +252,21 @@ Quaternion& Quaternion::operator*=(float scalar)
 	return *this;
 }
 
-bool Quaternion::Compare(float x, float y, float epsilon)
+bool Quaternion::Compare(float x, float y, float epsilon) const
 {
 	float a = x - y;
 
-	return a < epsilon && a > -epsilon;
+	return a < epsilon&& a > -epsilon;
 }
 
-bool Quaternion::operator==(const Quaternion& other)
+bool Quaternion::operator==(const Quaternion& other) const
 {
 	float epsilon = 1e-5f;
 
 	return Compare(X, other.X, epsilon) && Compare(Y, other.Y, epsilon) && Compare(Z, other.Z, epsilon) && Compare(W, other.W, epsilon);
 }
 
-bool Quaternion::operator!=(const Quaternion& other)
+bool Quaternion::operator!=(const Quaternion& other) const
 {
 	return !(*this == other);
 }
@@ -267,18 +289,4 @@ Quaternion::operator Vector3() const
 Quaternion operator*(float scalar, const Quaternion& quaternion)
 {
 	return quaternion * scalar;
-}
-
-Quaternion::operator std::string() const
-{
-	std::stringstream out;
-
-	out << *this;
-
-	return out.str();
-}
-
-std::ostream& operator<<(std::ostream& out, const Quaternion& quaternion)
-{
-	return out << "( " << quaternion.W << " + " << quaternion.X << "i + " << quaternion.Y << "j + " << quaternion.Z << "k )";
 }
