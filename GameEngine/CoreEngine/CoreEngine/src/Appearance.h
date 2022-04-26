@@ -19,14 +19,5 @@ namespace GraphicsEngine
 		std::weak_ptr<Texture> Texture;
 
 		~Appearance() {}
-
-		void Initialize() {}
-		void Update(float) {}
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Appearance);
 	};
 }

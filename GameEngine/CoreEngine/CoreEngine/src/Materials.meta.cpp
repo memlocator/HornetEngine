@@ -14,7 +14,11 @@ namespace Engine
 			Reflect<Materials, Object>::Class
 			(
 				"Materials",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

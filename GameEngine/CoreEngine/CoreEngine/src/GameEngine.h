@@ -34,21 +34,12 @@ namespace Engine
 
 		std::vector<std::string> Arguments;
 		FlagMap ArgumentFlags;
-
-		Base_Class;
-
-		Reflected_Type(ProcessArguments);
 	};
-
-	Define_Value_Type(ProcessArguments);
 
 	class GameEngine : public Object
 	{
 	public:
 		virtual ~GameEngine() {}
-
-		void Initialize() {}
-		void Update(float delta) {}
 
 		std::shared_ptr<GraphicsEngine::GameWindow> GetPrimaryWindow() const;
 		void SetPrimaryWindow(const std::shared_ptr<GraphicsEngine::GameWindow>& primaryWindow);
@@ -69,11 +60,5 @@ namespace Engine
 
 		ProcessArguments Arguments;
 		std::weak_ptr<GraphicsEngine::GameWindow> PrimaryWindow;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(GameEngine);
 	};
 }

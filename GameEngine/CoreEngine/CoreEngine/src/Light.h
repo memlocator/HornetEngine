@@ -45,7 +45,6 @@ namespace GraphicsEngine
 
 		virtual ~Light() {}
 
-		void Initialize() {}
 		void Update(float delta);
 
 		bool ShadowDebugView = false;
@@ -94,18 +93,7 @@ namespace GraphicsEngine
 
 		void GenBuffer(std::shared_ptr<FrameBuffer>& map, int width, int height);
 		void DeleteBuffer(std::shared_ptr<FrameBuffer>& map);
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Light);
 	};
-}
-
-namespace Engine
-{
-	Declare_Enum(LightType);
 }
 
 namespace Enum

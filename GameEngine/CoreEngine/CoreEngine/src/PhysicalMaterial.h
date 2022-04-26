@@ -15,13 +15,5 @@ namespace GraphicsEngine
 		float Transparency = 0;
 		float Translucency = 0.01f;
 		float Emission = 0;
-
-		void Initialize() {}
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(PhysicalMaterial);
 	};
 }

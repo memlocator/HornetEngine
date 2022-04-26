@@ -51,6 +51,10 @@ namespace Engine
 				Member<Bind(&HDRColorCorrectionOperation::Input)>("Input"),
 				Member<Bind(&HDRColorCorrectionOperation::Output)>("Output"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetLuminescenceBuffer",
 					Overload(

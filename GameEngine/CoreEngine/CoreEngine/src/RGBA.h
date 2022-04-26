@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector3.h"
-#include "ObjectReflection.h"
 
 struct RGBA
 {
@@ -30,15 +29,6 @@ struct RGBA
 	operator Vector3() const;
 	operator std::string() const;
 	RGBA& operator=(const RGBA& other);
-
-	Base_Class;
-
-	Reflected_Type(RGBA);
 };
 
 std::ostream& operator<<(std::ostream& out, const RGBA& color);
-
-namespace Engine
-{
-	Define_Value_Type(RGBA);
-}

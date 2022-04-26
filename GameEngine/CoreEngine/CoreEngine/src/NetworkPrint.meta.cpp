@@ -14,6 +14,10 @@ namespace Engine
 				"Printer",
 				{ "GameObject", "NetworkPrint" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"print",
 					Overload(

@@ -12,11 +12,10 @@ namespace GraphicsEngine
 		virtual ~RenderOperation();
 		
 		void Initialize();
-		void Update(float delta) {}
 
 		bool RenderAutomatically = false;
 
-		virtual void Render() = 0;
+		virtual void Render() {};
 
 		static void UpdateOperations(float delta);
 		static void RenderOperations();
@@ -27,11 +26,5 @@ namespace GraphicsEngine
 		static OperationHeap& GetOperations();
 
 		int OperationID = -1;
-
-		NonInstantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(RenderOperation);
 	};
 }

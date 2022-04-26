@@ -24,10 +24,6 @@ public:
 	DeviceAxis& operator-=(const DeviceAxis& axis);
 	DeviceAxis& operator*=(float scalar);
 	DeviceAxis& operator/=(float scalar);
-
-	Base_Class;
-
-	Reflected_Type(DeviceAxis);
 };
 
 DeviceAxis operator*(float scalar, DeviceAxis axis);
@@ -58,20 +54,9 @@ public:
 	DeviceVector& operator-=(const DeviceVector& vector);
 	DeviceVector& operator*=(float scalar);
 	DeviceVector& operator/=(float scalar);
-
-	Base_Class;
-
-	Reflected_Type(DeviceVector);
 };
 
-namespace Engine
-{
-	Define_Value_Type(DeviceAxis);
-	Define_Value_Type(DeviceVector);
-}
-
 DeviceVector operator*(float scalar, const DeviceVector& vector);
-
 
 std::ostream& operator<<(std::ostream& out, const DeviceAxis& axis);
 

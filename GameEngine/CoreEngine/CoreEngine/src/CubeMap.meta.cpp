@@ -22,7 +22,11 @@ namespace Engine
 				Member<Bind(&CubeMapTexture::Left)>("Left"),
 				Member<Bind(&CubeMapTexture::Right)>("Right"),
 				Member<Bind(&CubeMapTexture::Top)>("Top"),
-				Member<Bind(&CubeMapTexture::Bottom)>("Bottom")
+				Member<Bind(&CubeMapTexture::Bottom)>("Bottom"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -39,7 +43,11 @@ namespace Engine
 				Member<Bind(&CubeMapBuffer::Left)>("Left"),
 				Member<Bind(&CubeMapBuffer::Right)>("Right"),
 				Member<Bind(&CubeMapBuffer::Top)>("Top"),
-				Member<Bind(&CubeMapBuffer::Bottom)>("Bottom")
+				Member<Bind(&CubeMapBuffer::Bottom)>("Bottom"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

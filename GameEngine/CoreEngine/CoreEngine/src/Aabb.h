@@ -1,8 +1,9 @@
 #pragma once
 
+#include <vector>
+
 #include "Vector3.h"
 #include "Matrix3.h"
-#include "ObjectReflection.h"
 #include "Plane.h"
 #include "ConstMath.h"
 
@@ -49,20 +50,11 @@ public:
 
 	bool operator==(const Aabb& other) const;
 	bool operator!=(const Aabb& other) const;
-
-	Base_Class;
-
-	Reflected_Type(Aabb);
 };
 
 namespace Enum
 {
 	typedef Aabb::Axis Axis;
-}
-
-namespace Engine
-{
-	Define_Value_Type(Aabb);
 }
 
 // Helper functions

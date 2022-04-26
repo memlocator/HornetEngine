@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ObjectReflection.h"
-
 #include "Object.h"
 
 /*****
@@ -11,8 +9,6 @@
 
 	Warning: order of registration is crucial. Register this before any item that depends on it.
 *****/
-
-// #include "ObjectRegistration.cpp" // Remove this once registered
 
 /*
 	Quick note about reflected objects and Lua:
@@ -40,16 +36,5 @@ namespace ExampleNamespace
 	class ObjectTemplate : public Engine::Object
 	{
 	public:
-		// These 2 functions need to be defined. If they aren't defined then the parent class's versions will be called twice.
-		void Initialize() {}
-		void Update(float) {}
-
-		// Allows creation with the object factory. Use "NonInstantiable" for singletons/base types.
-		Instantiable;
-
-		// This must match the parent type.
-		Inherits_Class(Object);
-
-		Reflected(ObjectTemplate);
 	};
 }

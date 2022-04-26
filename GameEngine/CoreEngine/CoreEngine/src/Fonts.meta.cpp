@@ -14,7 +14,11 @@ namespace Engine
 			Reflect<Fonts, Object>::Class
 			(
 				"Fonts",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

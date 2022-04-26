@@ -4,6 +4,8 @@ namespace GraphicsEngine
 {
 	void RenderOperation::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		OperationID = GetOperations().RequestID(This.lock()->Cast<RenderOperation>());
 	}
 
@@ -46,7 +48,7 @@ namespace GraphicsEngine
 				if (operation == nullptr)
 					operations.Release(i);
 				else// if (operation->RenderAutomatically)
-					operation->UpdateBase(0, true);
+					operation->Update(0);
 			}
 		}
 

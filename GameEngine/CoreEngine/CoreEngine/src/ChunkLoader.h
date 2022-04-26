@@ -38,11 +38,5 @@ namespace Engine
 		void RefreshReferences();
 		std::shared_ptr<TerrainTypes::Status> GetReference(const Coordinates& cell, Coordinates chunk) const;
 
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(ChunkLoader);
-
 	};
 }

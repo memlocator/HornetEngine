@@ -58,11 +58,5 @@ namespace GraphicsEngine
 		bool IsWhiteSpace(int index) const;
 		int SkipWhiteSpace(int index) const;
 		float GetWordWidth(const std::shared_ptr<Font>& font, int start, int wordEnd) const;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Text);
 	};
 }

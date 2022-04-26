@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "Matrix3.h"
-#include "ObjectReflection.h"
 #include "MeshData.h"
 
 namespace Engine
@@ -21,13 +20,4 @@ public:
 
 	static OBB Compute(const MeshData::VertexVector& vertices);
 	static OBB Compute(const std::shared_ptr<Engine::ModelAsset>& model);
-
-	Base_Class;
-
-	Reflected_Type(OBB);
 };
-
-namespace Engine
-{
-	Define_Value_Type(OBB);
-}

@@ -18,6 +18,10 @@ namespace Engine
 				"MeshLoader",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"NewAsset",
 					Overload(

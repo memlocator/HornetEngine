@@ -1,5 +1,7 @@
 #include "Quaternion.h"
 
+#include <sstream>
+
 Quaternion::Quaternion(const Vector3& axis, float angle)
 {
 	*this = sinf(0.5f * angle) * Vector3(axis.X, axis.Y, axis.Z, 0).Normalize() + Vector3(0, 0, 0, cosf(0.5f * angle));

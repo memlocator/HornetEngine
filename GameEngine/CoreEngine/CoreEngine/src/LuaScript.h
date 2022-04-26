@@ -1,8 +1,9 @@
 #pragma once
 
 #include "IdentifierHeap.h"
-#include "Lua.h"
 #include "Object.h"
+
+struct lua_State;
 
 namespace Engine
 {
@@ -52,15 +53,7 @@ namespace Engine
 		bool SourceChanged = false;
 		bool DataLoaded = false;
 		bool AutoRuns = false;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(LuaScript);
 	};
-
-	Declare_Enum(ScriptStatus);
 }
 
 namespace Enum

@@ -2,12 +2,11 @@
 
 #include <iostream>
 
-#include "LuaBinding.h"
+#include "Reflection/MetaData.h"
 
 namespace Engine
 {
 	unsigned long long Object::ObjectsCreated = 0;
-	Object::FactoryCallbackMap Object::FactoryFunctions;
 	Object::ObjectHandleHeap Object::ObjectIDs = ObjectHandleHeap();
 
 	void Object::Initialize()
@@ -22,38 +21,30 @@ namespace Engine
 		return ObjectIDs.NodeAllocated(objectId) && ObjectIDs.GetNode(objectId).GetData().CreationOrderId == creationOrderId;
 	}
 
-	int Object::GetTypeID() const
+	std::string Object::GetTypeName() const
 	{
-		return GetMetaData()->ID;
-	}
-
-	const std::string& Object::GetTypeName() const
-	{
-		return GetMetaData()->Name;
+		return GetMetaData(0)->Name;
 	}
 
 	bool Object::IsA(const std::string& className, bool inherited) const
 	{
-		MetaData* data = GetMetaData();
+		const Meta::ReflectedType* data = GetMetaData(0);
 		
-		return data->Name == className || (inherited && data->Inherits(className));
+		if (data->Name == className) return true;
+
+		if (inherited)
+			for (int i = (int)data->Inherits.size() - 2; i >= 0; --i)
+				if (data->Inherits[i]->Name == className)
+					return true;
+
+		return false;
 	}
 
-	bool Object::IsA(MetaData* metadata, bool inherited) const
+	bool Object::IsA(const Meta::ReflectedType* metadata, bool inherited) const
 	{
-		MetaData* data = GetMetaData();
+		const Meta::ReflectedType* data = GetMetaData(0);
 
-		return data == metadata || data->Inherits(metadata->Name);
-	}
-
-	const ClassData::Property* Object::GetProperty(const std::string& name) const
-	{
-		return reinterpret_cast<const ClassData*>(GetMetaData())->GetProperty(name);
-	}
-
-	bool Object::HasRequirements() const
-	{
-		return GetRequirements().size() > 0;
+		return data == metadata || data->InheritsType(metadata);
 	}
 
 	void Object::SetObjectID(int id)
@@ -77,27 +68,12 @@ namespace Engine
 		return Name;
 	}
 
-	const Object::FactoryCallback& Object::GetFactoryFunction(const std::string& className)
-	{
-		FactoryCallbackMap::iterator i = FactoryFunctions.find(className);
-
-		if (i != FactoryFunctions.end())
-			return i->second;
-
-		throw "Attempt to get factory function of unregistered type: " + className;
-	}
-
-	std::shared_ptr<Object> CreateObject(const std::string& className)
-	{
-		return Object::GetFactoryFunction(className)();
-	}
-
 	void Object::Update(float delta)
 	{
 		for (int i = 0; i < GetChildren(); ++i)
 		{
 			if (Children[i] != nullptr && Children[i]->DoesTick())
-				Children[i]->UpdateBase(delta);
+				Children[i]->Update(delta);
 			else if (Children[i] == nullptr)
 				throw "bad child detected";
 		}
@@ -148,6 +124,15 @@ namespace Engine
 		return nullptr;
 	}
 
+	std::shared_ptr<Object> Object::Get(const std::string& className, bool inherited) const
+	{
+		for (int i = 0; i < int(Children.size()); ++i)
+			if (Children[i]->IsA(className, inherited))
+				return Children[i];
+
+		return nullptr;
+	}
+
 	std::shared_ptr<Object> Object::Get(int index)
 	{
 		if (index < 0 || index >= int(Children.size()))
@@ -182,10 +167,10 @@ namespace Engine
 
 	std::shared_ptr<Object> Object::GetComponent(const std::string& className, bool inherited) const
 	{
-		return GetComponent(ReflectionData::GetType(className), inherited);
+		return Get(className, inherited);
 	}
 
-	std::shared_ptr<Object> Object::GetComponent(MetaData* data, bool inherited) const
+	std::shared_ptr<Object> Object::GetComponent(const Meta::ReflectedType* data, bool inherited) const
 	{
 		auto parent = Parent.lock();
 
@@ -194,18 +179,7 @@ namespace Engine
 			if (ParentComponent && parent->IsA(data, inherited))
 				return parent;
 
-			if (SiblingComponents)
-			{
-				for (int i = 0; i < parent->GetChildren(); ++i)
-				{
-					std::shared_ptr<Object> child = parent->Cast<Object>()->Get(i)->Cast<Object>();
-
-					if (child != This.lock() && child->IsA(data, inherited))
-						return parent->Get(i);
-				}
-			}
-
-			if (AncestorComponents || SuperSiblingComponents)
+			if (AncestorComponents)
 			{
 				std::shared_ptr<Object> ancestor = Parent.lock();
 
@@ -213,17 +187,6 @@ namespace Engine
 				{
 					if (AncestorComponents && ancestor->IsA(data, inherited))
 						return ancestor;
-
-					if (SuperSiblingComponents)
-					{
-						for (int i = 0; i < ancestor->GetChildren(); ++i)
-						{
-							std::shared_ptr<Object> child = ancestor->Get(i);
-
-							if (child != This.lock() && child->IsA(data, inherited))
-								return ancestor->Get(i);
-						}
-					}
 
 					if (!ancestor->Parent.expired())
 						ancestor = ancestor->Parent.lock();
@@ -250,14 +213,6 @@ namespace Engine
 
 	void Object::AddChild(const std::shared_ptr<Object>& child)
 	{
-		if (!child->CheckRestriction(This.lock()))
-			throw "Attempt to add duplicate child type: " + child->GetTypeName() + " restricts types of siblings; Adding \"" + child->Name + "\" to \"" + Name + "\"";
-
-		const std::string& missingRequirement = child->CheckRequirements(This.lock());
-
-		if (missingRequirement != "")
-			throw "Attempt to add child to object with missing required siblings: " + child->GetTypeName() + " requires a sibling of type " + missingRequirement + "; Adding \"" + child->Name + "\" to \"" + Name + "\"";
-
 		child->Parent = This;
 
 		if (child->DoesTick())
@@ -319,27 +274,6 @@ namespace Engine
 	std::shared_ptr<Object> Object::GetParent() const
 	{
 		return Parent.lock();
-	}
-
-	bool Object::CheckRestriction(const std::shared_ptr<Object>& object) const
-	{
-		return !RestrictsSiblings() || object->HasA(GetTypeName());
-	}
-
-	std::string NoRequirements = "";
-
-	const std::string& Object::CheckRequirements(const std::shared_ptr<Object>& object) const
-	{
-		if (!HasRequirements())
-			return NoRequirements;
-
-		const StringVector& requirements = GetRequirements();
-
-		for (int i = 0; i < int(requirements.size()); ++i)
-			if (!object->HasA(requirements[i]))
-				return requirements[i];
-
-		return NoRequirements;
 	}
 
 	bool Object::IsAncestorOf(const std::shared_ptr<Object>& object) const
@@ -404,43 +338,8 @@ namespace Engine
 		TickedBefore = ticksNow;
 	}
 
-	namespace LuaTypes
+	bool Object::MetaMatches(const Meta::ReflectedType* type, const Meta::ReflectedType* target, bool inherited)
 	{
-		int Lua_object::GetObjectID(const void* data)
-		{
-			LuaData* object = (LuaData*)(data);
-
-			return object->Reference->GetObjectID();
-		}
-
-		void Lua_object::PushObject(lua_State* lua, const std::shared_ptr<Object>& object)
-		{
-			lua_pushstring(lua, "Objects");
-			lua_gettable(lua, LUA_REGISTRYINDEX);
-
-			int tableIndex = lua_gettop(lua);
-
-			lua_pushnumber(lua, lua_Number(object->GetObjectID()));
-			lua_gettable(lua, tableIndex);
-
-			if (!lua_isuserdata(lua, lua_gettop(lua)))
-			{
-				int remove = 1;
-
-				if (lua_gettop(lua) != tableIndex)
-					remove = 2;
-
-				lua_pop(lua, remove);
-
-				MakeLuaReference(lua, object->GetObjectID());
-			}
-			else
-				lua_replace(lua, -2);
-		}
-
-		void Lua_object::PushObject(lua_State* lua, const Reference<Engine::Object>& object)
-		{
-			PushObject(lua, object->Cast<Engine::Object>());
-		}
+		return type == target || (inherited && type->InheritsType(target));
 	}
 }

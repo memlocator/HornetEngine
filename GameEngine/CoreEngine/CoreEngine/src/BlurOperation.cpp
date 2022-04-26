@@ -23,6 +23,8 @@ namespace GraphicsEngine
 
 	void BlurOperation::Initialize()
 	{
+		RenderOperation::Initialize();
+
 		auto horizontalPass = Engine::Create<BlurPassOperation>();
 		auto verticalPass = Engine::Create<BlurPassOperation>();
 

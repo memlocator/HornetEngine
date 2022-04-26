@@ -18,6 +18,10 @@ namespace Engine
 
 				Member<Bind(&Camera::LightDirection)>("LightDirection"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"SetTransformation",
 					Overload(

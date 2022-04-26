@@ -26,6 +26,8 @@ namespace GraphicsEngine
 
 	void FrameBuffer::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		ObjectIDCache = This.lock()->GetObjectID();
 
 		std::shared_ptr<Texture> depthTexture = Engine::Create<Texture>();

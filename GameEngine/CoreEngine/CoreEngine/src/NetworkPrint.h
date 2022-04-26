@@ -11,21 +11,10 @@ namespace Engine
         public:
             virtual ~Printer() {}
 
-            void Initialize() {};
-            void Update(float) {}
-
             void print(std::string str)
             {
                 std::cout << "Print from C++: " << str << std::endl;
             }
-
-
-            Instantiable;
-            Inherits_Class(Object);
-
-            Reflected(Printer);
         };
     }
-    
-
 }

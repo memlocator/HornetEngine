@@ -13,6 +13,8 @@ namespace GraphicsEngine
 {
 	void ShadingOperation::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		auto shadowCamera = Engine::Create<Camera>();
 		auto shadowScene = Engine::Create<Scene>();
 
@@ -53,8 +55,10 @@ namespace GraphicsEngine
 		//SetTicks(true);
 	}
 
-	void ShadingOperation::Update(float)
+	void ShadingOperation::Update(float delta)
 	{
+		RenderOperation::Update(delta);
+
 		if (CurrentScene.expired())
 			return;
 

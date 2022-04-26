@@ -87,7 +87,11 @@ namespace Engine
 				Member<Bind(&SelectionHandlesOperation::SelectToolKey)>("SelectToolKey"),
 
 				Member<Bind(&SelectionHandlesOperation::ToggleLocalSpaceKey)>("ToggleLocalSpaceKey"),
-				Member<Bind(&SelectionHandlesOperation::ToggleGroupSelectKey)>("ToggleGroupSelectKey")
+				Member<Bind(&SelectionHandlesOperation::ToggleGroupSelectKey)>("ToggleGroupSelectKey"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

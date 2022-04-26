@@ -26,14 +26,7 @@ namespace GraphicsEngine
 
 			Character();
 			Character(char character, float aspectRatio, const Vector3& textOffset, const Vector3& textScale, float kerningLeft, float kerningRight, float verticalOffset);
-
-			Base_Class;
-
-			Reflected_Type(Character);
 		};
-
-		void Initialize() {}
-		void Update(float) {}
 
 		float SpaceWidth = 0.3f;
 		int TabSpaces = 4;
@@ -49,21 +42,5 @@ namespace GraphicsEngine
 		std::weak_ptr<Texture> Glyphs;
 
 		Character Nope = Character(0, 1, Vector3(), Vector3(), 0, 0, 0);
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Font);
 	};
-}
-
-namespace Engine
-{
-	namespace
-	{
-		typedef GraphicsEngine::Font::Character Character;
-	}
-
-	Define_Value_Type(Character);
 }

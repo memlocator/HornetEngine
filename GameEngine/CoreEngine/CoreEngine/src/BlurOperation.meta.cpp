@@ -22,6 +22,10 @@ namespace Engine
 				Member<Bind(&BlurPassOperation::Direction)>("Direction"),
 				Member<Bind(&BlurPassOperation::Input)>("Input"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Configure",
 					Overload(
@@ -49,6 +53,10 @@ namespace Engine
 				Member<Bind(&BlurOperation::Input)>("Input"),
 				Member<Bind(&BlurOperation::Output)>("Output"),
 				Member<Bind(&BlurOperation::Detatch)>("Detatch"),
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"Configure",

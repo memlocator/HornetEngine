@@ -11,7 +11,7 @@ namespace Engine
 		{
 			Reflect<Enum::TerrainColliderAxis>::Enum
 			(
-				"TestEnum",
+				"TerrainColliderAxis",
 				Value<Enum::TerrainColliderAxis::XYPlane>("XYPlane"),
 				Value<Enum::TerrainColliderAxis::XZPlane>("XZPlane"),
 				Value<Enum::TerrainColliderAxis::ZYPlane>("ZYPlane"),

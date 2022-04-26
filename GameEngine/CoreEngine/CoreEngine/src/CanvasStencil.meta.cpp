@@ -20,6 +20,10 @@ namespace Engine
 
 				Member<Bind(&CanvasStencil::Enabled)>("Enabled"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetTexture",
 					Overload(

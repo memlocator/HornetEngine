@@ -24,6 +24,10 @@ namespace Engine
 				Member<Bind(&InputContext::Device)>("Device"),
 				Member<Bind(&InputContext::InputSource)>("InputSource"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetFocus",
 					Overload(

@@ -48,12 +48,6 @@ namespace GraphicsEngine
 
 		void Resize(int width, int height);
 
-		Instantiable;
-
-		Inherits_Class(RenderOperation);
-
-		Reflected(HDRColorCorrectionOperation);
-
 	private:
 		std::weak_ptr<FrameBuffer> LuminescenceBuffer;
 		std::weak_ptr<FrameBuffer> LuminescenceBackBuffer;
@@ -66,10 +60,4 @@ namespace Enum
 {
 	typedef GraphicsEngine::HDRColorCorrectionOperation::LuminescenceMode LuminescenceMode;
 	typedef GraphicsEngine::HDRColorCorrectionOperation::RangeFittingMode RangeFittingMode;
-}
-
-namespace Engine
-{
-	Declare_Enum(LuminescenceMode);
-	Declare_Enum(RangeFittingMode);
 }

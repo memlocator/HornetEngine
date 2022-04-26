@@ -8,8 +8,10 @@ extern "C" {
 
 namespace GraphicsEngine
 {
-	void Camera::Update(float)
+	void Camera::Update(float delta)
 	{
+		Engine::Object::Update(delta);
+
 		HasMoved = false;
 
 		SetTicks(false);

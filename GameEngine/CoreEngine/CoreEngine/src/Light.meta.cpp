@@ -32,6 +32,10 @@ namespace Engine
 				Member<Bind(&Light::SpotlightFalloff)>("SpotlightFalloff"),
 				Member<Bind(&Light::Type)>("Type"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetRadius",
 					Overload(

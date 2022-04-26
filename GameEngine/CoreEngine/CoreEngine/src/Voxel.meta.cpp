@@ -12,7 +12,11 @@ namespace Engine
 			Reflect<Voxel, Object>::Class
 			(
 				"Voxel",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

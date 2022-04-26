@@ -39,11 +39,5 @@ namespace GraphicsEngine
 
 		void Draw(const std::shared_ptr<Light>& light);
 		void DrawShadows(const std::shared_ptr<Light>& light, int index);
-
-		Instantiable;
-
-		Inherits_Class(RenderOperation);
-
-		Reflected(ShadingOperation);
 	};
 }

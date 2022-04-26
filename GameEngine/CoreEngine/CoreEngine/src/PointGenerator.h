@@ -14,10 +14,6 @@ public:
 	{
 		return float(rand()) / RAND_MAX;
 	}
-
-	Base_Class;
-
-	Reflected_Type(VectorGenerator);
 };
 
 struct NumberRange
@@ -46,17 +42,7 @@ struct NumberRange
 		Min = value;
 		Max = value;
 	}
-
-	Base_Class;
-
-	Reflected_Type(NumberRange);
 };
-
-namespace Engine
-{
-	Define_Value_Type(VectorGenerator);
-	Define_Value_Type(NumberRange);
-}
 
 class PointGenerator : public VectorGenerator
 {
@@ -69,10 +55,6 @@ public:
 	{
 		return Position;
 	}
-
-	Inherits_Type(VectorGenerator);
-
-	Reflected_Type(PointGenerator);
 };
 
 class UnitVectorGenerator : public VectorGenerator
@@ -86,10 +68,6 @@ public:
 
 		return Vector3(sinPhi * cos(theta), sinPhi * sin(theta), cos(phi));
 	}
-
-	Inherits_Type(VectorGenerator);
-
-	Reflected_Type(UnitVectorGenerator);
 };
 
 class ConeUnitVectorGenerator : public VectorGenerator
@@ -115,15 +93,4 @@ public:
 
 		return (cosf(theta2) * Normal + sinf(theta2) * direction);
 	}
-
-	Inherits_Type(VectorGenerator);
-
-	Reflected_Type(ConeUnitVectorGenerator);
 };
-
-namespace Engine
-{
-	Define_Value_Type(PointGenerator);
-	Define_Value_Type(UnitVectorGenerator);
-	Define_Value_Type(ConeUnitVectorGenerator);
-}

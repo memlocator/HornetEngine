@@ -14,18 +14,9 @@ namespace GraphicsEngine
 
 		~ScreenCanvas() {}
 
-		void Initialize() {}
-		void Update(float) {}
-
 		void Draw();
 		
 	private:
 		void DrawScreen(const std::shared_ptr<DeviceTransform>& transform);
-	
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(ScreenCanvas);
 	};
 }

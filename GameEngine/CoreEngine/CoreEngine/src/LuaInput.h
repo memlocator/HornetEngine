@@ -5,11 +5,6 @@
 
 namespace Engine
 {
-	Declare_Enum(InputCode);
-	Declare_Enum(InputType);
-	Declare_Enum(InputState);
-	Declare_Enum(BoundDevice);
-
 	class InputData
 	{
 	public:
@@ -35,9 +30,6 @@ namespace Engine
 	class InputObject : public Object
 	{
 	public:
-		void Initialize() {}
-		void Update(float) {}
-
 		bool GetState(Enum::BoundDevice device = Enum::BoundDevice::Any) const {
 			return Inputs[device].GetState();
 		}
@@ -64,20 +56,11 @@ namespace Engine
 		static Vector3 Nope;
 
 		InputData Inputs[Enum::BoundDevice::Count] = {};
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(InputObject);
 	};
 
 	class InputDevice : public InputObject
 	{
 	public:
-		void Initialize() {}
-		void Update(float) {}
-
 		void Configure(::InputObject* input);
 
 		Enum::InputType GetType() const;
@@ -90,12 +73,6 @@ namespace Engine
 
 	private:
 		::InputObject* Input = nullptr;
-
-		Instantiable;
-
-		Inherits_Class(InputObject);
-
-		Reflected(InputDevice);
 	};
 	
 	class InputBinding : public InputObject
@@ -151,20 +128,11 @@ namespace Engine
 		void SetPosition(const Vector3& position, int index, bool suppressUpdates = false);
 		void Unbind(int index);
 		int Find(const std::shared_ptr<InputObject>& input) const;
-
-		Instantiable;
-
-		Inherits_Class(InputObject);
-
-		Reflected(InputBinding);
 	};
 
 	class UserInput : public Object
 	{
 	public:
-		void Initialize() {}
-		void Update(float) {}
-
 		void Configure(InputHandler* handler);
 
 		bool GetState(Enum::InputCode code);
@@ -185,21 +153,10 @@ namespace Engine
 
 		InputVector Inputs;
 		InputHandler* Handler = nullptr;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(UserInput);
 	};
 }
 
 namespace Enum
 {
 	typedef Engine::InputBinding::InputMode InputMode;
-}
-
-namespace Engine
-{
-	Declare_Enum(InputMode);
 }

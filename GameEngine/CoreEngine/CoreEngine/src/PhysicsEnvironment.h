@@ -32,10 +32,6 @@ namespace Engine
 			ColliderVector Colliders;
 			FloatVector Distances;
 			NormalVector Normals;
-
-			Base_Class;
-
-			Reflected_Type(RayCastResults);
 		};
 		
 		class PhysicsEnvironment : public Object
@@ -70,16 +66,8 @@ namespace Engine
 			MinkowskiDifference Difference;
 			CircleMinkowskiDifference CircleDifference;
 			CollisionPairVector CollisionBuffer;
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(PhysicsEnvironment);
 		};
 	}
 
 	using Physics::RayCastResults;
-
-	Define_Value_Type(RayCastResults);
 }

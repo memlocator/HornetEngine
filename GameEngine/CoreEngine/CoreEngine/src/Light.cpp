@@ -13,6 +13,8 @@ namespace GraphicsEngine
 {
 	void Light::Update(float delta)
 	{
+		Engine::Object::Update(delta);
+
 		Direction = Direction.Unit();
 	}
 

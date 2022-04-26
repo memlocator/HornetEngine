@@ -29,9 +29,6 @@ namespace GraphicsEngine
 class CubeMapTexture : public Engine::Object
 {
 public:
-	void Initialize() {}
-	void Update(float) {}
-
 	std::weak_ptr<GraphicsEngine::Texture> Front;
 	std::weak_ptr<GraphicsEngine::Texture> Back;
 	std::weak_ptr<GraphicsEngine::Texture> Left;
@@ -48,20 +45,11 @@ public:
 	{
 		return (&Front)[side].lock();
 	}
-
-	Instantiable;
-
-	Inherits_Class(Object);
-
-	Reflected(CubeMapTexture);
 };
 
 class CubeMapBuffer : public Engine::Object
 {
 public:
-	void Initialize() {}
-	void Update(float) {}
-
 	std::weak_ptr<GraphicsEngine::FrameBuffer> Front;
 	std::weak_ptr<GraphicsEngine::FrameBuffer> Back;
 	std::weak_ptr<GraphicsEngine::FrameBuffer> Left;
@@ -78,10 +66,4 @@ public:
 	{
 		return (&Front)[side].lock();
 	}
-
-	Instantiable;
-
-	Inherits_Class(Object);
-
-	Reflected(CubeMapBuffer);
 };

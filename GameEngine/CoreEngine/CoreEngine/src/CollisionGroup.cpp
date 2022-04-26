@@ -15,13 +15,13 @@ namespace Engine
 			}
 		}
 
-		void CollisionGroup::AddInteraction(const std::shared_ptr<Object>& group, InteractionType type)
+		void CollisionGroup::AddInteraction(const std::shared_ptr<CollisionGroup>& group, InteractionType type)
 		{
 			AddInteractionRegistry(group, type);
 			group->Cast<CollisionGroup>()->AddInteractionRegistry(This.lock()->Cast<CollisionGroup>(), type);
 		}
 
-		Enum::InteractionType CollisionGroup::GetInteraction(const std::shared_ptr<Object>& group) const
+		Enum::InteractionType CollisionGroup::GetInteraction(const std::shared_ptr<CollisionGroup>& group) const
 		{
 			GroupMap::const_iterator i = Interactions.find(group->GetObjectID());
 

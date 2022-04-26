@@ -28,9 +28,6 @@ namespace Engine
 
 		Enum::TerrainColliderAxis Axis = Enum::TerrainColliderAxis::XYPlane;
 
-		void Initialize() {}
-		void Update(float) {}
-
 		void PairQuery(const AabbTree::Node* head, const TerrainPairCallback& collisionCallback, const ColliderCallback& lookupCallback);
 
 		void InitializeReflection();
@@ -83,11 +80,5 @@ namespace Engine
 		void FillOccupancy(float* occupancy, const std::shared_ptr<Chunk>& chunk, int x, int y, int z) const;
 		int GetPermutation(const float* occupancy) const;
 		float FetchOccupancy(const std::shared_ptr<Chunk>* chunks, int x, int y, int z) const;
-
-		Instantiable;
-
-		Inherits_Class(Physics::Collider2D);
-
-		Reflected(TerrainCollider2D);
 	};
 }

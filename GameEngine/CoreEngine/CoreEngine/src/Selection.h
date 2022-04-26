@@ -17,9 +17,6 @@ namespace Engine
 		class Selection : public Object
 		{
 		public:
-			void Initialize() {}
-			void Update(float) {}
-
 			void AddObject(const std::shared_ptr<GraphicsEngine::SceneObject>& object);
 			void RemoveObject(const std::shared_ptr<GraphicsEngine::SceneObject>& object);
 			bool IsObjectSelected(const std::shared_ptr<GraphicsEngine::SceneObject>& object);
@@ -36,12 +33,6 @@ namespace Engine
 			ObjectVector SelectedObjects;
 
 			int FindIndex(const std::shared_ptr<GraphicsEngine::SceneObject>& object);
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(Selection);
 		};
 	}
 }

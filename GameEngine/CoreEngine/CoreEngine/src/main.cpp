@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <forward_list>
+#include <chrono>
 extern "C" {
 #include <Windows.h>
 }
@@ -23,9 +24,6 @@ extern "C" {
 
 #include "Object.h"
 #include "GameEngine.h"
-#include "ObjectRegistration.h"
-#include "Lua.h"
-#include "LuaBinding.h"
 #include "Graphics.h"
 #include "Scene.h"
 #include "FrameBase.h"
@@ -51,6 +49,7 @@ extern "C" {
 #include "GraphicsOperationPackage.h"
 #include "EditorPackage.h"
 #include "Reflection/DebugPrintMeta.h"
+#include "Reflection/LuaEnvironment.h"
 
 // Add NoLua reflection tag
 // Add Object::Clone(bool deep = true)
@@ -74,12 +73,10 @@ int main(int argc, char* argv[])
 		Engine::Reflection::GraphicsOperationPackage,
 		Engine::Reflection::EditorPackage
 	>();
-	Engine::Meta::PrintAll();
 
   // Initialization
 	try
 	{
-		Engine::InitializeObjectTypes();
 		Engine::InitializeEngine();
 		Graphics::Initialize();
 
@@ -96,9 +93,8 @@ int main(int argc, char* argv[])
 	{
 		Window& window = *Graphics::System->ActiveWindow;
 
-		Lua lua;
 
-		Engine::BindLua(lua.GetState());
+		Engine::Lua::LuaEnvironment luaEnv;
 
 		window.Update();
 
@@ -133,7 +129,18 @@ int main(int argc, char* argv[])
 			script->Run();
 		}
 
-		Engine::UpdateLua(lua.GetState(), 0);
+		{
+			auto start = std::chrono::high_resolution_clock::now();
+
+			luaEnv.UpdateLua(luaEnv.GetEnv(), 0);
+
+			auto stop = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+
+			float durationMS = (float(duration.count()) / 1e6f);
+
+			std::cout << "load time: " << durationMS << " miliseconds" << std::endl;
+		}
 
 		// Game Loop
 		while (!window.IsClosed())
@@ -145,9 +152,9 @@ int main(int argc, char* argv[])
 
 			TaskScheduler::Update(delta);
 
-			std::shared_ptr<Engine::Object>(Engine::Root())->UpdateBase(delta);
+			std::shared_ptr<Engine::Object>(Engine::Root())->Update(delta);
 
-			Engine::UpdateLua(lua.GetState(), delta);
+			luaEnv.UpdateLua(luaEnv.GetEnv(), delta);
 
 			GraphicsEngine::RenderOperation::RenderOperations();
 
@@ -161,7 +168,6 @@ int main(int argc, char* argv[])
 		Engine::CleanEngine();
 
 		Graphics::Clean();
-		ReflectionData::CleanUp();
 	}
 	catch (std::string& error)
 	{

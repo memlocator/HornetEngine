@@ -26,11 +26,15 @@ namespace Engine
 
 	void Chunk::Initialize()
 	{
+		Object::Initialize();
+
 		SetTicks(true);
 	}
 
-	void Chunk::Update(float)
+	void Chunk::Update(float delta)
 	{
+		Object::Update(delta);
+
 		if (RegenerateGeometry)
 			Regenerate();
 
@@ -73,7 +77,7 @@ namespace Engine
 		if (ParentTerrain.expired())
 			return;
 
-		std::string path = ParentTerrain.lock()->Cast<Terrain>()->DataDirectory + "/" + GetTerrain<Terrain>()->GetChunkPath(Index);
+		std::string path = ParentTerrain.lock()->Cast<Terrain>()->DataDirectory + "/" + GetTerrain()->GetChunkPath(Index);
 		std::ifstream file(path, std::ios_base::in | std::ios_base::binary);
 		
 		if (!file.is_open() || !file.good())
@@ -409,9 +413,9 @@ namespace Engine
 		voxel.SetDataIndex(index);
 	}
 
-	std::shared_ptr<Object> Chunk::GetTerrain() const
+	std::shared_ptr<Terrain> Chunk::GetTerrain() const
 	{
-		return ParentTerrain.lock();
+		return ParentTerrain.lock()->Cast<Terrain>();
 	}
 
 	TerrainTypes::VoxelData& Chunk::Get(const Coordinates& cell)

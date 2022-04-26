@@ -76,11 +76,15 @@ namespace Engine
 
 	void InputBinding::Initialize()
 	{
+		InputObject::Initialize();
+
 		SetTicks(true);
 	}
 
-	void InputBinding::Update(float)
+	void InputBinding::Update(float delta)
 	{
+		InputObject::Update(delta);
+
 		for (int i = 0; i < int(Bindings.size()); ++i)
 		{
 			if (Bindings[i].Input.expired())

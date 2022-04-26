@@ -1,7 +1,5 @@
 #pragma once
 
-#include "EnumDeclaration.h"
-
 namespace GraphicsEngine
 {
 	struct AlignmentEnum
@@ -18,9 +16,4 @@ namespace GraphicsEngine
 namespace Enum
 {
 	typedef GraphicsEngine::AlignmentEnum::Alignment Alignment;
-}
-
-namespace Engine
-{
-	Declare_Enum(Alignment);
 }

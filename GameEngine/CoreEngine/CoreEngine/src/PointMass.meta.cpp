@@ -17,7 +17,11 @@ namespace Engine
 				{ "GameObject", "Physics" },
 
 				Member<Bind(&PointMass::Mass)>("Mass"),
-				Member<Bind(&PointMass::Position)>("Position")
+				Member<Bind(&PointMass::Position)>("Position"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

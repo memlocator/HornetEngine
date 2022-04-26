@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ObjectReflection.h"
-
 /*****
 	TODO: Register new enum to ObjectRegistration.cpp. Use the #include as a shortcut to open it.
 
@@ -9,8 +7,6 @@
 
 	Warning: order of registration is crucial. Register this before any item that depends on it.
 *****/
-
-// #include "ObjectRegistration.cpp" // Remove this once registered
 
 // It is highly recommended to create a separate .meta.cpp file for each reflected enum, type, and object class.
 
@@ -37,9 +33,4 @@ namespace
 namespace Enum
 {
 	typedef EnumTemplateEnum::EnumTemplate EnumTemplate;
-}
-
-namespace Engine
-{
-	Declare_Enum(EnumTemplate);
 }

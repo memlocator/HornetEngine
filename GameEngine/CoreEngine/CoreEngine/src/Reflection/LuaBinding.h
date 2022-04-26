@@ -5,6 +5,8 @@
 #include "Reflected.h"
 #include "LuaTypeBinding.h"
 #include "../Event.h"
+#include "../Engine.h"
+#include "LuaError.h"
 
 #undef max
 
@@ -14,8 +16,12 @@ namespace Engine
 	{
 		const bool TestFunctions = false;
 
+		const char* GetTypeName(const Meta::ReflectedType* type, const char* nullName = "unknown");
+		const Meta::ReflectedType* GetArgumentType(lua_State* lua, int index);
+
 		typedef int(*LuaFunction)(lua_State*);
 		typedef bool(*LuaCheckFunction)(lua_State*);
+		typedef void(*DestructorFunction)(BoundObject& object);
 
 		struct LuaBinding
 		{
@@ -46,7 +52,30 @@ namespace Engine
 			struct BoundObject
 			{
 				LuaFunction Create = nullptr;
+				DestructorFunction Free = nullptr;
+				LuaFunction ToString = nullptr;
+				LuaFunction Call = nullptr;
+				LuaFunction Length = nullptr;
+				LuaFunction UnaryMinus = nullptr;
+				LuaFunction Add = nullptr;
+				LuaFunction Subtract = nullptr;
+				LuaFunction Multiply = nullptr;
+				LuaFunction Divide = nullptr;
+				LuaFunction FloorDivide = nullptr;
+				LuaFunction Modulus = nullptr;
+				LuaFunction Power = nullptr;
+				LuaFunction Concatenate = nullptr;
+				LuaFunction BitwiseAnd = nullptr;
+				LuaFunction BitwiseOr = nullptr;
+				LuaFunction BitwiseXor = nullptr;
+				LuaFunction BitwiseNot = nullptr;
+				LuaFunction BitwiseShiftLeft = nullptr;
+				LuaFunction BitwiseShiftRight = nullptr;
+				LuaFunction BitwiseEquals = nullptr;
+				LuaFunction LessThan = nullptr;
+				LuaFunction LessThanEqualTo = nullptr;
 
+				void CacheOperators(Meta::ReflectedType& type);
 				void Validate() const;
 			};
 		};
@@ -64,7 +93,7 @@ namespace Engine
 			template <typename Type>
 			static bool ArgumentMatches(const Meta::ReflectedType* found)
 			{
-				return found == GetMeta<Type>();
+				return GetMeta<Type>()->CanAllow(found);
 			}
 
 			template <typename Type>
@@ -77,18 +106,24 @@ namespace Engine
 			int RegisterConnectedFunction(lua_State* lua);
 
 			template <typename... Arguments>
-			static bool ArgumentsMatch(const Meta::ReflectedType** arguments, int count)
+			static bool ArgumentsMatch(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 			{
-				if (sizeof...(Arguments) != count) return false;
-
-				auto matches = []<typename T, T... Indices, typename... Holders>(const std::integer_sequence<T, Indices...>&indices, const Meta::ReflectedType** arguments, Holders... types) -> bool
+				auto matches = [count, &closestMatch, &expected]<typename T, T... Indices, typename... Holders>(const std::integer_sequence<T, Indices...>&indices, const Meta::ReflectedType** arguments, Holders... types) -> bool
 				{
-					auto matches = []<typename Type>(TypeHolder<Type>, const Meta::ReflectedType* argument) -> bool
+					auto matches = [count, &closestMatch, &expected]<typename Type>(TypeHolder<Type>, const Meta::ReflectedType* argument, int index) -> bool
 					{
-						return ArgumentMatches<Type>(argument);
+						if (index >= count || ArgumentMatches<Type>(argument)) return true;
+
+						if (index > closestMatch)
+						{
+							closestMatch = index + 1;
+							expected = GetMeta<Type>();
+						}
+
+						return false;
 					};
 					
-					return (matches(types, arguments[Indices]) && ...);
+					return (matches(types, arguments[Indices], Indices) && ...);
 				};
 
 				std::tuple<TypeHolder<Arguments>...> argumentsTuple;
@@ -99,40 +134,52 @@ namespace Engine
 			template <typename ClassType>
 			struct BindObjectFactory
 			{
-				static int FactoryFunction(lua_State* lua)
+				static void Destructor(BoundObject& bound)
 				{
-					return 1;
+					bound.GameObject = nullptr;
 				}
 
 				template <typename... Arguments>
 				static void FactoryFunction(lua_State* lua, const Arguments&... arguments)
 				{
+					BoundObject& bound = BoundObject::MakeBinding(lua);
 
+					bound.GameObject = Engine::Create<ClassType, Arguments...>(arguments...);
+					bound.ObjectType = LuaObjectType::Object;
+					bound.Type = GetMeta<ClassType>();
 				}
 			};
 
 			template <typename ClassType>
 			struct BindTypeFactory
 			{
-				static int FactoryFunction(lua_State* lua)
+				static void Destructor(BoundObject& bound)
 				{
-					return 1;
+					BoundTypeAllocators<ClassType>::AllocatedData.Release(bound.DataId);
 				}
 
 				template <typename... Arguments>
 				static void FactoryFunction(lua_State* lua, const Arguments&... arguments)
 				{
+					int dataId = BoundTypeAllocators<ClassType>::AllocatedData.RequestID();
 
+					BoundTypeAllocators<ClassType>::AllocatedData.GetNode(dataId).GetData() = ClassType(arguments...);
+
+					BoundObject& bound = BoundObject::MakeBinding(lua);
+
+					bound.DataId = dataId;
+					bound.ObjectType = LuaObjectType::Data;
+					bound.Type = GetMeta<ClassType>();
 				}
 			};
 
-			template <typename ClassType, typename Type, auto PointerData>//typename PointerType, PointerType Pointer>
+			template <typename ClassType, typename Type, auto PointerData>
 			struct BindMember
 			{
 				typedef decltype(PointerData) Traits;
 				typedef Traits::PointerType PointerType;
 
-				static inline const PointerType Pointer = PointerData.Pointer;
+				static inline PointerType const Pointer = PointerData.Pointer;
 
 				template <bool IsStatic, bool IsConst>
 				struct Bind;
@@ -141,9 +188,8 @@ namespace Engine
 				struct Bind<false, false>
 				{
 					static int Getter(lua_State* lua)
-					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						ClassType* pointer = object.get();
+					{;
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						BindType<Clean<Type>>::Push(lua, (pointer->*Pointer));
 
@@ -152,10 +198,9 @@ namespace Engine
 
 					static int Setter(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
-						(pointer->*Pointer) = BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, 2);
+						(pointer->*Pointer) = BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, 3);
 
 						return 0;
 					}
@@ -173,7 +218,7 @@ namespace Engine
 
 					static int Setter(lua_State* lua)
 					{
-						int top = 1;// lua_gettop(lua)
+						int top = lua_gettop(lua);
 
 						*Pointer = BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, top);
 
@@ -186,8 +231,7 @@ namespace Engine
 				{
 					static int Getter(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						const ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						BindType<Clean<Type>>::Push(lua, (pointer->*Pointer));
 
@@ -196,10 +240,9 @@ namespace Engine
 
 					static int Setter(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						const ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
-						(pointer->*Pointer) = BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, 2);
+						(pointer->*Pointer) = BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, 3);
 
 						return 0;
 					}
@@ -223,15 +266,14 @@ namespace Engine
 
 					static constexpr int GetArguments() { return MaximumArguments; }
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						return ArgumentsMatch<ClassType>(arguments, count);
+						return count == 1;
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						BindType<Clean<Type>>::Push(lua, (pointer->*Pointer)());
 
@@ -247,12 +289,9 @@ namespace Engine
 
 					static constexpr int GetArguments() { return MaximumArguments; }
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						if (count == 1)
-							return ArgumentMatches<ClassType>(arguments[0]);
-
-						return ArgumentsMatch<>(arguments, count);
+						return count == 1;
 					}
 
 					static int Callback(lua_State* lua)
@@ -271,15 +310,14 @@ namespace Engine
 
 					static constexpr int GetArguments() { return MaximumArguments; }
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						return ArgumentsMatch<ClassType>(arguments, count);
+						return count == 1;
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						const ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						BindType<Clean<Type>>::Push(lua, (pointer->*Pointer)());
 
@@ -302,15 +340,14 @@ namespace Engine
 
 					static constexpr int GetArguments() { return MaximumArguments; }
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						return ArgumentsMatch<ClassType, Clean<Type>>(arguments, count);
+						return ArgumentsMatch<ClassType, Clean<Type>>(arguments, count, closestMatch, expected);
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						(pointer->*Pointer)(BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, 2));
 
@@ -326,17 +363,17 @@ namespace Engine
 
 					static constexpr int GetArguments() { return MaximumArguments; }
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
 						if (count == 2)
 							return ArgumentMatches<ClassType, Clean<Type>>(arguments[0]);
 
-						return ArgumentsMatch<Clean<Type>>(arguments, count);
+						return ArgumentsMatch<void, Clean<Type>>(arguments, count, closestMatch, expected);
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						int top = 1;// lua_gettop(lua)
+						int top = lua_gettop(lua);
 
 						Pointer(BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, top));
 
@@ -352,15 +389,14 @@ namespace Engine
 
 					static constexpr int GetArguments() { return MaximumArguments; }
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						return ArgumentsMatch<ClassType, Clean<Type>>(arguments, count);
+						return ArgumentsMatch<ClassType, Clean<Type>>(arguments, count, closestMatch, expected);
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						const ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						(pointer->*Pointer)(BindType<Clean<Type>>::WithDefault<false>::Pop<void>(lua, 2));
 
@@ -409,6 +445,76 @@ namespace Engine
 				}
 			};
 
+			template <auto Pointer, typename ClassType>
+			struct BindLuaOverload
+			{
+				template <bool IsStatic, bool IsConst>
+				struct Bind;
+
+				template <>
+				struct Bind<false, false>
+				{
+					static constexpr int GetArguments()
+					{
+						return 0;
+					}
+					
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
+					{
+						return ArgumentsMatch<ClassType>(arguments, count, closestMatch, expected);
+					}
+
+					static int Callback(lua_State* lua)
+					{
+						ClassType* pointer = GetObject<ClassType>(lua);
+
+						return (pointer->*Pointer)(lua);
+					}
+				};
+
+				template <>
+				struct Bind<true, false>
+				{
+					static constexpr int GetArguments()
+					{
+						return 0;
+					}
+
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
+					{
+						return true;
+					}
+
+					static int Callback(lua_State* lua)
+					{
+						ClassType* pointer = GetObject<ClassType>(lua);
+
+						return (*Pointer)(lua);
+					}
+				};
+
+				template <>
+				struct Bind<false, true>
+				{
+					static constexpr int GetArguments()
+					{
+						return 0;
+					}
+
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
+					{
+						return ArgumentsMatch<ClassType>(arguments, count, closestMatch, expected);
+					}
+
+					static int Callback(lua_State* lua)
+					{
+						ClassType* pointer = GetObject<ClassType>(lua);
+
+						return (pointer->*Pointer)(lua);
+					}
+				};
+			};
+
 			template <auto Pointer, int MinimumArguments, int MaximumArguments, typename ClassType, typename ReturnType, typename... Arguments>
 			struct BindOverload
 			{
@@ -426,15 +532,14 @@ namespace Engine
 						return MaximumArguments;
 					}
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						return ArgumentsMatch<ClassType, Clean<typename Arguments::Type>...>(arguments, count);
+						return count >= MinimumArguments && count <= MaximumArguments && ArgumentsMatch<ClassType, Clean<typename Arguments::Type>...>(arguments, count, closestMatch, expected);
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						ClassType* pointer = object.get();
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						auto invoke = []<typename... Type>(lua_State * lua, ClassType* pointer, const Type&... arguments)
 						{
@@ -443,7 +548,7 @@ namespace Engine
 
 						auto pop = []<typename Argument>(lua_State* lua, Argument)
 						{
-							return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index));
+							return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index + 1));
 						};
 
 						return invoke(lua, pointer, pop(lua, Arguments{})...);
@@ -454,25 +559,22 @@ namespace Engine
 				struct Bind<true, false>
 				{
 					static const inline int MinimumArguments = MinimumArguments;
-					static const inline int MaximumArguments = MaximumArguments + 1;
+					static const inline int MaximumArguments = MaximumArguments;
 
 					static constexpr int GetArguments()
 					{
 						return MaximumArguments;
 					}
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						if (count == sizeof...(Arguments) + 1)
-							return ArgumentsMatch<ClassType, Clean<typename Arguments::Type>...>(arguments, count);
+						if (count < MinimumArguments || count > MaximumArguments) return false;
 
-						return ArgumentsMatch<Clean<typename Arguments::Type>...>(arguments, count);
+						return ArgumentsMatch<Clean<typename Arguments::Type>...>(arguments, count, closestMatch, expected);
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						int top = 1;// lua_gettop(lua)
-
 						auto invoke = []<typename... Type>(lua_State* lua, const Type&... arguments)
 						{
 							return CallbackWrapper<ReturnType>::template Invoke<Pointer, Type...>(lua, arguments...);
@@ -498,16 +600,14 @@ namespace Engine
 						return MaximumArguments;
 					}
 
-					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+					static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 					{
-						return ArgumentsMatch<ClassType, Clean<typename Arguments::Type>...>(arguments, count);
+						return count >= MinimumArguments && count <= MaximumArguments && ArgumentsMatch<ClassType, Clean<typename Arguments::Type>...>(arguments, count, closestMatch, expected);
 					}
 
 					static int Callback(lua_State* lua)
 					{
-						const std::shared_ptr<ClassType>& object = GetObject<ClassType>(lua);
-						const ClassType* pointer = object.get();
-
+						ClassType* pointer = GetObject<ClassType>(lua);
 
 						auto invoke = []<typename... Type>(lua_State* lua, const ClassType* pointer, const Type&... arguments)
 						{
@@ -516,7 +616,7 @@ namespace Engine
 
 						auto pop = []<typename Argument>(lua_State* lua, Argument)
 						{
-							return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index));
+							return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index + 1));
 						};
 
 						return invoke(lua, pointer, pop(lua, Arguments{})...);
@@ -526,17 +626,17 @@ namespace Engine
 			template <int MinimumArguments, int MaximumArguments, typename ClassType, typename... Arguments>
 			struct BindConstructorOverload
 			{
-				static const inline int MinimumArguments = MinimumArguments;
-				static const inline int MaximumArguments = MaximumArguments;
+				static const inline int MinimumArguments = MinimumArguments + 1;
+				static const inline int MaximumArguments = MaximumArguments + 1;
 
 				static constexpr int GetArguments()
 				{
 					return MaximumArguments;
 				}
 
-				static bool MatchesOverload(const Meta::ReflectedType** arguments, int count)
+				static bool MatchesOverload(const Meta::ReflectedType** arguments, int count, int& closestMatch, const Meta::ReflectedType*& expected)
 				{
-					return ArgumentsMatch<Clean<Arguments::Type>...>(arguments, count);
+					return count >= MinimumArguments && count <= MaximumArguments && ArgumentsMatch<void, Clean<Arguments::Type>...>(arguments, count, closestMatch, expected);
 				}
 
 				template <bool IsObject>
@@ -544,7 +644,7 @@ namespace Engine
 				{
 					auto pop = []<typename Argument>(lua_State * lua, Argument)
 					{
-						return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index));
+						return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index + 1));
 					};
 
 					BindObjectFactory<ClassType>::template FactoryFunction<typename Arguments::Type...>(lua, pop(lua, Arguments{})...);
@@ -557,7 +657,7 @@ namespace Engine
 				{
 					auto pop = []<typename Argument>(lua_State * lua, Argument)
 					{
-						return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index));
+						return std::move(BindType<Clean<Argument::Type>>::WithDefault<Argument::HasDefault>::Pop<Argument::DefaultValue>(lua, Argument::Index + 1));
 					};
 
 					BindTypeFactory<ClassType>::template FactoryFunction<Arguments::Type...>(lua, pop(lua, Arguments{})...);
@@ -565,8 +665,6 @@ namespace Engine
 					return 1;
 				}
 			};
-
-			static const Meta::ReflectedType* GetArgumentType(int index) { return nullptr; }
 
 			template <typename... Overloads>
 			struct ArgumentCounter;
@@ -594,20 +692,22 @@ namespace Engine
 			template <typename... Overloads>
 			struct BindFunction
 			{
-				static inline const int MaxArguments = std::max(1, ArgumentCounter<Overloads...>::GetMaxArguments());
+				static inline const int MaxArguments = std::max(1, ArgumentCounter<Overloads...>::GetMaxArguments()) + 1;
 
 				static int Callback(lua_State* lua)
 				{
 					const Meta::ReflectedType* arguments[MaxArguments] = { nullptr };
-					int stackTop = 0; // lua_gettop(lua);
+					int stackTop = lua_gettop(lua);
 					int returnedValues = 0;
+					int closestMatch = -1;
+					const Meta::ReflectedType* expected = nullptr;
 
 					for (int i = 0; i < stackTop && i < MaxArguments; ++i)
-						arguments[i] = GetArgumentType(i);
+						arguments[i] = GetArgumentType(lua, i + 1);
 
-					auto attemptOverload = [lua, &arguments, &returnedValues, stackTop]<typename Overload>(Overload)
+					auto attemptOverload = [lua, &arguments, &returnedValues, &closestMatch, &expected, stackTop]<typename Overload>(Overload)
 					{
-						if (TestFunctions || Overload::MatchesOverload(arguments, stackTop))
+						if (TestFunctions || Overload::MatchesOverload(arguments, stackTop, closestMatch, expected))
 						{
 							returnedValues = Overload::Callback(lua);
 
@@ -619,9 +719,17 @@ namespace Engine
 
 					std::tuple<Overloads...> overloadTuple;
 
-					std::apply([&attemptOverload](Overloads... overload) { (attemptOverload(overload) || ...); }, overloadTuple);
+					bool foundOverload = std::apply([&attemptOverload](Overloads... overload) { return (attemptOverload(overload) || ...); }, overloadTuple);
 
-					return returnedValues;
+					if (foundOverload)
+						return returnedValues;
+
+					foundOverload = std::apply([&attemptOverload](Overloads... overload) { return (attemptOverload(overload) || ...); }, overloadTuple);
+
+					if (closestMatch == -1)
+						return LuaError(lua, "got an unexpected number of arguments: %d", stackTop);
+
+					return LuaError(lua, "got unexpected type on argument %d: expected '%s', got '%s'", closestMatch, GetTypeName(expected), GetTypeName(arguments[closestMatch], "nil"));
 				}
 
 				template <bool IsObject>
@@ -633,15 +741,17 @@ namespace Engine
 					static int Callback(lua_State* lua)
 					{
 						const Meta::ReflectedType* arguments[MaxArguments] = { nullptr };
-						int stackTop = 0; // lua_gettop(lua);
+						int stackTop = lua_gettop(lua);
 						int returnedValues = 0;
+						int closestMatch = -1;
+						const Meta::ReflectedType* expected = nullptr;
 						
 						for (int i = 0; i < stackTop && i < MaxArguments; ++i)
-							arguments[i] = GetArgumentType(i);
+							arguments[i] = GetArgumentType(lua, i + 1);
 						
-						auto attemptOverload = [lua, &arguments, &returnedValues, stackTop]<typename Overload>(Overload)
+						auto attemptOverload = [lua, &arguments, &returnedValues, &closestMatch, &expected, stackTop]<typename Overload>(Overload)
 						{
-							if (TestFunctions || Overload::MatchesOverload(arguments, stackTop))
+							if (TestFunctions || Overload::MatchesOverload(arguments, stackTop, closestMatch, expected))
 							{
 								returnedValues = Overload::Callback<true>(lua);
 						
@@ -653,9 +763,15 @@ namespace Engine
 						
 						std::tuple<Overloads...> overloadTuple;
 						
-						std::apply([&attemptOverload](Overloads... overload) { (attemptOverload(overload) || ...); }, overloadTuple);
+						bool foundOverload = std::apply([&attemptOverload](Overloads... overload) { return (attemptOverload(overload) || ...); }, overloadTuple);
 
-						return 0;
+						if (foundOverload)
+							return returnedValues;
+
+						if (closestMatch == -1)
+							return LuaError(lua, "got an unexpected number of arguments: %d", stackTop);
+
+						return LuaError(lua, "got unexpected type on argument %d: expected '%s', got '%s'", closestMatch, GetTypeName(expected), GetTypeName(arguments[closestMatch], "nil"));
 					}
 				};
 
@@ -665,15 +781,17 @@ namespace Engine
 					static int Callback(lua_State* lua)
 					{
 						const Meta::ReflectedType* arguments[MaxArguments] = { nullptr };
-						int stackTop = 0; // lua_gettop(lua);
+						int stackTop = lua_gettop(lua);
 						int returnedValues = 0;
+						int closestMatch = -1;
+						const Meta::ReflectedType* expected = nullptr;
 						
 						for (int i = 0; i < stackTop && i < MaxArguments; ++i)
-							arguments[i] = GetArgumentType(i);
+							arguments[i] = GetArgumentType(lua, i + 1);
 						
-						auto attemptOverload = [lua, &arguments, &returnedValues, stackTop]<typename Overload>(Overload)
+						auto attemptOverload = [lua, &arguments, &returnedValues, &closestMatch, &expected, stackTop]<typename Overload>(Overload)
 						{
-							if (TestFunctions || Overload::MatchesOverload(arguments, stackTop))
+							if (TestFunctions || Overload::MatchesOverload(arguments, stackTop, closestMatch, expected))
 							{
 								returnedValues = Overload::Callback<false>(lua);
 						
@@ -685,9 +803,15 @@ namespace Engine
 						
 						std::tuple<Overloads...> overloadTuple;
 						
-						std::apply([&attemptOverload](Overloads... overload) { (attemptOverload(overload) || ...); }, overloadTuple);
+						bool foundOverload = std::apply([&attemptOverload](Overloads... overload) { return (attemptOverload(overload) || ...); }, overloadTuple);
 
-						return 0;
+						if (foundOverload)
+							return returnedValues;
+
+						if (closestMatch == -1)
+							return LuaError(lua, "got an unexpected number of arguments: %d", stackTop);
+
+						return LuaError(lua, "got unexpected type on argument %d: expected '%s', got '%s'", closestMatch, GetTypeName(expected), GetTypeName(arguments[closestMatch], "nil"));
 					}
 				};
 			};

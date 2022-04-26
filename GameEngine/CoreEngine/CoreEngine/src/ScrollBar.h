@@ -89,16 +89,5 @@ namespace GraphicsEngine
 
 		void UpdateBar();
 		bool UpdateBarPosition();
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(ScrollBar);
 	};
-}
-
-namespace Engine
-{
-	Declare_Enum(ScrollBarOrientation);
 }

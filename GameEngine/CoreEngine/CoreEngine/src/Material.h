@@ -50,11 +50,5 @@ namespace GraphicsEngine
 		static IDHeap<Material*> MaterialRegistry;
 
 		int MaterialId = -1;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Material);
 	};
 }

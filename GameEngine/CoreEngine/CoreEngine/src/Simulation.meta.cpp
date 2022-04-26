@@ -12,7 +12,11 @@ namespace Engine
 			Reflect<Simulation, Object>::Class
 			(
 				"Simulation",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

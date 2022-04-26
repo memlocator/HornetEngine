@@ -12,17 +12,14 @@ namespace Engine
 		struct CollisionPair;
 		class CollisionGroup;
 		class ColliderAsset;
+		class Collider2D;
 
 		class Collision
 		{
 		public:
-			std::weak_ptr<Object> OtherCollider;
+			std::weak_ptr<Collider2D> OtherCollider;
 			Vector3 ContactPoint;
 			Vector3 Displacement;
-
-			Base_Class;
-
-			Reflected_Type(Collision);
 		};
 
 		class Collider2D : public Object
@@ -44,7 +41,7 @@ namespace Engine
 			float GetRadius() const;
 			Vector3 GetCenter() const;
 			float GetWidth(const Vector3& axis) const;
-			bool CanCollideWith(const std::shared_ptr<Object>& otherCollider) const;
+			bool CanCollideWith(const std::shared_ptr<Collider2D>& otherCollider) const;
 			void Collided(const CollisionPair& collisionPair);
 			int GetCollisions() const;
 			Collision GetCollision(int index) const;
@@ -58,18 +55,10 @@ namespace Engine
 			Aabb BoundingBox;
 			Vector3 Center;
 			CollisionVector Collisions;
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(Collider2D);
 		};
 	}
 
 	using Physics::Collision;
-
-	Define_Value_Type(Collision);
 
 	namespace Physics
 	{

@@ -15,8 +15,12 @@ namespace Engine
 		{
 			Reflect<RigidBody, Object>::Class
 			(
-				"Object",
+				"RigidBody",
 				{ "GameObject", "Physics"},
+
+				Constructor(
+					Overload()
+				),
 
 				Member<Bind(&RigidBody::Velocity)>("Velocity"),
 				Member<Bind(&RigidBody::Torque)>("Torque"),

@@ -16,6 +16,10 @@ namespace Engine
 				"ChunkLoader",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Member<Bind(&ChunkLoader::Shape)>("Shape"),
 				Member<Bind(&ChunkLoader::Target)>("Target"),
 

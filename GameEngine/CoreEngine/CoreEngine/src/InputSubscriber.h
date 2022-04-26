@@ -23,12 +23,6 @@ namespace GraphicsEngine
 		std::shared_ptr<Engine::InputObject> Input;
 
 		void UpdateState();
-
-		Instantiable;
-
-		Inherits_Class(InputObject);
-
-		Reflected(InputSubscription);
 	};
 
 	class InputSubscriber : public Engine::Object
@@ -44,11 +38,5 @@ namespace GraphicsEngine
 
 		void SetFocus(Enum::BoundDevice device, bool focus);
 		bool HasFocus(Enum::BoundDevice device) const { return Focused[device]; }
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(InputSubscriber);
 	};
 }

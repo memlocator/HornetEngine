@@ -61,12 +61,6 @@ namespace GraphicsEngine
 		typedef std::vector<TexturePair> TexturePairVector;
 
 		TexturePairVector NormalMapQueue;
-
-		Instantiable;
-
-		Inherits_Class(RenderOperation);
-
-		Reflected(GlowingSceneOperation);
 	};
 }
 

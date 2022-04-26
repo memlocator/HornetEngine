@@ -22,6 +22,10 @@ namespace Engine
 				Member<Bind(&DebugDraw::TriangleAsset)>("TriangleAsset"),
 				Member<Bind(&DebugDraw::MaterialProperties)>("MaterialProperties"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetScene",
 					Overload(

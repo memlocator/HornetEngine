@@ -48,11 +48,15 @@ namespace Engine
 
 		void PhysicsEnvironment::Initialize()
 		{
+			Object::Initialize();
+
 			SetTicks(true);
 		}
 
 		void PhysicsEnvironment::Update(float delta)
 		{
+			Object::Update(delta);
+
 			for (int i = 0; i < int(Colliders.size()); ++i)
 			{
 				std::shared_ptr<Collider2D> collider = Colliders[i]->Collider.lock();

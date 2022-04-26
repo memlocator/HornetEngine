@@ -18,6 +18,10 @@ namespace Engine
 				"GameWindow",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetInput",
 					Overload(

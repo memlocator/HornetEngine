@@ -18,7 +18,11 @@ namespace Engine
 				"InterfaceDrawOperation",
 				{ "GameObject" },
 
-				Member<Bind(&InterfaceDrawOperation::CurrentScreen)>("CurrentScreen")
+				Member<Bind(&InterfaceDrawOperation::CurrentScreen)>("CurrentScreen"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

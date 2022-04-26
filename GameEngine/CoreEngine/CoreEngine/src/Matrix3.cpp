@@ -7,6 +7,7 @@ contains implimentation of Matrix class functions
 */
 
 #include <iostream>
+#include <sstream>
 
 #include "Matrix3.h"
 

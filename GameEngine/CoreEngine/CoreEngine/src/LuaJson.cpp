@@ -3,6 +3,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <lua.hpp>
+
+#include "Reflection/LuaError.h"
 
 namespace Engine
 {
@@ -45,10 +48,10 @@ namespace Engine
 		int arg2Type = lua_type(lua, 2);
 
 		if (top < 1 || arg1Type != LUA_TSTRING)
-			Lua::BadArgumentError(lua, 1, "string", Lua::GetType(lua, 1));
+			LuaError(lua, "bad argument to #1: expected 'string'");
 
 		if (top >= 2 && arg2Type != LUA_TBOOLEAN && arg2Type != LUA_TNIL)
-			Lua::BadArgumentError(lua, 2, "boolean", Lua::GetType(lua, 2));
+			LuaError(lua, "bad argument to #2: expected 'boolean'");
 
 		std::string input = lua_tostring(lua, 1);
 		bool isPath = false;
@@ -111,8 +114,7 @@ namespace Engine
 		}
 		catch (std::string& error)
 		{
-			Lua::SetErrorMessage(error);
-			Lua::Error(lua);
+			LuaError(lua, error.c_str());
 		}
 
 		return 1;
@@ -235,11 +237,9 @@ namespace Engine
 				break;
 
 			default:
-				std::string valueType = Lua::GetType(lua, -1);
 				std::string value = lua_tolstring(lua, -1, 0);
 
-				Lua::SetErrorMessage("json.encode - Attempt to encode an unsupported value. Failed on value '" + value + "' of type '" + valueType + "'");
-				Lua::Error(lua);
+				LuaError(lua, "json.encode - Attempt to encode an unsupported value. Failed on value '%s'", value.c_str());
 			}
 		}
 
@@ -260,22 +260,18 @@ namespace Engine
 				{
 					if (keyType != LUA_TNUMBER)
 					{
-						std::string keyType = Lua::GetType(lua, -2);
 						std::string value = lua_tolstring(lua, -2, 0);
 
-						Lua::SetErrorMessage("json.encode - Attempt to encode a mixed index table. Failed on key '" + value + "' of type '" + keyType + "'");
-						Lua::Error(lua);
+						LuaError(lua, "json.encode - Attempt to encode a mixed index table. Failed on key '%s'", value.c_str());
 					}
 				}
 				else
 				{
 					if (keyType != LUA_TSTRING)
 					{
-						std::string keyType = Lua::GetType(lua, -2);
 						std::string value = lua_tolstring(lua, -2, 0);
 
-						Lua::SetErrorMessage("json.encode - Attempt to encode a mixed index table. Failed on key '" + value + "' of type '" + keyType + "'");
-						Lua::Error(lua);
+						LuaError(lua, "json.encode - Attempt to encode a mixed index table. Failed on key '%s'", value.c_str());
 					}
 
 					Sanitize(lua_tostring(lua, -2));
@@ -303,10 +299,10 @@ namespace Engine
 		int arg2Type = lua_type(lua, 2);
 
 		if (top < 1 || arg1Type != LUA_TTABLE)
-			Lua::BadArgumentError(lua, 1, "table", Lua::GetType(lua, 1));
+			LuaError(lua, "bad argument to #1: expected 'string'");
 
 		if (top >= 2 && arg2Type != LUA_TSTRING && arg2Type != LUA_TNIL)
-			Lua::BadArgumentError(lua, 2, "string", Lua::GetType(lua, 2));
+			LuaError(lua, "bad argument to #1: expected 'boolean'");
 
 		std::string path;
 
@@ -328,8 +324,7 @@ namespace Engine
 
 			if (!out.good())
 			{
-				Lua::SetErrorMessage("json.encode - failed to open output file at directory '" + path + "'");
-				Lua::Error(lua);
+				LuaError(lua, "json.encode - failed to open output file at directory '%s'", path.c_str());
 			}
 
 			out << encoder.Output.str();

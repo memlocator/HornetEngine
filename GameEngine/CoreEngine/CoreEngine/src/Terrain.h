@@ -31,7 +31,6 @@ namespace Engine
 		~Terrain();
 
 		void Initialize();
-		void Update(float delta) {}
 
 		bool CanLoadChunk(const Coordinates& chunk) const;
 		std::shared_ptr<Chunk> LoadChunk(const Coordinates& chunk);
@@ -90,12 +89,5 @@ namespace Engine
 		ChunkTree* Head = nullptr;
 
 		std::weak_ptr<GraphicsEngine::Material> MaterialProperties;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Terrain);
-
 	};
 }

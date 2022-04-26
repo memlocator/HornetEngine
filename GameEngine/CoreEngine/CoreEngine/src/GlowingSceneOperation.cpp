@@ -58,6 +58,8 @@ namespace GraphicsEngine
 {
 	void GlowingSceneOperation::Initialize()
 	{
+		RenderOperation::Initialize();
+
 		auto camera = Engine::Create<Camera>();
 
 		ShadowCamera = camera;
@@ -261,6 +263,8 @@ namespace GraphicsEngine
 
 	void GlowingSceneOperation::Update(float dt)
 	{
+		RenderOperation::Update(dt);
+
 		auto blur = Blur.lock();
 
 		blur->Radius = Radius;

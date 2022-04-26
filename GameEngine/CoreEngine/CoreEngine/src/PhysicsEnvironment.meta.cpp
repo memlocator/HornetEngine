@@ -77,6 +77,10 @@ namespace Engine
 				"PhysicsEnvironment",
 				{ "GameObject", "Physics" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"AddObject",
 					Overload(

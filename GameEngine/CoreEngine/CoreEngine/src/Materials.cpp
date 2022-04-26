@@ -18,6 +18,8 @@ namespace GraphicsEngine
 
 	void Materials::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		std::shared_ptr<Object> materials = This.lock();
 
 		NewMaterial(Engine::Create<Material>(), "Default",    0x808080FF, 0x808080FF, 0x808080FF, 0x00000000,   1)->SetParent(materials);

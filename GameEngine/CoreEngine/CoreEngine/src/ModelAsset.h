@@ -11,8 +11,6 @@ namespace Engine
 	class ModelAsset : public Object
 	{
 	public:
-		void Initialize() {}
-		void Update(float) {}
 		~ModelAsset();
 
 		int GetMeshID() const;
@@ -32,11 +30,5 @@ namespace Engine
 	private:
 		int MeshID = -1;
 		bool Dying = false;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(ModelAsset);
 	};
 }

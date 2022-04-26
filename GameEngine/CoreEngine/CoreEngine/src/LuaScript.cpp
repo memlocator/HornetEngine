@@ -1,17 +1,23 @@
 #include "LuaScript.h"
 
-#include "LuaThreadManager.h"
+#include "Reflection/LuaThreadManager.h"
 #include "LuaSource.h"
+#include "Reflection/LuaTypeBinding.h"
+#include <lua.hpp>
 
 namespace Engine
 {
 	void LuaScript::Initialize()
 	{
+		Object::Initialize();
+
 		SetTicks(true);
 	}
 
 	void LuaScript::Update(float delta)
 	{
+		Object::Update(delta);
+
 		if (AutoRuns && GetStatus() == Enum::ScriptStatus::Idle)
 			Run();
 
@@ -64,13 +70,13 @@ namespace Engine
 		if (ThreadID == -1)
 			return Enum::ScriptStatus::Idle;
 
-		if (LuaThread::Running(ThreadID))
+		if (Lua::Running(ThreadID))
 			return Enum::ScriptStatus::Running;
 
-		if (LuaThread::Yielded(ThreadID))
+		if (Lua::Yielded(ThreadID))
 			return Enum::ScriptStatus::Yielded;
 
-		if (LuaThread::Dead(ThreadID))
+		if (Lua::Dead(ThreadID))
 			return Enum::ScriptStatus::Dead;
 
 		return Enum::ScriptStatus::Idle;
@@ -105,10 +111,11 @@ namespace Engine
 			return;
 
 		SourceChanged = false;
-		ThreadID = LuaThread::Spawn(Source, GetFullName() + "[" + Path + "]", [this] (lua_State* lua) -> int
+		ThreadID = Lua::Spawn(Source, GetFullName() + "[" + Path + "]", [this] (lua_State* lua) -> int
 		{
 			lua_pushstring(lua, "This");
-			LuaTypes::Lua_object::PushObject(lua, This.lock());
+
+			Engine::Lua::BindType<std::shared_ptr<Object>>::Push(lua, This.lock());
 
 			lua_settable(lua, -3);
 
@@ -121,7 +128,7 @@ namespace Engine
 		if (GetStatus() == Enum::ScriptStatus::Idle)
 			return;
 
-		LuaThread::Kill(ThreadID);
+		Lua::Kill(ThreadID);
 
 		ThreadID = -1;
 	}
@@ -141,6 +148,6 @@ namespace Engine
 
 	int LuaScript::GetData(lua_State* lua)
 	{
-		return LuaThread::GetData(lua, ThreadID);
+		return Lua::GetData(lua, ThreadID);
 	}
 }

@@ -13,6 +13,8 @@ namespace GraphicsEngine
 
 	void Material::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		MaterialId = MaterialRegistry.RequestID(this);
 	}
 

@@ -16,12 +16,16 @@ namespace Engine
 				"CollisionGroup",
 				{ "GameObject", "Physics" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"AddInteraction",
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<const std::shared_ptr<Object>&>("group"), // TODO: change type when reflection is replaced
+						Argument<const std::shared_ptr<CollisionGroup>&>("group"),
 						Argument<Enum::InteractionType>("type")
 					).Bind<CollisionGroup, &CollisionGroup::AddInteraction>()
 				),
@@ -31,7 +35,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Enum::InteractionType>(),
-						Argument<const std::shared_ptr<Object>&>("group")
+						Argument<const std::shared_ptr<CollisionGroup>&>("group")
 					).Bind<CollisionGroup, &CollisionGroup::GetInteraction>()
 				)
 			);

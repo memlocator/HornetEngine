@@ -19,6 +19,10 @@ namespace Engine
 				"Terrain",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Member<Bind(&Terrain::DataDirectory)>("DataDirectory"),
 
 				Function(

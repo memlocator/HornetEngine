@@ -20,11 +20,15 @@ namespace GraphicsEngine
 
 	void InputContext::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		SetTicks(true);
 	}
 
-	void InputContext::Update(float)
+	void InputContext::Update(float delta)
 	{
+		Engine::Object::Update(delta);
+
 		if (!Enabled || Device.expired())
 			return;
 

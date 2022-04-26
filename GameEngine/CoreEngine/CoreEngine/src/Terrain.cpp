@@ -23,6 +23,8 @@ namespace Engine
 
 	void Terrain::Initialize()
 	{
+		Object::Initialize();
+
 		auto materialProperties = Engine::Create<GraphicsEngine::Material>();
 
 		materialProperties->Diffuse.Set(0.5f, 0.5, 0.5, 1);

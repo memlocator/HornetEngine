@@ -1,5 +1,7 @@
 #include "LuaScript.h"
 
+#include <lua.hpp>
+
 #include "LuaSource.h"
 
 #include "Reflection/Reflection.h"
@@ -15,6 +17,10 @@ namespace Engine
 			(
 				"LuaScript",
 				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"GetSource",

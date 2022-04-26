@@ -22,7 +22,7 @@ namespace Engine
 					Overload()
 				),
 
-				Member<Bind(&Collision::OtherCollider)>("OtherCollider"), // TODO: change type when reflections replaced
+				Member<Bind(&Collision::OtherCollider)>("OtherCollider"),
 				Member<Bind(&Collision::ContactPoint)>("ContactPoint"),
 				Member<Bind(&Collision::Displacement)>("Displacement")
 			);
@@ -35,6 +35,10 @@ namespace Engine
 			(
 				"Collider2D",
 				{ "GameObject", "Physics" },
+
+				Constructor(
+					Overload()
+				),
 
 				Member<Bind(&Collider2D::IsCircle)>("IsCircle"),
 				Member<Bind(&Collider2D::Group)>("Group"),
@@ -95,7 +99,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const std::shared_ptr<Object>&>("otherCollider") // TODO: change type once reflections fully switched
+						Argument<const std::shared_ptr<Collider2D>&>("otherCollider")
 					).Bind<Collider2D, &Collider2D::CanCollideWith>()
 				),
 

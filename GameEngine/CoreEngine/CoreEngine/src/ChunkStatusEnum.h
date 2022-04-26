@@ -1,7 +1,5 @@
 #pragma once
 
-#include "EnumDeclaration.h"
-
 namespace EnumTypeStorage
 {
 	struct ChunkStatusEnum
@@ -19,9 +17,4 @@ namespace EnumTypeStorage
 namespace Enum
 {
 	typedef EnumTypeStorage::ChunkStatusEnum::ChunkStatus ChunkStatus;
-}
-
-namespace Engine
-{
-	Declare_Enum(ChunkStatus);
 }

@@ -23,7 +23,11 @@ namespace Engine
 				Member<Bind(&Appearance::TextureColor)>("TextureColor"),
 				Member<Bind(&Appearance::UVScale)>("UVScale"),
 				Member<Bind(&Appearance::UVOffset)>("UVOffset"),
-				Member<Bind(&Appearance::Texture)>("Texture")
+				Member<Bind(&Appearance::Texture)>("Texture"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

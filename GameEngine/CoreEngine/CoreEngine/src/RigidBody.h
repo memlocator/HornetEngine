@@ -38,12 +38,6 @@ namespace Engine
 
 			CoordinateVector ForceBuffer;
 			PointMassVector Mass;
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(RigidBody);
 		};
 	}
 }

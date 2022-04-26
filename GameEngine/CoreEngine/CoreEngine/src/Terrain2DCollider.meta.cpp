@@ -12,7 +12,11 @@ namespace Engine
 			Reflect<Terrain2DCollider, Physics::Collider2D>::Class
 			(
 				"Terrain2DCollider",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

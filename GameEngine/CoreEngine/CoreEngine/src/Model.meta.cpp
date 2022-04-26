@@ -23,6 +23,10 @@ namespace Engine
 				Member<Bind(&Model::GlowColor)>("GlowColor"),
 				Member<Bind(&Model::Asset)>("Asset"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetMeshName",
 					Overload(

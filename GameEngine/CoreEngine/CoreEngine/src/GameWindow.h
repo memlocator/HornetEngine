@@ -13,9 +13,6 @@ namespace GraphicsEngine
 	class GameWindow : public Engine::Object
 	{
 	public:
-		void Initialize() {}
-		void Update(float) {}
-
 		void Configure(Window* window);
 
 		std::shared_ptr<Engine::UserInput> GetInput() const;
@@ -26,11 +23,5 @@ namespace GraphicsEngine
 	private:
 		Window* ActiveWindow = nullptr;
 		std::weak_ptr<Engine::UserInput> WindowInput;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(GameWindow);
 	};
 }

@@ -3,14 +3,19 @@
 #include <memory>
 
 #include "IdentifierHeap.h"
-#include "ObjectReflection.h"
-#include "LuaStackTypes.h"
 #include "ObjectAllocator.h"
-#include "ObjectLuaType.h"
+#include "Reflection/Reflected.h"
 #include <iostream>
+#include <functional>
+#include <map>
 
 namespace Engine
 {
+	namespace Meta
+	{
+		struct ReflectedType;
+	}
+
 	class Object
 	{
 	public:
@@ -22,24 +27,18 @@ namespace Engine
 
 		virtual ~Object();
 
-		bool SiblingComponents = false;
 		bool ParentComponent = true;
 		bool AncestorComponents = true;
-		bool SuperSiblingComponents = false;
 		int SuperComponentHeight = -1;
 
-		void Initialize();
-		void Update(float delta);
+		virtual void Initialize();
+		virtual void Update(float delta);
 
 		virtual void ParentChanged(std::shared_ptr<Object> newParent) {}
 
-		int GetTypeID() const;
-		const std::string& GetTypeName() const;
+		std::string GetTypeName() const;
 		bool IsA(const std::string& className, bool inherited = true) const;
-		bool IsA(MetaData* type, bool inherited = true) const;
-		const ClassData::Property* GetProperty(const std::string& name) const;
-
-		bool HasRequirements() const;
+		bool IsA(const Meta::ReflectedType* type, bool inherited = true) const;
 
 		void SetObjectID(int id);
 		int GetObjectID() const;
@@ -55,14 +54,13 @@ namespace Engine
 
 		operator std::string() const;
 
-		static const FactoryCallback& GetFactoryFunction(const std::string& className);
-
 		template <typename T = Object>
 		static std::shared_ptr<T> GetObjectFromID(int id);
 
 		std::string GetFullName() const;
 		int GetChildren() const;
 		std::shared_ptr<Object> Get(const std::string& className, bool inherited = true);
+		std::shared_ptr<Object> Get(const std::string& className, bool inherited = true) const;
 		std::shared_ptr<Object> Get(int index);
 		std::shared_ptr<Object> GetByName(const std::string& name);
 		std::shared_ptr<Object> GetAncestor(const std::string& className, bool inherited = true);
@@ -74,8 +72,6 @@ namespace Engine
 		void SetParent(const std::shared_ptr<Object>& newParent);
 		std::shared_ptr<Object> GetParent() const;
 		std::shared_ptr<Object> GetComponent(const std::string& className, bool inherited = true) const;
-		bool CheckRestriction(const std::shared_ptr<Object>& object) const;
-		const std::string& CheckRequirements(const std::shared_ptr<Object>& object) const;
 		bool IsAncestorOf(const std::shared_ptr<Object>& object) const;
 		bool IsDescendantOf(const std::shared_ptr<Object>& object) const;
 
@@ -107,6 +103,20 @@ namespace Engine
 
 		static bool IsAlive(int objectID, unsigned long long creationOrderId);
 
+		const Meta::ReflectedType* GetMetaData(int) const
+		{
+			return ObjectMetaData;
+		}
+
+		void SetMetaData(const Meta::ReflectedType* meta)
+		{
+			if (ObjectMetaData != nullptr) return;
+
+			ObjectMetaData = meta;
+		}
+
+		bool operator==(const std::shared_ptr<Object>& object) const { return this == object.get(); }
+
 	protected:
 		static void RegisterFactoryFunction(const std::string& typeName, const FactoryCallback& factory)
 		{
@@ -136,17 +146,14 @@ namespace Engine
 		int TickingChildren = 0;
 		bool TickedBefore = false;
 
+		const Meta::ReflectedType* ObjectMetaData = nullptr;
 		std::weak_ptr<Object> Parent;
 		ObjectVector Children;
 
-		std::shared_ptr<Object> GetComponent(MetaData* data, bool inherited) const;
+		std::shared_ptr<Object> GetComponent(const Meta::ReflectedType* data, bool inherited) const;
 		void UpdateTickingState();
 
-		Instantiable;
-
-		Base_Class;
-
-		Reflected(Object);
+		static bool MetaMatches(const Meta::ReflectedType* type, const Meta::ReflectedType* target, bool inherited);
 	};
 
 	template <typename T>
@@ -165,16 +172,25 @@ namespace Engine
 	template <typename T>
 	std::shared_ptr<T> Create()
 	{
-		return T::ObjectData::Create()->Cast<T>();
+		std::shared_ptr<T> object = GameObjectAllocator<T>::Create();
+
+		object->SetMetaData(Meta::Reflected<T>::GetMeta());
+		object->Name = object->GetTypeName();
+
+		return object;
 	}
 
-	std::shared_ptr<Object> CreateObject(const std::string& className);
+	template <typename T, typename... Arguments>
+	std::shared_ptr<T> Create(Arguments&&... arguments)
+	{
+		return Create<T>();
+	}
 
 	template <typename T>
 	std::shared_ptr<T> Object::Get(bool inherited)
 	{
 		for (int i = 0; i < GetChildren(); ++i)
-			if (Get(i)->GetMetaData() == T::GetClassMetaData() || (inherited && Get(i)->GetMetaData()->Inherits(T::GetClassMetaData()->Name)))
+			if (MetaMatches(Get(i)->GetMetaData(0), Engine::Meta::Reflected<T>::GetMeta(), inherited))
 				return Get(i)->Cast<T>();
 
 		return nullptr;
@@ -199,7 +215,7 @@ namespace Engine
 
 		while (ancestor != nullptr)
 		{
-			if (ancestor->GetMetaData() == T::GetClassMetaData() || (inherited && ancestor->GetMetaData()->Inherits(T::GetClassMetaData()->Name)))
+			if (MetaMatches(ancestor->GetMetaData(0), Engine::Meta::Reflected<T>::GetMeta(), inherited))
 				return ancestor;
 
 			ancestor = ancestor->Parent;
@@ -211,7 +227,7 @@ namespace Engine
 	template <typename T>
 	std::shared_ptr<T> Object::GetComponent(bool inherited) const
 	{
-		std::shared_ptr<Object> child = GetComponent(T::GetClassMetaData(), inherited);
+		std::shared_ptr<Object> child = GetComponent(Engine::Meta::Reflected<T>::GetMeta(), inherited);
 
 		if (child == nullptr)
 			return nullptr;
@@ -228,7 +244,7 @@ namespace Engine
 	template <typename T>
 	bool Object::IsA(bool inherited)
 	{
-		return IsA(T::GetClassMetaData()->Name, inherited);
+		return MetaMatches(GetMetaData(0), Meta::Reflected<T>::GetMeta(), inherited); //IsA(T::GetClassMetaData()->Name, inherited);
 	}
 
 	template <typename T>

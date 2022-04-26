@@ -13,6 +13,7 @@ namespace Engine
 	{
 		void Collider2D::Initialize()
 		{
+			Object::Initialize();
 		}
 
 		void Collider2D::UpdateData()
@@ -100,12 +101,10 @@ namespace Engine
 			return max - min;
 		}
 
-		bool Collider2D::CanCollideWith(const std::shared_ptr<Object>& otherCollider) const
+		bool Collider2D::CanCollideWith(const std::shared_ptr<Collider2D>& other) const
 		{
 			if ((!IsCircle && Asset.lock()) || Group.lock())
 				return false;
-
-			std::shared_ptr<Collider2D> other = otherCollider->Cast<Collider2D>();
 
 			if ((!other->IsCircle && other->Asset.expired()) || other->Group.expired())
 				return false;

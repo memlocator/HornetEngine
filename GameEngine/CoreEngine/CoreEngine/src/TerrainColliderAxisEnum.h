@@ -1,7 +1,5 @@
 #pragma once
 
-#include "EnumDeclaration.h"
-
 namespace EnumTypeStorage
 {
 	struct TerrainColliderAxisEnum
@@ -22,9 +20,4 @@ namespace EnumTypeStorage
 namespace Enum
 {
 	typedef EnumTypeStorage::TerrainColliderAxisEnum::TerrainColliderAxis TerrainColliderAxis;
-}
-
-namespace Engine
-{
-	Declare_Enum(TerrainColliderAxis);
 }

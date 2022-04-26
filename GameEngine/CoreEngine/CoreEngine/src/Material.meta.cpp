@@ -45,6 +45,10 @@ namespace Engine
 				Member<Bind(&Material::CubeMapBack)>("CubeMapBack"),
 				Member<Bind(&Material::DiffuseTexture)>("DiffuseTexture"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetMaterialId",
 					Overload(

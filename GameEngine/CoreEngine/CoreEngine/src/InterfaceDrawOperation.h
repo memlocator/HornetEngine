@@ -10,15 +10,6 @@ namespace GraphicsEngine
 	public:
 		std::weak_ptr<DeviceTransform> CurrentScreen;
 
-		void Initialize() {}
-		void Update(float) {}
-
 		void Render();
-
-		Instantiable;
-
-		Inherits_Class(RenderOperation);
-
-		Reflected(InterfaceDrawOperation);
 	};
 }

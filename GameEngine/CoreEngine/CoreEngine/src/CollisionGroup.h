@@ -25,11 +25,8 @@ namespace Engine
 
 			~CollisionGroup();
 
-			void Initialize() {}
-			void Update(float) {}
-
-			void AddInteraction(const std::shared_ptr<Object>& group, InteractionType type);
-			InteractionType GetInteraction(const std::shared_ptr<Object>& group) const;
+			void AddInteraction(const std::shared_ptr<CollisionGroup>& group, InteractionType type);
+			InteractionType GetInteraction(const std::shared_ptr<CollisionGroup>& group) const;
 
 		private:
 			typedef std::pair<std::weak_ptr<Object>, InteractionType> InteractionPair;
@@ -38,12 +35,6 @@ namespace Engine
 			GroupMap Interactions;
 
 			void AddInteractionRegistry(const std::shared_ptr<Object>& group, InteractionType type);
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(CollisionGroup);
 		};
 	}
 }
@@ -51,9 +42,4 @@ namespace Engine
 namespace Enum
 {
 	typedef Engine::Physics::CollisionGroup::InteractionType InteractionType;
-}
-
-namespace Engine
-{
-	Declare_Enum(InteractionType);
 }

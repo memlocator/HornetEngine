@@ -14,6 +14,28 @@ namespace Engine
 				"Transform",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
+				Property(
+					"IsStatic",
+					Getter<bool>(Const).Bind<Transform, &Transform::IsTransformStatic>(),
+					Setter<bool>(Mutable).Bind<Transform, &Transform::SetStatic>()
+				),
+
+				Property(
+					"Transformation",
+					Getter<const Matrix3&>(Mutable).Bind<Transform, &Transform::GetTransformation>(),
+					Setter<const Matrix3&>(Mutable).Bind<Transform, &Transform::SetTransformation>()
+				),
+
+				Property(
+					"InheritTransformation",
+					Getter<bool>(Const).Bind<Transform, &Transform::InheritsTransformation>(),
+					Setter<bool>(Mutable).Bind<Transform, &Transform::SetInheritsTransformation>()
+				),
+
 				Function(
 					"HasMoved",
 					Overload(

@@ -9,7 +9,6 @@ contains declaration of Matrix class
 #pragma once
 
 #include "Vector3.h"
-#include "ObjectReflection.h"
 
 class Matrix3
 {
@@ -151,109 +150,7 @@ private:
 	float Det(int y1, int y2, int x1, int x2) const;
 	float ComponentMultiplication(const Matrix3& rhs, int x, int y) const;
 	float ComponentMultiplicationNoAffine(const Matrix3& rhs, int x, int y) const;
-
-	Base_Class;
-
-	Reflected_Type(Matrix3);
 };
-
-#include "EngineException.h"
-
-namespace Engine
-{
-	namespace LuaTypes
-	{
-		class Lua_Matrix3
-		{
-		public:
-			template <typename T>
-			class Converter
-			{
-			public:
-				Converter(int argumentNumber, int& arguments, bool isStatic, T defaultValue = T()) : ArgumentNumber(argumentNumber), Arguments(arguments), IsStatic(isStatic), DefaultValue(defaultValue)
-				{
-				}
-			
-				lua_State** LuaState = nullptr;
-				const char* FuncName = "";
-				int ArgumentNumber = 0;
-				int& Arguments = ArgumentNumber;
-				bool HasDefaultValue = false;
-				bool IsStatic = false;
-				T DefaultValue = T();
-			
-				operator T() const
-				{
-					static const ReflectionData* type = nullptr; 
-				
-					if (type == nullptr)
-						type = ReflectionData::GetType("Matrix3"); 
-					
-					int index = ArgumentNumber + (IsStatic ? 1 : 2); 
-					
-					if (lua_isuserdata(*LuaState, index))
-					{
-						LuaData* object = (LuaData*)lua_topointer(*LuaState, index); 
-						
-						if (object->Data == nullptr)
-						{
-							Lua::SetErrorMessage("Attempt to pass in static object to type '" + std::string("Matrix3") + "'"); 
-							Lua::Error(*LuaState); 
-						}
-						else if (object->Meta != type)
-							Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Matrix3", object->Meta->Name.c_str()); 
-							
-						return *reinterpret_cast<Matrix3*>(object->Data);
-					}
-					else
-						Lua::BadArgumentError(*LuaState, ArgumentNumber + 1, "Matrix3", Lua::GetType(*LuaState, index)); 
-						
-						throw EngineException("shut up, compiler"); 
-				}
-			};
-		
-			class ReturnValue
-			{
-			public:
-				const int ReturnValues = 1;
-			
-				lua_State** LuaState = nullptr;
-			
-			
-				void operator()(const Matrix3& value)
-				{
-					static const ReflectionData* type = nullptr;
-			
-					if (type == nullptr)
-						type = ReflectionData::GetType("Matrix3");
-			
-					try
-					{
-						void* data = type->CreateRaw();
-
-						MakeLuaTypeReference(*LuaState, type, data);
-
-						new (data) Matrix3(value);
-					}
-					catch (std::string& err)
-					{
-						Lua::SetErrorMessage(err);
-						Lua::Error(*LuaState);
-					}
-				}
-			};
-		};
-	}
-
-	template<>
-	class CoreTypes<Matrix3>
-	{
-	public:
-		typedef LuaTypes::Lua_Matrix3 LuaType;
-	
-		static const std::string GetTypeName() { return "Matrix3"; };
-	};
-}
 
 constexpr Matrix3 operator*(float scalar, const Matrix3& matrix)
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ObjectReflection.h"
+#include <string>
 
 /*****
 	TODO: Register new type to ObjectRegistration.cpp. Use the #include as a shortcut to open it.
@@ -9,8 +9,6 @@
 
 	Warning: order of registration is crucial. Register this before any item that depends on it.
 *****/
-
-// #include "ObjectRegistration.cpp" // Remove this once registered
 
 /*
 	Quick note about reflected types and Lua:
@@ -32,17 +30,13 @@ public:
 	int ExampleMember;
 
 	// Example Constructor
-	TemplateType(int exampleParam, int exampleParam2 = 0) {}
+	TemplateType(int exampleParam, int exampleParam2 = 0) {} TemplateType() {}
 
 	// Example operator overload; used internally by Lua's metatable dictionary of operator overloads
 	int operator-() const { return -ExampleMember; }
 
 	// Example string conversion; used internally by Lua's tostring() if reflected
 	operator std::string() const { return ""; }
-
-	Base_Class;
-
-	Reflected_Type(TemplateType);
 };
 
 // Example inheritance
@@ -51,18 +45,4 @@ struct InheritedTemplate : public TemplateType
 	// Example function with multiple overloads
 	void ExampleMethod() {}
 	static int ExampleMethod(int arg1) { return arg1; }
-
-	Inherits_Type(TemplateType);
-
-	Reflected_Type(InheritedTemplate);
 };
-
-namespace Engine
-{
-	/*
-		This must be in namespace Engine.
-		This is required for internal reflection book keeping.
-	*/
-	Define_Value_Type(TemplateType);
-	Define_Value_Type(InheritedTemplate);
-}

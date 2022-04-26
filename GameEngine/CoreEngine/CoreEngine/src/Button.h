@@ -24,11 +24,5 @@ namespace GraphicsEngine
 
 	private:
 		bool Down = false;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Button);
 	};
 }

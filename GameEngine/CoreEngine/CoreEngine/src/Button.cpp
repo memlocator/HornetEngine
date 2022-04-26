@@ -8,11 +8,15 @@ namespace GraphicsEngine
 {
 	void Button::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		SetTicks(true);
 	}
 
-	void Button::Update(float)
+	void Button::Update(float delta)
 	{
+		Engine::Object::Update(delta);
+
 		std::shared_ptr<ScreenCanvas> canvas = GetComponent<ScreenCanvas>();
 
 		if (canvas == nullptr)

@@ -30,9 +30,6 @@ namespace GraphicsEngine
 
 		virtual ~SceneObject();
 
-		void Initialize() {}
-		void Update(float) {}
-
 		void ParentChanged(std::shared_ptr<Object> newParent);
 
 		bool Visible = true;
@@ -72,12 +69,6 @@ namespace GraphicsEngine
 		Reference<Material> MaterialPropertiesObject;
 
 		void UpdateScenes();
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(SceneObject);
 	};
 }
 
@@ -231,11 +222,5 @@ namespace GraphicsEngine
 		bool RefreshLightWatch(int lightIndex);
 
 		static std::shared_ptr<Camera>& Target();
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Scene);
 	};
 }

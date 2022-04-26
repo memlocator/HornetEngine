@@ -4,13 +4,14 @@
 
 #include "Materials.h"
 #include "Graphics.h"
-#include "LuaBinding.h"
 #include "Camera.h"
 #include "Light.h"
 #include "Material.h"
 #include "Terrain.h"
 #include "LightBuffer.h"
 #include "Transform.h"
+#include "Reflection/LuaTypeBinding.h"
+#include "Reflection/LuaError.h"
 
 namespace GraphicsEngine
 {
@@ -22,6 +23,8 @@ namespace GraphicsEngine
 
 			if (scene != nullptr)
 				scene->RemoveObjectRaw(this);
+			else
+				Scenes.pop_back();
 		}
 	}
 
@@ -211,17 +214,10 @@ namespace GraphicsEngine
 
 	int Scene::CastRay(lua_State* lua)
 	{
-		int arguments;
-
-		Engine::LuaTypes::Lua_Ray::Converter<Ray> rayValue(0, arguments, false);
-
-		rayValue.FuncName = "CastRay";
-		rayValue.LuaState = &lua;
-
-		Ray ray = (Ray)rayValue;
+		Ray ray = Engine::Lua::BindType<Ray>::WithDefault<false>::Pop<void>(lua, 2);
 
 		if (lua_type(lua, 3) != LUA_TFUNCTION)
-			Lua::BadArgumentError(lua, 2, "function", Lua::GetType(lua, 3), "CastRay");
+			LuaError(lua, "bad argument to #3, expected 'function'");
 
 		int top = lua_gettop(lua);
 		bool stopped = false;
@@ -234,13 +230,9 @@ namespace GraphicsEngine
 
 			lua_pushvalue(lua, 3);
 
-			Engine::LuaTypes::Lua_SceneRayCastResults::ReturnValue returned;
+			Engine::Lua::BindType<SceneRayCastResults>::Push(lua, results);
 
-			returned.LuaState = &lua;
-
-			returned(results);
-
-			lua_call(lua, returned.ReturnValues, 1);
+			lua_call(lua, 1, 1);
 
 			if (lua_isboolean(lua, 4) && lua_toboolean(lua, 4))
 				stopped = true;
@@ -277,11 +269,13 @@ namespace GraphicsEngine
 
 	void Scene::Initialize()
 	{
+		Engine::Object::Initialize();
 		//SetTicks(true);
 	}
 
-	void Scene::Update(float)
+	void Scene::Update(float delta)
 	{
+		Engine::Object::Update(delta);
 	}
 
 	void Scene::AddObject(const std::shared_ptr<SceneObject>& object)

@@ -31,6 +31,10 @@ namespace Engine
 				Member<Bind(&Scene::GlobalSpecular)>("GlobalSpecular"),
 				Member<Bind(&Scene::GlobalAmbient)>("GlobalAmbient"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"RefreshWatches",
 					Overload(
@@ -45,6 +49,11 @@ namespace Engine
 						Mutable,
 						Returns<void>()
 					).Bind<Scene, &Scene::ClearStaticObjects>()
+				),
+
+				Function(
+					"CastRay",
+					LuaOverload<Scene, &Scene::CastRay>()
 				),
 
 				Function(
@@ -171,26 +180,22 @@ namespace Engine
 						Argument<bool>("drawTransparent"),
 						Argument<const std::shared_ptr<GraphicsEngine::Camera>&>("targetCamera")
 					).Bind<Scene, &Scene::Draw>()
-				),
+				)//,
 
-				Function(
-					"Update",
-					Overload(
-						Mutable,
-						Returns<void>(),
-						Argument<int>("object")
-					).Bind<Scene, &Scene::Update>()
-				),
-
-				Function(
-					"Update",
-					Overload(
-						Mutable,
-						Returns<void>(),
-						Argument<int>("object"),
-						Argument<bool>("isStatic")
-					).Bind<Scene, &Scene::Update>()
-				)
+				//Function(
+				//	"Update",
+				//	Overload(
+				//		Mutable,
+				//		Returns<void>(),
+				//		Argument<int>("object")
+				//	).Bind<Scene, &Scene::Update>(),
+				//	Overload(
+				//		Mutable,
+				//		Returns<void>(),
+				//		Argument<int>("object"),
+				//		Argument<bool>("isStatic")
+				//	).Bind<Scene, &Scene::Update>()
+				//)
 			);
 		}
 	}

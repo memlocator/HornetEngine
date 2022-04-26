@@ -18,6 +18,10 @@ namespace Engine
 				Member<Bind(&Vector3::W)>("W"),
 
 				Constructor(
+					Overload()
+				),
+
+				Constructor(
 					Overload(
 						Argument<float, Default(0.0f)>("x"),
 						Argument<float, Default(0.0f)>("y"),

@@ -6,8 +6,6 @@ extern "C" {
 #include <math.h>
 }
 
-#include "ObjectReflection.h"
-
 class Quaternion
 {
 public:
@@ -52,18 +50,7 @@ public:
 
 private:
 	bool Compare(float x, float y, float epsilon) const;
-
-private:
-
-	Base_Class;
-
-	Reflected_Type(Quaternion);
 };
-
-namespace Engine
-{
-	Define_Value_Type(Quaternion);
-}
 
 Quaternion operator*(float scalar, const Quaternion& quaternion);
 std::ostream& operator<<(std::ostream& out, const Quaternion& quaternion);

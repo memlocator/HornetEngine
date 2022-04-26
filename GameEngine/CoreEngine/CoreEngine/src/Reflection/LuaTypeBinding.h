@@ -12,8 +12,6 @@ namespace Engine
 {
 	namespace Lua
 	{
-		void MakeBinding(lua_State* lua, int id);
-
 		template <typename Type>
 		struct BoundTypeAllocators
 		{
@@ -55,7 +53,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static bool Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (bool)lua_toboolean(lua, index);
@@ -89,7 +87,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static unsigned char Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (unsigned char)lua_tointeger(lua, index);
@@ -123,7 +121,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static signed char Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (signed char)lua_tointeger(lua, index);
@@ -157,7 +155,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static unsigned short Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (unsigned short)lua_tointeger(lua, index);
@@ -191,7 +189,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static short Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (short)lua_tointeger(lua, index);
@@ -225,7 +223,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static unsigned int Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (unsigned int)lua_tointeger(lua, index);
@@ -259,7 +257,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static int Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (int)lua_tointeger(lua, index);
@@ -293,7 +291,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static unsigned long long Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (unsigned long long)lua_tointeger(lua, index);
@@ -327,7 +325,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static int Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (long long)lua_tointeger(lua, index);
@@ -361,7 +359,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static float Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (float)lua_tonumber(lua, index);
@@ -395,7 +393,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static float Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return (double)lua_tonumber(lua, index);
@@ -429,7 +427,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static std::string Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return std::string(lua_tostring(lua, index));
@@ -463,7 +461,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static const char* Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
 					return lua_tostring(lua, index);
@@ -485,13 +483,11 @@ namespace Engine
 					return;
 				}
 
-				std::pair<int, BoundObject*> bound = BoundObject::Allocate();
+				BoundObject& bound = BoundObject::MakeBinding(lua);
 
-				bound.second->GameObject = value;
-				bound.second->ObjectType = LuaObjectType::Object;
-				bound.second->Type = Meta::Reflected<Type>::GetMeta();
-
-				MakeBinding(lua, bound.first);
+				bound.GameObject = value;
+				bound.ObjectType = LuaObjectType::Object;
+				bound.Type = bound.GameObject->GetMetaData(0);
 			}
 
 			template <bool HasDefault>
@@ -500,8 +496,10 @@ namespace Engine
 				template <typename DefaultTraits>
 				static std::shared_ptr<Type> Pop(lua_State* lua, int index)
 				{
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					if (lua_isnil(lua, index))
+						return nullptr;
+
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return bound.GameObject->Cast<Type>();
 				}
@@ -513,11 +511,13 @@ namespace Engine
 				template <typename DefaultTraits>
 				static std::shared_ptr<Type> Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					if (lua_isnil(lua, index))
+						return nullptr;
+
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return bound.GameObject->Cast<Type>();
 				}
@@ -538,13 +538,11 @@ namespace Engine
 					return;
 				}
 
-				std::pair<int, BoundObject*> bound = BoundObject::Allocate();
+				BoundObject& bound = BoundObject::MakeBinding(lua);
 
-				bound.second->GameObject = value.lock();
-				bound.second->ObjectType = LuaObjectType::Object;
-				bound.second->Type = Meta::Reflected<Type>::GetMeta();
-
-				MakeBinding(lua, bound.first);
+				bound.GameObject = value.lock();
+				bound.ObjectType = LuaObjectType::Object;
+				bound.Type = bound.GameObject->GetMetaData(1);
 			}
 
 			template <bool HasDefault>
@@ -553,8 +551,10 @@ namespace Engine
 				template <typename DefaultTraits>
 				static std::weak_ptr<Type> Pop(lua_State* lua, int index)
 				{
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					if (lua_isnil(lua, index))
+						return std::weak_ptr<Type>();
+
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return bound.GameObject->Cast<Type>();
 				}
@@ -566,11 +566,13 @@ namespace Engine
 				template <typename DefaultTraits>
 				static std::weak_ptr<Type> Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					if (lua_isnil(lua, index))
+						return std::weak_ptr<Type>();
+
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return bound.GameObject->Cast<Type>();
 				}
@@ -581,67 +583,70 @@ namespace Engine
 		struct BindType<Type*>
 		{
 			static inline const int Returns = 1;
-
+		
 			static void Push(lua_State* lua, Type* value)
 			{
 				if (value == nullptr)
 				{
 					lua_pushnil(lua);
-
+		
 					return;
 				}
 
-				std::pair<int, BoundObject*> bound = BoundObject::Allocate();
-
-				bound.second->GameObject = value->This.lock()->Cast<Type>();
-				bound.second->ObjectType = LuaObjectType::Object;
-				bound.second->Type = Meta::Reflected<Type>::GetMeta();
-
-				MakeBinding(lua, bound.first);
+				BoundObject& bound = BoundObject::MakeBinding(lua);
+		
+				bound.GameObject = value->This.lock()->Cast<Type>();
+				bound.ObjectType = LuaObjectType::Object;
+				bound.Type = bound.GameObject->GetMetaData(1);
 			}
-
+		
 			static void Push(lua_State* lua, const Type* value)
 			{
 				if (value == nullptr)
 				{
 					lua_pushnil(lua);
-
+		
 					return;
 				}
 
-				std::pair<int, BoundObject*> bound = BoundObject::Allocate();
-
-				bound.second->GameObject = value->This.lock()->Cast<Type>();
-				bound.second->ObjectType = LuaObjectType::Object;
-
-				MakeBinding(lua, bound.first);
+				BoundObject& bound = BoundObject::MakeBinding(lua);
+		
+				bound.GameObject = value->This.lock()->Cast<Type>();
+				bound.ObjectType = LuaObjectType::Object;
+				bound.Type = bound.GameObject->GetMetaData(1);
 			}
-
+		
 			template <bool HasDefault>
 			struct WithDefault
 			{
 				template <typename DefaultTraits>
 				static Type* Pop(lua_State* lua, int index)
 				{
+					if (lua_isnil(lua, index))
+						return nullptr;
+
 					int reference = (int)(intptr_t)lua_touserdata(lua, index);
 					BoundObject& bound = BoundObject::GetBound(reference);
-
+		
 					return bound.GameObject->Cast<Type>().get();
 				}
 			};
-
+		
 			template <>
 			struct WithDefault<true>
 			{
 				template <typename DefaultTraits>
 				static Type* Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
+
+					if (lua_isnil(lua, index))
+						return nullptr;
 
 					int reference = (int)(intptr_t)lua_touserdata(lua, index);
 					BoundObject& bound = BoundObject::GetBound(reference);
-
+		
 					return bound.GameObject->Cast<Type>().get();
 				}
 			};
@@ -657,13 +662,11 @@ namespace Engine
 
 			static void Push(lua_State* lua, Type value)
 			{
-				std::pair<int, BoundObject*> bound = BoundObject::Allocate();
+				BoundObject& bound = BoundObject::MakeBinding(lua);
 
-				bound.second->DataId = (int)value;
-				bound.second->ObjectType = LuaObjectType::Enum;
-				bound.second->Type = Meta::Reflected<Type>::GetMeta();
-
-				MakeBinding(lua, bound.first);
+				bound.DataId = (int)value;
+				bound.ObjectType = LuaObjectType::Enum;
+				bound.Type = Meta::Reflected<Type>::GetMeta();
 			}
 
 			template <bool HasDefault>
@@ -672,8 +675,15 @@ namespace Engine
 				template <typename DefaultTraits>
 				static Type Pop(lua_State* lua, int index)
 				{
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					int type = lua_type(lua, index);
+
+					if (type == LUA_TNUMBER)
+						return (Type)lua_tointeger(lua, index);
+					
+					if (type == LUA_TSTRING)
+						(Type)Meta::Reflected<Type>::GetMeta()->GetEnumItem(lua_tostring(lua, index))->Value;
+
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return (Type)bound.DataId;
 				}
@@ -685,11 +695,18 @@ namespace Engine
 				template <typename DefaultTraits>
 				static Type Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					int type = lua_type(lua, index);
+
+					if (type == LUA_TNUMBER)
+						return (Type)lua_tointeger(lua, index);
+
+					if (type == LUA_TSTRING)
+						(Type)Meta::Reflected<Type>::GetMeta()->GetEnumItem(lua_tostring(lua, index))->Value;
+
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return (Type)bound.DataId;
 				}
@@ -707,17 +724,11 @@ namespace Engine
 
 				BoundTypeAllocators<Type>::AllocatedData.GetNode(dataId).GetData() = value;
 
-				std::pair<int, BoundObject*> bound = BoundObject::Allocate();
+				BoundObject& bound = BoundObject::MakeBinding(lua);
 
-				bound.second->DataId = dataId;
-				bound.second->ObjectType = LuaObjectType::Data;
-				bound.second->Type = Meta::Reflected<Type>::GetMeta();
-				bound.second->Destructor = [](BoundObject& bound)
-				{
-					BoundTypeAllocators<Type>::AllocatedData.Release(bound.DataId);
-				};
-
-				MakeBinding(lua, bound.first);
+				bound.DataId = dataId;
+				bound.ObjectType = LuaObjectType::Data;
+				bound.Type = Meta::Reflected<Type>::GetMeta();
 			}
 
 			template <bool HasDefault>
@@ -726,8 +737,7 @@ namespace Engine
 				template <typename DefaultTraits>
 				static Type& Pop(lua_State* lua, int index)
 				{
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return BoundTypeAllocators<Type>::AllocatedData.GetNode(bound.DataId).GetData();
 				}
@@ -739,21 +749,33 @@ namespace Engine
 				template <typename DefaultTraits>
 				static Type& Pop(lua_State* lua, int index)
 				{
-					if (index == -1)
+					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;
 
-					int reference = (int)(intptr_t)lua_touserdata(lua, index);
-					BoundObject& bound = BoundObject::GetBound(reference);
+					BoundObject& bound = BoundObject::Get(lua, index);
 
 					return BoundTypeAllocators<Type>::AllocatedData.GetNode(bound.DataId).GetData();
 				}
 			};
 		};
 
-		template <typename Type>
-		std::shared_ptr<Type> GetObject(lua_State* lua)
+		template <typename Base, typename Derived>
+		inline constexpr bool isnt_base_of_v = !std::is_base_of_v<Base, Derived>;
+
+		template <typename Type> requires std::is_base_of_v<Object, Type>
+		Type* GetObject(lua_State* lua)
 		{
-			return BindType<std::shared_ptr<Type>>::WithDefault<false>::Pop<void>(lua, 1);
+			BoundObject& bound = BoundObject::Get(lua);
+
+			return bound.GameObject->Cast<Type>().get();
+		}
+
+		template <typename Type> requires isnt_base_of_v<Object, Type>
+		Type* GetObject(lua_State* lua)
+		{
+			BoundObject& bound = BoundObject::Get(lua);
+
+			return &BoundTypeAllocators<Type>::AllocatedData.GetNode(bound.DataId).GetData();
 		}
 	}
 }

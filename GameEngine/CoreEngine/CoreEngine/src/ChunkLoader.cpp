@@ -10,11 +10,15 @@ namespace Engine
 {
 	void ChunkLoader::Initialize()
 	{
+		Object::Initialize();
+
 		SetTicks(true);
 	}
 
 	void ChunkLoader::Update(float delta)
 	{
+		Object::Update(delta);
+
 		Coordinates position = GetChunkCoordinates();
 
 		if (Position.X != position.X || Position.Y != position.Y || Position.Z != position.Z)

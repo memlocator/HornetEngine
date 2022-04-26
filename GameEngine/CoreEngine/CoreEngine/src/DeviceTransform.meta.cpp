@@ -26,6 +26,10 @@ namespace Engine
 				Member<Bind(&DeviceTransform::AnchorPoint)>("AnchorPoint"),
 				Member<Bind(&DeviceTransform::RotationAnchor)>("RotationAnchor"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetTransformation",
 					Overload(

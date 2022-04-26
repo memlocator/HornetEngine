@@ -1,6 +1,7 @@
 #include "Chunk.h"
 
 #include "Camera.h"
+#include "Terrain.h"
 
 #include "Reflection/Reflection.h"
 
@@ -15,6 +16,10 @@ namespace Engine
 			(
 				"Chunk",
 				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"Save",
@@ -181,7 +186,7 @@ namespace Engine
 					"GetTerrain",
 					Overload(
 						Const,
-						Returns<std::shared_ptr<Object>>() // TODO: change type when replacing reflection
+						Returns<std::shared_ptr<Terrain>>()
 					).Bind<Chunk, &Chunk::GetTerrain>()
 				)
 			);

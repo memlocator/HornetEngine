@@ -26,7 +26,11 @@ namespace Engine
 				Member<Bind(&ShadingOperation::CurrentCamera)>("CurrentCamera"),
 				Member<Bind(&ShadingOperation::CurrentScene)>("CurrentScene"),
 				Member<Bind(&ShadingOperation::GlobalLight)>("GlobalLight"),
-				Member<Bind(&ShadingOperation::Resolution)>("Resolution")
+				Member<Bind(&ShadingOperation::Resolution)>("Resolution"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

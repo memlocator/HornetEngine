@@ -38,7 +38,7 @@ namespace Engine
 			auto handle = std::shared_ptr<T>(object, Free);
 
 			object->This = handle;
-			object->InitializeBase();
+			object->Initialize();
 
 			return handle;
 		}

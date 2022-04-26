@@ -31,11 +31,15 @@ namespace GraphicsEngine
 
 	void InputSubscription::Initialize()
 	{
+		Engine::InputObject::Initialize();
+
 		SetTicks(true);
 	}
 
-	void InputSubscription::Update(float)
+	void InputSubscription::Update(float delta)
 	{
+		Engine::InputObject::Update(delta);
+
 		if (!ChangedThisFrame)
 			UpdateState();
 
@@ -125,11 +129,15 @@ namespace GraphicsEngine
 
 	void InputSubscriber::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		SetTicks(true);
 	}
 
-	void InputSubscriber::Update(float)
+	void InputSubscriber::Update(float delta)
 	{
+		Engine::Object::Update(delta);
+
 		for (int i = 0; i < Enum::BoundDevice::Count; ++i)
 			FocusedLast[i] = Focused[i];
 	}

@@ -10,6 +10,8 @@ namespace GraphicsEngine
 {
 	void ScrollBar::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		FrameTransform = Engine::Create<DeviceTransform>();
 		FrameTransform->SetParent(This.lock());
 		FrameTransform->Name = "FrameTransform";
@@ -48,8 +50,10 @@ namespace GraphicsEngine
 		return vector.Y;
 	}
 
-	void ScrollBar::Update(float)
+	void ScrollBar::Update(float delta)
 	{
+		Engine::Object::Update(delta);
+
 		if (!Initialized)
 		{
 

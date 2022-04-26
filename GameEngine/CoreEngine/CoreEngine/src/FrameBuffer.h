@@ -58,11 +58,5 @@ namespace GraphicsEngine
 		GLuint FormerBufferID = 0; // for debug purposes, detecting double deletes
 		AttachmentVector AttachmentSlots = AttachmentVector(1);
 		TextureVector AttachmentTextures = TextureVector(1);
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(FrameBuffer);
 	};
 }

@@ -14,9 +14,6 @@ namespace Engine
 
 			~ColliderAsset() {}
 
-			void Initialize() {}
-			void Update(float) {}
-
 			void ConfigureTriangleMesh();
 			void ConfigureSquareMesh();
 			void ConfigureOctagonMesh();
@@ -24,12 +21,6 @@ namespace Engine
 			void ConfigureChargerShieldMesh();
 			void ConfigureWormHeadMesh();
 			void ConfigureWormTailMesh();
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(ColliderAsset);
 		};
 	}
 }

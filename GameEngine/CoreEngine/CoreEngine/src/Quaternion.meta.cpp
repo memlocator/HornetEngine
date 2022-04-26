@@ -19,10 +19,10 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0)>("w"),
-						Argument<float, Default(0)>("x"),
-						Argument<float, Default(0)>("y"),
-						Argument<float, Default(0)>("z")
+						Argument<float, Default(0.0f)>("w"),
+						Argument<float, Default(0.0f)>("x"),
+						Argument<float, Default(0.0f)>("y"),
+						Argument<float, Default(0.0f)>("z")
 					),
 
 					Overload(

@@ -40,6 +40,7 @@ namespace Engine
 			if (mousePosition == nullptr) return;
 
 			Programs::Screen->Use();
+			Programs::Screen->SetTexture(nullptr);
 
 			Ray mouseRay = camera->GetRay(int(mousePosition->GetPosition().X), int(mousePosition->GetPosition().Y), int(Resolution.X), int(Resolution.Y), SelectionRayDistance);
 

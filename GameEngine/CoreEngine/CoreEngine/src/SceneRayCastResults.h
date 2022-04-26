@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <functional>
 
 #include "Vector3.h"
-#include "ObjectReflection.h"
 
 namespace Engine
 {
@@ -23,7 +23,7 @@ struct SceneRayCastResults
 	Vector3 Normal;
 	Vector3 Color;
 	Vector3 GlowColor;
-	std::shared_ptr<const GraphicsEngine::Material> MaterialProperties;
+	std::shared_ptr<GraphicsEngine::Material> MaterialProperties;
 	std::shared_ptr<Engine::Object> Hit;
 
 	bool operator<(const SceneRayCastResults& other) const
@@ -35,15 +35,6 @@ struct SceneRayCastResults
 	}
 
 	operator std::string() const;
-
-	Base_Class;
-
-	Reflected_Type(SceneRayCastResults);
 };
 
 typedef std::function<void(const SceneRayCastResults& results)> CastResultsCallback;
-
-namespace Engine
-{
-	Define_Value_Type(SceneRayCastResults);
-}

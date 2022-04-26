@@ -16,6 +16,9 @@ namespace GraphicsEngine
 
 namespace Engine
 {
+	class ModelAsset;
+	class Terrain;
+
 	class Chunk : public Object
 	{
 	public:
@@ -54,13 +57,7 @@ namespace Engine
 
 		std::shared_ptr<Chunk> FetchChunk(int chunkX, int chunkY, int chunkZ);
 
-		std::shared_ptr<Object> GetTerrain() const;
-
-		template <typename T>
-		std::shared_ptr<T> GetTerrain() const
-		{
-			return GetTerrain()->Cast<T>();
-		}
+		std::shared_ptr<Terrain> GetTerrain() const;
 
 	private:
 		typedef std::vector<std::weak_ptr<Voxel>> VoxelVector;
@@ -83,11 +80,5 @@ namespace Engine
 		void RegenerateNeighbors(bool changedLeft = true, bool changedBottom = true, bool changedBack = true);
 		void AttemptRegeneration(int chunkX, int chunkY, int chunkZ);
 		void Triangulate(VoxelTriangulation& triangulator, std::shared_ptr<Chunk>* chunks, bool* chunksCanLoad, int x, int y, int z);
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Chunk);
 	};
 }

@@ -14,18 +14,9 @@ namespace GraphicsEngine
 		Vector3 Direction;
 		std::weak_ptr<Texture> Input;
 
-		void Initialize() {}
-		void Update(float) {}
-
 		void Configure(const Vector3& direction, const std::shared_ptr<Texture>& input);
 
 		void Render();
-
-		Instantiable;
-
-		Inherits_Class(RenderOperation);
-
-		Reflected(BlurPassOperation);
 	};
 }
 
@@ -43,7 +34,6 @@ namespace GraphicsEngine
 		bool Detatch = true;
 
 		void Initialize();
-		void Update(float) {}
 
 		void Configure(int width, int height, GLint sampleType = GL_LINEAR, GLint wrapType = GL_CLAMP_TO_EDGE, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA);
 
@@ -55,11 +45,5 @@ namespace GraphicsEngine
 		std::weak_ptr<FrameBuffer> HorizontalBuffer;
 		std::weak_ptr<BlurPassOperation> HorizontalPass;
 		std::weak_ptr<BlurPassOperation> VerticalPass;
-
-		Instantiable;
-
-		Inherits_Class(RenderOperation);
-
-		Reflected(BlurOperation);
 	};
 }

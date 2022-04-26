@@ -18,6 +18,10 @@ namespace Engine
 				"Textures",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Create",
 					Overload(

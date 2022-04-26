@@ -37,17 +37,7 @@ namespace Engine
         public:
             virtual ~Socket() {}
 
-            void Initialize() {};
-            void Update(float) {}
-
             void Create();
-            
-            
-
-            Instantiable;
-            Inherits_Class(Object);
-
-            Reflected(Socket);
         };
     }
 }

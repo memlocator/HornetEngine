@@ -23,11 +23,5 @@ namespace GraphicsEngine
 	private:
 		std::weak_ptr<Texture> StencilTexture;
 		std::weak_ptr<FrameBuffer> StencilBuffer;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(CanvasStencil);
 	};
 }

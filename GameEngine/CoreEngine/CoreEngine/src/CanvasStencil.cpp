@@ -14,6 +14,8 @@ namespace GraphicsEngine
 
 	void CanvasStencil::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		auto stencilTexture = Engine::Create<Texture>();
 		auto stencilBuffer = FrameBuffer::Create(0, 0, StencilTexture.lock(), true);
 
@@ -27,9 +29,9 @@ namespace GraphicsEngine
 		stencilTexture->SetParent(stencilBuffer);
 	}
 
-	void CanvasStencil::Update(float)
+	void CanvasStencil::Update(float delta)
 	{
-
+		Engine::Object::Update(delta);
 	}
 
 	void CanvasStencil::Draw()

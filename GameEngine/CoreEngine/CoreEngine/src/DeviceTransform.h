@@ -72,11 +72,5 @@ namespace GraphicsEngine
 		Matrix3 InverseTransformation;
 
 		void Draw(std::shared_ptr<Object> object, bool updateStencils);
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(DeviceTransform);
 	};
 }

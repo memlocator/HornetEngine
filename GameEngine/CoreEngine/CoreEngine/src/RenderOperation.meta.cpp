@@ -18,6 +18,10 @@ namespace Engine
 
 				Member<Bind(&RenderOperation::RenderAutomatically)>("RenderAutomatically"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Render",
 					Overload(

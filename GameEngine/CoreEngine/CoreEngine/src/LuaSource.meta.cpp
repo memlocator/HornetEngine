@@ -14,6 +14,10 @@ namespace Engine
 				"LuaSource",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetPath",
 					Overload(

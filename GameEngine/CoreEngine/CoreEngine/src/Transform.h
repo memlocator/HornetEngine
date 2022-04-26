@@ -13,8 +13,6 @@ namespace Engine
 	public:
 		virtual ~Transform() {}
 
-		void Initialize() {}
-
 		void Update(float delta);
 
 		bool HasMoved() const;
@@ -94,11 +92,5 @@ namespace Engine
 		bool Moved = false;
 		bool HadParent = false;
 		Matrix3 OldParentTransform;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Transform);
 	};
 }

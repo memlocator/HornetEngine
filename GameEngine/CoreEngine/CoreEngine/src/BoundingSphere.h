@@ -3,7 +3,6 @@
 #include <vector>
 #include "Vector3.h"
 #include "Matrix3.h"
-#include "ObjectReflection.h"
 #include "MeshData.h"
 
 namespace Engine
@@ -34,13 +33,4 @@ public:
 	static BoundingSphere ComputeRitter(const std::shared_ptr<Engine::ModelAsset>& model);
 	static BoundingSphere ComputeLarson(const std::shared_ptr<Engine::ModelAsset>& model);
 	static BoundingSphere ComputePCA(const std::shared_ptr<Engine::ModelAsset>& model);
-
-	Base_Class;
-
-	Reflected_Type(BoundingSphere);
 };
-
-namespace Engine
-{
-	Define_Value_Type(BoundingSphere);
-}

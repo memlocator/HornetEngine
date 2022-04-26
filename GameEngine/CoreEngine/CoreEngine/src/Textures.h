@@ -13,8 +13,6 @@ namespace GraphicsEngine
 	class Textures : public Engine::Object
 	{
 	public:
-		void Initialize() {}
-		void Update(float) {}
 		~Textures() {}
 
 		static std::shared_ptr<Texture> Create(int width, int height, GLint sampleType = GL_NEAREST, GLint wrapType = GL_REPEAT, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA, bool invertedY = false);
@@ -24,11 +22,5 @@ namespace GraphicsEngine
 		void LoadDirectory(const std::string& folderPath, GLint sampleType = GL_NEAREST, GLint wrapType = GL_REPEAT, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA);
 
 		void Add(const std::shared_ptr<Texture>& texture, const std::string& name);
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Textures);
 	};
 }

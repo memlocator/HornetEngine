@@ -23,7 +23,11 @@ namespace Engine
 				Member<Bind(&Button::Pressed)>("Pressed"),
 				Member<Bind(&Button::Idle)>("Idle"),
 				Member<Bind(&Button::Binding)>("Binding"),
-				Member<Bind(&Button::Device)>("Device")
+				Member<Bind(&Button::Device)>("Device"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

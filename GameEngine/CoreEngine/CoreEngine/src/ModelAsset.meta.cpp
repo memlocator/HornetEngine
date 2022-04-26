@@ -16,6 +16,10 @@ namespace Engine
 				"ModelAsset",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetMeshID",
 					Overload(

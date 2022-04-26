@@ -14,6 +14,10 @@ namespace Engine
 				"TerrainMaterial",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetID",
 					Overload(

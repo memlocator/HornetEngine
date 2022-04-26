@@ -17,7 +17,7 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0)>("radius"),
+						Argument<float, Default(0.0f)>("radius"),
 						Argument<const Vector3&, Default(Vector3())>("center")
 					)
 				),

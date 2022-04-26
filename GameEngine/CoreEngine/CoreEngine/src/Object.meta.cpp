@@ -35,10 +35,13 @@ namespace Engine
 				{ "GameObject" },
 
 				Member<Bind(&Object::Name)>("Name"),
-				Member<Bind(&Object::SiblingComponents)>("SiblingComponents"),
 				Member<Bind(&Object::ParentComponent)>("ParentComponent"),
 				Member<Bind(&Object::AncestorComponents)>("AncestorComponents"),
 				Member<Bind(&Object::SuperComponentHeight)>("SuperComponentHeight"),
+
+				Constructor(
+					Overload()
+				),
 
 				Property(
 					"Parent",
@@ -67,7 +70,7 @@ namespace Engine
 					"GetTypeName",
 					Overload(
 						Const,
-						Returns<const std::string&>()
+						Returns<std::string>()
 					).Bind<Object, &Object::GetTypeName>()
 				),
 
@@ -79,14 +82,6 @@ namespace Engine
 						Argument<const std::string&>("name"),
 						Argument<bool, true>("inherits")
 					).Bind<Object, &Object::IsA>()
-				),
-
-				Function(
-					"HasRequirements",
-					Overload(
-						Const,
-						Returns<bool>()
-					).Bind<Object, &Object::HasRequirements>()
 				),
 
 				Function(
@@ -158,24 +153,6 @@ namespace Engine
 				),
 
 				Function(
-					"CheckRestriction",
-					Overload(
-						Const,
-						Returns<bool>(),
-						Argument<const std::shared_ptr<Object>&>("object")
-					).Bind<Object, &Object::CheckRestriction>()
-				),
-
-				Function(
-					"CheckRequirements",
-					Overload(
-						Const,
-						Returns<const std::string&>(),
-						Argument<const std::shared_ptr<Object>&>("object")
-					).Bind<Object, &Object::CheckRequirements>()
-				),
-
-				Function(
 					"IsAncestorOf",
 					Overload(
 						Const,
@@ -199,6 +176,15 @@ namespace Engine
 						Const,
 						Returns<std::string>()
 					).Bind<Object, &Object::operator std::string>()
+				),
+
+				Function(
+					"operator==",
+					Overload(
+						Const,
+						Returns<bool>(),
+						Argument<const std::shared_ptr<Object>&>("other")
+					).Bind<Object, &Object::operator==>()
 				)
 			);
 		}

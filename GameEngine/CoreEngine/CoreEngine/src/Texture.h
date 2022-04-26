@@ -61,9 +61,6 @@ namespace GraphicsEngine
 			};
 		};
 
-		void Initialize() {}
-		void Update(float) {}
-
 		~Texture();
 
 		void Resize(int width, int height);
@@ -95,12 +92,6 @@ namespace GraphicsEngine
 		Dimensions Size;
 		unsigned char* PixelData = nullptr;
 		bool StbTexture = false;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Texture);
 	};
 }
 
@@ -111,13 +102,4 @@ namespace Enum
 	typedef GraphicsEngine::Texture::InternalFormatEnum::InternalFormat InternalFormat;
 	typedef GraphicsEngine::Texture::FormatEnum::Format Format;
 	typedef GraphicsEngine::Texture::DataTypeEnum::DataType DataType;
-}
-
-namespace Engine
-{
-	Declare_Enum(SampleType);
-	Declare_Enum(WrapType);
-	Declare_Enum(InternalFormat);
-	Declare_Enum(Format);
-	Declare_Enum(DataType);
 }

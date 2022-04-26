@@ -11,6 +11,21 @@ namespace Engine
 {
 	namespace Meta
 	{
+		struct MemberTypeEnum
+		{
+			enum MemberType
+			{
+				Member,
+				Property,
+				Function,
+				Event,
+
+				NotFound
+			};
+		};
+
+		typedef MemberTypeEnum::MemberType MemberType;
+
 		struct ReflectedType;
 
 		struct Member
@@ -107,6 +122,8 @@ namespace Engine
 			typedef std::vector<std::string> StringVector;
 			typedef std::vector<EnumItem> EnumVector;
 			typedef std::unordered_map<int, EnumItem> EnumDictionary;
+			typedef std::vector<const ReflectedType*> MetaVector;
+			typedef std::unordered_map<std::string, std::pair<int, MemberType>> MemberDictionary;
 
 			bool IsComponent = false;
 			bool IsFundamental = false;
@@ -127,7 +144,14 @@ namespace Engine
 			EnumVector EnumItems;
 			EnumDictionary UnorderedEnumItems;
 			ActiveBinding::BoundObject Binding;
+			MetaVector AllowedTypes;
+			MetaVector Inherits;
+			MemberDictionary RegisteredMembers;
 
+			bool CanAllow(const ReflectedType* type) const;
+			bool InheritsType(const ReflectedType* type) const;
+
+			std::pair<int, MemberType> GetRegisteredMember(const std::string& name) const;
 			const Member* GetMember(const std::string& name) const;
 			const Property* GetProperty(const std::string& name) const;
 			const Event* GetEvent(const std::string& name) const;
@@ -148,8 +172,10 @@ namespace Engine
 			const ReflectedTypes* GetScope(const std::string& name) const;
 			ReflectedTypes* GetScope(const std::string& name);
 			int GetCount() const;
+			int GetIndexFromName(const std::string& name) const;
 			const ReflectedType* Get(int index) const;
 			int GetScopeCount() const;
+			int GetScopeIndexFromName(const std::string& name) const;
 			const ReflectedTypes* GetScope(int index) const;
 			const std::string& GetName() const { return Name; }
 
@@ -158,8 +184,8 @@ namespace Engine
 
 		private:
 			typedef std::unordered_map<std::string, int> Dictionary;
-			typedef std::vector<const ReflectedType*> MetaVector;
 			typedef std::vector<ReflectedTypes*> ScopeVector;
+			typedef std::vector<const ReflectedType*> MetaVector;
 
 			std::string Name;
 			Dictionary MetaKeys;

@@ -33,11 +33,5 @@ namespace GraphicsEngine
 	private:
 
 		std::shared_ptr<InputSubscriber> GetMouseFocus(const Vector3& mousePosition, const std::shared_ptr<Object>& object) const;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(InputContext);
 	};
 }

@@ -38,6 +38,10 @@ namespace Engine
 				Member<Bind(&GlowingSceneOperation::Output)>("Output"),
 				Member<Bind(&GlowingSceneOperation::DebugViewLight)>("DebugViewLight"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Configure",
 					Overload(
@@ -46,7 +50,7 @@ namespace Engine
 						Argument<int>("width"),
 						Argument<int>("height"),
 						Argument<const std::shared_ptr<Scene>&>("scene"),
-						Argument<const std::shared_ptr<FrameBuffer>&>("output")
+						Argument<const std::shared_ptr<FrameBuffer>&, Default(nullptr)>("output")
 					).Bind<GlowingSceneOperation, &GlowingSceneOperation::Configure>()
 				),
 

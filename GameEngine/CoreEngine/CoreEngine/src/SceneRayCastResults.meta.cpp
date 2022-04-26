@@ -21,7 +21,7 @@ namespace Engine
 				Member<Bind(&SceneRayCastResults::Normal)>("Normal"),
 				Member<Bind(&SceneRayCastResults::Color)>("Color"),
 				Member<Bind(&SceneRayCastResults::GlowColor)>("GlowColor"),
-				//Member<Bind(&SceneRayCastResults::MaterialProperties)>("MaterialProperties"),
+				Member<Bind(&SceneRayCastResults::MaterialProperties)>("MaterialProperties"),
 				Member<Bind(&SceneRayCastResults::Hit)>("Hit"),
 
 				Constructor(

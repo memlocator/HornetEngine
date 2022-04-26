@@ -13,7 +13,6 @@ namespace GraphicsEngine
 	public:
 		virtual ~Camera() {}
 
-		void Initialize() {}
 		void Update(float);
 
 		Vector3 LightDirection;
@@ -48,11 +47,5 @@ namespace GraphicsEngine
 		void CalculateProjectionMatrix();
 		void CalculateFrustum();
 		void MarkMoved();
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Camera);
 	};
 }

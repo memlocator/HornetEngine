@@ -63,9 +63,6 @@ namespace Engine
 		class SelectionHandlesOperation : public GraphicsEngine::RenderOperation
 		{
 		public:
-			void Initialize() {}
-			void Update(float) {}
-
 			bool IsActive = true;
 			bool DrawSelectionBox = true;
 			bool DrawHandles = true;
@@ -123,12 +120,6 @@ namespace Engine
 			std::weak_ptr<InputObject> ToggleGroupSelectKey = GetInput(Enum::InputCode::O);
 
 			void Render();
-
-			Instantiable;
-
-			Inherits_Class(GraphicsEngine::RenderOperation);
-
-			Reflected(SelectionHandlesOperation);
 
 		private:
 			typedef SelectedAxisEnum::SelectedAxis SelectedAxis;
@@ -191,9 +182,4 @@ namespace Engine
 			static std::shared_ptr<InputObject> GetInput(Enum::InputCode code);
 		};
 	}
-}
-
-namespace Engine
-{
-	Declare_Enum(SelectionHandleType);
 }

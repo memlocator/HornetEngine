@@ -22,9 +22,6 @@ namespace Engine
 		typedef std::function<void(const std::shared_ptr<Physics::Collider2D>& collider, const Physics::ColliderData& cell)> TerrainPairCallback;
 		typedef std::function<std::shared_ptr<Physics::Collider2D>(void*)> ColliderCallback;
 
-		void Initialize() {}
-		void Update(float) {}
-
 		void PairQuery(const AabbTree::Node* head, const TerrainPairCallback& collisionCallback, const ColliderCallback& lookupCallback);
 
 	private:

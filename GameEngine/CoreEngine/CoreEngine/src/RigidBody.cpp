@@ -9,11 +9,15 @@ namespace Engine
 	{
 		void RigidBody::Initialize()
 		{
+			Object::Initialize();
+
 			SetTicks(true);
 		}
 
 		void RigidBody::Update(float delta)
 		{
+			Object::Update(delta);
+
 			std::shared_ptr<Transform> transform = GetComponent<Transform>();
 
 			if (transform == nullptr)

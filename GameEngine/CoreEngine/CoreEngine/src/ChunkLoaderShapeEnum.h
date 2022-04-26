@@ -1,7 +1,5 @@
 #pragma once
 
-#include "EnumDeclaration.h"
-
 namespace EnumTypeStorage
 {
 	struct ChunkLoaderShapeEnum
@@ -20,9 +18,4 @@ namespace EnumTypeStorage
 namespace Enum
 {
 	typedef EnumTypeStorage::ChunkLoaderShapeEnum::ChunkLoaderShape ChunkLoaderShape;
-}
-
-namespace Engine
-{
-	Declare_Enum(ChunkLoaderShape);
 }

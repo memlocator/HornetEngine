@@ -27,10 +27,6 @@ namespace Engine
 		Enum::HierarchyItemType ItemType = Enum::HierarchyItemType::None;
 		std::shared_ptr<Object> FocusedItem;
 		std::shared_ptr<Object> ParentItem;
-
-		Base_Class;
-
-		Reflected_Type(HierarchyItem);
 	};
 
 	namespace Editor
@@ -38,9 +34,6 @@ namespace Engine
 		class ExplorerDisplaySettings : public Object
 		{
 		public:
-			void Initialize() {}
-			void Update(float) {}
-
 			int MaxDepth = -1;
 
 			void UpdateHierarchy();
@@ -63,15 +56,6 @@ namespace Engine
 			std::vector<InternalHierarchyItem> HierarchyItems;
 
 			void Traverse(Object* object, Object* parent = nullptr, int depth = 0);
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(ExplorerDisplaySettings);
 		};
 	}
-
-	Declare_Enum(HierarchyItemType);
-	Define_Value_Type(HierarchyItem);
 }

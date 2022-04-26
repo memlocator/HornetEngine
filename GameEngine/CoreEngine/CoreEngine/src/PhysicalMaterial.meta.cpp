@@ -22,7 +22,11 @@ namespace Engine
 				Member<Bind(&PhysicalMaterial::RefractiveIndex)>("RefractiveIndex"),
 				Member<Bind(&PhysicalMaterial::Transparency)>("Transparency"),
 				Member<Bind(&PhysicalMaterial::Translucency)>("Translucency"),
-				Member<Bind(&PhysicalMaterial::Emission)>("Emission")
+				Member<Bind(&PhysicalMaterial::Emission)>("Emission"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

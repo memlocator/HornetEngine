@@ -14,7 +14,11 @@ namespace Engine
 				"TerrainCollider2D",
 				{ "GameObject" },
 
-				Member<Bind(&TerrainCollider2D::Axis)>("Axis")
+				Member<Bind(&TerrainCollider2D::Axis)>("Axis"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

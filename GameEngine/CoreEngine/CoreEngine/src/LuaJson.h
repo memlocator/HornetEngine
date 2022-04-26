@@ -1,7 +1,8 @@
 #pragma once
 
 #include "JsonParser.h"
-#include "Lua.h"
+
+struct luaL_Reg;
 
 namespace Engine
 {

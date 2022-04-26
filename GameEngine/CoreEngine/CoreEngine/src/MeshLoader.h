@@ -93,10 +93,4 @@ private:
 	static MeshHolder::AssetVector& Assets();
 
 	static void UnloadAsset(int id);
-
-	Instantiable;
-
-	Inherits_Class(Engine::Object);
-
-	Reflected(MeshLoader);
 };

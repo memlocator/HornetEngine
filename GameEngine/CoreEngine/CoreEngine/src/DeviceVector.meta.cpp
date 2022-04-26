@@ -17,8 +17,8 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0)>("scale"),
-						Argument<float, Default(0)>("offset")
+						Argument<float, Default(0.0f)>("scale"),
+						Argument<float, Default(0.0f)>("offset")
 					)
 				),
 
@@ -113,10 +113,10 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0)>("xScale"),
-						Argument<float, Default(0)>("xOffset"),
-						Argument<float, Default(0)>("yScale"),
-						Argument<float, Default(0)>("yOffset")
+						Argument<float, Default(0.0f)>("xScale"),
+						Argument<float, Default(0.0f)>("xOffset"),
+						Argument<float, Default(0.0f)>("yScale"),
+						Argument<float, Default(0.0f)>("yOffset")
 					)
 				),
 

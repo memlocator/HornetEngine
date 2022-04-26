@@ -21,6 +21,10 @@ namespace Engine
 				Member<Bind(&Font::SpaceWidth)>("SpaceWidth"),
 				Member<Bind(&Font::TabSpaces)>("TabSpaces"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Load",
 					Overload(

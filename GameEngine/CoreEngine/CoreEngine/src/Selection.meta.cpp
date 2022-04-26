@@ -14,7 +14,11 @@ namespace Engine
 			Reflect<Selection, Object>::Class
 			(
 				"Selection",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

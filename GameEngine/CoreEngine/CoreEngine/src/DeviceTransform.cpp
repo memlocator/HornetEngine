@@ -14,11 +14,15 @@ namespace GraphicsEngine
 
 	void DeviceTransform::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		SetTicks(true);
 	}
 
-	void DeviceTransform::Update(float)
+	void DeviceTransform::Update(float delta)
 	{
+		Engine::Object::Update(delta);
+
 		UpdateTransformation();
 	}
 

@@ -12,7 +12,11 @@ namespace Engine
 			Reflect<Environments, Object>::Class
 			(
 				"Environments",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

@@ -32,7 +32,11 @@ namespace Engine
 				Member<Bind(&HierarchyItem::HierarchyDepth)>("HierarchyDepth"),
 				Member<Bind(&HierarchyItem::ItemType)>("ItemType"),
 				Member<Bind(&HierarchyItem::FocusedItem)>("FocusedItem"),
-				Member<Bind(&HierarchyItem::ParentItem)>("ParentItem")
+				Member<Bind(&HierarchyItem::ParentItem)>("ParentItem"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -45,6 +49,10 @@ namespace Engine
 				{ "GameObject" },
 
 				Member<Bind(&ExplorerDisplaySettings::MaxDepth)>("MaxDepth"),
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"UpdateHierarchy",

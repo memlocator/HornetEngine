@@ -495,7 +495,7 @@ namespace Engine
 					offset += restoredVelocity - (1 - distance) * vector;
 
 					float d = LeftNormal(hitObject->Collider->Normals[hitSide]) * vector;
-					if (clockwise == (LeftNormal(hitObject->Collider->Normals[hitSide]) * velocity < 0))//if ((leftNormal(velocity) * vector > 0) != (leftNormal(vector) * hitObject->collider->normals[hitSide] > 0))
+					if (clockwise == (LeftNormal(hitObject->Collider->Normals[hitSide]) * velocity < 0))
 					{
 						offset -= velocity + vel;
 						velocity.Set(0, 0);

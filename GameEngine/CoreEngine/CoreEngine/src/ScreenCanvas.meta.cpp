@@ -18,6 +18,10 @@ namespace Engine
 				"ScreenCanvas",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Member<Bind(&ScreenCanvas::Visible)>("Visible"),
 				Member<Bind(&ScreenCanvas::Appearance)>("Appearance")
 			);

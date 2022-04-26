@@ -16,6 +16,10 @@ namespace Engine
 				"GameEngine",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetPrimaryWindow",
 					Overload(
@@ -107,6 +111,10 @@ namespace Engine
 			(
 				"ProcessArguments",
 				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"GetArguments",

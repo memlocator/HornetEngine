@@ -12,6 +12,8 @@ namespace GraphicsEngine
 {
 	void Text::Initialize()
 	{
+		Engine::Object::Initialize();
+
 		ContentsTexture = Engine::Create<Texture>();
 		ContentsTexture->Name = "ContentsTexture";
 

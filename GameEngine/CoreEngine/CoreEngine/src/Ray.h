@@ -4,7 +4,6 @@
 
 #include "Vector3.h"
 #include "Aabb.h"
-#include "ObjectReflection.h"
 
 class Ray
 {
@@ -19,13 +18,5 @@ public:
 
 private:
 	bool IntersectsAxis(float start, float direction, float min, float max, float& tMin, float& tMax, float epsilon = 1e-5f) const;
-
-	Base_Class;
-
-	Reflected_Type(Ray);
 };
 
-namespace Engine
-{
-	Define_Value_Type(Ray);
-}

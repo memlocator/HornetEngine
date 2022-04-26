@@ -20,6 +20,10 @@ namespace Engine
 
 				Member<Bind(&DrawSceneOperation::CurrentScene)>("CurrentScene"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Configure",
 					Overload(

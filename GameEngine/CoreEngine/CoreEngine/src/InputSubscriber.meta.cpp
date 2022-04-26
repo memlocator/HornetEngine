@@ -18,6 +18,10 @@ namespace Engine
 				"InputSubscription",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"HasFocus",
 					Overload(
@@ -26,6 +30,7 @@ namespace Engine
 						Argument<Enum::BoundDevice>("device")
 					).Bind<InputSubscription, &InputSubscription::HasFocus>()
 				),
+
 				Function(
 					"Subscribe",
 					Overload(
@@ -45,6 +50,10 @@ namespace Engine
 				"InputSubscriber",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"HasFocus",
 					Overload(
@@ -53,6 +62,7 @@ namespace Engine
 						Argument<Enum::BoundDevice>("device")
 					).Bind<InputSubscriber, &InputSubscriber::HasFocus>()
 				),
+
 				Function(
 					"Subscribe",
 					Overload(

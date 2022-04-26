@@ -14,6 +14,10 @@ namespace Engine
 				"Socket",
 				{ "GameObject", "Networking" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Create",
 					Overload(

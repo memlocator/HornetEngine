@@ -20,6 +20,10 @@ namespace Engine
 
 				Member<Bind(&FrameBuffer::WindowSize)>("WindowSize"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"DrawTo",
 					Overload(

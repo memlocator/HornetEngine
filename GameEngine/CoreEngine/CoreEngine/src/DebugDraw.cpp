@@ -5,6 +5,8 @@
 
 void DebugDraw::Initialize()
 {
+	Engine::Object::Initialize();
+
 	auto debugScene = Engine::Create<GraphicsEngine::Scene>();
 
 	debugScene->SetParent(This.lock());

@@ -16,6 +16,10 @@ namespace Engine
 				"Texture",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Resize",
 					Overload(

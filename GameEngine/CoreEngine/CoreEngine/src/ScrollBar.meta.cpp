@@ -31,6 +31,48 @@ namespace Engine
 				"ScrollBar",
 				{ "GameObject" },
 
+				Property(
+					"FrameTransform",
+					Getter<const std::shared_ptr<DeviceTransform>&>(Const).Bind<ScrollBar, &ScrollBar::GetFrameTransform>()
+				),
+
+				Property(
+					"FrameCanvas",
+					Getter<const std::shared_ptr<ScreenCanvas>&>(Const).Bind<ScrollBar, &ScrollBar::GetFrameCanvas>()
+				),
+
+				Property(
+					"BarTransform",
+					Getter<const std::shared_ptr<DeviceTransform>&>(Const).Bind<ScrollBar, &ScrollBar::GetBarTransform>()
+				),
+
+				Property(
+					"BarCanvas",
+					Getter<const std::shared_ptr<ScreenCanvas>&>(Const).Bind<ScrollBar, &ScrollBar::GetBarCanvas>()
+				),
+
+				Property(
+					"BarSize",
+					Getter<float>(Const).Bind<ScrollBar, &ScrollBar::GetBarSize>(),
+					Setter<float>(Mutable).Bind<ScrollBar, &ScrollBar::SetBarSize>()
+				),
+
+				Property(
+					"BarPercent",
+					Getter<float>(Const).Bind<ScrollBar, &ScrollBar::GetBarPercent>(),
+					Setter<float>(Mutable).Bind<ScrollBar, &ScrollBar::SetBarPercent>()
+				),
+
+				Property(
+					"BarOrientation",
+					Getter<Enum::ScrollBarOrientation>(Const).Bind<ScrollBar, &ScrollBar::GetBarOrientation>(),
+					Setter<Enum::ScrollBarOrientation>(Mutable).Bind<ScrollBar, &ScrollBar::SetBarOrientation>()
+				),
+
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetFrameTransform",
 					Overload(

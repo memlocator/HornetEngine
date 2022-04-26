@@ -14,15 +14,6 @@ namespace Engine
 
 			float Mass = 1;
 			Vector3 Position;
-
-			void Initialize() {}
-			void Update(float) {}
-
-			Instantiable;
-
-			Inherits_Class(Object);
-
-			Reflected(PointMass);
 		};
 	}
 }

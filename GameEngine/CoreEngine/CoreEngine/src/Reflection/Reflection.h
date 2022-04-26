@@ -6,6 +6,8 @@
 
 #include "MetaData.h"
 
+#include <assert.h>
+
 #ifdef Static
 #undef Static
 #endif
@@ -28,9 +30,13 @@ namespace Engine
 
 	namespace Core
 	{
+		const bool WarnAboutMissingConstructors = true;
+
 		template <typename Class>
 		struct ParentCheck
 		{
+			static inline bool IsTypeObject = false;
+
 			template <typename Parent>
 			struct IsValid
 			{
@@ -47,11 +53,19 @@ namespace Engine
 		template <>
 		struct ParentCheck<Engine::Object>
 		{
+			static inline bool IsTypeObject = true;
+
 			template <typename Parent>
 			struct IsValid
 			{
 				static inline const bool Value = true;
 			};
+		};
+
+		template <typename Type>
+		struct TypeContainer
+		{
+			typedef Type Type;
 		};
 	}
 
@@ -84,19 +98,34 @@ namespace Engine
 
 				(bindMembers(members), ...);
 
+				if (!Core::ParentCheck<ClassType>::IsTypeObject && std::string(name) == "Object")
+					std::cout << "warning: class '" << typeid(ClassType).name() << "'has the default name 'Object'!" << std::endl;
+
 				reflected.Constructor.Parent = Meta::Reflected<ClassType>::GetMeta();
 				reflected.Constructor.Name = name;
 				reflected.Constructor.IsConstructor = true;
 
 				if (reflected.Constructor.Binding.Callback == nullptr)
-					reflected.Constructor.Binding.Callback = &ActiveBinder::BindObjectFactory<ClassType>::FactoryFunction;
+				{
+					if (Core::WarnAboutMissingConstructors)
+						std::cout << "warning: class '" << name << "' is missing a constructor!" << std::endl;
+
+					assert(!Core::WarnAboutMissingConstructors);
+
+					//reflected.Constructor.Binding.Callback = &ActiveBinder::BindObjectFactory<ClassType>::FactoryFunction;
+				}
 
 				reflected.Binding.Create = reflected.Constructor.Binding.Callback;
+				reflected.Binding.Free = &ActiveBinder::BindObjectFactory<ClassType>::Destructor;
 
 				reflected.Constructor.Binding.Validate();
 				reflected.Binding.Validate();
 
-				Meta::Reflected<ClassType>::template SetMeta<Parent>(reflected);
+				reflected.AllowedTypes.push_back(Meta::Reflected<void>::GetMeta());
+
+				Meta::ReflectedType* meta = Meta::Reflected<ClassType>::template SetMeta<Parent>(reflected);
+
+				reflected.Binding.CacheOperators(*meta);
 			}
 
 			template <typename... Members>
@@ -119,19 +148,31 @@ namespace Engine
 
 				(bindMembers(members), ...);
 
+				if (!Core::ParentCheck<ClassType>::IsTypeObject && std::string(name) == "Object")
+					std::cout << "warning: type '" << typeid(ClassType).name() << "'has the default name 'Object'!" << std::endl;
+
 				reflected.Constructor.Parent = Meta::Reflected<ClassType>::GetMeta();
 				reflected.Constructor.Name = name;
 				reflected.Constructor.IsConstructor = true;
 				
 				if (reflected.Constructor.Binding.Callback == nullptr)
-					reflected.Constructor.Binding.Callback = &ActiveBinder::BindTypeFactory<ClassType>::FactoryFunction;
+				{
+					if (Core::WarnAboutMissingConstructors)
+						std::cout << "warning: type '" << name << "' is missing a constructor!" << std::endl;
+
+					assert(!Core::WarnAboutMissingConstructors);
+					//reflected.Constructor.Binding.Callback = &ActiveBinder::BindTypeFactory<ClassType>::FactoryFunction;
+				}
 
 				reflected.Binding.Create = reflected.Constructor.Binding.Callback;
+				reflected.Binding.Free = &ActiveBinder::BindTypeFactory<ClassType>::Destructor;
 
 				reflected.Constructor.Binding.Validate();
 				reflected.Binding.Validate();
 
-				Meta::Reflected<ClassType>::template SetMeta<Parent>(reflected);
+				Meta::ReflectedType* meta = Meta::Reflected<ClassType>::template SetMeta<Parent>(reflected);
+
+				reflected.Binding.CacheOperators(*meta);
 			}
 
 			template <typename... Members>
@@ -140,6 +181,7 @@ namespace Engine
 				Type<Members...>(name, {}, members...);
 			}
 
+			template <typename... AllowedTypes>
 			static void FundamentalType(const char* name)
 			{
 				Meta::ReflectedType reflected{ false, true, false, name };
@@ -149,6 +191,13 @@ namespace Engine
 				reflected.Constructor.IsConstructor = true;
 				reflected.IsFundamental = true;
 
+				auto addAllowed = [] <typename Allowed> (Meta::ReflectedType& reflected, Allowed allowed)
+				{
+					reflected.AllowedTypes.push_back(Meta::Reflected<Allowed::Type>::GetMeta());
+				};
+
+				(addAllowed(reflected, Core::TypeContainer<AllowedTypes>{}), ...);
+
 				Meta::Reflected<ClassType>::template SetMeta<Parent>(reflected);
 			}
 
@@ -157,11 +206,18 @@ namespace Engine
 			{
 				Meta::ReflectedType reflected{ false, true, false, name };
 
+				if (std::string(name) == "TestEnum")
+					std::cout << "warning: enum '" << typeid(ClassType).name() << "'has the default name 'TestEnum'!" << std::endl;
+
 				reflected.Constructor.Parent = Meta::Reflected<ClassType>::GetMeta();
 				reflected.Constructor.Name = name;
 				reflected.Constructor.IsConstructor = true;
 				reflected.IsEnum = true;
 				reflected.Namespaces = { "Enum" };
+
+				reflected.AllowedTypes.push_back(Meta::Reflected<std::string>::GetMeta());
+				reflected.AllowedTypes.push_back(Meta::Reflected<lua_Number>::GetMeta());
+				reflected.AllowedTypes.push_back(Meta::Reflected<lua_Integer>::GetMeta());
 
 				auto bindValues = [&reflected]<typename EnumValue>(EnumValue value)
 				{
@@ -176,6 +232,9 @@ namespace Engine
 
 		namespace Core
 		{
+			template <typename Type1, typename Type2>
+			inline constexpr bool isnt_same_v = !std::is_same_v<Type1, Type2>;
+
 			template <bool IsMutable>
 			struct Mutability
 			{
@@ -334,6 +393,22 @@ namespace Engine
 					Meta::FunctionOverload overload{ IsStatic, IsConst, Meta::Reflected<UnqualifiedReturnType>::GetMeta(), std::move(parameters) };
 
 					overloads.push_back(std::move(overload));
+
+					return BoundOverload();
+				}
+			};
+
+			template <auto Pointer, bool IsStatic, bool IsConst>
+			struct LuaOverload
+			{
+				template <typename ClassType>
+				auto Bind(Meta::Function::OverloadVector& overloads) const
+				{
+					typedef ActiveBinder::BindLuaOverload<Pointer, ClassType>::template Bind<IsStatic, IsConst> BoundOverload;
+
+					Meta::FunctionOverload overload{ IsStatic, IsConst, Meta::Reflected<void>::GetMeta() }; // TODO: change to "any" type
+
+					overloads.push_back(overload);
 
 					return BoundOverload();
 				}
@@ -664,6 +739,53 @@ namespace Engine
 				}
 			};
 
+			template <typename Type, auto Default>
+			struct DefaultDifferentArgument
+			{
+				typedef std::remove_cvref_t<Type> UnqualifiedType;
+
+				static inline constexpr int OptionalArgument = 1;
+				static inline constexpr int RequiredArgument = 0;
+
+				static inline constexpr decltype(Default) DefaultValue = Default;
+
+				const char* Name;
+
+				Type GetType() const {}
+
+				template <int Index>
+				struct Bound
+				{
+					typedef Type Type;
+
+					static inline const bool HasDefault = true;
+					static inline const int Index = Index;
+
+					Type GetType() const {}
+
+					struct DefaultValue
+					{
+						static inline decltype(Default) Value = Default;
+					};
+				};
+
+				template <int Index>
+				static constexpr auto BindArgument()
+				{
+					return Bound<Index>();
+				}
+
+				template <typename ClassType>
+				auto Bind() const
+				{
+					typedef std::remove_cvref_t<Type> UnqualifiedType;
+
+					Meta::Argument argument{ Name, "", Meta::Reflected<UnqualifiedType>::GetMeta() };
+
+					return argument;
+				}
+			};
+
 			template <typename... Accessors>
 			struct Property
 			{
@@ -866,6 +988,15 @@ namespace Engine
 			};
 
 			template <typename Type>
+			concept LuaOverloadType = requires(Type value)
+			{
+				{ LuaOverload{ value } } -> std::same_as<Type>;
+			};
+
+			template <typename Type>
+			concept FunctionOverloadType = OverloadType<Type> || LuaOverloadType<Type>;
+
+			template <typename Type>
 			concept ConstructorOverloadType = requires(Type value)
 			{
 				{ ConstructorOverload{ value } } -> std::same_as<Type>;
@@ -890,7 +1021,13 @@ namespace Engine
 			};
 
 			template <typename Type>
-			concept AnyArgumentType = ArgumentType<Type> || DefaultArgumentType<Type>;
+			concept DefaultDifferentArgumentType = requires(Type value)
+			{
+				{ DefaultDifferentArgument{ value } } -> std::same_as<Type>;
+			};
+
+			template <typename Type>
+			concept AnyArgumentType = ArgumentType<Type> || DefaultArgumentType<Type> || DefaultDifferentArgumentType<Type>;
 
 			template <typename Type>
 			concept GetterType = requires(Type value)
@@ -930,7 +1067,7 @@ namespace Engine
 			return Core::Member<Pointer> { name };
 		}
 
-		template <Core::OverloadType... Overloads>
+		template <Core::FunctionOverloadType... Overloads>
 		auto Function(const char* name, Overloads... overloads)
 		{
 			return Core::Function<Overloads...> { name, std::make_tuple(overloads...) };
@@ -987,6 +1124,24 @@ namespace Engine
 			return BindWith::GetBinder(data, std::make_index_sequence<sizeof...(Arguments)>{});
 		}
 
+		template <typename ClassType, int(ClassType::*Pointer)(lua_State*)>
+		auto LuaOverload()
+		{
+			return Core::LuaOverload<Pointer, false, false>();
+		}
+
+		template <typename ClassType, int(ClassType::* Pointer)(lua_State*) const>
+		auto LuaOverload()
+		{
+			return Core::LuaOverload<Pointer, true, false>();
+		}
+
+		template <int(*Pointer)(lua_State*)>
+		auto LuaOverload()
+		{
+			return Core::LuaOverload<Pointer, false, true>();
+		}
+
 		template <typename ReturnType>
 		auto Returns()
 		{
@@ -1005,8 +1160,14 @@ namespace Engine
 			return Core::DefaultArgument<Type, DefaultValue>{ name };
 		}
 
+		template <typename Type, auto DefaultValue> requires Core::isnt_same_v<Type, decltype(DefaultValue)>
+		auto Argument(const char* name)
+		{
+			return Core::DefaultDifferentArgument<Type, DefaultValue>{ name };
+		}
+
 		template <typename Type>
-		consteval auto Default(const Type& type)
+		consteval Type Default(const Type& type)
 		{
 			return type;
 		}

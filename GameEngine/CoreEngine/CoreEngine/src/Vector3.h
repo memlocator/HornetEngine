@@ -9,7 +9,6 @@ contains declaration of Vector3 class
 #include <iostream>
 #include <string>
 
-#include "ObjectReflection.h"
 #include "ConstMath.h"
 
 class Vector3
@@ -52,16 +51,7 @@ public:
 
 private:
 	bool Compare(float x, float y, float epsilon)  const;
-
-	Base_Class;
-
-	Reflected_Type(Vector3);
 };
-
-namespace Engine
-{
-	Define_Value_Type(Vector3);
-}
 
 Vector3 operator*(float scalar, const Vector3& vector);
 std::ostream& operator<<(std::ostream& out, const Vector3& vector);

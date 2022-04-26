@@ -126,18 +126,18 @@ namespace Engine
 			Reflect<void>::FundamentalType("void");
 
 			Reflect<bool>::FundamentalType("bool");
-			Reflect<char>::FundamentalType("char");
-			Reflect<signed char>::FundamentalType("signed char");
-			Reflect<unsigned char>::FundamentalType("unsigned char");
-			Reflect<short>::FundamentalType("short");
-			Reflect<unsigned short>::FundamentalType("unsigned short");
-			Reflect<int>::FundamentalType("int");
-			Reflect<unsigned int>::FundamentalType("unsigned int");
-			Reflect<long long>::FundamentalType("long long");
-			Reflect<unsigned long long>::FundamentalType("unsigned long long");
+			Reflect<char>::FundamentalType<lua_Number, lua_Integer>("char");
+			Reflect<signed char>::FundamentalType<lua_Number, lua_Integer>("signed char");
+			Reflect<unsigned char>::FundamentalType<lua_Number, lua_Integer>("unsigned char");
+			Reflect<short>::FundamentalType<lua_Number, lua_Integer>("short");
+			Reflect<unsigned short>::FundamentalType<lua_Number, lua_Integer>("unsigned short");
+			Reflect<int>::FundamentalType<lua_Number, lua_Integer>("int");
+			Reflect<unsigned int>::FundamentalType<lua_Number, lua_Integer>("unsigned int");
+			Reflect<long long>::FundamentalType<lua_Number, lua_Integer>("long long");
+			Reflect<unsigned long long>::FundamentalType<lua_Number, lua_Integer>("unsigned long long");
 
-			Reflect<float>::FundamentalType("float");
-			Reflect<double>::FundamentalType("double");
+			Reflect<float>::FundamentalType<lua_Number, lua_Integer>("float");
+			Reflect<double>::FundamentalType<lua_Number, lua_Integer>("double");
 
 			Reflect<std::string>::FundamentalType("string");
 		}

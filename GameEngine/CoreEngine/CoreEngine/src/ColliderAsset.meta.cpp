@@ -16,6 +16,10 @@ namespace Engine
 				"ColliderAsset",
 				{ "GameObject", "Physics" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"ConfigureTriangleMesh",
 					Overload(

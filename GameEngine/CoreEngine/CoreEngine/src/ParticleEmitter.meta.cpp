@@ -24,7 +24,11 @@ namespace Engine
 				Member<Bind(&EmitterConfig::Color)>("UVOffset"),
 				Member<Bind(&EmitterConfig::Color)>("BoxScale"),
 				Member<Bind(&EmitterConfig::Color)>("CubeMapped"),
-				Member<Bind(&EmitterConfig::Color)>("CompressedNormalMap")
+				Member<Bind(&EmitterConfig::Color)>("CompressedNormalMap"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -41,6 +45,10 @@ namespace Engine
 				Member<Bind(&ParticleEmitter::EmitRate)>("EmitRate"),
 
 				Member<Bind(&ParticleEmitter::Asset)>("Asset"),
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"SetMaxParticles",
@@ -79,6 +87,10 @@ namespace Engine
 			(
 				"ParticleConfiguration",
 				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"AttachTo",
@@ -122,7 +134,11 @@ namespace Engine
 
 				Member<Bind(&DirectionalParticleSpawner::Size)>("Size"),
 				Member<Bind(&DirectionalParticleSpawner::Position)>("Position"),
-				Member<Bind(&DirectionalParticleSpawner::DirectionGenerator)>("DirectionGenerator")
+				Member<Bind(&DirectionalParticleSpawner::DirectionGenerator)>("DirectionGenerator"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -144,7 +160,11 @@ namespace Engine
 
 				Member<Bind(&RisingParticleSpawner::DirectionGenerator)>("DirectionGenerator"),
 
-				Member<Bind(&RisingParticleSpawner::Radius)>("Radius")
+				Member<Bind(&RisingParticleSpawner::Radius)>("Radius"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -165,7 +185,11 @@ namespace Engine
 				Member<Bind(&PlanarParticleSpawner::Axis1)>("Axis1"),
 				Member<Bind(&PlanarParticleSpawner::Axis2)>("Axis2"),
 				Member<Bind(&PlanarParticleSpawner::Size)>("Size"),
-				Member<Bind(&PlanarParticleSpawner::Position)>("Position")
+				Member<Bind(&PlanarParticleSpawner::Position)>("Position"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -184,7 +208,11 @@ namespace Engine
 				Member<Bind(&LineParticleSpawner::Point1)>("Point1"),
 				Member<Bind(&LineParticleSpawner::Point2)>("Point2"),
 				Member<Bind(&LineParticleSpawner::Size)>("Size"),
-				Member<Bind(&LineParticleSpawner::Direction)>("Direction")
+				Member<Bind(&LineParticleSpawner::Direction)>("Direction"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -204,7 +232,11 @@ namespace Engine
 
 				Member<Bind(&RingParticleSpawner::Position)>("Position"),
 				Member<Bind(&RingParticleSpawner::Size)>("Size"),
-				Member<Bind(&RingParticleSpawner::Normal)>("Normal")
+				Member<Bind(&RingParticleSpawner::Normal)>("Normal"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -223,7 +255,11 @@ namespace Engine
 
 				Member<Bind(&ConeParticleSpawner::Position)>("Position"),
 				Member<Bind(&ConeParticleSpawner::Size)>("Size"),
-				Member<Bind(&ConeParticleSpawner::Normal)>("Normal")
+				Member<Bind(&ConeParticleSpawner::Normal)>("Normal"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -235,7 +271,11 @@ namespace Engine
 				"GravityParticleUpdater",
 				{ "GameObject" },
 
-				Member<Bind(&GravityParticleUpdater::Force)>("Force")
+				Member<Bind(&GravityParticleUpdater::Force)>("Force"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -247,7 +287,11 @@ namespace Engine
 				"DragParticleUpdater",
 				{ "GameObject" },
 
-				Member<Bind(&DragParticleUpdater::DragFactor)>("DragFactor")
+				Member<Bind(&DragParticleUpdater::DragFactor)>("DragFactor"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -260,7 +304,11 @@ namespace Engine
 				{ "GameObject" },
 
 				Member<Bind(&DampenedForceUpdater::DragFactor)>("DragFactor"),
-				Member<Bind(&DampenedForceUpdater::Force)>("Force")
+				Member<Bind(&DampenedForceUpdater::Force)>("Force"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -276,7 +324,11 @@ namespace Engine
 				Member<Bind(&CubicBezierUpdater::Control1)>("Control1"),
 				Member<Bind(&CubicBezierUpdater::Control2)>("Control2"),
 				Member<Bind(&CubicBezierUpdater::End)>("End"),
-				Member<Bind(&CubicBezierUpdater::FinishThreshold)>("FinishThreshold")
+				Member<Bind(&CubicBezierUpdater::FinishThreshold)>("FinishThreshold"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

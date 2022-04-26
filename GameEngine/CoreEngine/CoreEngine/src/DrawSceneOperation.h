@@ -10,16 +10,8 @@ namespace GraphicsEngine
 	public:
 		std::weak_ptr<Scene> CurrentScene;
 
-		void Initialize() {}
-		void Update(float) {}
 		void Configure(const std::shared_ptr<Scene>& scene);
 
 		void Render();
-
-		Instantiable;
-
-		Inherits_Class(RenderOperation);
-
-		Reflected(DrawSceneOperation);
 	};
 }

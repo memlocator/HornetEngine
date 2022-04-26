@@ -90,9 +90,6 @@ namespace GraphicsEngine
 
 		~RayTracer();
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void SetMaxThreads(int count);
 		int GetMaxThreads() const;
 		int GetHardwareThreads() const { return CoreCount; }
@@ -276,11 +273,5 @@ namespace GraphicsEngine
 		Vector3 ComputeAtmosphericLightNaive(const Vector3& direction) const;
 		Vector3 ProcessRay(const QueuedRay& ray, Thread& thread, const Vector3& lightFilter, int bounces = 0, int rayID = 0) const;
 		void ProcessBatch(int x, int y, int threadID);
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(RayTracer);
 	};
 }

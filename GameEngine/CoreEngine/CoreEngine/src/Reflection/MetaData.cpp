@@ -4,6 +4,33 @@ namespace Engine
 {
 	namespace Meta
 	{
+		bool ReflectedType::CanAllow(const ReflectedType* type) const
+		{
+			if (type->Inherits.size() >= Inherits.size() && type->Inherits[Inherits.size() - 1] == this)
+				return true;
+
+			for (int i = 0; i < (int)AllowedTypes.size(); ++i)
+				if (AllowedTypes[i] == type)
+					return true;
+
+			return false;
+		}
+
+		bool ReflectedType::InheritsType(const ReflectedType* type) const
+		{
+			return Inherits.size() >= type->Inherits.size() && Inherits[type->Inherits.size() - 1] == type;
+		}
+
+		std::pair<int, MemberType> ReflectedType::GetRegisteredMember(const std::string& name) const
+		{
+			MemberDictionary::const_iterator key = RegisteredMembers.find(name);
+
+			if (key != RegisteredMembers.end())
+				return key->second;
+
+			return std::make_pair(-1, MemberType::NotFound);
+		}
+
 		const Member* ReflectedType::GetMember(const std::string& name) const
 		{
 			Dictionary::const_iterator key = MemberKeys.find(name);
@@ -70,18 +97,21 @@ namespace Engine
 		void ReflectedType::AddMember(const Member& member)
 		{
 			MemberKeys[member.Name] = int(Members.size());
+			RegisteredMembers[member.Name] = std::make_pair(int(Members.size()), MemberType::Member);
 			Members.push_back(member);
 		}
 
 		void ReflectedType::AddMember(const Property& member)
 		{
 			PropertyKeys[member.Name] = int(Properties.size());
+			RegisteredMembers[member.Name] = std::make_pair(int(Properties.size()), MemberType::Property);
 			Properties.push_back(member);
 		}
 
 		void ReflectedType::AddMember(const Event& member)
 		{
 			EventKeys[member.Name] = int(Events.size());
+			RegisteredMembers[member.Name] = std::make_pair(int(Events.size()), MemberType::Event);
 			Events.push_back(member);
 		}
 
@@ -95,6 +125,7 @@ namespace Engine
 			}
 
 			FunctionKeys[member.Name] = int(Functions.size());
+			RegisteredMembers[member.Name] = std::make_pair(int(Functions.size()), MemberType::Function);
 			Functions.push_back(member);
 		}
 
@@ -113,11 +144,19 @@ namespace Engine
 		}
 
 		template <typename Container>
-		void CopyData(const ReflectedType* meta, ReflectedType::Dictionary& keys, Container& members, const ReflectedType::Dictionary& otherKeys, const Container& otherMembers)
+		void CopyData(const ReflectedType* meta, ReflectedType::Dictionary& keys, Container& members, const ReflectedType::Dictionary& otherKeys, const Container& otherMembers, ReflectedType::MemberDictionary& registeredMembers, MemberType memberType)
 		{
 			for (ReflectedType::Dictionary::const_iterator i = otherKeys.begin(); i != otherKeys.end(); ++i)
 			{
 				keys[i->first] = int(members.size());
+
+				auto found = registeredMembers.find(i->first);
+
+				if (found == registeredMembers.end())
+					registeredMembers[i->first] = std::make_pair(int(members.size()), memberType);
+				else
+					std::cout << "warning: conflicting members '" << i->first << "' found while initializing inherited data in '" << meta->Name << "'" << std::endl;
+
 				members.push_back(otherMembers[i->second]);
 
 				members.back().InheritedBy = meta;
@@ -126,10 +165,28 @@ namespace Engine
 
 		void ReflectedType::CopyMembers(const ReflectedType* parent)
 		{
-			CopyData(this, MemberKeys, Members, parent->MemberKeys, parent->Members);
-			CopyData(this, PropertyKeys, Properties, parent->PropertyKeys, parent->Properties);
-			CopyData(this, EventKeys, Events, parent->EventKeys, parent->Events);
-			CopyData(this, FunctionKeys, Functions, parent->FunctionKeys, parent->Functions);
+			Inherits = parent->Inherits;
+
+			Inherits.push_back(this);
+
+			int allowed = (int)AllowedTypes.size();
+
+			for (int i = 0; i < (int)parent->AllowedTypes.size(); ++i)
+			{
+				bool found = false;
+
+				for (int j = 0; j < allowed; ++j)
+					if (AllowedTypes[j] == parent->AllowedTypes[i])
+						found = true;
+
+				if (!found)
+					AllowedTypes.push_back(parent->AllowedTypes[i]);
+			}
+
+			CopyData(this, MemberKeys, Members, parent->MemberKeys, parent->Members, RegisteredMembers, MemberType::Member);
+			CopyData(this, PropertyKeys, Properties, parent->PropertyKeys, parent->Properties, RegisteredMembers, MemberType::Property);
+			CopyData(this, EventKeys, Events, parent->EventKeys, parent->Events, RegisteredMembers, MemberType::Event);
+			CopyData(this, FunctionKeys, Functions, parent->FunctionKeys, parent->Functions, RegisteredMembers, MemberType::Function);
 		}
 
 		const ReflectedType* ReflectedTypes::GetMeta(const std::string& name) const
@@ -166,6 +223,15 @@ namespace Engine
 		{
 			return int(Reflected.size());
 		}
+		int ReflectedTypes::GetIndexFromName(const std::string& name) const
+		{
+			Dictionary::const_iterator child = MetaKeys.find(name);
+
+			if (child != MetaKeys.end())
+				return child->second;
+
+			return -1;
+		}
 
 		const ReflectedType* ReflectedTypes::Get(int index) const
 		{
@@ -178,6 +244,16 @@ namespace Engine
 		int ReflectedTypes::GetScopeCount() const
 		{
 			return int(ChildScopes.size());
+		}
+
+		int ReflectedTypes::GetScopeIndexFromName(const std::string& name) const
+		{
+			Dictionary::const_iterator child = ScopeKeys.find(name);
+
+			if (child != ScopeKeys.end())
+				return child->second;
+
+			return -1;
 		}
 
 		const ReflectedTypes* ReflectedTypes::GetScope(int index) const

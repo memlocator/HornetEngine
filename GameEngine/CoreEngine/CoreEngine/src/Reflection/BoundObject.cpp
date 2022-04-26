@@ -1,29 +1,48 @@
 #include "BoundObject.h"
 
+#include <lua.hpp>
+
 namespace Engine
 {
 	namespace Lua
 	{
-		BoundObject& BoundObject::GetBound(int id)
+		BoundObject& BoundObject::MakeBinding(lua_State* lua, bool isEnum, bool isItem)
 		{
-			static BoundObject NullObject;
+			BoundObject& bound = *reinterpret_cast<BoundObject*>(lua_newuserdata(lua, sizeof(BoundObject)));
 
-			if (id < 0 || id > BoundObjects.Size())
-				return NullObject;
+			new (&bound) BoundObject();
 
-			return BoundObjects.GetNode(id).GetData();
+			luaL_getmetatable(lua, !isEnum ? Metatable : (isItem ? EnumItemMetatable : EnumTypeMetatable));
+			lua_setmetatable(lua, -2);
+
+			return bound;
 		}
 
-		void BoundObject::ReleaseBound(int id)
+		BoundObject& BoundObject::Get(lua_State* lua, int index)
 		{
-			BoundObjects.Release(id);
+			return *reinterpret_cast<BoundObject*>(lua_touserdata(lua, index));
 		}
 
-		std::pair<int, BoundObject*> BoundObject::Allocate()
+		BoundScope& BoundScope::MakeBinding(lua_State* lua)
 		{
-			int id = BoundObjects.RequestID();
+			BoundScope& bound = *reinterpret_cast<BoundScope*>(lua_newuserdata(lua, sizeof(BoundScope)));
 
-			return std::make_pair(id, &GetBound(id));
+			new (&bound) BoundScope();
+
+			luaL_getmetatable(lua, Metatable);
+			lua_setmetatable(lua, -2);
+
+			return bound;
+		}
+
+		BoundScope& BoundScope::Get(lua_State* lua, int index)
+		{
+			return *reinterpret_cast<BoundScope*>(lua_touserdata(lua, index));
+		}
+
+		LuaUserdataType GetUserdataType(lua_State* lua, int index)
+		{
+			return *reinterpret_cast<LuaUserdataType*>(lua_touserdata(lua, index));
 		}
 	}
 }

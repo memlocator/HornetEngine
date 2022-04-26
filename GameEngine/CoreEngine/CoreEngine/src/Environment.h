@@ -8,15 +8,5 @@ namespace Engine
 	{
 	public:
 		virtual ~Environment() {}
-
-		void Initialize() {}
-
-		void Update(float delta) {}
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Environment);
 	};
 }

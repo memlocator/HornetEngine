@@ -10,6 +10,7 @@
 namespace Engine
 {
 	class Transform;
+	class ModelAsset;
 }
 
 namespace GraphicsEngine
@@ -47,10 +48,4 @@ private:
 	
 	std::shared_ptr<Engine::Transform> NewObject(const Matrix3& transformation);
 	void PlaceObject(const Matrix3& transformation, const RGBA& color, float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset);
-
-	Instantiable;
-
-	Inherits_Class(Object);
-
-	Reflected(DebugDraw);
 };

@@ -22,7 +22,7 @@ namespace Engine
 			static void SetMeta(const ReflectedType& meta);
 
 			template <typename Parent>
-			static void SetMeta(const ReflectedType& meta)
+			static ReflectedType* SetMeta(const ReflectedType& meta)
 			{
 				ParentMeta = Reflected<Parent>::Meta;
 
@@ -37,14 +37,18 @@ namespace Engine
 
 					InitializeInheritedTypes();
 				}
+
+				return Meta;
 			}
 
 			template <>
-			static void SetMeta<void>(const ReflectedType& meta)
+			static ReflectedType* SetMeta<void>(const ReflectedType& meta)
 			{
 				SetMeta(meta);
 
 				InitializeInheritedTypes();
+
+				return Meta;
 			}
 
 		private:
@@ -86,6 +90,7 @@ namespace Engine
 		void Reflected<Type>::SetMeta(const ReflectedType& meta)
 		{
 			*Meta = meta;
+			Meta->Inherits.push_back(Meta);
 
 			Register(Meta);
 		}

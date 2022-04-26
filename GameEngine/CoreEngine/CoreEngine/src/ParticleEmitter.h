@@ -40,16 +40,7 @@ namespace GraphicsEngine
 		bool CubeMapped = false;
 		bool CompressedNormalMap = false;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		virtual void operator()();
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(EmitterConfig);
 	};
 }
 
@@ -134,12 +125,6 @@ namespace GraphicsEngine
 		ParticleDrawCallback DrawCallback = DefaultDraw;
 
 		static Aabb GetPairBounds(const Aabb& first, const Aabb& second);
-
-		Instantiable;
-
-		Inherits_Class(SceneObject);
-
-		Reflected(ParticleEmitter);
 	};
 }
 
@@ -148,19 +133,10 @@ namespace GraphicsEngine
 	class ParticleConfiguration : public Engine::Object
 	{
 	public:
-		void Initialize() {}
-		void Update(float delta) {}
-
-		virtual void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter) = 0;
+		virtual void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter) {};
 
 		Vector3 RelativeVector(const Vector3& vector) const;
 		Vector3 GetMomentum() const;
-
-		NonInstantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(ParticleConfiguration);
 	};
 
 	class DirectionalParticleSpawner : public ParticleConfiguration
@@ -174,21 +150,12 @@ namespace GraphicsEngine
 		Vector3 Position;
 		UnitVectorGenerator DirectionGenerator;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
 		void operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(DirectionalParticleSpawner);
 	};
 
 	class RisingParticleSpawner : public ParticleConfiguration
@@ -206,21 +173,12 @@ namespace GraphicsEngine
 
 		float Radius = 1;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
 		void operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(RisingParticleSpawner);
 	};
 
 	class PlanarParticleSpawner : public ParticleConfiguration
@@ -237,21 +195,12 @@ namespace GraphicsEngine
 		Vector3 Size = Vector3(1, 1, 1);
 		Vector3 Position;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
 		void operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(PlanarParticleSpawner);
 	};
 
 	class LineParticleSpawner : public ParticleConfiguration
@@ -266,21 +215,12 @@ namespace GraphicsEngine
 		Vector3 Direction;
 		Vector3 Size = Vector3(1, 1, 1);
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
 		void operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(LineParticleSpawner);
 	};
 
 	class RingParticleSpawner : public ParticleConfiguration
@@ -296,21 +236,12 @@ namespace GraphicsEngine
 		Vector3 Normal = Vector3(0, 1, 0);
 		Vector3 Size = Vector3(1, 1, 1);
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
 		void operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(RingParticleSpawner);
 	};
 
 	class ConeParticleSpawner : public ParticleConfiguration
@@ -325,21 +256,12 @@ namespace GraphicsEngine
 		Vector3 Normal;
 		Vector3 Size = Vector3(1, 1, 1);
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
 		void operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(ConeParticleSpawner);
 	};
 
 	class GravityParticleUpdater : public ParticleConfiguration
@@ -347,21 +269,12 @@ namespace GraphicsEngine
 	public:
 		Vector3 Force;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
 		bool operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(GravityParticleUpdater);
 	};
 
 	class DragParticleUpdater : public ParticleConfiguration
@@ -369,21 +282,12 @@ namespace GraphicsEngine
 	public:
 		float DragFactor = 1;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
 		bool operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(DragParticleUpdater);
 	};
 
 	class DampenedForceUpdater : public ParticleConfiguration
@@ -392,21 +296,12 @@ namespace GraphicsEngine
 		float DragFactor = 1;
 		Vector3 Force;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
 		bool operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(DampenedForceUpdater);
 	};
 
 	class CubicBezierUpdater : public ParticleConfiguration
@@ -418,20 +313,11 @@ namespace GraphicsEngine
 		Vector3 End;
 		float FinishThreshold = 0.1f;
 
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
 		bool operator()(Particle& particle, float delta);
-
-		Instantiable;
-
-		Inherits_Class(ParticleConfiguration);
-
-		Reflected(CubicBezierUpdater);
 	};
 }

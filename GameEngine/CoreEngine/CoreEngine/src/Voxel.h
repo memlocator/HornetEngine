@@ -8,9 +8,6 @@ namespace Engine
 	class Voxel : public Object
 	{
 	public:
-		void Initialize() {}
-		void Update(float delta) {}
-
 		void SetPosition(const Coordinates& position);
 		Coordinates GetPosition() const;
 
@@ -21,11 +18,5 @@ namespace Engine
 
 	private:
 		Coordinates Position;
-
-		Instantiable;
-
-		Inherits_Class(Object);
-
-		Reflected(Voxel);
 	};
 }

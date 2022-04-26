@@ -25,6 +25,10 @@ namespace Engine
 				Member<Bind(&RayTracer::Samples)>("Samples"),
 				Member<Bind(&RayTracer::CurrentScene)>("CurrentScene"),
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"SetMaxThreads",
 					Overload(

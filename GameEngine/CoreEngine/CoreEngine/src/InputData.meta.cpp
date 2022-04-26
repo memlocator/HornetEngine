@@ -14,6 +14,10 @@ namespace Engine
 				"InputObject",
 				{ "GameObject" },
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"GetState",
 					Overload(
@@ -106,7 +110,11 @@ namespace Engine
 			Reflect<InputDevice, InputObject>::Class
 			(
 				"InputDevice",
-				{ "GameObject" }
+				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -119,6 +127,10 @@ namespace Engine
 				{ "GameObject" },
 
 				Member<Bind(&InputBinding::BindingMode)>("BindingMode"),
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"Bind",
@@ -173,6 +185,10 @@ namespace Engine
 			(
 				"UserInput",
 				{ "GameObject" },
+
+				Constructor(
+					Overload()
+				),
 
 				Function(
 					"GetState",

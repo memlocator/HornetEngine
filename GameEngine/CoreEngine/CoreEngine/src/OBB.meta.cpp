@@ -14,7 +14,11 @@ namespace Engine
 
 				Member<Bind(&OBB::Size)>("Size"),
 				Member<Bind(&OBB::Center)>("Center"),
-				Member<Bind(&OBB::Transformation)>("Transformation")
+				Member<Bind(&OBB::Transformation)>("Transformation"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

@@ -46,6 +46,8 @@ namespace GraphicsEngine
 
 	void ParticleEmitter::Update(float delta)
 	{
+		SceneObject::Update(delta);
+
 		if (Enabled)
 			TotalLifetime += delta;
 

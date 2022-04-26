@@ -1,4 +1,4 @@
-local mySocket = GameObject("Socket")
+local mySocket = GameObject.Networking.Socket()
 
 print("========")
 print("Trying to set up networking from Lua")

@@ -11,11 +11,14 @@ namespace GraphicsEngine
 {
 	void Model::Initialize()
 	{
+		SceneObject::Initialize();
+
 		SetTicks(false);
 	}
 
-	void Model::Update(float)
+	void Model::Update(float delta)
 	{
+		SceneObject::Update(delta);
 		//if (Color.A <= 0.001f)
 		//	Visible = false;
 		//
@@ -61,30 +64,18 @@ namespace GraphicsEngine
 
 	void Model::DrawMesh(const std::shared_ptr<Camera>& camera, const Mesh* mesh) const
 	{
-		//const Matrix3& cameraMatrix = camera->GetTransformationInverse();
-		//Matrix3 transform = cameraMatrix * transformation;
-		//Matrix3 rotated = cameraMatrix * rotation;
-		//Programs::Phong->transform.Set(camera->GetProjection().FullMultiply(TransformObject->GetWorldTransformation()));
 		Programs::Phong->objectTransform.Set(TransformObject->GetWorldTransformation());
-		//Programs::Phong->objectRotation.Set(TransformObject->GetWorldRotation());
 
 		Programs::Phong->color.Set(Color);
-		//Programs::Phong->glowColor.Set(GlowColor);
 
 		mesh->Draw();
 	}
 
 	void Model::DrawForward(const std::shared_ptr<Camera>& camera, const Mesh* mesh) const
 	{
-		//const Matrix3& cameraMatrix = camera->GetTransformationInverse();
-		//Matrix3 transform = cameraMatrix * transformation;
-		//Matrix3 rotated = cameraMatrix * rotation;
-		//Programs::PhongForward->transform.Set(camera->GetProjection().FullMultiply(TransformObject->GetWorldTransformation()));
 		Programs::PhongForward->objectTransform.Set(TransformObject->GetWorldTransformation());
-		//Programs::PhongForward->objectRotation.Set(TransformObject->GetWorldRotation());
 
 		Programs::PhongForward->color.Set(Color);
-		//Programs::PhongForward->glowColor.Set(GlowColor);
 
 		mesh->Draw();
 	}

@@ -3,7 +3,6 @@
 #include <string>
 
 #include "Vector3.h"
-#include "ObjectReflection.h"
 
 struct Dimensions
 {
@@ -16,13 +15,4 @@ struct Dimensions
 	operator std::string() const;
 	bool operator==(const Dimensions& other) const { return Width == other.Width && Height == other.Height; }
 	bool operator!=(const Dimensions& other) const { return Width != other.Width || Height != other.Height; }
-
-	Base_Class;
-
-	Reflected_Type(Dimensions);
 };
-
-namespace Engine
-{
-	Define_Value_Type(Dimensions);
-}

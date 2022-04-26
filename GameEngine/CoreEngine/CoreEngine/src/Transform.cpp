@@ -4,6 +4,8 @@ namespace Engine
 {
 	void Transform::Update(float delta)
 	{
+		Object::Update(delta);
+
 		Recompute();
 
 		if (Moved)

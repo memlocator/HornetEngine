@@ -12,6 +12,10 @@ namespace Engine
 			Reflect<VectorGenerator>::Type(
 				"VectorGenerator",
 
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Generate",
 					Overload(
@@ -82,7 +86,11 @@ namespace Engine
 		void ReflectType<UnitVectorGenerator>()
 		{
 			Reflect<UnitVectorGenerator, VectorGenerator>::Type(
-				"UnitVectorGenerator"
+				"UnitVectorGenerator",
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 
@@ -93,7 +101,11 @@ namespace Engine
 				"ConeUnitVectorGenerator",
 
 				Member<Bind(&ConeUnitVectorGenerator::Normal)>("Normal"),
-				Member<Bind(&ConeUnitVectorGenerator::Angle)>("Angle")
+				Member<Bind(&ConeUnitVectorGenerator::Angle)>("Angle"),
+
+				Constructor(
+					Overload()
+				)
 			);
 		}
 	}

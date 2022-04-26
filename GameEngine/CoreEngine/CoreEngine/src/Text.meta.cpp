@@ -28,6 +28,16 @@ namespace Engine
 				Member<Bind(&Text::FontSize)>("FontSize"),
 				Member<Bind(&Text::FontData)>("FontData"),
 
+				Property(
+					"Contents",
+					Getter<std::string>(Const).Bind<Text, &Text::GetText>(),
+					Setter<const std::string&>(Mutable).Bind<Text, &Text::SetText>()
+				),
+
+				Constructor(
+					Overload()
+				),
+
 				Function(
 					"Draw",
 					Overload(

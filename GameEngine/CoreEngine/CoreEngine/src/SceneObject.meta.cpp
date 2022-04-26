@@ -23,6 +23,16 @@ namespace Engine
 				Member<Bind(&SceneObject::Visible)>("Visible"),
 				Member<Bind(&SceneObject::PhysicalMaterialProperties)>("PhysicalMaterialProperties"),
 
+				Constructor(
+					Overload()
+				),
+
+				Property(
+					"MaterialProperties",
+					Getter<std::shared_ptr<Material>>(Const).Bind<SceneObject, &SceneObject::GetMaterial>(),
+					Setter<const std::shared_ptr<Material>&>(Mutable).Bind<SceneObject, &SceneObject::SetMaterial>()
+				),
+
 				Function(
 					"GetBoundingBox",
 					Overload(

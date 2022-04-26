@@ -52,11 +52,5 @@ namespace GraphicsEngine
 
 		Engine::Transform* TransformObject = nullptr;
 		Engine::ModelAsset* AssetObject = nullptr;
-
-		Instantiable;
-
-		Inherits_Class(SceneObject);
-
-		Reflected(Model);
 	};
 }
