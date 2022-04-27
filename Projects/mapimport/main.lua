@@ -1,8 +1,8 @@
-dofile("./assets/scripts/apidump.lua")
+--dofile("./assets/scripts/apidump.lua")
 
 local resolution = GameObject.FrameBuffer.WindowSize
 
-local meshes = GameObject("Object")
+local meshes = GameObject.Object()
 meshes.Name = "Meshes"
 meshes.Parent = Engine --[[ meshes:SetParent(Engine) ]]
 
@@ -15,12 +15,12 @@ for name, path in pairs(assets.meshes) do
 	print("loaded", name)
 end
 
-local textures = GameObject("Textures")
+local textures = GameObject.Textures()
 textures.Name = "Textures"
 textures.Parent = Engine --[[ textures:SetParent(Engine) ]]
 
-local robloxTextures = GameObject("Object")
-robloxTextures:SetParent(textures)
+local robloxTextures = GameObject.Object()
+robloxTexturesParent = textures
 robloxTextures.Name = "Roblox"
 
 local robloxMaterials
@@ -38,7 +38,7 @@ print("loading material textures")
 
 print(pcall(function()
 for i, name in pairs(robloxMaterials) do
-	local material = GameObject("Object")
+	local material = GameObject.Object()
 	material.Name = name
 	material.Parent = robloxTextures
 	print(name)
@@ -105,22 +105,22 @@ textures:Add(textures:Create("assets/maps/textures/skyTop.Png", Enum.SampleType.
 textures:Add(textures:Create("assets/maps/textures/skyBottom.Jpg", Enum.SampleType.Linear, Enum.WrapType.ClampExtend), "skyBottom")
 
 ]]
-local fonts = GameObject("Fonts")
+local fonts = GameObject.Fonts()
 fonts.Parent = Engine
 
-local sans = GameObject("Font")
+local sans = GameObject.Font()
 sans.Name = "Sans"
 sans:Load("assets/fonts/Sans", "Sans")
 sans.Parent = fonts --[[ sans:SetParent(fonts) ]]
 
-local environments = GameObject("Environments")
+local environments = GameObject.Environments()
 environments.Parent = Engine --[[ environments:SetParent(Engine) ]]
 
-local level = GameObject("Environment")
+local level = GameObject.Environment()
 level.Name = "Level"
 level.Parent = environments
 
-local simulation = GameObject("Simulation")
+local simulation = GameObject.Simulation()
 simulation.Parent = level --[[ simulation:SetParent(level) ]]
 
 local aspectRatio = GameObject.FrameBuffer.WindowSize.Width / GameObject.FrameBuffer.WindowSize.Height
@@ -131,12 +131,12 @@ local defaultProjection = 1
 local defaultNear = 0.1
 local defaultFar = 5000
 
-local camera = GameObject("Camera")
+local camera = GameObject.Camera()
 camera.Parent = level --[[ camera:SetParent(level) ]]
 camera:SetProperties(defaultWidth, defaultHeight, defaultProjection, defaultNear, defaultFar)--120, resolution.Width / resolution.Height, 0.1, 10000)
 camera:SetTransformation(Matrix3(0, 200, 100))
 
-local light = GameObject("Light")
+local light = GameObject.Light()
 light.Enabled = true
 light.Direction = Vector3(0.25, -1, 0.25):Unit()
 light.Brightness = 0.5
@@ -147,19 +147,19 @@ light.Type = Enum.LightType.Directional
 --light.Ambient = RGBA(0.5, 0.5, 0.5, 1)
 light.Parent = simulation 
 
-local lightOrb = GameObject("Transform")
+local lightOrb = GameObject.Transform()
 lightOrb.Parent = simulation --[[ lightOrb:SetParent(simulation) ]]
 lightOrb.IsStatic = false
 lightOrb.Transformation = Matrix3(0, 1000, 10) * Matrix3.PitchRotation(math.pi / 2) * Matrix3.NewScale(1, 1, 1)
 lightOrb:Update(0)
 
-local lightOrbModel = GameObject("Model")
+local lightOrbModel = GameObject.Model()
 lightOrbModel.Asset = Engine.Meshes.Sphere
 lightOrbModel.Parent = lightOrb --[[ lightOrbModel:SetParent(lightOrb) ]]
 lightOrbModel.Color = RGBA(1, 1, 1, 0.5)
 lightOrbModel.GlowColor = RGBA(1, 1, 1, 0.99)
 
-local testLight = GameObject("Light")
+local testLight = GameObject.Light()
 testLight.Enabled = true
 testLight.Position = Vector3(0, 1000, 0)
 testLight.Direction = Vector3(0, -1, 0)
@@ -174,18 +174,18 @@ testLight.Brightness = 1
 testLight:SetShadowsEnabled(true, 1024, 1024)
 testLight.Parent = lightOrb --[[ testLight:SetParent(lightOrb) ]]
 
-local lightOrb2 = GameObject("Transform")
+local lightOrb2 = GameObject.Transform()
 lightOrb2.Parent = simulation --[[ lightOrb2:SetParent(simulation) ]]
 lightOrb2.IsStatic = false
 lightOrb2:Update(0)
 
-local lightOrbModel2 = GameObject("Model")
+local lightOrbModel2 = GameObject.Model()
 lightOrbModel2.Asset = Engine.Meshes.Sphere
 lightOrbModel2.Parent = lightOrb2 --[[ lightOrbModel2:SetParent(lightOrb2) ]]
 lightOrbModel2.Color = RGBA(0.2, 1, 0.4, 0.99)
 lightOrbModel2.GlowColor = RGBA(0.2, 1, 0.4, 0.99)
 
-local testLight2 = GameObject("Light")
+local testLight2 = GameObject.Light()
 testLight2.Enabled = true
 testLight2.Diffuse = RGBA(0.2, 1, 0.4, 0.99)
 testLight2.Specular = RGBA(0.2, 1, 0.4, 0.99)
@@ -198,12 +198,12 @@ testLight2.Brightness = 0.05
 testLight2:SetShadowsEnabled(true, 1024, 1024)
 testLight2.Parent = lightOrb2 --[[ testLight2:SetParent(lightOrb2) ]]
 
-local emptyScene = GameObject("Scene")
+local emptyScene = GameObject.Scene()
 emptyScene.Parent = level
 emptyScene.CurrentCamera = camera
 emptyScene.GlobalLight = light
 
-local scene = GameObject("Scene")
+local scene = GameObject.Scene()
 scene.Parent = level --[[ scene:SetParent(level) ]]
 scene.CurrentCamera = camera
 scene.GlobalLight = light
@@ -212,7 +212,7 @@ scene:AddLight(testLight)
 scene:AddLight(testLight2)
 scene:AddObject(lightOrbModel)
 
-local sceneDraw = GameObject("GlowingSceneOperation")
+local sceneDraw = GameObject.GlowingSceneOperation()
 sceneDraw.Parent = level --[[ sceneDraw:SetParent(level) ]]
 sceneDraw:Configure(resolution.Width, resolution.Height, scene)
 sceneDraw.Radius = 10
@@ -238,7 +238,7 @@ local viewMinY = centerY - 0.5 * viewportY
 local viewMaxX = centerX + 0.5 * viewportX
 local viewMaxY = centerY + 0.5 * viewportY
 
-local rayTracer = GameObject("RayTracer")
+local rayTracer = GameObject.RayTracer()
 rayTracer.Parent = Engine
 rayTracer.CurrentScene = scene
 rayTracer.BatchWidth = 8--resX/4
@@ -254,25 +254,25 @@ end
 
 print("hardware threads:", rayTracer:GetHardwareThreads())
 
-local screen = GameObject("DeviceTransform")
+local screen = GameObject.DeviceTransform()
 screen.Parent = rayTracer
 screen.Size = DeviceVector(0, resX, 0, resY)
 
-local uiDraw = GameObject("InterfaceDrawOperation")
+local uiDraw = GameObject.InterfaceDrawOperation()
 uiDraw.Parent = rayTracer
 uiDraw.RenderAutomatically = true
 uiDraw.CurrentScreen = screen
 
-local rayTracedScene = GameObject("DeviceTransform")
+local rayTracedScene = GameObject.DeviceTransform()
 rayTracedScene.Parent = screen
 rayTracedScene.Size = DeviceVector(0, resX, 0, resY)
 
-local rayTracedSceneSub = GameObject("DeviceTransform")
+local rayTracedSceneSub = GameObject.DeviceTransform()
 rayTracedSceneSub.Parent = screen
 rayTracedSceneSub.Position = DeviceVector(0, viewMinX, 0, viewMinY)
 rayTracedSceneSub.Size = DeviceVector(0, viewMaxX - viewMinX, 0, viewMaxY - viewMinY)
 
-local rayTracedCanvas = GameObject("ScreenCanvas")
+local rayTracedCanvas = GameObject.ScreenCanvas()
 rayTracedCanvas.Parent = useViewport and rayTracedSceneSub or rayTracedScene
 
 local rayTracedTexture = GameObject.Textures.Create(resX, resY, Enum.SampleType.Nearest, Enum.WrapType.ClampExtend, Enum.DataType.Float)
@@ -280,7 +280,7 @@ rayTracedTexture.Parent = rayTracedCanvas
 
 print(rayTracedTexture)
 
-local rayTracedColorCorrection = GameObject("HDRColorCorrectionOperation")
+local rayTracedColorCorrection = GameObject.HDRColorCorrectionOperation()
 rayTracedColorCorrection.Parent = screen
 rayTracedColorCorrection.Input = rayTracedTexture
 rayTracedColorCorrection.Exposure = 1
@@ -296,14 +296,14 @@ rayTracedHDRBuffer.Parent = rayTracedColorCorrection
 
 rayTracedColorCorrection.Output = rayTracedHDRBuffer
 
-local rayTracedAppearance = GameObject("Appearance")
+local rayTracedAppearance = GameObject.Appearance()
 rayTracedAppearance.Texture = rayTracedHDRTexture--rayTracedTexture
 rayTracedAppearance.Color = RGBA(0, 0, 0, 0)
 
 rayTracedCanvas.Appearance = rayTracedAppearance
 rayTracedCanvas.Visible = false
 
---[=[local skybox = GameObject("CubeMapTexture")
+--[=[local skybox = GameObject.CubeMapTexture()
 skybox.Front = textures.skyFront
 skybox.Back = textures.skyBack
 skybox.Left = textures.skyLeft
@@ -319,20 +319,20 @@ sceneDraw.DrawSkyBox = true]=]
 
 math.randomseed(os.time())
 
-local materials = GameObject("Materials")
+local materials = GameObject.Materials()
 materials.Parent = Engine --[[ materials:SetParent(Engine) ]]
 
-local material = GameObject("Material")
+local material = GameObject.Material()
 material.Shininess = 75
 material.Diffuse = RGBA(0.5, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
 material.Specular = RGBA(0.5, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
 material.Ambient = RGBA(0.5, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
 material.Emission = RGBA(0, 0, 0, 0)
 
-local physicalMaterial = GameObject("PhysicalMaterial")
+local physicalMaterial = GameObject.PhysicalMaterial()
 physicalMaterial.Parent = materials
 
-local waterMaterial = GameObject("Material")
+local waterMaterial = GameObject.Material()
 waterMaterial.Name = "WaterMaterial"
 waterMaterial.Shininess = 3
 waterMaterial.Diffuse = RGBA(1, 1, 1, 1)--RGBA(0.5, 0.5, 0.5, 0)
@@ -340,7 +340,7 @@ waterMaterial.Specular = RGBA(1, 1, 1, 1)--RGBA(0.5, 0.5, 0.5, 0)
 waterMaterial.Ambient = RGBA(1, 1, 1, 1)--RGBA(0.5, 0.5, 0.5, 0)
 waterMaterial.Emission = RGBA(0, 0, 0, 0)
 
-local fireMaterial = GameObject("Material")
+local fireMaterial = GameObject.Material()
 fireMaterial.Name = "FireMaterial"
 fireMaterial.Shininess = 250
 fireMaterial.Diffuse = RGBA(0, 0, 0, 0)--RGBA(0.5, 0.5, 0.5, 0)
@@ -348,7 +348,7 @@ fireMaterial.Specular = RGBA(0, 0, 0, 0)--RGBA(0.5, 0.5, 0.5, 0)
 fireMaterial.Ambient = RGBA(0, 0, 0, 0)--RGBA(0.5, 0.5, 0.5, 0)
 fireMaterial.Emission = RGBA(0, 0, 0, 0)
 
-local underwaterMaterial = GameObject("Material")
+local underwaterMaterial = GameObject.Material()
 underwaterMaterial.Name = "UnderwaterMaterial"
 underwaterMaterial.Shininess = 250
 underwaterMaterial.Diffuse = RGBA(0.2, 0.2, 0.2, 0)--RGBA(0.5, 0.5, 0.5, 0)
@@ -360,12 +360,12 @@ lightOrbModel.MaterialProperties = material
 lightOrbModel.PhysicalMaterialProperties = physicalMaterial
 
 for i=1,0 do
-	local transform = GameObject("Transform")
+	local transform = GameObject.Transform()
 	transform.Parent = simulation --[[ transform:SetParent(simulation) ]]
 	transform.Transformation = Matrix3(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)) * Matrix3.AxisRotation(Vector3(-1, 2, 0.5), 3*math.random())
 	transform:Update(0)
 
-	local model = GameObject("Model")
+	local model = GameObject.Model()
 	model.MaterialProperties = material
 	model.Asset = Engine.Meshes.DestroyerHead
 	model.DiffuseTexture = Engine.Textures.palette
@@ -379,12 +379,12 @@ waterMaterial.Parent = Engine --[[ waterMaterial:SetParent(Engine) ]]
 fireMaterial.Parent = Engine --[[ fireMaterial:SetParent(Engine) ]]
 underwaterMaterial.Parent = Engine --[[ underwaterMaterial:SetParent(Engine) ]]
 
-local robloxMaterialContainer = GameObject("Object")
+local robloxMaterialContainer = GameObject.Object()
 robloxMaterialContainer.Name = "RobloxMaterials"
 robloxMaterialContainer.Parent = Engine
 
 for name, properties in pairs(robloxMaterials) do
-	local newMaterial = GameObject("PhysicalMaterial")
+	local newMaterial = GameObject.PhysicalMaterial()
 	newMaterial.Name = name
 	
 	for i,v in pairs(properties) do
@@ -433,7 +433,7 @@ if true then
 	--local mapOffset = Vector3(0, -7000, 1000)
 	local mapOffset = Vector3(0, 0, 0)
 
-	local mapContainer = GameObject("Object")
+	local mapContainer = GameObject.Object()
 	
 	mapContainer.Name = mapName
 	mapContainer.Parent = Engine.Environments.Level.Simulation --[[ mapContainer:SetParent(Engine.Environments.Level.Simulation) ]]
@@ -475,7 +475,7 @@ if true then
 					end
 				end
 			
-				local transform = GameObject("Transform")
+				local transform = GameObject.Transform()
 
 				if current.shape == "Cylinder" and current.size[2] ~= current.size[3] then
 					current.size[1] = current.size[2]
@@ -507,7 +507,7 @@ if true then
 
 				--transform:Update(0)
 
-				local model = GameObject("Model")
+				local model = GameObject.Model()
 
 				--if a ~= 1 then a = 0.5 end
 				local color = RGBA(tonumber(current.color[1]), tonumber(current.color[2]), tonumber(current.color[3]), 1)
@@ -535,7 +535,7 @@ if true then
 				model.PhysicalMaterialProperties = robloxMaterialContainer[current.material]
 				model.Asset = loadedMeshes[current.shape]
 
-				--local physicsBody = GameObject("PhysicsBody")
+				--local physicsBody = GameObject.PhysicsBody()
 				--physicsBody.Velocity = Vector3(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)):Unit() * 10
 				--physicsBody.Acceleration = Vector3(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)):Unit()
 				--physicsBody.Parent = transform --[[ physicsBody:SetParent(transform) ]]
@@ -554,7 +554,7 @@ if true then
 				spotlights = spotlights + 1
 			end
 
-			local light = GameObject("Light")
+			local light = GameObject.Light()
 
 			light.Parent = mapContainer --[[ light:SetParent(mapContainer) ]]
 			light.Position = Vector3(tonumber(current.pos[1]), tonumber(current.pos[2]), tonumber(current.pos[3]), 1)
@@ -628,9 +628,9 @@ coroutine.wrap(function()
 	end
 end)()
 
-local selection = GameObject("Selection")
+local selection = GameObject.Selection()
 
-local selectionOperation = GameObject("SelectionHandlesOperation")
+local selectionOperation = GameObject.SelectionHandlesOperation()
 
 selectionOperation.ActiveSelection = selection
 selectionOperation.TargetScene = scene
@@ -693,7 +693,7 @@ coroutine.wrap(function()
 	local rayTraceMode = false
 	local lastB = false
 	
-	local hitMaterial = GameObject("Material")
+	local hitMaterial = GameObject.Material()
 	hitMaterial.Shininess = 75
 	hitMaterial.Diffuse = RGBA(1, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
 	hitMaterial.Specular = RGBA(1, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)

@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <iostream>
 
 #include "Texture.h"
 #include "Scene.h"
@@ -306,7 +307,7 @@ namespace GraphicsEngine
 		if (output->GetTextureID() == 0)
 			output->Load(width, height);
 
-		output->Upload(width, height, Data, GL_FLOAT, GL_RGB32F, GL_RGB);
+		output->Upload(width, height, Data, Enum::DataType::Float, Enum::InternalFormat::RGB32F, Enum::Format::RGB);
 	}
 
 	void RayTracer::Save(const std::string& filePath) const

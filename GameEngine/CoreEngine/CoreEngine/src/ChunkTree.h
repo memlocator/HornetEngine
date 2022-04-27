@@ -5,6 +5,8 @@
 #include "Coordinates.h"
 #include "Aabb.h"
 
+#include <memory>
+
 namespace GraphicsEngine
 {
 	class Camera;

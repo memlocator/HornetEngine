@@ -153,7 +153,7 @@ namespace GraphicsEngine
 				return;
 		}
 
-		map = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_R32F, GL_RED));
+		map = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::R32F, Enum::Format::Red));
 
 		FrameBuffer::Detatch();
 	}

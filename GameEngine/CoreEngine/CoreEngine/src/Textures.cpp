@@ -5,7 +5,7 @@
 
 namespace GraphicsEngine
 {
-	std::shared_ptr<Texture> Textures::Create(int width, int height, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format, bool invertedY)
+	std::shared_ptr<Texture> Textures::Create(int width, int height, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format, bool invertedY)
 	{
 		std::shared_ptr<Texture> texture = Engine::Create<Texture>();
 
@@ -14,7 +14,7 @@ namespace GraphicsEngine
 		return texture;
 	}
 
-	std::shared_ptr<Texture> Textures::Create(const std::string& fileName, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format)
+	std::shared_ptr<Texture> Textures::Create(const std::string& fileName, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format)
 	{
 		std::shared_ptr<Texture> texture = Engine::Create<Texture>();
 
@@ -23,7 +23,7 @@ namespace GraphicsEngine
 		return texture;
 	}
 
-	std::shared_ptr<Texture> Textures::Create(int width, int height, unsigned char* pixelData, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format, bool invertedY)
+	std::shared_ptr<Texture> Textures::Create(int width, int height, unsigned char* pixelData, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format, bool invertedY)
 	{
 		std::shared_ptr<Texture> texture = Engine::Create<Texture>();
 
@@ -32,7 +32,7 @@ namespace GraphicsEngine
 		return texture;
 	}
 
-	void Textures::LoadDirectory(const std::string& folderPath, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format)
+	void Textures::LoadDirectory(const std::string& folderPath, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format)
 	{
 
 		for (const auto& entry : std::filesystem::directory_iterator(folderPath)) {

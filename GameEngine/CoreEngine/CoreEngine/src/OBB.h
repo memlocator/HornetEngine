@@ -2,7 +2,9 @@
 
 #include <vector>
 #include "Matrix3.h"
-#include "MeshData.h"
+#include <memory>
+
+struct VertexData;
 
 namespace Engine
 {
@@ -18,6 +20,6 @@ public:
 	Vector3 Center;
 	Matrix3 Transformation;
 
-	static OBB Compute(const MeshData::VertexVector& vertices);
+	static OBB Compute(const std::vector<VertexData>& vertices);
 	static OBB Compute(const std::shared_ptr<Engine::ModelAsset>& model);
 };

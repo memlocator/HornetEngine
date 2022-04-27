@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "Object.h"
 #include "Vector3.h"
 #include "CellData.h"

@@ -5,6 +5,7 @@
 #include "PCA.h"
 #include "MeshLoader.h"
 #include "ModelAsset.h"
+#include "MeshData.h"
 
 bool BoundingSphere::Contains(const Vector3& point) const
 {

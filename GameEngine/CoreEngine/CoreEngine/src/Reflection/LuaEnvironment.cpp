@@ -1,6 +1,7 @@
 #include "LuaEnvironment.h"
 
 #include <lua.hpp>
+#include <iostream>
 
 #include "ObjectMetatable.h"
 #include "MetaData.h"

@@ -1,5 +1,7 @@
 #include "Ray.h"
 
+#include "Aabb.h"
+
 #include <limits>
 
 bool Ray::Intersects(const Aabb& box, float& t, float epsilon) const

@@ -40,7 +40,13 @@ namespace GraphicsEngine
 		{
 			enum InternalFormat
 			{
-				RGBA = GL_RGBA
+				RGBA = GL_RGBA,
+				Depth24Stencil8 = GL_DEPTH24_STENCIL8,
+				RGBA16F = GL_RGBA16F,
+				RGB32F = GL_RGB32F,
+				RGB8 = GL_RGB8,
+				RG32F = GL_RG32F,
+				R32F = GL_R32F
 			};
 		};
 
@@ -48,7 +54,11 @@ namespace GraphicsEngine
 		{
 			enum Format
 			{
-				RGBA = GL_RGBA
+				RGBA = GL_RGBA,
+				RGB = GL_RGB,
+				RG = GL_RG,
+				Red = GL_RED,
+				DepthStencil = GL_DEPTH_STENCIL
 			};
 		};
 
@@ -57,18 +67,25 @@ namespace GraphicsEngine
 			enum DataType
 			{
 				UnsignedByte = GL_UNSIGNED_BYTE,
-				Float = GL_FLOAT
+				Float = GL_FLOAT,
+				DepthStencilInt = GL_UNSIGNED_INT_24_8
 			};
 		};
+
+		typedef SampleTypeEnum::SampleType ESampleType;
+		typedef WrapTypeEnum::WrapType EWrapType;
+		typedef InternalFormatEnum::InternalFormat EInternalFormat;
+		typedef FormatEnum::Format EFormat;
+		typedef DataTypeEnum::DataType EDataType;
 
 		~Texture();
 
 		void Resize(int width, int height);
 		void Resize(Dimensions size);
-		void Load(int width, int height, GLint sampleType = GL_NEAREST, GLint wrapType = GL_REPEAT, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA, bool invertedY = false);
-		void Load(const std::string& fileName, GLint sampleType = GL_NEAREST, GLint wrapType = GL_REPEAT, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA, bool isDXT5 = false);
-		void Load(int width, int height, unsigned char* pixelData, GLint sampleType = GL_NEAREST, GLint wrapType = GL_REPEAT, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA, bool invertedY = false);
-		void Upload(int width, int height, void* pixelData, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA);
+		void Load(int width, int height, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte , EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA, bool invertedY = false);
+		void Load(const std::string& fileName, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA, bool isDXT5 = false);
+		void Load(int width, int height, unsigned char* pixelData, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA, bool invertedY = false);
+		void Upload(int width, int height, void* pixelData, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA);
 		GLuint GetTextureID() const;
 		int GetWidth() const;
 		int GetHeight() const;
@@ -77,7 +94,7 @@ namespace GraphicsEngine
 		RGBA GetPixel(int x, int y) const;
 		bool HasInvertedY() const;
 
-		void LoadPiece(const std::string& fileName, int x, int y, int width, int height, GLenum dataType = GL_UNSIGNED_BYTE, GLenum format = GL_RGBA);
+		void LoadPiece(const std::string& fileName, int x, int y, int width, int height, EDataType dataType = EDataType::UnsignedByte, EFormat format = EFormat::RGBA);
 
 	private:
 		GLint SampleType = GL_NEAREST;

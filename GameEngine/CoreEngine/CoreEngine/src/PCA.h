@@ -3,7 +3,8 @@
 #include <vector>
 #include "Vector3.h"
 #include "Matrix3.h"
-#include "MeshData.h"
+
+struct VertexData;
 
 class PCA
 {
@@ -16,6 +17,6 @@ public:
 	Vector3 EigenValues;
 
 	static PCA Compute(const Matrix3& covariance, int maxIterations = 50, float epsilon = 0.0001f);
-	static Matrix3 ComputeCovariance(const MeshData::VertexVector& vertices);
+	static Matrix3 ComputeCovariance(const std::vector<VertexData>& vertices);
 	static Matrix3 ComputeJacobiRotation(const Matrix3& matrix);
 };

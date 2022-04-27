@@ -1,5 +1,7 @@
 #include "SelectionHandlesOperation.h"
 
+#include <iostream>
+
 #include "Camera.h"
 #include "Selection.h"
 #include "Scene.h"

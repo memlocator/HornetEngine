@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "ModelAsset.h"
+#include "ShaderPrograms.h"
 
 namespace GraphicsEngine
 {

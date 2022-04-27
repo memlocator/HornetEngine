@@ -1,9 +1,8 @@
 #pragma once
 
-#include <limits>
-
 #include "Vector3.h"
-#include "Aabb.h"
+
+class Aabb;
 
 class Ray
 {

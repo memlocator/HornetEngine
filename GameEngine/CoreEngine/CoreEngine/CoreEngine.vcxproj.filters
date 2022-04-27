@@ -867,6 +867,9 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\Reflection\Reflection.cpp">
+      <Filter>Source Files\Source\Engine\MetaReflection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">

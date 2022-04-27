@@ -1,5 +1,7 @@
 #include "RayAcceleration.h"
 
+#include <iostream>
+
 #include "Vector3.h"
 #include "Scene.h"
 #include "AabbTree.h"

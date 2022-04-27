@@ -2,12 +2,8 @@
 
 #include <memory>
 
-#include "IdentifierHeap.h"
 #include "ObjectAllocator.h"
 #include "Reflection/Reflected.h"
-#include <iostream>
-#include <functional>
-#include <map>
 
 namespace Engine
 {
@@ -19,7 +15,6 @@ namespace Engine
 	class Object
 	{
 	public:
-		typedef std::function<std::shared_ptr<Object>()> FactoryCallback;
 		typedef std::vector<std::string> StringVector;
 
 		std::string Name = "Object";
@@ -117,13 +112,6 @@ namespace Engine
 
 		bool operator==(const std::shared_ptr<Object>& object) const { return this == object.get(); }
 
-	protected:
-		static void RegisterFactoryFunction(const std::string& typeName, const FactoryCallback& factory)
-		{
-			FactoryFunctions[typeName] = factory;
-		}
-
-	private:
 		struct ObjectHandleData
 		{
 			Object* Data = nullptr;
@@ -131,13 +119,10 @@ namespace Engine
 			unsigned long long CreationOrderId = 0;
 		};
 
-		typedef std::map<std::string, FactoryCallback> FactoryCallbackMap;
-		typedef IDHeap<ObjectHandleData> ObjectHandleHeap;
+	private:
 		typedef std::vector<std::shared_ptr<Object>> ObjectVector;
 
 		static unsigned long long ObjectsCreated;
-		static ObjectHandleHeap ObjectIDs;
-		static FactoryCallbackMap FactoryFunctions;
 
 		int ObjectID = -1;
 		int OriginalID = -1;
@@ -154,6 +139,8 @@ namespace Engine
 		void UpdateTickingState();
 
 		static bool MetaMatches(const Meta::ReflectedType* type, const Meta::ReflectedType* target, bool inherited);
+
+		static const std::weak_ptr<Object>& GetHandle(int id);
 	};
 
 	template <typename T>
@@ -244,14 +231,14 @@ namespace Engine
 	template <typename T>
 	bool Object::IsA(bool inherited)
 	{
-		return MetaMatches(GetMetaData(0), Meta::Reflected<T>::GetMeta(), inherited); //IsA(T::GetClassMetaData()->Name, inherited);
+		return MetaMatches(GetMetaData(0), Meta::Reflected<T>::GetMeta(), inherited);
 	}
 
 	template <typename T>
 	std::shared_ptr<T> Object::GetObjectFromID(int id)
 	{
 		if (id != -1)
-			return ObjectIDs.GetNode(id).GetData().SmartPointer.lock()->Cast<T>();
+			return GetHandle(id).lock()->Cast<T>();
 
 		return nullptr;
 	}

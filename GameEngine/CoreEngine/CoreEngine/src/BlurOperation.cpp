@@ -35,7 +35,7 @@ namespace GraphicsEngine
 		VerticalPass = verticalPass;
 	}
 
-	void BlurOperation::Configure(int width, int height, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format)
+	void BlurOperation::Configure(int width, int height, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format)
 	{
 		auto bufferTexture = Textures::Create(width, height, sampleType, wrapType, dataType, internalFormat, format);
 		auto horizontalBuffer = FrameBuffer::Create(width, height, bufferTexture, false, false);

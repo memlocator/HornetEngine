@@ -35,7 +35,13 @@ namespace Engine
 			Reflect<Enum::InternalFormat>::Enum
 			(
 				"InternalFormat",
-				Value<Enum::InternalFormat::RGBA>("RGBA")
+				Value<Enum::InternalFormat::RGBA>("RGBA"),
+				Value<Enum::InternalFormat::Depth24Stencil8>("Depth24Stencil8"),
+				Value<Enum::InternalFormat::RGBA16F>("RGBA16F"),
+				Value<Enum::InternalFormat::RGB32F>("RGB32F"),
+				Value<Enum::InternalFormat::RGB8>("RGB8"),
+				Value<Enum::InternalFormat::RG32F>("RG32F"),
+				Value<Enum::InternalFormat::R32F>("R32F")
 			);
 		}
 
@@ -45,7 +51,11 @@ namespace Engine
 			Reflect<Enum::Format>::Enum
 			(
 				"Format",
-				Value<Enum::Format::RGBA>("RGBA")
+				Value<Enum::Format::RGBA>("RGBA"),
+				Value<Enum::Format::RGB>("RGB"),
+				Value<Enum::Format::RG>("RG"),
+				Value<Enum::Format::Red>("Red"),
+				Value<Enum::Format::DepthStencil>("DepthStencil")
 			);
 		}
 
@@ -56,7 +66,8 @@ namespace Engine
 			(
 				"DataType",
 				Value<Enum::DataType::UnsignedByte>("UnsignedByte"),
-				Value<Enum::DataType::Float>("Float")
+				Value<Enum::DataType::Float>("Float"),
+				Value<Enum::DataType::DepthStencilInt>("DepthStencilInt")
 			);
 		}
 	}

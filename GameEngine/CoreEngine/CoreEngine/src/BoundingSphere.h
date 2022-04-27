@@ -10,6 +10,8 @@ namespace Engine
 	class ModelAsset;
 }
 
+struct VertexData;
+
 class BoundingSphere
 {
 public:
@@ -23,11 +25,11 @@ public:
 	bool Contains(const Vector3& point) const;
 	void ExpandByPoint(const Vector3& point);
 
-	static BoundingSphere ComputeCentroid(const MeshData::VertexVector& vertices);
-	static BoundingSphere ComputeRitter(const MeshData::VertexVector& vertices);
-	static BoundingSphere ComputeLarson(const MeshData::VertexVector& vertices);
-	static BoundingSphere ComputePCA(const MeshData::VertexVector& vertices);
-	static BoundingSphere ComputeExactSphere(const MeshData::VertexVector& vertices, int* indices, int indexCount);
+	static BoundingSphere ComputeCentroid(const std::vector<VertexData>& vertices);
+	static BoundingSphere ComputeRitter(const std::vector<VertexData>& vertices);
+	static BoundingSphere ComputeLarson(const std::vector<VertexData>& vertices);
+	static BoundingSphere ComputePCA(const std::vector<VertexData>& vertices);
+	static BoundingSphere ComputeExactSphere(const std::vector<VertexData>& vertices, int* indices, int indexCount);
 
 	static BoundingSphere ComputeCentroid(const std::shared_ptr<Engine::ModelAsset>& model);
 	static BoundingSphere ComputeRitter(const std::shared_ptr<Engine::ModelAsset>& model);

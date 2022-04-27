@@ -1,5 +1,7 @@
 #include "InputSubscriber.h"
 
+#include <iostream>
+
 #include "EngineException.h"
 
 namespace GraphicsEngine

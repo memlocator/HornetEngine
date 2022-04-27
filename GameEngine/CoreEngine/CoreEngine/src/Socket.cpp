@@ -1,5 +1,7 @@
 #include "Socket.h"
 
+#include <iostream>
+
 void Engine::Networking::Socket::unpackData(asio::ip::tcp::socket& socket)
 {
     socket.async_read_some(asio::buffer(readBuff.data(), readBuff.size()), 
@@ -9,7 +11,7 @@ void Engine::Networking::Socket::unpackData(asio::ip::tcp::socket& socket)
             {
                 std::cout << "\n\nRead " << len << " bytes\n\n";
 
-                for (int i = 0; i < len; i++)
+                for (int i = 0; i < (int)len; i++)
                     std::cout <<  readBuff[i];
 
                 //Only runs once there is some actual data to read - runs async

@@ -5,6 +5,8 @@ extern "C" {
 #include <Windows.h>
 }
 
+#include <iostream>
+
 #include "Textures.h"
 #include "Fonts.h"
 #include "Materials.h"

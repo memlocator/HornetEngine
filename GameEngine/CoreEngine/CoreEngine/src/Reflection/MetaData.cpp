@@ -1,5 +1,7 @@
 #include "MetaData.h"
 
+#include <iostream>
+
 namespace Engine
 {
 	namespace Meta

@@ -144,6 +144,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -211,7 +212,9 @@
     <ClCompile Include="src\Environment.cpp" />
     <ClCompile Include="src\Environment.meta.cpp" />
     <ClCompile Include="src\Environments.cpp" />
-    <ClCompile Include="src\Environments.meta.cpp" />
+    <ClCompile Include="src\Environments.meta.cpp">
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ShowIncludes>
+    </ClCompile>
     <ClCompile Include="src\Event.cpp" />
     <ClCompile Include="src\ExplorerDisplaySettings.cpp" />
     <ClCompile Include="src\ExplorerDisplaySettings.meta.cpp" />
@@ -282,7 +285,9 @@
     <ClCompile Include="src\OBB.cpp" />
     <ClCompile Include="src\OBB.meta.cpp" />
     <ClCompile Include="src\Object.cpp" />
-    <ClCompile Include="src\Object.meta.cpp" />
+    <ClCompile Include="src\Object.meta.cpp">
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ShowIncludes>
+    </ClCompile>
     <ClCompile Include="src\ObjParser.cpp" />
     <ClCompile Include="src\OcclusionTree.cpp" />
     <ClCompile Include="src\Packet.cpp" />
@@ -317,6 +322,7 @@
     <ClCompile Include="src\Reflection\MetaData.cpp" />
     <ClCompile Include="src\Reflection\ObjectMetatable.cpp" />
     <ClCompile Include="src\Reflection\Reflected.cpp" />
+    <ClCompile Include="src\Reflection\Reflection.cpp" />
     <ClCompile Include="src\RenderOperation.cpp" />
     <ClCompile Include="src\RenderOperation.meta.cpp" />
     <ClCompile Include="src\RGBA.cpp" />
@@ -345,7 +351,12 @@
     <ClCompile Include="src\ShaderPrograms.cpp" />
     <ClCompile Include="src\ShadingOperation.cpp" />
     <ClCompile Include="src\ShadingOperation.meta.cpp" />
-    <ClCompile Include="src\Simulation.cpp" />
+    <ClCompile Include="src\Simulation.cpp">
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ShowIncludes>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ShowIncludes>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ShowIncludes>
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ShowIncludes>
+    </ClCompile>
     <ClCompile Include="src\Simulation.meta.cpp" />
     <ClCompile Include="src\Socket.cpp" />
     <ClCompile Include="src\Socket.meta.cpp" />

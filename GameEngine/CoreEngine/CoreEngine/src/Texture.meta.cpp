@@ -42,22 +42,22 @@ namespace Engine
 						Returns<void>(),
 						Argument<int>("width"),
 						Argument<int>("height"),
-						Argument<GLint, Default(GL_NEAREST)>("sampleType"),
-						Argument<GLint, Default(GL_REPEAT)>("wrapType"),
-						Argument<GLenum, Default(GL_UNSIGNED_BYTE)>("dataType"),
-						Argument<GLint, Default(GL_RGBA)>("internalFormat"),
-						Argument<GLenum, Default(GL_RGBA)>("format"),
+						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format"),
 						Argument<bool, Default(false)>("invertedY")
 					).Bind<Texture, &Texture::Load>(),
 					Overload(
 						Mutable,
 						Returns<void>(),
 						Argument<const std::string&>("fileName"),
-						Argument<GLint, Default(GL_NEAREST)>("sampleType"),
-						Argument<GLint, Default(GL_REPEAT)>("wrapType"),
-						Argument<GLenum, Default(GL_UNSIGNED_BYTE)>("dataType"),
-						Argument<GLint, Default(GL_RGBA)>("internalFormat"),
-						Argument<GLenum, Default(GL_RGBA)>("format"),
+						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format"),
 						Argument<bool, Default(false)>("isDXT5")
 					).Bind<Texture, &Texture::Load>()
 				),
@@ -122,8 +122,8 @@ namespace Engine
 						Argument<int>("y"),
 						Argument<int>("width"),
 						Argument<int>("height"),
-						Argument<GLenum, Default(GL_UNSIGNED_BYTE)>("dataType"),
-						Argument<GLenum, Default(GL_RGBA)>("format")
+						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format")
 					).Bind<Texture, &Texture::LoadPiece>()
 				)
 			);

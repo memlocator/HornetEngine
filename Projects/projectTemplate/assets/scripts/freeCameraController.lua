@@ -44,8 +44,6 @@ coroutine.wrap(function()
 
 		local camera = This:GetComponent("Camera")
 
-		--print(delta, camera, This)
-
 		if camera then
 			local x = 0
 			local y = 0
@@ -80,7 +78,7 @@ coroutine.wrap(function()
 			if bindings.UpKey:GetState() then
 				y = delta * speed
 			end
-
+			
 			if bindings.TurnKey:GetState() then
 				local currentPosition = bindings.MovementInput:GetPosition()
 				local mouseDelta = currentPosition - previousPosition

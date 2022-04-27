@@ -1,22 +1,18 @@
 #pragma once
 
-#include <map>
-#include <set>
-
 #include "Mesh.h"
 #include "RGBA.h"
-#include "ShaderPrograms.h"
 #include "Scene.h"
 
 namespace Engine
 {
 	class Transform;
+	class ModelAsset;
 }
 
 namespace GraphicsEngine
 {
 	class Texture;
-	class ModelAsset;
 	class Camera;
 
 	class Model : public SceneObject

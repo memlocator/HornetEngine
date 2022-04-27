@@ -6,17 +6,6 @@
 
 #include "MetaData.h"
 
-#include <assert.h>
-
-#ifdef Static
-#undef Static
-#endif
-#ifdef Reflected
-#undef Reflected
-#endif
-#ifdef Reflect
-#undef Reflect
-#endif
 #ifdef Constructor
 #undef Constructor
 #endif
@@ -71,6 +60,14 @@ namespace Engine
 
 	namespace Reflection
 	{
+		namespace Warnings
+		{
+			void DefaultName(const std::string& name);
+			void MissingConstructor(const std::string& name);
+			void DefaultEnumName(const std::string& name);
+			void Assert();
+		}
+
 		template <typename Type>
 		void ReflectType();
 
@@ -99,7 +96,7 @@ namespace Engine
 				(bindMembers(members), ...);
 
 				if (!Core::ParentCheck<ClassType>::IsTypeObject && std::string(name) == "Object")
-					std::cout << "warning: class '" << typeid(ClassType).name() << "'has the default name 'Object'!" << std::endl;
+					Warnings::DefaultName(typeid(ClassType).name());
 
 				reflected.Constructor.Parent = Meta::Reflected<ClassType>::GetMeta();
 				reflected.Constructor.Name = name;
@@ -108,9 +105,9 @@ namespace Engine
 				if (reflected.Constructor.Binding.Callback == nullptr)
 				{
 					if (Core::WarnAboutMissingConstructors)
-						std::cout << "warning: class '" << name << "' is missing a constructor!" << std::endl;
+						Warnings::MissingConstructor(name);
 
-					assert(!Core::WarnAboutMissingConstructors);
+					Warnings::Assert();
 
 					//reflected.Constructor.Binding.Callback = &ActiveBinder::BindObjectFactory<ClassType>::FactoryFunction;
 				}
@@ -149,7 +146,7 @@ namespace Engine
 				(bindMembers(members), ...);
 
 				if (!Core::ParentCheck<ClassType>::IsTypeObject && std::string(name) == "Object")
-					std::cout << "warning: type '" << typeid(ClassType).name() << "'has the default name 'Object'!" << std::endl;
+					Warnings::DefaultName(typeid(ClassType).name());
 
 				reflected.Constructor.Parent = Meta::Reflected<ClassType>::GetMeta();
 				reflected.Constructor.Name = name;
@@ -158,9 +155,9 @@ namespace Engine
 				if (reflected.Constructor.Binding.Callback == nullptr)
 				{
 					if (Core::WarnAboutMissingConstructors)
-						std::cout << "warning: type '" << name << "' is missing a constructor!" << std::endl;
+						Warnings::MissingConstructor(name);
 
-					assert(!Core::WarnAboutMissingConstructors);
+					Warnings::Assert();
 					//reflected.Constructor.Binding.Callback = &ActiveBinder::BindTypeFactory<ClassType>::FactoryFunction;
 				}
 
@@ -207,7 +204,7 @@ namespace Engine
 				Meta::ReflectedType reflected{ false, true, false, name };
 
 				if (std::string(name) == "TestEnum")
-					std::cout << "warning: enum '" << typeid(ClassType).name() << "'has the default name 'TestEnum'!" << std::endl;
+					Warnings::DefaultEnumName(typeid(ClassType).name());
 
 				reflected.Constructor.Parent = Meta::Reflected<ClassType>::GetMeta();
 				reflected.Constructor.Name = name;

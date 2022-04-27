@@ -6,7 +6,7 @@ contains declaration of Vector3 class
 
 #pragma once
 
-#include <iostream>
+#include <iosfwd>
 #include <string>
 
 #include "ConstMath.h"

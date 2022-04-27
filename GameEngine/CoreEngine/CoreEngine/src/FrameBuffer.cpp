@@ -33,7 +33,7 @@ namespace GraphicsEngine
 		std::shared_ptr<Texture> depthTexture = Engine::Create<Texture>();
 		depthTexture->Name = "DepthTexture";
 		depthTexture->SetParent(This.lock());
-		depthTexture->Load(1, 1, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_UNSIGNED_INT_24_8, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL);
+		depthTexture->Load(1, 1, Enum::SampleType::Nearest, Enum::WrapType::ClampExtend, Enum::DataType::DepthStencilInt, Enum::InternalFormat::Depth24Stencil8, Enum::Format::DepthStencil);
 
 		DepthTexture = depthTexture;
 	}

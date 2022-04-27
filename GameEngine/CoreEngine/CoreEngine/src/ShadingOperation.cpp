@@ -29,12 +29,12 @@ namespace GraphicsEngine
 		int width = 2048;
 		int height = 2048;
 
-		auto rightMap = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_R32F, GL_RED));
-		auto leftMap = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_R32F, GL_RED));
-		auto topMap = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_R32F, GL_RED));
-		auto bottomMap = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_R32F, GL_RED));
-		auto frontMap = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_R32F, GL_RED));
-		auto backMap = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_R32F, GL_RED));
+		auto rightMap = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::R32F, Enum::Format::Red));
+		auto leftMap = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::R32F, Enum::Format::Red));
+		auto topMap = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::R32F, Enum::Format::Red));
+		auto bottomMap = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::R32F, Enum::Format::Red));
+		auto frontMap = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::R32F, Enum::Format::Red));
+		auto backMap = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::R32F, Enum::Format::Red));
 
 		auto parent = This.lock();
 

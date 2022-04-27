@@ -65,11 +65,11 @@ namespace Engine
 						Returns<void>(),
 						Argument<int>("width"),
 						Argument<int>("height"),
-						Argument<GLint, Default(GL_LINEAR)>("sampleType"),
-						Argument<GLint, Default(GL_CLAMP_TO_EDGE)>("wrapType"),
-						Argument<GLenum, Default(GL_UNSIGNED_BYTE)>("dataType"),
-						Argument<GLint, Default(GL_RGBA)>("internalFormat"),
-						Argument<GLenum, Default(GL_RGBA)>("format")
+						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format")
 					).Bind<BlurOperation, &BlurOperation::Configure>()
 				)
 			);

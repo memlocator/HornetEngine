@@ -29,22 +29,22 @@ namespace Engine
 						Returns<std::shared_ptr<Texture>>(),
 						Argument<int>("width"),
 						Argument<int>("height"),
-						Argument<GLint, Default(Enum::SampleType::Nearest)>("sampleType"),
-						Argument<GLint, Default(Enum::WrapType::Repeat)>("wrapType"),
-						Argument<GLenum, Default(Enum::DataType::UnsignedByte)>("dataType"),
-						Argument<GLint, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
-						Argument<GLenum, Default(Enum::Format::RGBA)>("format"),
+						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format"),
 						Argument<bool, Default(false)>("invertedY")
 					).Bind<&Textures::Create>(),
 					Overload(
 						Static,
 						Returns<std::shared_ptr<Texture>>(),
 						Argument<const std::string&>("fileName"),
-						Argument<GLint, Default(Enum::SampleType::Nearest)>("sampleType"),
-						Argument<GLint, Default(Enum::WrapType::Repeat)>("wrapType"),
-						Argument<GLenum, Default(Enum::DataType::UnsignedByte)>("dataType"),
-						Argument<GLint, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
-						Argument<GLenum, Default(Enum::Format::RGBA)>("format")
+						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format")
 					).Bind<&Textures::Create>()
 				),
 
@@ -64,11 +64,11 @@ namespace Engine
 						Mutable,
 						Returns<void>(),
 						Argument<const std::string&>("folderPath"),
-						Argument<GLint, Default(Enum::SampleType::Nearest)>("sampleType"),
-						Argument<GLint, Default(Enum::WrapType::Repeat)>("wrapType"),
-						Argument<GLenum, Default(Enum::DataType::UnsignedByte)>("dataType"),
-						Argument<GLint, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
-						Argument<GLenum, Default(Enum::Format::RGBA)>("format")
+						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
+						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
+						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format")
 					).Bind<Textures, &Textures::LoadDirectory>()
 				)
 			);

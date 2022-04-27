@@ -63,10 +63,10 @@ public:
 	Vector3 Generate()
 	{
 		float theta = 2 * PI * randf();
-		float phi = acos(1 - 2 * randf());
-		float sinPhi = sin(phi);
+		float phi = (float)acos(1 - 2 * randf());
+		float sinPhi = (float)sin(phi);
 
-		return Vector3(sinPhi * cos(theta), sinPhi * sin(theta), cos(phi));
+		return Vector3(sinPhi * (float)cos(theta), sinPhi * (float)sin(theta), (float)cos(phi));
 	}
 };
 

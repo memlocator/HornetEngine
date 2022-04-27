@@ -35,7 +35,13 @@ namespace GraphicsEngine
 
 		void Initialize();
 
-		void Configure(int width, int height, GLint sampleType = GL_LINEAR, GLint wrapType = GL_CLAMP_TO_EDGE, GLenum dataType = GL_UNSIGNED_BYTE, GLint internalFormat = GL_RGBA, GLenum format = GL_RGBA);
+		typedef Enum::SampleType ESampleType;
+		typedef Enum::WrapType EWrapType;
+		typedef Enum::InternalFormat EInternalFormat;
+		typedef Enum::Format EFormat;
+		typedef Enum::DataType EDataType;
+
+		void Configure(int width, int height, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA);
 
 		void SetInput(const std::shared_ptr<Texture>& texture);
 		void Render();

@@ -1,5 +1,7 @@
 #include "ExplorerDisplaySettings.h"
 
+#include <cmath>
+
 #include "Engine.h"
 #include "GameEngine.h"
 

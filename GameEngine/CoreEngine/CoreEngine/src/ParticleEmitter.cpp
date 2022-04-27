@@ -1,5 +1,7 @@
 #include "ParticleEmitter.h"
 
+#include <iostream>
+
 #include "PointGenerator.h"
 #include "Graphics.h"
 #include "MeshLoader.h"

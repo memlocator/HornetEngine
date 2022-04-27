@@ -51,7 +51,7 @@ namespace GraphicsEngine
 		Resize(size.Width, size.Height);
 	}
 
-	void Texture::Load(int width, int height, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format, bool invertedY)
+	void Texture::Load(int width, int height, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format, bool invertedY)
 	{
 		SampleType = sampleType;
 		WrapType = wrapType;
@@ -82,7 +82,7 @@ namespace GraphicsEngine
 		}
 	}
 
-	void Texture::Load(const std::string& fileName, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format, bool isDXT5)
+	void Texture::Load(const std::string& fileName, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format, bool isDXT5)
 	{
 		SampleType = sampleType;
 		WrapType = wrapType;
@@ -228,7 +228,7 @@ namespace GraphicsEngine
 		}
 	}
 
-	void Texture::Load(int width, int height, unsigned char* pixelData, GLint sampleType, GLint wrapType, GLenum dataType, GLint internalFormat, GLenum format, bool invertedY)
+	void Texture::Load(int width, int height, unsigned char* pixelData, ESampleType sampleType, EWrapType wrapType, EDataType dataType, EInternalFormat internalFormat, EFormat format, bool invertedY)
 	{
 		SampleType = sampleType;
 		WrapType = wrapType;
@@ -252,7 +252,7 @@ namespace GraphicsEngine
 		glBindTexture(GL_TEXTURE_2D, 0); CheckGLErrors();
 	}
 
-	void Texture::Upload(int width, int height, void* pixelData, GLenum dataType, GLint internalFormat, GLenum format)
+	void Texture::Upload(int width, int height, void* pixelData, EDataType dataType, EInternalFormat internalFormat, EFormat format)
 	{
 		if (TextureID == 0)
 			return;
@@ -277,7 +277,7 @@ namespace GraphicsEngine
 		}
 	}
 
-	void Texture::LoadPiece(const std::string& fileName, int x, int y, int width, int height, GLenum dataType, GLenum format)
+	void Texture::LoadPiece(const std::string& fileName, int x, int y, int width, int height, EDataType dataType, EFormat format)
 	{
 		int resWidth;
 		int resHeight;

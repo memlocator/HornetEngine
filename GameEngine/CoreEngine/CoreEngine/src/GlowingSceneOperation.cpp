@@ -93,7 +93,7 @@ namespace GraphicsEngine
 
 		waterBuffer->SetAttachmentCount(1);
 
-		waterBuffer->AttachTexture(0, Textures::Create(waterWidth, waterHeight, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_RGB32F, GL_RGB), GL_COLOR_ATTACHMENT0, true);
+		waterBuffer->AttachTexture(0, Textures::Create(waterWidth, waterHeight, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGB32F, Enum::Format::RGB), GL_COLOR_ATTACHMENT0, true);
 
 		waterBuffer->BindAttachments();
 
@@ -162,7 +162,7 @@ namespace GraphicsEngine
 
 		AccumulationBuffer = accumulationBuffer;
 
-		std::shared_ptr<FrameBuffer> blurResult = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE), true, false);
+		std::shared_ptr<FrameBuffer> blurResult = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend), true, false);
 		blurResult->Name = "BlurResult";
 		blurResult->SetParent(This.lock());
 
@@ -171,7 +171,7 @@ namespace GraphicsEngine
 		std::shared_ptr<BlurOperation> blur = Engine::Create<BlurOperation>();
 		blur->Output = BlurResult;
 		blur->Detatch = false;
-		blur->Configure(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_RGBA16F, GL_RGBA);
+		blur->Configure(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA);
 		blur->SetParent(This.lock());
 
 		Blur = blur;
@@ -184,20 +184,20 @@ namespace GraphicsEngine
 		sceneBuffer->DrawTo();
 		sceneBuffer->SetAttachmentCount(7);
 
-		sceneBuffer->AttachTexture(0, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_RGB32F, GL_RGB), GL_COLOR_ATTACHMENT0, true);
-		sceneBuffer->AttachTexture(1, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_RGB32F, GL_RGB), GL_COLOR_ATTACHMENT1, true);
-		sceneBuffer->AttachTexture(2, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA), GL_COLOR_ATTACHMENT2, true);
-		sceneBuffer->AttachTexture(3, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_UNSIGNED_BYTE, GL_RGB8, GL_RGB), GL_COLOR_ATTACHMENT3, true);
-		sceneBuffer->AttachTexture(4, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_UNSIGNED_BYTE, GL_RGB8, GL_RGB), GL_COLOR_ATTACHMENT4, true);
-		sceneBuffer->AttachTexture(5, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_UNSIGNED_BYTE, GL_RGB8, GL_RGB), GL_COLOR_ATTACHMENT5, true);
-		sceneBuffer->AttachTexture(6, Textures::Create(width, height, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_RGBA16F, GL_RGBA), GL_COLOR_ATTACHMENT6, true);
+		sceneBuffer->AttachTexture(0, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGB32F, Enum::Format::RGB), GL_COLOR_ATTACHMENT0, true);
+		sceneBuffer->AttachTexture(1, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGB32F, Enum::Format::RGB), GL_COLOR_ATTACHMENT1, true);
+		sceneBuffer->AttachTexture(2, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGBA, Enum::Format::RGBA), GL_COLOR_ATTACHMENT2, true);
+		sceneBuffer->AttachTexture(3, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGB8, Enum::Format::RGB), GL_COLOR_ATTACHMENT3, true);
+		sceneBuffer->AttachTexture(4, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGB8, Enum::Format::RGB), GL_COLOR_ATTACHMENT4, true);
+		sceneBuffer->AttachTexture(5, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGB8, Enum::Format::RGB), GL_COLOR_ATTACHMENT5, true);
+		sceneBuffer->AttachTexture(6, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA), GL_COLOR_ATTACHMENT6, true);
 
 		sceneBuffer->BindAttachments();
 
 		accumulationBuffer->DrawTo();
 		accumulationBuffer->SetAttachmentCount(1);
 
-		accumulationBuffer->AttachTexture(0, Textures::Create(width, height, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_RGBA16F, GL_RGBA), GL_COLOR_ATTACHMENT0, true);
+		accumulationBuffer->AttachTexture(0, Textures::Create(width, height, Enum::SampleType::Nearest, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA), GL_COLOR_ATTACHMENT0, true);
 
 		accumulationBuffer->BindAttachments();
 
@@ -212,7 +212,7 @@ namespace GraphicsEngine
 		blur->SetInput(sceneBuffer->GetTexture(6));
 
 
-		std::shared_ptr<FrameBuffer> hdrBuffer = FrameBuffer::Create(width, height, Textures::Create(width, height, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_FLOAT, GL_RGBA16F, GL_RGBA), true, false);
+		std::shared_ptr<FrameBuffer> hdrBuffer = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Nearest, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA), true, false);
 
 		hdrBuffer->Name = "HDRBuffer";
 
@@ -234,7 +234,7 @@ namespace GraphicsEngine
 
 	std::shared_ptr<Texture> GlowingSceneOperation::GenerateNormalMap(const std::shared_ptr<Texture>& heightMap)
 	{
-		std::shared_ptr<Texture> normalMap = Textures::Create(heightMap->GetWidth(), heightMap->GetHeight(), GL_LINEAR, GL_REPEAT, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA);
+		std::shared_ptr<Texture> normalMap = Textures::Create(heightMap->GetWidth(), heightMap->GetHeight(), Enum::SampleType::Linear, Enum::WrapType::Repeat, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGBA, Enum::Format::RGBA);
 
 		NormalMapQueue.push_back(TexturePair());
 

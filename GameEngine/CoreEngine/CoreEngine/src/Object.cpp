@@ -2,12 +2,16 @@
 
 #include <iostream>
 
+#include "IdentifierHeap.h"
 #include "Reflection/MetaData.h"
 
 namespace Engine
 {
+	typedef IDHeap<Object::ObjectHandleData> ObjectHandleHeap;
+
+	ObjectHandleHeap ObjectIDs;
+
 	unsigned long long Object::ObjectsCreated = 0;
-	Object::ObjectHandleHeap Object::ObjectIDs = ObjectHandleHeap();
 
 	void Object::Initialize()
 	{
@@ -167,7 +171,31 @@ namespace Engine
 
 	std::shared_ptr<Object> Object::GetComponent(const std::string& className, bool inherited) const
 	{
-		return Get(className, inherited);
+		auto parent = Parent.lock();
+
+		if (parent != nullptr)
+		{
+			if (ParentComponent && parent->IsA(className, inherited))
+				return parent;
+
+			if (AncestorComponents)
+			{
+				std::shared_ptr<Object> ancestor = Parent.lock();
+
+				for (int height = 0; (SuperComponentHeight == -1 || height < SuperComponentHeight) && ancestor != nullptr; ++height)
+				{
+					if (AncestorComponents && ancestor->IsA(className, inherited))
+						return ancestor;
+
+					if (!ancestor->Parent.expired())
+						ancestor = ancestor->Parent.lock();
+					else
+						ancestor = nullptr;
+				}
+			}
+		}
+
+		return nullptr;
 	}
 
 	std::shared_ptr<Object> Object::GetComponent(const Meta::ReflectedType* data, bool inherited) const
@@ -341,5 +369,10 @@ namespace Engine
 	bool Object::MetaMatches(const Meta::ReflectedType* type, const Meta::ReflectedType* target, bool inherited)
 	{
 		return type == target || (inherited && type->InheritsType(target));
+	}
+
+	const std::weak_ptr<Object>& Object::GetHandle(int id)
+	{
+		return ObjectIDs.GetNode(id).GetData().SmartPointer;
 	}
 }

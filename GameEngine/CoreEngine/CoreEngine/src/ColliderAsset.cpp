@@ -1,5 +1,7 @@
 #include "ColliderAsset.h"
 
+#include <cmath>
+
 namespace Engine
 {
 	namespace Physics

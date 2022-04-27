@@ -76,7 +76,7 @@ function makeData(meta, data)
 end
 
 function createInstance(objectType, parent, properties)
-	local object = GameObject(objectType)
+	local object = GameObject[objectType]()
 	local members = Meta[objectType].Members
 	
 	--print(objectType)

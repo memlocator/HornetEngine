@@ -8,7 +8,7 @@
 ]]
 
 -- Create a home for mesh assets & load meshes in from a json file
-local meshes = GameObject("Object")
+local meshes = GameObject.Object()
 meshes.Name = "Meshes"
 meshes.Parent = Engine
 
@@ -22,7 +22,7 @@ for name, path in pairs(assets.meshes) do
 end
 
 -- Create a home for textures
-local textures = GameObject("Textures")
+local textures = GameObject.Textures()
 textures.Name = "Textures"
 textures.Parent = Engine
 
@@ -31,14 +31,14 @@ textures.Parent = Engine
 	Set up the effective game world. At the moment these don't do anything yet, but they are planned for use in controlling
 	the simulation state. All live objects that are meant to be rendered or simulate something should be stored here.
 ]]
-local environments = GameObject("Environments")
+local environments = GameObject.Environments()
 environments.Parent = Engine
 
-local level = GameObject("Environment")
+local level = GameObject.Environment()
 level.Name = "Level"
 level.Parent = environments
 
-local simulation = GameObject("Simulation")
+local simulation = GameObject.Simulation()
 simulation.Parent = level
 
 --[[
@@ -47,7 +47,7 @@ simulation.Parent = level
 	objects as anything other than black silhouettes.
 ]]
 
-local skyLight = GameObject("Light")
+local skyLight = GameObject.Light()
 skyLight.Enabled = true
 skyLight.Direction = Vector3(0.25, -1, 0.25):Unit()
 skyLight.Brightness = 0.5
@@ -68,7 +68,7 @@ local defaultProjection = 1
 local defaultNear = 0.1
 local defaultFar = 5000
 
-local camera = GameObject("Camera")
+local camera = GameObject.Camera()
 camera.Parent = level --[[ camera:SetParent(level) ]]
 camera:SetProperties(defaultWidth, defaultHeight, defaultProjection, defaultNear, defaultFar)
 camera:SetTransformation(Matrix3(0, 5, 10))
@@ -79,7 +79,7 @@ camera:SetTransformation(Matrix3(0, 5, 10))
 	If you want an object to render it has to be registered with `scene:AddObject(Model)`.
 	If you want a light to illuminate the scene it has to be registered with `scene:AddLight(Light)`, except for the global light.
 ]]
-local scene = GameObject("Scene")
+local scene = GameObject.Scene()
 scene.Parent = level
 scene.CurrentCamera = camera
 scene.GlobalLight = skyLight
@@ -89,7 +89,7 @@ scene.GlobalLight = skyLight
 	This object is responsible for rendering objects to either the screen or a desired output FrameBuffer.
 	A FrameBuffer can be used for render to texture, to render onto another object, or even saving to file (don't remember the state of this one lol)
 ]]
-local sceneDraw = GameObject("GlowingSceneOperation")
+local sceneDraw = GameObject.GlowingSceneOperation()
 sceneDraw.Parent = level
 sceneDraw:Configure(resolution.Width, resolution.Height, scene)
 sceneDraw.Radius = 10
@@ -103,11 +103,11 @@ sceneDraw.RenderAutomatically = true
 
 
 -- Add a script for controlling the camera in free cam mode
-local freeCamSource = GameObject("LuaSource")
+local freeCamSource = GameObject.LuaSource()
 freeCamSource.Name = "FreeCamSource"
 freeCamSource:LoadSource("./assets/scripts/freeCameraController.lua")
 
-local freeCamScript = GameObject("LuaScript")
+local freeCamScript = GameObject.LuaScript()
 freeCamScript.Name = "FreeCamScript"
 freeCamScript:SetSource(freeCamSource)
 freeCamScript.Parent = camera
@@ -117,7 +117,7 @@ freeCamSource.Parent = freeCamScript
 freeCamScript:Run()
 
 -- Create some example objects in the scene
-local defaultMaterial = GameObject("Material")
+local defaultMaterial = GameObject.Material()
 defaultMaterial.Shininess = 75
 defaultMaterial.Diffuse = RGBA(0.5, 0.5, 0.5, 0)
 defaultMaterial.Specular = RGBA(0.5, 0.5, 0.5, 0)
@@ -134,14 +134,14 @@ function CreateObject(scene, meshAsset, material)
 	end
 	
 	-- Many objects are built using transformation hierarchies. They search through their parents to find a Transform to inherit from.
-	local transform = GameObject("Transform")
+	local transform = GameObject.Transform()
 	
 	--[[
 		Models can be created that reference a material and mesh asset.
 		The mesh asset is separate so it will only be created once and can be used across multiple objects.
 		All 3D object rendering is tied to these models.
 	]]
-	local model = GameObject("Model")
+	local model = GameObject.Model()
 	model.Parent = transform
 	model.Asset = meshAsset or Engine.CoreMeshes.CoreCube
 	model.MaterialProperties = material or defaultMaterial
