@@ -190,7 +190,7 @@ namespace GraphicsEngine
 	{
 		std::priority_queue<SceneRayCastResults> hits;
 
-		auto resultsProcessorLambda = [&hits, &ray, &callback] (const AabbTree::Node* node, float t)
+		auto resultsProcessorLambda = [&hits, &ray, &callback] (const AabbTree::Node* node, Float t)
 		{
 			SceneObjectReference* objectReference = node->GetData<SceneObjectReference>();
 
@@ -273,7 +273,7 @@ namespace GraphicsEngine
 		//SetTicks(true);
 	}
 
-	void Scene::Update(float delta)
+	void Scene::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 	}

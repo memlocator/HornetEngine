@@ -67,9 +67,9 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<float>("x"),
-						Argument<float>("min"),
-						Argument<float>("max")
+						Argument<Float>("x"),
+						Argument<Float>("min"),
+						Argument<Float>("max")
 					).Bind<Aabb, &Aabb::InRange>()
 				),
 

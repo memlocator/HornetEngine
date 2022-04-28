@@ -46,7 +46,7 @@ namespace GraphicsEngine
 		return Aabb(minCorner, maxCorner);
 	}
 
-	void ParticleEmitter::Update(float delta)
+	void ParticleEmitter::Update(Float delta)
 	{
 		SceneObject::Update(delta);
 
@@ -101,7 +101,7 @@ namespace GraphicsEngine
 			DrawCallback(Particles[i], camera, mesh);
 	}
 
-	void ParticleEmitter::FireParticles(int count, float delta)
+	void ParticleEmitter::FireParticles(int count, Float delta)
 	{
 		for (int j = 0; j < count && ParticlesAlive < MaxParticles; ++j)
 		{
@@ -136,7 +136,7 @@ namespace GraphicsEngine
 
 	}
 
-	void ParticleEmitter::DefaultSpawn(Particle& particle, float delta)
+	void ParticleEmitter::DefaultSpawn(Particle& particle, Float delta)
 	{
 		particle.Time = 10 - delta;
 		particle.Position.Set(0, 0, -1, 1);
@@ -144,7 +144,7 @@ namespace GraphicsEngine
 		particle.Size.Set(.1f, .1f, .1f);
 	}
 
-	bool ParticleEmitter::DefaultUpdate(Particle& particle, float delta)
+	bool ParticleEmitter::DefaultUpdate(Particle& particle, Float delta)
 	{
 		particle.Time -= delta;
 		particle.Position += delta * particle.Direction;
@@ -259,7 +259,7 @@ namespace GraphicsEngine
 		return rigidBody->Velocity;
 	}
 
-	void DirectionalParticleSpawner::operator()(Particle& particle, float delta)
+	void DirectionalParticleSpawner::operator()(Particle& particle, Float delta)
 	{
 		particle.LifeTime = Lifetime.rand();
 		particle.Time = particle.LifeTime - delta;
@@ -268,7 +268,7 @@ namespace GraphicsEngine
 		particle.Size = 0.05f * Scale.rand() * Size;
 	}
 
-	void RisingParticleSpawner::operator()(Particle& particle, float delta)
+	void RisingParticleSpawner::operator()(Particle& particle, Float delta)
 	{
 		particle.LifeTime = Lifetime.rand();
 		particle.Time = particle.LifeTime - delta;
@@ -277,7 +277,7 @@ namespace GraphicsEngine
 		particle.Size = 0.05f * Scale.rand() * Size;
 	}
 
-	void PlanarParticleSpawner::operator()(Particle& particle, float delta)
+	void PlanarParticleSpawner::operator()(Particle& particle, Float delta)
 	{
 		particle.LifeTime = Lifetime.rand();
 		particle.Time = particle.LifeTime - delta;
@@ -286,9 +286,9 @@ namespace GraphicsEngine
 		particle.Size = Scale.rand() * Size;
 	}
 
-	void LineParticleSpawner::operator()(Particle& particle, float delta)
+	void LineParticleSpawner::operator()(Particle& particle, Float delta)
 	{
-		float t = NumberRange(0, 1).rand();
+		Float t = NumberRange(0, 1).rand();
 
 		particle.LifeTime = Lifetime.rand();
 		particle.Time = particle.LifeTime - delta;
@@ -297,9 +297,9 @@ namespace GraphicsEngine
 		particle.Size = Scale.rand() * Size;
 	}
 
-	void RingParticleSpawner::operator()(Particle& particle, float delta)
+	void RingParticleSpawner::operator()(Particle& particle, Float delta)
 	{
-		float scalar = (1 - Normal.Y) / (Normal.X * Normal.X + Normal.Z * Normal.Z);
+		Float scalar = (1 - Normal.Y) / (Normal.X * Normal.X + Normal.Z * Normal.Z);
 
 		if (abs(Normal.X * Normal.Z) < 1e-5f)
 			scalar = 1;
@@ -312,23 +312,23 @@ namespace GraphicsEngine
 
 		Vector3 vector2(-vector1.Z, Normal.Z, Normal.X * vector1.Y - Normal.Y * vector1.X);
 
-		float theta = NumberRange(0, 2 * PI).rand();
-		float distance = Radius.rand();
+		Float theta = NumberRange(0, 2 * PI).rand();
+		Float distance = Radius.rand();
 
-		Vector3 direction = cosf(theta) * vector1 + sinf(theta) * vector2;
+		Vector3 direction = std::cos(theta) * vector1 + std::sin(theta) * vector2;
 
-		float theta2 = Angle.rand();
+		Float theta2 = Angle.rand();
 
 		particle.LifeTime = Lifetime.rand();
 		particle.Time = particle.LifeTime - delta;
-		particle.Direction = RelativeVector(Speed.rand() * (cosf(theta2) * direction + sinf(theta2) * Normal)) + GetMomentum();
+		particle.Direction = RelativeVector(Speed.rand() * (std::cos(theta2) * direction + std::sin(theta2) * Normal)) + GetMomentum();
 		particle.Position = RelativeVector(distance * direction + Position);
 		particle.Size = Scale.rand() * Size;
 	}
 
-	void ConeParticleSpawner::operator()(Particle& particle, float delta)
+	void ConeParticleSpawner::operator()(Particle& particle, Float delta)
 	{
-		float scalar = (1 - Normal.Y) / (Normal.X * Normal.X + Normal.Z * Normal.Z);
+		Float scalar = (1 - Normal.Y) / (Normal.X * Normal.X + Normal.Z * Normal.Z);
 
 		if (abs(Normal.X * Normal.Z) < 1e-5f)
 			scalar = 1;
@@ -341,22 +341,22 @@ namespace GraphicsEngine
 
 		Vector3 vector2(-vector1.Z, Normal.Z, Normal.X * vector1.Y - Normal.Y * vector1.X);
 
-		float theta = NumberRange(0, 2 * PI).rand();
+		Float theta = NumberRange(0, 2 * PI).rand();
 
-		Vector3 direction = cosf(theta) * vector1 + sinf(theta) * vector2;
+		Vector3 direction = std::cos(theta) * vector1 + std::sin(theta) * vector2;
 
-		float rangeStart = Angle.Min / Angle.Max;
+		Float rangeStart = Angle.Min / Angle.Max;
 
-		float theta2 = Angle.Min + (Angle.Max - Angle.Min) * acosf(rangeStart + VectorGenerator::randf() * (1 - rangeStart)) * 2 / PI;
+		Float theta2 = Angle.Min + (Angle.Max - Angle.Min) * std::acos(rangeStart + VectorGenerator::randf() * (1 - rangeStart)) * 2 / PI;
 
 		particle.LifeTime = Lifetime.rand();
 		particle.Time = particle.LifeTime - delta;
-		particle.Direction = RelativeVector(Speed.rand() * (cosf(theta2) * Normal + sinf(theta2) * direction)) + GetMomentum();
+		particle.Direction = RelativeVector(Speed.rand() * (std::cos(theta2) * Normal + std::sin(theta2) * direction)) + GetMomentum();
 		particle.Position = RelativeVector(Position);
 		particle.Size = Scale.rand() * Size;
 	}
 
-	bool GravityParticleUpdater::operator()(Particle& particle, float delta)
+	bool GravityParticleUpdater::operator()(Particle& particle, Float delta)
 	{
 		particle.Time -= delta;
 		particle.Direction += delta * Force;
@@ -365,7 +365,7 @@ namespace GraphicsEngine
 		return particle.Time > 0;
 	}
 
-	bool DragParticleUpdater::operator()(Particle& particle, float delta)
+	bool DragParticleUpdater::operator()(Particle& particle, Float delta)
 	{
 		particle.Time -= delta;
 		particle.Direction *= DragFactor;
@@ -374,7 +374,7 @@ namespace GraphicsEngine
 		return particle.Time > 0;
 	}
 
-	bool DampenedForceUpdater::operator()(Particle& particle, float delta)
+	bool DampenedForceUpdater::operator()(Particle& particle, Float delta)
 	{
 		particle.Time -= delta;
 		particle.Direction *= DragFactor;
@@ -384,22 +384,22 @@ namespace GraphicsEngine
 		return particle.Time > 0;
 	}
 
-	bool CubicBezierUpdater::operator()(Particle& particle, float delta)
+	bool CubicBezierUpdater::operator()(Particle& particle, Float delta)
 	{
 		particle.Time -= delta;
 
-		float t = (particle.LifeTime - particle.Time) / particle.LifeTime;
+		Float t = (particle.LifeTime - particle.Time) / particle.LifeTime;
 
 		if (t > 1)
 			t = 1;
 
-		float t2 = 1 - t;
+		Float t2 = 1 - t;
 
 		Vector3 point = t2 * t2*t2 * Start + 3 * t2*t2*t * Control1 + 3 * t2*t*t * Control2 + t * t*t * End;
 
 		particle.Direction = (point - particle.Position);
 
-		float s = 1 / (particle.Position - End).SquareLength();
+		Float s = 1 / (particle.Position - End).SquareLength();
 
 		if (s > 0.1f)
 			s = 0.1f;

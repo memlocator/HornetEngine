@@ -40,7 +40,7 @@ namespace Engine
 					"GetRadius",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Light, &Light::GetRadius>()
 				),
 
@@ -48,7 +48,7 @@ namespace Engine
 					"GetAttenuationOffset",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Light, &Light::GetAttenuationOffset>()
 				),
 
@@ -132,11 +132,11 @@ namespace Engine
 					"ComputeRadius",
 					Overload(
 						Static,
-						Returns<float>(),
-						Argument<float>("a"),
-						Argument<float>("b"),
-						Argument<float>("c"),
-						Argument<float>("value")
+						Returns<Float>(),
+						Argument<Float>("a"),
+						Argument<Float>("b"),
+						Argument<Float>("c"),
+						Argument<Float>("value")
 					).Bind<&Light::ComputeRadius>()
 				)
 			);

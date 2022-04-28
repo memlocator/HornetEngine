@@ -97,7 +97,7 @@ namespace Engine
 		InputMode BindingMode = InputMode::Or;
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 		Enum::InputType GetType() const { return Enum::InputType::Custom; }
 		Enum::InputCode GetCode() const { return Enum::InputCode::Custom; }

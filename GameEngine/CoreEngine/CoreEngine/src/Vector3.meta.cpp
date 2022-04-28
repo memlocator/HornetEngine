@@ -23,10 +23,10 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0.0f)>("x"),
-						Argument<float, Default(0.0f)>("y"),
-						Argument<float, Default(0.0f)>("z"),
-						Argument<float, Default(0.0f)>("w")
+						Argument<Float, Default(0.0f)>("x"),
+						Argument<Float, Default(0.0f)>("y"),
+						Argument<Float, Default(0.0f)>("z"),
+						Argument<Float, Default(0.0f)>("w")
 					)
 				),
 
@@ -34,7 +34,7 @@ namespace Engine
 					"Dot",
 					Overload(
 						Const,
-						Returns<float>(),
+						Returns<Float>(),
 						Argument<const Vector3&>("other")
 					).Bind<Vector3, &Vector3::Dot>()
 				),
@@ -60,7 +60,7 @@ namespace Engine
 					"Length",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Vector3, &Vector3::Length>()
 				),
 
@@ -68,7 +68,7 @@ namespace Engine
 					"SquareLength",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Vector3, &Vector3::SquareLength>()
 				),
 
@@ -107,11 +107,11 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Vector3>(),
-						Argument<float>("scalar")
+						Argument<Float>("scalar")
 					).Bind<Vector3, &Vector3::operator*>(),
 					Overload(
 						Const,
-						Returns<float>(),
+						Returns<Float>(),
 						Argument<const Vector3&>("other")
 					).Bind<Vector3, &Vector3::operator*>()
 				),

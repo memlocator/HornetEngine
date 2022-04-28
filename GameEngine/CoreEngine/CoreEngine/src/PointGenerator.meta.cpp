@@ -38,11 +38,11 @@ namespace Engine
 				Constructor(
 					Overload(),
 					Overload(
-						Argument<float>("min")
+						Argument<Float>("min")
 					),
 					Overload(
-						Argument<float>("min"),
-						Argument<float>("max")
+						Argument<Float>("min"),
+						Argument<Float>("max")
 					)
 				),
 
@@ -50,7 +50,7 @@ namespace Engine
 					"rand",
 					Overload(
 						Mutable,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<NumberRange, &NumberRange::rand>()
 				),
 
@@ -59,8 +59,8 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("min"),
-						Argument<float>("max")
+						Argument<Float>("min"),
+						Argument<Float>("max")
 					).Bind<NumberRange, &NumberRange::Set>()
 				)
 			);

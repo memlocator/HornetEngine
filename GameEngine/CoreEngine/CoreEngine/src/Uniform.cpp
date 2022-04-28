@@ -59,6 +59,11 @@ namespace GLSL
 		return true;
 	}
 
+	bool Float::Set(double value)
+	{
+		return Set((float)value);
+	}
+
 	bool Vec2::Set(const Vector3& vector)
 	{
 		Validate();
@@ -73,6 +78,11 @@ namespace GLSL
 		glUniform2f(GetHandle(), x, y); CheckGLErrors();
 
 		return true;
+	}
+
+	bool Vec2::Set(double x, double y)
+	{
+		return Set((float)x, (float)y);
 	}
 
 	bool Vec3::Set(const Vector3& vector)
@@ -101,6 +111,11 @@ namespace GLSL
 		}
 
 		return true;
+	}
+
+	bool Vec3::Set(double x, double y, double z)
+	{
+		return Set((float)x, (float)y, (float)z);
 	}
 
 	bool Vec3::Set(unsigned int color)
@@ -140,6 +155,11 @@ namespace GLSL
 		return true;
 	}
 
+	bool Vec4::Set(double x, double y, double z, double w)
+	{
+		return Set((float)x, (float)y, (float)z, (float)w);
+	}
+
 	bool Vec4::Set(unsigned int color)
 	{
 		Validate();
@@ -147,11 +167,30 @@ namespace GLSL
 		return Set(RGBA(color));
 	}
 
+	template <typename T>
+	void sendMatrix(GLint handle, const T*);
+
+	template <>
+	void sendMatrix<float>(GLint handle, const float* matrix)
+	{
+		glUniformMatrix4fv(handle, 1, GL_TRUE, matrix); CheckGLErrors();
+	}
+
+	template <>
+	void sendMatrix<double>(GLint handle, const double* matrix)
+	{
+		float mat[16];
+
+		for (int i = 0; i < 16; ++i) mat[i] = (float)matrix[i];
+
+		glUniformMatrix4fv(handle, 1, GL_TRUE, mat); CheckGLErrors();
+	}
+
 	bool Matrix::Set(const Matrix3& matrix)
 	{
 		Validate();
 
-		glUniformMatrix4fv(GetHandle(), 1, GL_TRUE, &matrix.Data[0][0]); CheckGLErrors();
+		sendMatrix(GetHandle(), &matrix.Data[0][0]); CheckGLErrors();
 
 		return true;
 	}
@@ -220,6 +259,32 @@ namespace GLSL
 		return true;
 	}
 
+	bool FloatArray::Set(const double* values, int size)
+	{
+		if (size < 16)
+		{
+			float fvalues[16];
+
+			for (int i = 0; i < size; ++i)
+				fvalues[i] = (float)values[i];
+
+			Set(fvalues, size);
+		}
+		else
+		{
+			float* fvalues = new float[size];
+
+			for (int i = 0; i < size; ++i)
+				fvalues[i] = (float)values[i];
+
+			Set(fvalues, size);
+
+			delete[] fvalues;
+		}
+
+		return true;
+	}
+
 	namespace
 	{
 		typedef std::vector<float> FloatVector;
@@ -236,6 +301,32 @@ namespace GLSL
 		return true;
 	}
 
+	bool Vec2Array::Set(const double* data, int size)
+	{
+		if (size <= 16)
+		{
+			float fdata[16];
+
+			for (int i = 0; i < size; ++i)
+				fdata[i] = (float)data[i];
+
+			return Set(fdata, size);
+		}
+		else
+		{
+			float* fdata = new float[size];
+
+			for (int i = 0; i < size; ++i)
+				fdata[i] = (float)data[i];
+
+			Set(fdata, size);
+
+			delete[] fdata;
+
+			return true;
+		}
+	}
+
 	bool Vec2Array::Set(const Vector3* vector, int size)
 	{
 		Validate();
@@ -244,8 +335,8 @@ namespace GLSL
 
 		for (int i = 0; i < size; ++i)
 		{
-			buffer[2 * i] = vector->X;
-			buffer[2 * i + 1] = vector->Y;
+			buffer[2 * i] = (float)vector->X;
+			buffer[2 * i + 1] = (float)vector->Y;
 		}
 
 		return Set(buffer.data(), size);
@@ -260,6 +351,32 @@ namespace GLSL
 		return true;
 	}
 
+	bool Vec3Array::Set(const double* data, int size)
+	{
+		if (size <= 16)
+		{
+			float fdata[16];
+
+			for (int i = 0; i < size; ++i)
+				fdata[i] = (float)data[i];
+
+			Set(fdata, size);
+		}
+		else
+		{
+			float* fdata = new float[size];
+
+			for (int i = 0; i < size; ++i)
+				fdata[i] = (float)data[i];
+
+			Set(fdata, size);
+
+			delete[] fdata;
+		}
+
+		return true;
+	}
+
 	bool Vec3Array::Set(const Vector3* vector, int size)
 	{
 		Validate();
@@ -268,9 +385,9 @@ namespace GLSL
 
 		for (int i = 0; i < size; ++i)
 		{
-			buffer[3 * i] = vector->X;
-			buffer[3 * i + 1] = vector->Y;
-			buffer[3 * i + 2] = vector->Z;
+			buffer[3 * i] = (float)vector->X;
+			buffer[3 * i + 1] = (float)vector->Y;
+			buffer[3 * i + 2] = (float)vector->Z;
 		}
 
 		return Set(buffer.data(), size);

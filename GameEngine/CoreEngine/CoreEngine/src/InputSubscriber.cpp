@@ -38,7 +38,7 @@ namespace GraphicsEngine
 		SetTicks(true);
 	}
 
-	void InputSubscription::Update(float delta)
+	void InputSubscription::Update(Float delta)
 	{
 		Engine::InputObject::Update(delta);
 
@@ -136,7 +136,7 @@ namespace GraphicsEngine
 		SetTicks(true);
 	}
 
-	void InputSubscriber::Update(float delta)
+	void InputSubscriber::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 

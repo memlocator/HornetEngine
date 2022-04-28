@@ -5,28 +5,28 @@
 class DeviceAxis
 {
 public:
-	float Scale;
-	float Offset;
+	Float Scale;
+	Float Offset;
 
-	constexpr DeviceAxis(float scale = 0, float offset = 0) : Scale(scale), Offset(offset) {}
+	constexpr DeviceAxis(Float scale = 0, Float offset = 0) : Scale(scale), Offset(offset) {}
 
-	void Set(float newScale, float newOffset);
-	float Calculate(float base, float size) const;
+	void Set(Float newScale, Float newOffset);
+	Float Calculate(Float base, Float size) const;
 
 	bool operator==(const DeviceAxis& other) const;
 	bool operator!=(const DeviceAxis& other) const;
 	DeviceAxis operator+(const DeviceAxis& axis) const;
 	DeviceAxis operator-(const DeviceAxis& axis) const;
 	DeviceAxis operator-() const;
-	DeviceAxis operator*(float scalar) const;
-	DeviceAxis operator/(float scalar) const;
+	DeviceAxis operator*(Float scalar) const;
+	DeviceAxis operator/(Float scalar) const;
 	DeviceAxis& operator+=(const DeviceAxis& axis);
 	DeviceAxis& operator-=(const DeviceAxis& axis);
-	DeviceAxis& operator*=(float scalar);
-	DeviceAxis& operator/=(float scalar);
+	DeviceAxis& operator*=(Float scalar);
+	DeviceAxis& operator/=(Float scalar);
 };
 
-DeviceAxis operator*(float scalar, DeviceAxis axis);
+DeviceAxis operator*(Float scalar, DeviceAxis axis);
 
 class DeviceVector
 {
@@ -34,29 +34,29 @@ public:
 	DeviceAxis X;
 	DeviceAxis Y;
 
-	constexpr DeviceVector(float xScale = 0, float xOffset = 0, float yScale = 0, float yOffset = 0) : X(xScale, xOffset), Y(yScale, yOffset) {}
+	constexpr DeviceVector(Float xScale = 0, Float xOffset = 0, Float yScale = 0, Float yOffset = 0) : X(xScale, xOffset), Y(yScale, yOffset) {}
 	constexpr DeviceVector(const DeviceAxis& x, const DeviceAxis& y) : X(x), Y(y) {}
 
-	void Set(float xScale, float xOffset, float yScale, float yOffset);
+	void Set(Float xScale, Float xOffset, Float yScale, Float yOffset);
 	void Set(const DeviceAxis& xAxis, const DeviceAxis& yAxis);
 	Vector3 Calculate(const Vector3& base, const Vector3& size) const;
-	Vector3 Calculate(float baseX, float baseY, float sizeX, float sizeY) const;
-	DeviceVector Lerp(float t, const DeviceVector& goal) const;
+	Vector3 Calculate(Float baseX, Float baseY, Float sizeX, Float sizeY) const;
+	DeviceVector Lerp(Float t, const DeviceVector& goal) const;
 
 	bool operator==(const DeviceVector& other) const;
 	bool operator!=(const DeviceVector& other) const;
 	DeviceVector operator+(const DeviceVector& vector) const;
 	DeviceVector operator-(const DeviceVector& vector) const;
 	DeviceVector operator-() const;
-	DeviceVector operator*(float scalar) const;
-	DeviceVector operator/(float scalar) const;
+	DeviceVector operator*(Float scalar) const;
+	DeviceVector operator/(Float scalar) const;
 	DeviceVector& operator+=(const DeviceVector& vector);
 	DeviceVector& operator-=(const DeviceVector& vector);
-	DeviceVector& operator*=(float scalar);
-	DeviceVector& operator/=(float scalar);
+	DeviceVector& operator*=(Float scalar);
+	DeviceVector& operator/=(Float scalar);
 };
 
-DeviceVector operator*(float scalar, const DeviceVector& vector);
+DeviceVector operator*(Float scalar, const DeviceVector& vector);
 
 std::ostream& operator<<(std::ostream& out, const DeviceAxis& axis);
 

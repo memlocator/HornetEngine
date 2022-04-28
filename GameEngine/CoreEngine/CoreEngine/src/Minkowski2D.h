@@ -43,12 +43,12 @@ namespace Engine
 		class CircleMinkowskiDifference : public MinkowskiDifference
 		{
 		public:
-			void Calculate(const ColliderData& collider, const Vector3& circleCenter, float radius);
+			void Calculate(const ColliderData& collider, const Vector3& circleCenter, Float radius);
 			bool Colliding(int& circle);
 			Vector3 MinimumTranslationVector(int circle);
 
 		private:
-			float CircleRadius;
+			Float CircleRadius;
 		};
 
 		typedef std::vector<ColliderData> ColliderVector;
@@ -63,19 +63,19 @@ namespace Engine
 
 		Vector3 MinimumTranslationVector(const ColliderData& mesh, const Vector3& point);
 
-		int GetEntrySide(const ColliderData& mesh, const Vector3& point, const Vector3& vector, float& distance);
+		int GetEntrySide(const ColliderData& mesh, const Vector3& point, const Vector3& vector, Float& distance);
 
-		int GetEntrySideFromStart(const ColliderData& mesh, const Vector3& point, const Vector3& vector, float& distance, int startIndex);
+		int GetEntrySideFromStart(const ColliderData& mesh, const Vector3& point, const Vector3& vector, Float& distance, int startIndex);
 
-		bool VectorApproachesCollider(const Vector3& point, const Vector3& vector, const Vector3& center, float radius);
+		bool VectorApproachesCollider(const Vector3& point, const Vector3& vector, const Vector3& center, Float radius);
 
 		Vector3 GetVelocityOffset(const ColliderData& mesh, Vector3 velocity);
 
 		void GetCollisionCandidates(const ColliderVector& differences, const Vector3& Velocity, LineVector& results);
 
-		void GetClosestCollision(const ColliderInfoVector& colliders, Vector3 point, Vector3 velocity, ColliderInfoVector::const_iterator& ignore, ColliderInfoVector::const_iterator& closestCollider, float& closestDistance, int& closestSide);
+		void GetClosestCollision(const ColliderInfoVector& colliders, Vector3 point, Vector3 velocity, ColliderInfoVector::const_iterator& ignore, ColliderInfoVector::const_iterator& closestCollider, Float& closestDistance, int& closestSide);
 		Vector3 GetVelocityOffset(const ColliderInfoVector& differences, const ColliderInfoVector::iterator& mesh, const Vector3& velocity, int entrySide, const Vector3& entryPoint, bool clockwise, const ColliderInfoVector::iterator& hitObject, int& hitSide);
 		Vector3 GetVelocityOffset(const ColliderInfoVector& differences, Vector3 velocity);
-		Vector3 GetCircleMinimumTranslationVector(const Vector3& difference, float radius);
+		Vector3 GetCircleMinimumTranslationVector(const Vector3& difference, Float radius);
 	}
 }

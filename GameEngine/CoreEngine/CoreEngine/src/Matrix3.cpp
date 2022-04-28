@@ -27,7 +27,7 @@ Matrix3& Matrix3::Transpose()
 	{
 		for (int y = 0; y < x; ++y)
 		{
-			float temp = Data[x][y];
+			Float temp = Data[x][y];
 
 			Data[x][y] = Data[y][x];
 			Data[y][x] = temp;
@@ -82,7 +82,7 @@ Matrix3& Matrix3::SetTransformedTranslation(const Vector3& vector)
 	return *this;
 }
 
-Matrix3& Matrix3::Scale(float x, float y, float z)
+Matrix3& Matrix3::Scale(Float x, Float y, Float z)
 {
 	Identity();
 
@@ -98,12 +98,12 @@ Matrix3& Matrix3::Scale(const Vector3& vector)
 	return Scale(vector.X, vector.Y, vector.Z);
 }
 
-Matrix3& Matrix3::RotateAxis(const Vector3& vector, float theta)
+Matrix3& Matrix3::RotateAxis(const Vector3& vector, Float theta)
 {
 	Vector3 normalized = vector;
 
 	normalized.Normalize();
-	float axis[3] = { normalized.X, normalized.Y, normalized.Z };
+	Float axis[3] = { normalized.X, normalized.Y, normalized.Z };
 
 	Identity();
 
@@ -111,7 +111,7 @@ Matrix3& Matrix3::RotateAxis(const Vector3& vector, float theta)
 		for (int y = 0; y < 3; ++y)
 			Data[y][x] = axis[x] * axis[y];
 
-	float cosine = cosf(theta);
+	Float cosine = std::cos(theta);
 
 	*this *= 1 - cosine;
 
@@ -128,19 +128,19 @@ Matrix3& Matrix3::RotateAxis(const Vector3& vector, float theta)
 		Vector3(-normalized.Y, normalized.X, 0)
 	);
 
-	cross *= sinf(theta);
+	cross *= std::sin(theta);
 
 	*this += cross;
 
 	return *this;
 }
 
-Matrix3& Matrix3::RotatePitch(float theta)
+Matrix3& Matrix3::RotatePitch(Float theta)
 {
 	Identity();
 
-	float sine = sinf(theta);
-	float cosine = cosf(theta);
+	Float sine = std::sin(theta);
+	Float cosine = std::cos(theta);
 
 	Data[1][1] = cosine;
 	Data[2][1] = sine;
@@ -151,12 +151,12 @@ Matrix3& Matrix3::RotatePitch(float theta)
 	return *this;
 }
 
-Matrix3& Matrix3::RotateYaw(float theta)
+Matrix3& Matrix3::RotateYaw(Float theta)
 {
 	Identity();
 
-	float sine = sinf(theta);
-	float cosine = cosf(theta);
+	Float sine = std::sin(theta);
+	Float cosine = std::cos(theta);
 
 	Data[0][0] = cosine;
 	Data[2][0] = -sine;
@@ -167,12 +167,12 @@ Matrix3& Matrix3::RotateYaw(float theta)
 	return *this;
 }
 
-Matrix3& Matrix3::RotateRoll(float theta)
+Matrix3& Matrix3::RotateRoll(Float theta)
 {
 	Identity();
 
-	float sine = sinf(theta);
-	float cosine = cosf(theta);
+	Float sine = std::sin(theta);
+	Float cosine = std::cos(theta);
 
 	Data[0][0] = cosine;
 	Data[1][0] = sine;
@@ -183,30 +183,30 @@ Matrix3& Matrix3::RotateRoll(float theta)
 	return *this;
 }
 
-Matrix3& Matrix3::RotateEulerAngles(float pitch, float yaw, float roll)
+Matrix3& Matrix3::RotateEulerAngles(Float pitch, Float yaw, Float roll)
 {
 	*this = Matrix3().RotateRoll(roll) * Matrix3().RotateYaw(yaw) * Matrix3().RotatePitch(pitch);
 
 	return *this;
 }
 
-Matrix3& Matrix3::RotateEulerAnglesYaw(float yaw, float pitch, float roll)
+Matrix3& Matrix3::RotateEulerAnglesYaw(Float yaw, Float pitch, Float roll)
 {
 	*this = Matrix3().RotateRoll(roll) * Matrix3().RotatePitch(pitch) * Matrix3().RotateYaw(yaw);
 
 	return *this;
 }
 
-float Matrix3::Det(int y1, int y2, int x1, int x2) const
+Float Matrix3::Det(int y1, int y2, int x1, int x2) const
 {
 	return Data[y1][x1] * Data[y2][x2] - Data[y1][x2] * Data[y2][x1];
 }
 
 Matrix3& Matrix3::Inverse()
 {
-	float determinant = Det();
+	Float determinant = Det();
 
-	float inverseData[3][3] = {};
+	Float inverseData[3][3] = {};
 
 	inverseData[0][0] = Det(1, 2, 1, 2);
 	inverseData[1][0] = -Det(1, 2, 0, 2);
@@ -251,7 +251,7 @@ Matrix3& Matrix3::Invert(const Matrix3& other)
 	return *this;
 }
 
-Matrix3& Matrix3::Projection(float distance, float near, float far, float width, float height)
+Matrix3& Matrix3::Projection(Float distance, Float near, Float far, Float width, Float height)
 {
 	Scale(2 * distance / width, 2 * distance / height, (near + far) / (near - far));
 
@@ -315,7 +315,7 @@ Vector3 Matrix3::ExtractScale() const
 	return Vector3(RightVector().Length(), UpVector().Length(), FrontVector().Length());
 }
 
-float Matrix3::Det() const
+Float Matrix3::Det() const
 {
 	return Data[0][0] * Det(1, 2, 1, 2) - Data[0][1] * Det(1, 2, 0, 2) + Data[0][2] * Det(1, 2, 0, 1);
 }
@@ -354,7 +354,7 @@ Matrix3 Matrix3::operator-() const
 }
 
 // scalar multiply
-Matrix3 Matrix3::operator*(float scalar) const
+Matrix3 Matrix3::operator*(Float scalar) const
 {
 	Matrix3 result;
 
@@ -365,7 +365,7 @@ Matrix3 Matrix3::operator*(float scalar) const
 	return result;
 }
 
-float Matrix3::ComponentMultiplication(const Matrix3& other, int y, int x) const
+Float Matrix3::ComponentMultiplication(const Matrix3& other, int y, int x) const
 {
 	return Data[y][0] * other.Data[0][x] + Data[y][1] * other.Data[1][x] + Data[y][2] * other.Data[2][x] + Data[y][3] * other.Data[3][x];
 }
@@ -401,7 +401,7 @@ Matrix3 Matrix3::FullMultiply(const Matrix3& other) const
 	return results;
 }
 
-float Matrix3::ComponentMultiplicationNoAffine(const Matrix3& other, int y, int x) const
+Float Matrix3::ComponentMultiplicationNoAffine(const Matrix3& other, int y, int x) const
 {
 	return Data[y][0] * other.Data[0][x] + Data[y][1] * other.Data[1][x] + Data[y][2] * other.Data[2][x];
 }
@@ -448,12 +448,12 @@ Vector3 Matrix3::operator*(const Vector3& other) const
 	);
 }
 
-float* Matrix3::operator[](int row)
+Float* Matrix3::operator[](int row)
 {
 	return Data[row];
 }
 
-const float* Matrix3::operator[](int row) const
+const Float* Matrix3::operator[](int row) const
 {
 	return Data[row];
 }
@@ -497,7 +497,7 @@ Matrix3& Matrix3::operator*=(const Matrix3& other)
 }
 
 // scalar assignment
-Matrix3& Matrix3::operator*=(float scalar)
+Matrix3& Matrix3::operator*=(Float scalar)
 {
 	for (int x = 0; x < 3; ++x)
 		for (int y = 0; y < 3; ++y)
@@ -506,7 +506,7 @@ Matrix3& Matrix3::operator*=(float scalar)
 	return *this;
 }
 
-bool Matrix3::Compare(float x, float y, float epsilon)
+bool Matrix3::Compare(Float x, Float y, Float epsilon)
 {
 	return cmath::abs(x - y) < epsilon;
 }

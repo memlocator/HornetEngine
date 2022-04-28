@@ -1,3 +1,3 @@
 #pragma once
 
-const float PI = 3.14159265359f;
+const Float PI = 3.14159265359f;

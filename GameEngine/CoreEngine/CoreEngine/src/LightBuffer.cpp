@@ -43,8 +43,8 @@ namespace GraphicsEngine
 		Ambient.push_back(light->Ambient.G);
 		Ambient.push_back(light->Ambient.B);
 
-		SpotlightAngles.push_back(cosf(light->InnerRadius));
-		SpotlightAngles.push_back(cosf(light->OuterRadius));
+		SpotlightAngles.push_back(std::cos(light->InnerRadius));
+		SpotlightAngles.push_back(std::cos(light->OuterRadius));
 
 		SpotlightFalloff.push_back(light->SpotlightFalloff);
 

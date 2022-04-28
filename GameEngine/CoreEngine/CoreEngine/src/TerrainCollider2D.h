@@ -58,7 +58,7 @@ namespace Engine
 			Aabb RightNodeBox;
 			Aabb RegionBox;
 			Coordinates Index;
-			float Occupancy[4];
+			Float Occupancy[4];
 			Physics::ColliderData& Collider;
 
 			QueryData(const std::shared_ptr<Terrain>& terrain, const std::shared_ptr<Transform>& transform, Physics::ColliderData& collider, const TerrainPairCallback& collisionPairCallback, const ColliderCallback& nodeColliderCallback) : CurrentTerrain(terrain), CurrentTransform(transform), Collider(collider), CollisionPairCallback(collisionPairCallback), NodeColliderCallback(nodeColliderCallback) {}
@@ -77,8 +77,8 @@ namespace Engine
 		void Visit(QueryData& query, const AabbTree::Node* node, const ChunkColumn* chunks) const;
 		void Visit(QueryData& query, const AabbTree::Node* node, const std::shared_ptr<Chunk>& chunk) const;
 		bool GetCellCollider(QueryData& query, const std::shared_ptr<Chunk>& chunk, int x, int y, int z) const;
-		void FillOccupancy(float* occupancy, const std::shared_ptr<Chunk>& chunk, int x, int y, int z) const;
-		int GetPermutation(const float* occupancy) const;
-		float FetchOccupancy(const std::shared_ptr<Chunk>* chunks, int x, int y, int z) const;
+		void FillOccupancy(Float* occupancy, const std::shared_ptr<Chunk>& chunk, int x, int y, int z) const;
+		int GetPermutation(const Float* occupancy) const;
+		Float FetchOccupancy(const std::shared_ptr<Chunk>* chunks, int x, int y, int z) const;
 	};
 }

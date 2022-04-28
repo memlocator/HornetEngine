@@ -31,7 +31,7 @@ namespace GraphicsEngine
 		void Configure(int width, int height, const std::shared_ptr<Scene>& scene, const std::shared_ptr<FrameBuffer>& output = nullptr);
 		void SetScene(const std::shared_ptr<Scene>& scene);
 
-		void Update(float);
+		void Update(Float);
 		void Render();
 		std::shared_ptr<FrameBuffer> GetSceneBuffer() const;
 		std::shared_ptr<FrameBuffer> GetLuminescenceBuffer() const;

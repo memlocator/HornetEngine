@@ -65,7 +65,7 @@ namespace Engine
 						Mutable,
 						Returns<void>(),
 						Argument<int>("count"),
-						Argument<float, Default(0.0f)>("delta")
+						Argument<Float, Default(0.0f)>("delta")
 					).Bind<ParticleEmitter, &ParticleEmitter::FireParticles>()
 				),
 

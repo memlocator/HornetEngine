@@ -25,7 +25,7 @@ namespace GraphicsEngine
 		SetTicks(true);
 	}
 
-	void InputContext::Update(float delta)
+	void InputContext::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 

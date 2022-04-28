@@ -81,7 +81,7 @@ namespace Engine
 		SetTicks(true);
 	}
 
-	void InputBinding::Update(float delta)
+	void InputBinding::Update(Float delta)
 	{
 		InputObject::Update(delta);
 

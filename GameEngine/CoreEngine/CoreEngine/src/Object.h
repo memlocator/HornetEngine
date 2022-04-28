@@ -4,6 +4,7 @@
 
 #include "ObjectAllocator.h"
 #include "Reflection/Reflected.h"
+#include "Precision.h"
 
 namespace Engine
 {
@@ -27,7 +28,7 @@ namespace Engine
 		int SuperComponentHeight = -1;
 
 		virtual void Initialize();
-		virtual void Update(float delta);
+		virtual void Update(Float delta);
 
 		virtual void ParentChanged(std::shared_ptr<Object> newParent) {}
 

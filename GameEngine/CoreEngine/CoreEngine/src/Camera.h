@@ -13,25 +13,25 @@ namespace GraphicsEngine
 	public:
 		virtual ~Camera() {}
 
-		void Update(float);
+		void Update(Float);
 
 		Vector3 LightDirection;
 
 		void SetTransformation(const Matrix3& newTransformation);
-		void SetProperties(float fieldOfView, float aspectRatio, float near, float far);
-		void SetProperties(float width, float height, float projectionPlane, float near, float far);
+		void SetProperties(Float fieldOfView, Float aspectRatio, Float near, Float far);
+		void SetProperties(Float width, Float height, Float projectionPlane, Float near, Float far);
 		const Matrix3& GetTransformation() const;
 		const Matrix3& GetTransformationInverse() const;
 		const Matrix3& GetProjectionMatrix() const;
 		const Matrix3& GetProjection() const;
 		Vector3 GetDimensions() const;
-		float GetProjectionPlane() const;
-		float GetNearPlane() const;
-		float GetFarPlane() const;
-		float GetAspectRatio() const;
-		float GetFieldOfView() const;
+		Float GetProjectionPlane() const;
+		Float GetNearPlane() const;
+		Float GetFarPlane() const;
+		Float GetAspectRatio() const;
+		Float GetFieldOfView() const;
 		const Frustum& GetFrustum() const;
-		Ray GetRay(int x, int y, int resolutionX, int resolutionY, float length = 1) const;
+		Ray GetRay(int x, int y, int resolutionX, int resolutionY, Float length = 1) const;
 		bool Moved() const;
 
 	private:
@@ -42,7 +42,7 @@ namespace GraphicsEngine
 		Frustum CameraFrustum;
 		bool HasMoved = false;
 
-		float Width = 0, Height = 0, ProjectionPlane = 0, NearPlane = 0, FarPlane = 0, AspectRatio = 0, FieldOfView = 0;
+		Float Width = 0, Height = 0, ProjectionPlane = 0, NearPlane = 0, FarPlane = 0, AspectRatio = 0, FieldOfView = 0;
 
 		void CalculateProjectionMatrix();
 		void CalculateFrustum();

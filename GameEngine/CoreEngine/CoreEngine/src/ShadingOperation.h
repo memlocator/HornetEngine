@@ -22,7 +22,7 @@ namespace GraphicsEngine
 		Vector3 Resolution;
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 		void Render();
 
 	private:

@@ -102,6 +102,7 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <DisableSpecificWarnings>26812</DisableSpecificWarnings>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalOptions>/we4244 /we4838 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -120,6 +121,7 @@
       <ShowIncludes>false</ShowIncludes>
       <DisableSpecificWarnings>26812</DisableSpecificWarnings>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalOptions>/we4244 /we4838 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>fmod_vc.lib;lua53.lib;opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -135,6 +137,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <DisableSpecificWarnings>26812</DisableSpecificWarnings>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalOptions>/we4244 /we4838 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lua53.lib;opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -155,6 +158,7 @@
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/we4244 /we4838 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -316,6 +320,7 @@
     <ClCompile Include="src\PointGenerator.meta.cpp" />
     <ClCompile Include="src\PointMass.cpp" />
     <ClCompile Include="src\PointMass.meta.cpp" />
+    <ClCompile Include="src\Precision.cpp" />
     <ClCompile Include="src\Quaternion.cpp" />
     <ClCompile Include="src\Quaternion.meta.cpp" />
     <ClCompile Include="src\Ray.cpp" />
@@ -445,6 +450,7 @@
     <ClInclude Include="src\Packet.h" />
     <ClInclude Include="src\PhysicalMaterial.h" />
     <ClInclude Include="src\PhysicsPackage.h" />
+    <ClInclude Include="src\Precision.h" />
     <ClInclude Include="src\RayAcceleration.h" />
     <ClInclude Include="src\RayTracer.h" />
     <ClInclude Include="src\Reference.h" />

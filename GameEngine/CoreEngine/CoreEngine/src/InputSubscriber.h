@@ -10,7 +10,7 @@ namespace GraphicsEngine
 		~InputSubscription();
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 		bool HasFocus(Enum::BoundDevice device) const;
 
 		void Subscribe(const std::shared_ptr<Engine::InputObject>& input);
@@ -32,7 +32,7 @@ namespace GraphicsEngine
 		bool FocusedLast[Enum::BoundDevice::Count] = { false };
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 		std::shared_ptr<InputSubscription> Subscribe(const std::shared_ptr<Engine::InputObject>& input);
 

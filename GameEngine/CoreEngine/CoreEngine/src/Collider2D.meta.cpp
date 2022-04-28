@@ -73,7 +73,7 @@ namespace Engine
 					"GetRadius",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Collider2D, &Collider2D::GetRadius>()
 				),
 
@@ -89,7 +89,7 @@ namespace Engine
 					"GetWidth",
 					Overload(
 						Const,
-						Returns<float>(),
+						Returns<Float>(),
 						Argument<const Vector3&>("axis")
 					).Bind<Collider2D, &Collider2D::GetWidth>()
 				),

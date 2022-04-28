@@ -870,6 +870,9 @@
     <ClCompile Include="src\Reflection\Reflection.cpp">
       <Filter>Source Files\Source\Engine\MetaReflection</Filter>
     </ClCompile>
+    <ClCompile Include="src\Precision.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">
@@ -1339,6 +1342,9 @@
     </ClInclude>
     <ClInclude Include="src\Reflection\LuaError.h">
       <Filter>Source Files\Source\Engine\MetaReflection\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Precision.h">
+      <Filter>Source Files\Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,17 +9,18 @@ contains declaration of Matrix class
 #pragma once
 
 #include "Vector3.h"
+#include "Precision.h"
 
 class Matrix3
 {
 public:
-	float Data[4][4] = { {} };
+	Float Data[4][4] = { {} };
 
 	constexpr Matrix3()
 	{
 		Identity();
 	}
-	constexpr Matrix3(float x, float y, float z)
+	constexpr Matrix3(Float x, Float y, Float z)
 	{
 		Translate(x, y, z);
 	}
@@ -69,7 +70,7 @@ public:
 	Matrix3& SetFront(const Vector3& vector);
 	Matrix3& SetTranslation(const Vector3& vector);
 	Matrix3& SetTransformedTranslation(const Vector3& vector);
-	constexpr Matrix3& Translate(float x, float y, float z)
+	constexpr Matrix3& Translate(Float x, Float y, Float z)
 	{
 		Identity();
 
@@ -83,17 +84,17 @@ public:
 	{
 		return Translate(vector.X, vector.Y, vector.Z);
 	}
-	Matrix3& Scale(float x, float y, float z);
+	Matrix3& Scale(Float x, Float y, Float z);
 	Matrix3& Scale(const Vector3& vector);
-	Matrix3& RotateAxis(const Vector3& axis, float theta);
-	Matrix3& RotatePitch(float theta);
-	Matrix3& RotateYaw(float theta);
-	Matrix3& RotateRoll(float theta);
-	Matrix3& RotateEulerAngles(float pitch, float yaw, float roll);
-	Matrix3& RotateEulerAnglesYaw(float yaw, float pitch, float roll);
+	Matrix3& RotateAxis(const Vector3& axis, Float theta);
+	Matrix3& RotatePitch(Float theta);
+	Matrix3& RotateYaw(Float theta);
+	Matrix3& RotateRoll(Float theta);
+	Matrix3& RotateEulerAngles(Float pitch, Float yaw, Float roll);
+	Matrix3& RotateEulerAnglesYaw(Float yaw, Float pitch, Float roll);
 	Matrix3& Inverse();
 	Matrix3& Invert(const Matrix3& other);
-	Matrix3& Projection(float distance, float near, float far, float width, float height);
+	Matrix3& Projection(Float distance, Float near, Float far, Float width, Float height);
 	Matrix3& ExtractRotation(const Matrix3& matrix, const Vector3& newTranslation = Vector3());
 	Matrix3& TransformAround(const Vector3& point);
 	Matrix3& Face(const Vector3& position, const Vector3& direction, const Vector3& globalUp = Vector3(0, 1, 0));
@@ -108,19 +109,19 @@ public:
 	Vector3 FrontVector() const;
 	Vector3 Translation() const;
 	Vector3 ExtractScale() const;
-	float Det() const;
+	Float Det() const;
 
 	Matrix3  operator+(const Matrix3& other) const;
 	Matrix3  operator-(const Matrix3& other) const;
 	Matrix3  operator-() const;
 	Matrix3  operator*(const Matrix3& other) const;
 	Vector3  operator*(const Vector3& other) const;
-	Matrix3  operator*(float scalar) const;
+	Matrix3  operator*(Float scalar) const;
 
 	Matrix3 FullMultiply(const Matrix3& other) const;
 
-	float* operator[](int row);
-	const float* operator[](int row) const;
+	Float* operator[](int row);
+	const Float* operator[](int row) const;
 
 	operator std::string() const;
 
@@ -128,31 +129,31 @@ public:
 	Matrix3& operator+=(const Matrix3& other);
 	Matrix3& operator-=(const Matrix3& other);
 	Matrix3& operator*=(const Matrix3& other);
-	Matrix3& operator*=(float scalar);
+	Matrix3& operator*=(Float scalar);
 
 	bool operator==(const Matrix3& other) const;
 	bool operator!=(const Matrix3& other) const;
 
-	static Matrix3 NewScale(float x, float y, float z) { return Matrix3().Scale(x, y, z); }
+	static Matrix3 NewScale(Float x, Float y, Float z) { return Matrix3().Scale(x, y, z); }
 	static Matrix3 NewScale(const Vector3& vector) { return Matrix3().Scale(vector); }
-	static Matrix3 AxisRotation(const Vector3& axis, float theta) { return Matrix3().RotateAxis(axis, theta); }
-	static Matrix3 PitchRotation(float theta) { return Matrix3().RotatePitch(theta); }
-	static Matrix3 YawRotation(float theta) { return Matrix3().RotateYaw(theta); }
-	static Matrix3 RollRotation(float theta) { return Matrix3().RotateRoll(theta); }
-	static Matrix3 EulerAnglesRotation(float pitch, float yaw, float roll) { return Matrix3().RotateEulerAngles(pitch, yaw, roll); }
-	static Matrix3 EulerAnglesYawRotation(float yaw, float pitch, float roll) { return Matrix3().RotateEulerAnglesYaw(yaw, pitch, roll); }
-	static Matrix3 NewProjection(float distance, float nearPlane, float farPlane, float width, float height) { return Matrix3().Projection(distance, nearPlane, farPlane, width, height); }
+	static Matrix3 AxisRotation(const Vector3& axis, Float theta) { return Matrix3().RotateAxis(axis, theta); }
+	static Matrix3 PitchRotation(Float theta) { return Matrix3().RotatePitch(theta); }
+	static Matrix3 YawRotation(Float theta) { return Matrix3().RotateYaw(theta); }
+	static Matrix3 RollRotation(Float theta) { return Matrix3().RotateRoll(theta); }
+	static Matrix3 EulerAnglesRotation(Float pitch, Float yaw, Float roll) { return Matrix3().RotateEulerAngles(pitch, yaw, roll); }
+	static Matrix3 EulerAnglesYawRotation(Float yaw, Float pitch, Float roll) { return Matrix3().RotateEulerAnglesYaw(yaw, pitch, roll); }
+	static Matrix3 NewProjection(Float distance, Float nearPlane, Float farPlane, Float width, Float height) { return Matrix3().Projection(distance, nearPlane, farPlane, width, height); }
 	static Matrix3 Facing(const Vector3& position, const Vector3& direction, const Vector3& globalUp = Vector3(0, 1, 0)) { return Matrix3().Face(position, direction, globalUp); }
 
 private:
-	static bool Compare(float x, float y, float epsilon);
+	static bool Compare(Float x, Float y, Float epsilon);
 
-	float Det(int y1, int y2, int x1, int x2) const;
-	float ComponentMultiplication(const Matrix3& rhs, int x, int y) const;
-	float ComponentMultiplicationNoAffine(const Matrix3& rhs, int x, int y) const;
+	Float Det(int y1, int y2, int x1, int x2) const;
+	Float ComponentMultiplication(const Matrix3& rhs, int x, int y) const;
+	Float ComponentMultiplicationNoAffine(const Matrix3& rhs, int x, int y) const;
 };
 
-constexpr Matrix3 operator*(float scalar, const Matrix3& matrix)
+constexpr Matrix3 operator*(Float scalar, const Matrix3& matrix)
 {
 	Matrix3 result;
 

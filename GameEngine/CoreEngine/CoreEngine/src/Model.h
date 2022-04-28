@@ -21,11 +21,11 @@ namespace GraphicsEngine
 		virtual ~Model() {}
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 		float Reflectivity = 0;
 		RGBA Color;
-		RGBA GlowColor = RGBA(0, 0, 0, 1);
+		RGBA GlowColor = RGBA(0.f, 0.f, 0.f, 1.f);
 		std::weak_ptr<Engine::ModelAsset> Asset;
 
 		void Draw(const std::shared_ptr<Camera>& camera);

@@ -24,11 +24,11 @@ namespace GraphicsEngine
 	class Vector
 	{
 	public:
-		float X = 0;
-		float Y = 0;
-		float Z = 0;
+		Float X = 0;
+		Float Y = 0;
+		Float Z = 0;
 
-		Vector(float x = 0, float y = 0, float z = 0) : X(x), Y(y), Z(z) {}
+		Vector(Float x = 0, Float y = 0, Float z = 0) : X(x), Y(y), Z(z) {}
 		Vector(const Vector3& other) : X(other.X), Y(other.Y), Z(other.Z) {}
 		Vector(const RGBA& other) : X(other.R), Y(other.G), Z(other.B) {}
 
@@ -42,8 +42,8 @@ namespace GraphicsEngine
 			return RGBA(X, Y, Z);
 		}
 
-		float& operator[](int index) { return (&X)[index]; }
-		const float& operator[](int index) const { return (&X)[index]; }
+		Float& operator[](int index) { return (&X)[index]; }
+		const Float& operator[](int index) const { return (&X)[index]; }
 	};
 
 	class Vertex
@@ -59,7 +59,7 @@ namespace GraphicsEngine
 		int A = -1;
 		int B = -1;
 		int C = -1;
-		float Area = 0;
+		Float Area = 0;
 		Vector Normal;
 	};
 
@@ -84,7 +84,7 @@ namespace GraphicsEngine
 	struct KDNode
 	{
 		KDAxis Axis = KDAxis::X;
-		float Position = 0;
+		Float Position = 0;
 		int Left = -1;
 		int Right = -1;
 		int Index = -1;
@@ -122,9 +122,9 @@ namespace GraphicsEngine
 
 	private:
 		static inline const int MaxDepth = 1024;
-		static inline const float Epsilon = 0.01f;
-		static inline const float MarginThreshold = 0.1f;
-		static inline const float MinimumMargin = 0.1f;
+		static inline const Float Epsilon = 0.01f;
+		static inline const Float MarginThreshold = 0.1f;
+		static inline const Float MinimumMargin = 0.1f;
 
 		struct Range
 		{
@@ -137,20 +137,20 @@ namespace GraphicsEngine
 		struct SplitResults
 		{
 			KDAxis Axis = KDAxis::X;
-			float Position = 0;
+			Float Position = 0;
 			int LeftBoxes = 0;
 			int RightBoxes = 0;
 			int IntersectedBoxes = 0;
 			bool Trimmed = false;
-			float MarginVolume = 0;
+			Float MarginVolume = 0;
 
 			SplitResults ComputeVolume(const BoundingBox& box);
 		};
 
 		struct AxisBounds
 		{
-			float Min = 0;
-			float Max = 0;
+			Float Min = 0;
+			Float Max = 0;
 		};
 
 		static int Split(AccelerationVectors& accelerator, const BoundingBox& bounds, const Range& boxes, int parent, int depth, bool isLeft);
@@ -159,15 +159,15 @@ namespace GraphicsEngine
 		static int PushNode(AccelerationVectors& accelerator, const KDNode& node);
 		static SplitResults FindSplitAxis(AccelerationVectors& accelerator, KDAxis axis, const BoundingBox& bounds, const Range& boxes, bool marginOnly);
 		static const SplitResults& CompareSplit(const SplitResults& split1, const SplitResults& split2, const BoundingBox& bounds);
-		static float ScoreTrim(const SplitResults& split, const BoundingBox& bounds);
-		static float Score(const SplitResults& split);
+		static Float ScoreTrim(const SplitResults& split, const BoundingBox& bounds);
+		static Float Score(const SplitResults& split);
 		static AxisBounds GetBox(AccelerationVectors& accelerator, KDAxis axis, int index);
 		static BoundingBox GetBox(AccelerationVectors& accelerator, int index);
-		static SplitResults RankPlane(AccelerationVectors& accelerator, KDAxis axis, float position, const BoundingBox& bounds, int totalObjects, int start);
-		static SplitResults RankPlaneSlow(AccelerationVectors& accelerator, KDAxis axis, float position, const Range& boxes);
+		static SplitResults RankPlane(AccelerationVectors& accelerator, KDAxis axis, Float position, const BoundingBox& bounds, int totalObjects, int start);
+		static SplitResults RankPlaneSlow(AccelerationVectors& accelerator, KDAxis axis, Float position, const Range& boxes);
 		static int ConstructAabbTree(AccelerationVectors& accelerator, const BoundingBox& bounds, const Range& boxes);
 		static BoundingBox GetPairBounds(const BoundingBox& left, const BoundingBox& right);
-		static float SurfaceArea(const BoundingBox& box);
+		static Float SurfaceArea(const BoundingBox& box);
 		static void RecomputeHeight(int nodeID);
 		static void PushAabbNode(AccelerationVectors& accelerator, int& head, int index, int parent, bool fromLeft = false);
 	};

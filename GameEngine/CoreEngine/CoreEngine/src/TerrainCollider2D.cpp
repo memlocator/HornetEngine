@@ -46,7 +46,7 @@ namespace Engine
 	{
 		Aabb box = node->Box;
 
-		float cellZ = std::floorf(0.5f * (box.Min.Z + box.Max.Z));
+		Float cellZ = std::floor((Float)0.5 * (box.Min.Z + box.Max.Z));
 
 		box.Min.Z = cellZ + 0.1f;
 		box.Max.Z = cellZ + 0.9f;
@@ -239,7 +239,7 @@ namespace Engine
 						query.CollisionPairCallback(query.NodeColliderCallback(node->ClientData), query.Collider);
 	}
 
-	typedef std::function<void(float x, float y, float z)> PushVertexCallback;
+	typedef std::function<void(Float x, Float y, Float z)> PushVertexCallback;
 	typedef std::function<void(PushVertexCallback pushTriangle)> PermutationFunction;
 
 	PermutationFunction permutations[16] = {
@@ -355,7 +355,7 @@ namespace Engine
 		},
 	};
 
-	float lerpEdge(float weight1, float weight2)
+	Float lerpEdge(Float weight1, Float weight2)
 	{
 		if (weight1 == 0)
 			return 1 - weight2;
@@ -372,7 +372,7 @@ namespace Engine
 		query.Collider.Clear();
 		query.Index = 16 * chunk->GetCoordinates() + Coordinates(x, y, z);
 
-		permutations[permutation]([&query] (float x, float y, float z)
+		permutations[permutation]([&query] (Float x, Float y, Float z)
 		{
 			if (x == 0.5f)
 			{
@@ -398,7 +398,7 @@ namespace Engine
 		return query.Collider.Vertices.size() > 0;
 	}
 
-	void TerrainCollider2D::FillOccupancy(float* occupancy, const std::shared_ptr<Chunk>& chunk, int x, int y, int z) const
+	void TerrainCollider2D::FillOccupancy(Float* occupancy, const std::shared_ptr<Chunk>& chunk, int x, int y, int z) const
 	{
 		const Coordinates& index = chunk->GetCoordinates();
 
@@ -461,7 +461,7 @@ namespace Engine
 		}
 	}
 
-	int TerrainCollider2D::GetPermutation(const float* occupancy) const
+	int TerrainCollider2D::GetPermutation(const Float* occupancy) const
 	{
 		int permutation = 0;
 
@@ -471,7 +471,7 @@ namespace Engine
 		return permutation;
 	}
 
-	float TerrainCollider2D::FetchOccupancy(const std::shared_ptr<Chunk>* chunks, int x, int y, int z) const
+	Float TerrainCollider2D::FetchOccupancy(const std::shared_ptr<Chunk>* chunks, int x, int y, int z) const
 	{
 		int chunkX = int(x == 16);
 		int chunkY = int(y == 16);

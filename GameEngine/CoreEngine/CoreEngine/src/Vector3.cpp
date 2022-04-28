@@ -16,12 +16,12 @@ extern "C" {
 
 
 // set coordinates
-Vector3& Vector3::Set(float x, float y, float z, float w)
+Vector3& Vector3::Set(Float x, Float y, Float z, Float w)
 {
-	this->X = x;
-	this->Y = y;
-	this->Z = z;
-	this->W = w;
+	X = x;
+	Y = y;
+	Z = z;
+	W = w;
 
 	return *this;
 }
@@ -29,7 +29,7 @@ Vector3& Vector3::Set(float x, float y, float z, float w)
 // normalizes the vector
 Vector3& Vector3::Normalize()
 {
-	float length = this->Length();
+	Float length = Length();
 
 	if (cmath::abs(length) < 1e-9f)
 		return *this;
@@ -43,7 +43,7 @@ Vector3& Vector3::Normalize()
 	return *this;
 }
 
-float Vector3::Dot(const Vector3& other) const
+Float Vector3::Dot(const Vector3& other) const
 {
 	return *this * other;
 }
@@ -64,13 +64,13 @@ Vector3 Vector3::Unit() const
 }
 
 // returns the length of the vector
-float Vector3::Length() const
+Float Vector3::Length() const
 {
-	return sqrtf(SquareLength());
+	return std::sqrt(SquareLength());
 }
 
 // returns the square length of the vector
-float Vector3::SquareLength() const
+Float Vector3::SquareLength() const
 {
 	return X * X + Y * Y + Z * Z + W * W;
 }
@@ -84,7 +84,7 @@ Vector3& Vector3::Scale(const Vector3& other)
 	return *this;
 }
 
-Vector3& Vector3::Scale(float x, float y, float z)
+Vector3& Vector3::Scale(Float x, Float y, Float z)
 {
 	X *= x;
 	Y *= y;
@@ -95,7 +95,7 @@ Vector3& Vector3::Scale(float x, float y, float z)
 
 Vector3& Vector3::InvertLength()
 {
-	float scale = 1.f / SquareLength();
+	Float scale = 1.f / SquareLength();
 
 	X *= scale;
 	Y *= scale;
@@ -128,13 +128,13 @@ Vector3 Vector3::operator-(const Vector3& other) const
 }
 
 // scalar multiplication
-Vector3 Vector3::operator*(float scalar) const
+Vector3 Vector3::operator*(Float scalar) const
 {
 	return Vector3(scalar * X, scalar * Y, scalar * Z, scalar * W);
 }
 
 // dot product multiplication
-float Vector3::operator*(const Vector3& other) const
+Float Vector3::operator*(const Vector3& other) const
 {
 	return X * other.X + Y * other.Y + Z * other.Z + W * other.W;
 }
@@ -167,21 +167,21 @@ Vector3& Vector3::operator-=(const Vector3& other)
 }
 
 // multiplication assignment
-Vector3& Vector3::operator*=(float scalar)
+Vector3& Vector3::operator*=(Float scalar)
 {
 	*this = *this * scalar;
 
 	return *this;
 }
 
-bool Vector3::Compare(float x, float y, float epsilon) const
+bool Vector3::Compare(Float x, Float y, Float epsilon) const
 {
 	return cmath::abs(x - y) < epsilon;
 }
 
 bool Vector3::operator==(const Vector3& other) const
 {
-	float epsilon = 1e-5f;
+	Float epsilon = 1e-5f;
 
 	return Compare(X, other.X, epsilon) && Compare(Y, other.Y, epsilon) && Compare(Z, other.Z, epsilon);
 }
@@ -191,18 +191,18 @@ bool Vector3::operator!=(const Vector3& other) const
 	return !(*this == other);
 }
 
-float Vector3::operator[](int i) const
+Float Vector3::operator[](int i) const
 {
-	return ((const float*)(this))[i];
+	return ((const Float*)(this))[i];
 }
 
-float& Vector3::operator[](int i)
+Float& Vector3::operator[](int i)
 {
-	return ((float*)(this))[i];
+	return ((Float*)(this))[i];
 }
 
 // rhs scalar multiplication
-Vector3 operator*(float scalar, const Vector3& vector)
+Vector3 operator*(Float scalar, const Vector3& vector)
 {
 	//use other scalar multiplication function
 	return vector * scalar;

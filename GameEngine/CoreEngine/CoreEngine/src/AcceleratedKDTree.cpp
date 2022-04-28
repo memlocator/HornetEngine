@@ -9,15 +9,15 @@ namespace GraphicsEngine
 {
 	struct BoxData
 	{
-		float Min = 0;
-		float Max = 0;
+		Float Min = 0;
+		Float Max = 0;
 		int Count = 1;
 		int TotalBefore = 0;
-		float LargestBefore = 0;
+		Float LargestBefore = 0;
 	};
 
 	typedef std::vector<int> IntVector;
-	typedef std::vector<float> FloatVector;
+	typedef std::vector<Float> FloatVector;
 	typedef std::vector<BoxData> BoxVector;
 
 	IntVector faceReferences;
@@ -152,8 +152,8 @@ namespace GraphicsEngine
 		bool trim1 = split1.LeftBoxes == 0 || split1.RightBoxes == 0;
 		bool trim2 = split2.LeftBoxes == 0 || split2.RightBoxes == 0;
 
-		float score1 = 0;
-		float score2 = 0;
+		Float score1 = 0;
+		Float score2 = 0;
 
 		if (trim1 && trim2)
 		{
@@ -169,9 +169,9 @@ namespace GraphicsEngine
 		return score1 < score2 ? split1 : split2;
 	}
 
-	float AcceleratedKDTree::ScoreTrim(const SplitResults& split, const BoundingBox& bounds)
+	Float AcceleratedKDTree::ScoreTrim(const SplitResults& split, const BoundingBox& bounds)
 	{
-		float length = split.LeftBoxes == 0 ? split.Position - bounds[0][split.Axis] : bounds[1][split.Axis] - split.Position;
+		Float length = split.LeftBoxes == 0 ? split.Position - bounds[0][split.Axis] : bounds[1][split.Axis] - split.Position;
 
 		Vector size{
 			bounds[1].X - bounds[0].X,
@@ -183,31 +183,31 @@ namespace GraphicsEngine
 
 		int separated = std::max(split.LeftBoxes, split.RightBoxes) + split.IntersectedBoxes;
 
-		return float(separated * separated + split.IntersectedBoxes * split.IntersectedBoxes) / (size.X * size.Y * size.Z);
+		return Float(separated * separated + split.IntersectedBoxes * split.IntersectedBoxes) / (size.X * size.Y * size.Z);
 	}
 
-	float AcceleratedKDTree::Score(const SplitResults& split)
+	Float AcceleratedKDTree::Score(const SplitResults& split)
 	{
 		int leftScore = split.LeftBoxes + split.IntersectedBoxes;
 		int rightScore = split.RightBoxes + split.IntersectedBoxes;
 
-		return float(leftScore * leftScore + rightScore * rightScore);
+		return Float(leftScore * leftScore + rightScore * rightScore);
 	}
 
-	bool floatEquals(float a, float b, float epsilon)
+	bool floatEquals(Float a, Float b, Float epsilon)
 	{
 		return std::abs(a - b) < epsilon;
 	}
 
-	void CullDuplicateObjects(float epsilon);
-	void CullDuplicatePlanes(float epsilon);
+	void CullDuplicateObjects(Float epsilon);
+	void CullDuplicatePlanes(Float epsilon);
 
 	AcceleratedKDTree::SplitResults AcceleratedKDTree::FindSplitAxis(AccelerationVectors& accelerator, KDAxis axis, const BoundingBox& bounds, const Range& boxes, bool marginOnly)
 	{
 		objects.clear();
 
-		float boxMin = bounds[1][axis];
-		float boxMax = bounds[0][axis];
+		Float boxMin = bounds[1][axis];
+		Float boxMax = bounds[0][axis];
 
 		for (int i = boxes.Start; i < boxes.End; ++i)
 		{
@@ -222,9 +222,9 @@ namespace GraphicsEngine
 		boxMin -= 2 * Epsilon;
 		boxMax += 2 * Epsilon;
 
-		float extents = bounds[1][axis] - bounds[0][axis];
-		float marginBefore = std::max(boxMin - bounds[0][axis], 0.f);
-		float marginAfter = std::max(bounds[1][axis] - boxMax, 0.f);
+		Float extents = bounds[1][axis] - bounds[0][axis];
+		Float marginBefore = std::max(boxMin - bounds[0][axis], (Float)0.0);
+		Float marginAfter = std::max(bounds[1][axis] - boxMax, (Float)0.0);
 
 		if (std::max(marginBefore, marginAfter) > std::max(MarginThreshold * extents, MinimumMargin))
 		{
@@ -275,14 +275,14 @@ namespace GraphicsEngine
 
 	AcceleratedKDTree::SplitResults AcceleratedKDTree::SplitResults::ComputeVolume(const BoundingBox& box)
 	{
-		float marginSize = 0;
+		Float marginSize = 0;
 
 		if (LeftBoxes == 0)
 			marginSize = Position - box[0][Axis];
 		else
 			marginSize = box[1][Axis] - Position;
 
-		float size[3] = {
+		Float size[3] = {
 			box[1][0] - box[0][0],
 			box[1][1] - box[0][1],
 			box[1][2] - box[0][2]
@@ -295,11 +295,11 @@ namespace GraphicsEngine
 		return *this;
 	}
 
-	void CullDuplicateObjects(float epsilon)
+	void CullDuplicateObjects(Float epsilon)
 	{
 		int index = 0;
 		int total = 0;
-		float maxSpan = 0;
+		Float maxSpan = 0;
 
 		for (int i = 1; i < int(objects.size()); ++i)
 		{
@@ -322,7 +322,7 @@ namespace GraphicsEngine
 		objects.resize(std::min(index + 1, int(objects.size())));
 	}
 
-	void CullDuplicatePlanes(float epsilon)
+	void CullDuplicatePlanes(Float epsilon)
 	{
 		int index = 0;
 
@@ -343,9 +343,9 @@ namespace GraphicsEngine
 	{
 		const Face& face = accelerator.faces[faceReferences[index]];
 
-		float a = accelerator.vertices[face.A].Position[axis];
-		float b = accelerator.vertices[face.B].Position[axis];
-		float c = accelerator.vertices[face.C].Position[axis];
+		Float a = accelerator.vertices[face.A].Position[axis];
+		Float b = accelerator.vertices[face.B].Position[axis];
+		Float c = accelerator.vertices[face.C].Position[axis];
 
 		return AxisBounds{
 			std::min(std::min(a, b), c),
@@ -362,7 +362,7 @@ namespace GraphicsEngine
 		return BoundingBox{ Vector3(x.Min, y.Min, z.Min), Vector3(x.Max, y.Max, z.Max) };
 	}
 
-	AcceleratedKDTree::SplitResults AcceleratedKDTree::RankPlane(AccelerationVectors& accelerator, KDAxis axis, float position, const BoundingBox& bounds, int totalObjects, int start)
+	AcceleratedKDTree::SplitResults AcceleratedKDTree::RankPlane(AccelerationVectors& accelerator, KDAxis axis, Float position, const BoundingBox& bounds, int totalObjects, int start)
 	{
 		if (position <= bounds[0][axis])
 			return SplitResults{ axis, position, 0, totalObjects, 0, false, 0 };
@@ -403,7 +403,7 @@ namespace GraphicsEngine
 		return SplitResults{ axis, position, before, after, intersecting, false, 0 };
 	}
 
-	AcceleratedKDTree::SplitResults AcceleratedKDTree::RankPlaneSlow(AccelerationVectors& accelerator, KDAxis axis, float position, const Range& boxes)
+	AcceleratedKDTree::SplitResults AcceleratedKDTree::RankPlaneSlow(AccelerationVectors& accelerator, KDAxis axis, Float position, const Range& boxes)
 	{
 		int before = 0;
 		int after = 0;
@@ -514,7 +514,7 @@ namespace GraphicsEngine
 		};
 	}
 
-	float AcceleratedKDTree::SurfaceArea(const BoundingBox& box)
+	Float AcceleratedKDTree::SurfaceArea(const BoundingBox& box)
 	{
 		Vector3 diff = box[1] - box[0];
 
@@ -627,14 +627,14 @@ namespace GraphicsEngine
 		BoundingBox newBoundsLeft = GetPairBounds(left->Get().Box, node->Get().Box);
 		BoundingBox newBoundsRight = GetPairBounds(right->Get().Box, node->Get().Box);
 
-		float surfaceAreaLeft = SurfaceArea(left->Get().Box);
-		float surfaceAreaRight = SurfaceArea(right->Get().Box);
+		Float surfaceAreaLeft = SurfaceArea(left->Get().Box);
+		Float surfaceAreaRight = SurfaceArea(right->Get().Box);
 
-		float newSurfaceAreaLeft = SurfaceArea(newBoundsLeft);
-		float newSurfaceAreaRight = SurfaceArea(newBoundsRight);
+		Float newSurfaceAreaLeft = SurfaceArea(newBoundsLeft);
+		Float newSurfaceAreaRight = SurfaceArea(newBoundsRight);
 
-		float changeLeft = newSurfaceAreaLeft - surfaceAreaLeft;
-		float changeRight = newSurfaceAreaRight - surfaceAreaRight;
+		Float changeLeft = newSurfaceAreaLeft - surfaceAreaLeft;
+		Float changeRight = newSurfaceAreaRight - surfaceAreaRight;
 
 		if (changeRight <= changeLeft)
 			PushAabbNode(accelerator, head, index, right->ID, false);

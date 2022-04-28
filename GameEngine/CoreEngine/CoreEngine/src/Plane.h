@@ -20,7 +20,7 @@ public:
 
 	typedef IntersectionTypeEnum::IntersectionType IntersectionType;
 
-	IntersectionType Compare(const Vector3& point, float epsilon = 1e-5f) const;
+	IntersectionType Compare(const Vector3& point, Float epsilon = 1e-5f) const;
 };
 
 namespace Enum

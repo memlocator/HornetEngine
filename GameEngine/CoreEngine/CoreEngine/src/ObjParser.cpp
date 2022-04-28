@@ -24,7 +24,7 @@ Vector3 cross(const Vector3& vert1, const Vector3& vert2, const Vector3& vert3)
 		vec1.X * vec2.Y - vec1.Y * vec2.X
 	);
 
-	float length = 1 / sqrt(normal.X*normal.X + normal.Y*normal.Y + normal.Z*normal.Z);
+	Float length = 1 / sqrt(normal.X*normal.X + normal.Y*normal.Y + normal.Z*normal.Z);
 
 	normal.X *= length;
 	normal.Y *= length;
@@ -88,7 +88,7 @@ void ObjParser::Parse(const std::string& filePath)
 
 			Vector3 normal = (Vertices[i->Vertices[1].Position] - Vertices[i->Vertices[0].Position]).Cross(Vertices[i->Vertices[2].Position] - Vertices[i->Vertices[0].Position]);
 
-			float length = normal.SquareLength();
+			Float length = normal.SquareLength();
 
 			if (length < 1e-15)
 			{
@@ -99,7 +99,7 @@ void ObjParser::Parse(const std::string& filePath)
 				continue;
 			}
 
-			normal *= 1 / std::sqrtf(length);
+			normal *= 1 / std::sqrt(length);
 
 			for (int j = 0; j < 3; ++j)
 			{
@@ -119,7 +119,7 @@ void ObjParser::Parse(const std::string& filePath)
 			}
 		}
 
-		Colors.push_back(RGBA(1, 1, 1, 1));
+		Colors.push_back(RGBA(1.f, 1.f, 1.f, 1.f));
 		UVs.push_back(Vector3());
 	}
 	catch (std::string& error)

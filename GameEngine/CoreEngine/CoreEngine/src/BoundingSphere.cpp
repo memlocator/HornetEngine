@@ -15,12 +15,12 @@ bool BoundingSphere::Contains(const Vector3& point) const
 void BoundingSphere::ExpandByPoint(const Vector3& point)
 {
 	Vector3 diff = point - Center;
-	float length = diff.SquareLength();
+	Float length = diff.SquareLength();
 
 	if (length <= Radius * Radius)
 		return;
 
-	length = sqrtf(length);
+	length = std::sqrt(length);
 	diff *= 1 / length;
 
 	Center = 0.5f * (Center - Radius * diff + point);
@@ -79,12 +79,12 @@ BoundingSphere BoundingSphere::ComputeCentroid(const MeshData::VertexVector& ver
 	Vector3 center;
 
 	center = 0.5f * (minPoint + maxPoint);
-	float maxRadius = 0;
+	Float maxRadius = 0;
 
 	for (int i = 0; i < int(vertices.size()); ++i)
 		maxRadius = std::max(maxRadius, (Vector3(vertices[i].Position) - center).SquareLength());
 
-	return BoundingSphere(sqrtf(maxRadius), center);
+	return BoundingSphere(std::sqrt(maxRadius), center);
 }
 
 BoundingSphere BoundingSphere::ComputeRitter(const MeshData::VertexVector& vertices)
@@ -144,9 +144,9 @@ BoundingSphere BoundingSphere::ComputeRitter(const MeshData::VertexVector& verti
 		}
 	}
 
-	float lengthX = (Vector3(vertices[minX].Position) - vertices[maxX].Position).SquareLength();
-	float lengthY = (Vector3(vertices[minY].Position) - vertices[maxY].Position).SquareLength();
-	float lengthZ = (Vector3(vertices[minZ].Position) - vertices[maxZ].Position).SquareLength();
+	Float lengthX = (Vector3(vertices[minX].Position) - vertices[maxX].Position).SquareLength();
+	Float lengthY = (Vector3(vertices[minY].Position) - vertices[maxY].Position).SquareLength();
+	Float lengthZ = (Vector3(vertices[minZ].Position) - vertices[maxZ].Position).SquareLength();
 
 	Vector3 bound1;
 	Vector3 bound2;
@@ -167,7 +167,7 @@ BoundingSphere BoundingSphere::ComputeRitter(const MeshData::VertexVector& verti
 		bound2 = vertices[maxZ].Position;
 	}
 
-	BoundingSphere sphere(0.5f * (bound1 - bound2).Length(), 0.5f * (bound1 + bound2));
+	BoundingSphere sphere((Float)0.5 * (bound1 - bound2).Length(), (Float)0.5 * (bound1 + bound2));
 
 	for (int i = 0; i < int(vertices.size()); ++i)
 		sphere.ExpandByPoint(vertices[i].Position);
@@ -288,13 +288,13 @@ BoundingSphere BoundingSphere::ComputeExactSphere(const MeshData::VertexVector& 
 {
 	int farthest1 = 0;
 	int farthest2 = 0;
-	float farthestDistance = 0;
+	Float farthestDistance = 0;
 
 	for (int i = 0; i < indexCount; ++i)
 	{
 		for (int j = 0; j < indexCount; ++j)
 		{
-			float distance = (Vector3(vertices[indices[i]].Position) - vertices[indices[j]].Position).SquareLength();
+			Float distance = (Vector3(vertices[indices[i]].Position) - vertices[indices[j]].Position).SquareLength();
 
 			if (distance > farthestDistance)
 			{
@@ -306,17 +306,17 @@ BoundingSphere BoundingSphere::ComputeExactSphere(const MeshData::VertexVector& 
 	}
 
 	Vector3 center = 0.5f * (Vector3(vertices[indices[farthest1]].Position) + vertices[indices[farthest2]].Position);
-	float radiusSquared = (center + vertices[indices[farthest2]].Position).SquareLength();
-	float radius = std::sqrt(radiusSquared);
+	Float radiusSquared = (center + vertices[indices[farthest2]].Position).SquareLength();
+	Float radius = std::sqrt(radiusSquared);
 
 	while (indexCount > 0)
 	{
 		int expandingTo = -1;
-		float farthest = radiusSquared;
+		Float farthest = radiusSquared;
 
 		for (int i = 0; i < indexCount;)
 		{
-			float distance = (Vector3(vertices[indices[i]].Position) - center).SquareLength();
+			Float distance = (Vector3(vertices[indices[i]].Position) - center).SquareLength();
 
 			if (distance > farthest)
 			{
@@ -333,7 +333,7 @@ BoundingSphere BoundingSphere::ComputeExactSphere(const MeshData::VertexVector& 
 
 		if (indexCount > 0)
 		{
-			float distance = std::sqrt(farthest);
+			Float distance = std::sqrt(farthest);
 
 			center = 0.5f * (1 - radius / distance) * (vertices[indices[expandingTo]].Position - center);
 			radius += 0.5f * (distance - radius);
@@ -365,15 +365,15 @@ BoundingSphere BoundingSphere::ComputePCA(const MeshData::VertexVector& vertices
 	else
 		axis = eigenData.Axis3;
 
-	float smallestDot = Vector3(vertices[0].Position).Dot(axis);
-	float largestDot = smallestDot;
+	Float smallestDot = Vector3(vertices[0].Position).Dot(axis);
+	Float largestDot = smallestDot;
 
 	int i1 = 0;
 	int i2 = 0;
 
 	for (int i = 1; i < int(vertices.size()); ++i)
 	{
-		float dot = Vector3(vertices[i].Position).Dot(axis);
+		Float dot = Vector3(vertices[i].Position).Dot(axis);
 
 		if (dot < smallestDot)
 		{
@@ -388,7 +388,7 @@ BoundingSphere BoundingSphere::ComputePCA(const MeshData::VertexVector& vertices
 		}
 	}
 
-	BoundingSphere sphere(0.5f * Vector3(vertices[i1].Position - vertices[i2].Position).Length(), 0.5f * (vertices[i1].Position + vertices[i2].Position));
+	BoundingSphere sphere((Float)0.5 * Vector3(vertices[i1].Position - vertices[i2].Position).Length(), (Float)0.5 * (vertices[i1].Position + vertices[i2].Position));
 
 	for (int i = 0; i < int(vertices.size()); ++i)
 		sphere.ExpandByPoint(vertices[i].Position);

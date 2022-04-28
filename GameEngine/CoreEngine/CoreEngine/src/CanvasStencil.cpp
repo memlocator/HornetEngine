@@ -29,7 +29,7 @@ namespace GraphicsEngine
 		stencilTexture->SetParent(stencilBuffer);
 	}
 
-	void CanvasStencil::Update(float delta)
+	void CanvasStencil::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 	}

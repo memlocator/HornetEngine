@@ -381,7 +381,7 @@ namespace Engine
 			struct WithDefault
 			{
 				template <typename DefaultTraits>
-				static float Pop(lua_State* lua, int index)
+				static double Pop(lua_State* lua, int index)
 				{
 					return (double)lua_tonumber(lua, index);
 				}
@@ -391,7 +391,7 @@ namespace Engine
 			struct WithDefault<true>
 			{
 				template <typename DefaultTraits>
-				static float Pop(lua_State* lua, int index)
+				static double Pop(lua_State* lua, int index)
 				{
 					if (lua_gettop(lua) < index)
 						return DefaultTraits::Value;

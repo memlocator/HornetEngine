@@ -42,7 +42,7 @@ namespace Engine
 					"GetDistance",
 					Overload(
 						Const,
-						Returns<float>(),
+						Returns<Float>(),
 						Argument<int>("index")
 					).Bind<RayCastResults, &RayCastResults::GetDistance>()
 				),
@@ -62,7 +62,7 @@ namespace Engine
 						Mutable,
 						Returns<void>(),
 						Argument<const std::shared_ptr<Collider2D>&>("collider"),
-						Argument<float>("distance"),
+						Argument<Float>("distance"),
 						Argument<const Vector3&>("normal")
 					).Bind<RayCastResults, &RayCastResults::Push>()
 				)

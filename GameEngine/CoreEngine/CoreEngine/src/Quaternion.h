@@ -9,18 +9,18 @@ extern "C" {
 class Quaternion
 {
 public:
-	float X, Y, Z, W;
+	Float X, Y, Z, W;
 
-	constexpr Quaternion(float w = 0, float x = 0, float y = 0, float z = 0) : X(x), Y(y), Z(z), W(w) {}
+	constexpr Quaternion(Float w = 0, Float x = 0, Float y = 0, Float z = 0) : X(x), Y(y), Z(z), W(w) {}
 	constexpr Quaternion(const Quaternion& quat) : X(quat.X), Y(quat.Y), Z(quat.Z), W(quat.W) {}
 	constexpr Quaternion(const Vector3& vec) : X(vec.X), Y(vec.Y), Z(vec.Z), W(vec.W) {}
-	Quaternion(const Vector3& axis, float angle);
-	constexpr Quaternion(float w, const Vector3& vector) : X(vector.X), Y(vector.Y), Z(vector.Z), W(w) {}
+	Quaternion(const Vector3& axis, Float angle);
+	constexpr Quaternion(Float w, const Vector3& vector) : X(vector.X), Y(vector.Y), Z(vector.Z), W(w) {}
 	Quaternion(const Matrix3& matrix);
 
 	Quaternion& Invert();
 	Quaternion Inverse() const { return Quaternion(*this).Invert(); }
-	Quaternion Slerp(const Quaternion& destination, float t) const;
+	Quaternion Slerp(const Quaternion& destination, Float t) const;
 
 	Quaternion operator*(const Quaternion& rhs) const;
 
@@ -29,28 +29,28 @@ public:
 	Quaternion& Normalize();
 	Quaternion Cross(const Quaternion& other) const;
 	Quaternion Unit() const;
-	float Length() const;
-	float SquareLength() const;
-	float Dot(const Quaternion& other) const;
+	Float Length() const;
+	Float SquareLength() const;
+	Float Dot(const Quaternion& other) const;
 
 	Quaternion operator-() const;
 	Quaternion operator+(const Quaternion& other) const;
 	Quaternion operator-(const Quaternion& other) const;
-	Quaternion operator*(float scalar) const;
+	Quaternion operator*(Float scalar) const;
 	Quaternion& operator=(const Quaternion& other);
 	Quaternion& operator+=(const Quaternion& other);
 	Quaternion& operator-=(const Quaternion& other);
-	Quaternion& operator*=(float scalar);
+	Quaternion& operator*=(Float scalar);
 	bool operator==(const Quaternion& other) const;
 	bool operator!=(const Quaternion& other) const;
-	float operator[](int i) const;
-	float& operator[](int i);
+	Float operator[](int i) const;
+	Float& operator[](int i);
 	operator Vector3() const;
 	operator std::string() const;
 
 private:
-	bool Compare(float x, float y, float epsilon) const;
+	bool Compare(Float x, Float y, Float epsilon) const;
 };
 
-Quaternion operator*(float scalar, const Quaternion& quaternion);
+Quaternion operator*(Float scalar, const Quaternion& quaternion);
 std::ostream& operator<<(std::ostream& out, const Quaternion& quaternion);

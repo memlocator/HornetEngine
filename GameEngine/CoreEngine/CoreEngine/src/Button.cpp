@@ -13,7 +13,7 @@ namespace GraphicsEngine
 		SetTicks(true);
 	}
 
-	void Button::Update(float delta)
+	void Button::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 

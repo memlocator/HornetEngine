@@ -31,14 +31,14 @@ bool Aabb::Intersects(const Aabb& box) const
 	return Aabb(Min, Max + box.GetSize()).ContainsPoint(box.Max);
 }
 
-bool Aabb::InRange(float x, float min, float max) const
+bool Aabb::InRange(Float x, Float min, Float max) const
 {
 	return x >= min && x <= max;
 }
 
 Vector3 Aabb::GetCenter() const
 {
-	return 0.5f * (Min + Max);
+	return 0.5 * (Min + Max);
 }
 
 Vector3 Aabb::GetSize() const
@@ -46,7 +46,7 @@ Vector3 Aabb::GetSize() const
 	return Max - Min;
 }
 
-typename Enum::IntersectionType Aabb::Intersects(const Plane& plane, float epsilon) const
+typename Enum::IntersectionType Aabb::Intersects(const Plane& plane, Float epsilon) const
 {
 	Vector3 center = 0.5f * (Min + Max);
 	Vector3 halfExtent = Max - center;
@@ -60,8 +60,8 @@ typename Enum::IntersectionType Aabb::Intersects(const Plane& plane, float epsil
 
 	normal.W = 0;
 
-	float projectionRadius = halfExtent * absNormal;
-	float centerProjectionRadius = normal * center - plane.W;
+	Float projectionRadius = halfExtent * absNormal;
+	Float centerProjectionRadius = normal * center - plane.W;
 
 	if (cmath::abs(centerProjectionRadius) <= projectionRadius)
 		return Enum::IntersectionType::Overlaps;
@@ -88,18 +88,18 @@ Aabb Aabb::Transform(const Matrix3& transformation) const
 {
 	Vector3 translation = transformation.Translation();
 
-	float min[3] = { Min.X, Min.Y, Min.Z };
-	float max[3] = { Max.X, Max.Y, Max.Z };
+	Float min[3] = { Min.X, Min.Y, Min.Z };
+	Float max[3] = { Max.X, Max.Y, Max.Z };
 
-	float outMin[3] = { translation.X, translation.Y, translation.Z };
-	float outMax[3] = { translation.X, translation.Y, translation.Z };
+	Float outMin[3] = { translation.X, translation.Y, translation.Z };
+	Float outMax[3] = { translation.X, translation.Y, translation.Z };
 
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int j = 0; j < 3; ++j)
 		{
-			float a = transformation.Data[i][j] * min[j];
-			float b = transformation.Data[i][j] * max[j];
+			Float a = transformation.Data[i][j] * min[j];
+			Float b = transformation.Data[i][j] * max[j];
 
 			if (a > b)
 				std::swap(a, b);

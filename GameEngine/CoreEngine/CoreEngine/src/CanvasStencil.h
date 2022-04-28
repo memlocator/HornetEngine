@@ -15,7 +15,7 @@ namespace GraphicsEngine
 		~CanvasStencil();
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 		void Draw();
 		std::shared_ptr<Texture> GetTexture();

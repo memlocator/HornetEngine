@@ -53,14 +53,14 @@ namespace Engine
 
 				Property(
 					"BarSize",
-					Getter<float>(Const).Bind<ScrollBar, &ScrollBar::GetBarSize>(),
-					Setter<float>(Mutable).Bind<ScrollBar, &ScrollBar::SetBarSize>()
+					Getter<Float>(Const).Bind<ScrollBar, &ScrollBar::GetBarSize>(),
+					Setter<Float>(Mutable).Bind<ScrollBar, &ScrollBar::SetBarSize>()
 				),
 
 				Property(
 					"BarPercent",
-					Getter<float>(Const).Bind<ScrollBar, &ScrollBar::GetBarPercent>(),
-					Setter<float>(Mutable).Bind<ScrollBar, &ScrollBar::SetBarPercent>()
+					Getter<Float>(Const).Bind<ScrollBar, &ScrollBar::GetBarPercent>(),
+					Setter<Float>(Mutable).Bind<ScrollBar, &ScrollBar::SetBarPercent>()
 				),
 
 				Property(
@@ -110,7 +110,7 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("percent")
+						Argument<Float>("percent")
 					).Bind<ScrollBar, &ScrollBar::SetBarSize>()
 				),
 
@@ -119,7 +119,7 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("percent")
+						Argument<Float>("percent")
 					).Bind<ScrollBar, &ScrollBar::SetBarPercent>()
 				),
 
@@ -136,7 +136,7 @@ namespace Engine
 					"GetBarSize",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<ScrollBar, &ScrollBar::GetBarSize>()
 				),
 
@@ -144,7 +144,7 @@ namespace Engine
 					"GetBarPercent",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<ScrollBar, &ScrollBar::GetBarPercent>()
 				),
 

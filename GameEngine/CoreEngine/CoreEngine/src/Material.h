@@ -18,7 +18,7 @@ namespace GraphicsEngine
 		RGBA Diffuse = RGBA(0.5f, 0.5f, 0.5f, 1);
 		RGBA Specular = RGBA(0.5f, 0.5f, 0.5f, 1);
 		RGBA Ambient = RGBA(0.1f, 0.1f, 0.1f, 1);
-		RGBA Emission = RGBA(0, 0, 0, 0);
+		RGBA Emission = RGBA(0.f, 0.f, 0.f, 0.f);
 		int Shininess = 1;
 
 		RGBA TextureColor;

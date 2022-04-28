@@ -4,10 +4,10 @@
 
 #include <limits>
 
-bool Ray::Intersects(const Aabb& box, float& t, float epsilon) const
+bool Ray::Intersects(const Aabb& box, Float& t, Float epsilon) const
 {
-	float tMax = std::numeric_limits<float>::max();;
-	float tMin = -tMax;
+	Float tMax = std::numeric_limits<Float>::max();;
+	Float tMin = -tMax;
 
 	if (!(
 		IntersectsAxis(Start.X, Direction.X, box.Min.X, box.Max.X, tMin, tMax, epsilon) &&
@@ -16,17 +16,17 @@ bool Ray::Intersects(const Aabb& box, float& t, float epsilon) const
 		) || tMax < 0)
 		return false;
 
-	t = std::max(0.f, tMin);
+	t = std::max(0.0, tMin);
 
 	return true;
 }
 
-bool Ray::IntersectsAxis(float start, float direction, float min, float max, float& tMin, float& tMax, float epsilon) const
+bool Ray::IntersectsAxis(Float start, Float direction, Float min, Float max, Float& tMin, Float& tMax, Float epsilon) const
 {
 	if (direction < -epsilon || direction > epsilon)
 	{
-		float t1 = (min - start) / direction;
-		float t2 = (max - start) / direction;
+		Float t1 = (min - start) / direction;
+		Float t2 = (max - start) / direction;
 
 		if (t1 > t2)
 		{

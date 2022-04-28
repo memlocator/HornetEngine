@@ -19,8 +19,8 @@ namespace GraphicsEngine
 	class Particle
 	{
 	public:
-		float Time;
-		float LifeTime;
+		Float Time;
+		Float LifeTime;
 		Vector3 Position;
 		Vector3 Direction;
 		Vector3 Size;
@@ -50,21 +50,21 @@ namespace GraphicsEngine
 	{
 	public:
 		typedef std::function<void()> ConfigureShaderCallback;
-		typedef std::function<void(Particle& particle, float delta)> ParticleSpawnCallback;
-		typedef std::function<bool(Particle& particle, float delta)> ParticleUpdateCallback;
+		typedef std::function<void(Particle& particle, Float delta)> ParticleSpawnCallback;
+		typedef std::function<bool(Particle& particle, Float delta)> ParticleUpdateCallback;
 		typedef std::function<void(const Particle& particle, const std::shared_ptr<Camera>& camera, const Mesh* particleMesh)> ParticleDrawCallback;
 
 		bool Enabled = true;
 		int EmitCount = 5;
-		float EmitRate = 1;
+		Float EmitRate = 1;
 
 		std::weak_ptr<Engine::ModelAsset> Asset;
 
 		void SetMaxParticles(int count);
 		void Initialize() { Particles.resize(MaxParticles); SetTicks(true); }
-		void Update(float delta);
+		void Update(Float delta);
 		void Draw(const std::shared_ptr<Camera>& camera);
-		void FireParticles(int count, float delta = 0);
+		void FireParticles(int count, Float delta = 0);
 		bool IsTransparent() const;
 		Aabb GetBoundingBox() const;
 		bool HasMoved() const;
@@ -100,8 +100,8 @@ namespace GraphicsEngine
 		}
 
 		static void ConfigureShader();
-		static void DefaultSpawn(Particle& particle, float delta);
-		static bool DefaultUpdate(Particle& particle, float delta);
+		static void DefaultSpawn(Particle& particle, Float delta);
+		static bool DefaultUpdate(Particle& particle, Float delta);
 		static void DefaultDraw(const Particle& particle, const std::shared_ptr<Camera>& camera, const Mesh* particleMesh);
 
 	private:
@@ -109,8 +109,8 @@ namespace GraphicsEngine
 
 		int MaxParticles = 10;
 		int ParticlesAlive = 0;
-		float TotalLifetime = 0;
-		float LastSpawn = 0;
+		Float TotalLifetime = 0;
+		Float LastSpawn = 0;
 		Aabb BoundingBox;
 
 		ParticleVector Particles;
@@ -155,7 +155,7 @@ namespace GraphicsEngine
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
-		void operator()(Particle& particle, float delta);
+		void operator()(Particle& particle, Float delta);
 	};
 
 	class RisingParticleSpawner : public ParticleConfiguration
@@ -171,14 +171,14 @@ namespace GraphicsEngine
 
 		UnitVectorGenerator DirectionGenerator;
 
-		float Radius = 1;
+		Float Radius = 1;
 
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
-		void operator()(Particle& particle, float delta);
+		void operator()(Particle& particle, Float delta);
 	};
 
 	class PlanarParticleSpawner : public ParticleConfiguration
@@ -200,7 +200,7 @@ namespace GraphicsEngine
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
-		void operator()(Particle& particle, float delta);
+		void operator()(Particle& particle, Float delta);
 	};
 
 	class LineParticleSpawner : public ParticleConfiguration
@@ -220,7 +220,7 @@ namespace GraphicsEngine
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
-		void operator()(Particle& particle, float delta);
+		void operator()(Particle& particle, Float delta);
 	};
 
 	class RingParticleSpawner : public ParticleConfiguration
@@ -241,7 +241,7 @@ namespace GraphicsEngine
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
-		void operator()(Particle& particle, float delta);
+		void operator()(Particle& particle, Float delta);
 	};
 
 	class ConeParticleSpawner : public ParticleConfiguration
@@ -261,7 +261,7 @@ namespace GraphicsEngine
 			emitter->SetSpawn(std::ref(*this), This.lock());
 		}
 
-		void operator()(Particle& particle, float delta);
+		void operator()(Particle& particle, Float delta);
 	};
 
 	class GravityParticleUpdater : public ParticleConfiguration
@@ -274,26 +274,26 @@ namespace GraphicsEngine
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
-		bool operator()(Particle& particle, float delta);
+		bool operator()(Particle& particle, Float delta);
 	};
 
 	class DragParticleUpdater : public ParticleConfiguration
 	{
 	public:
-		float DragFactor = 1;
+		Float DragFactor = 1;
 
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
-		bool operator()(Particle& particle, float delta);
+		bool operator()(Particle& particle, Float delta);
 	};
 
 	class DampenedForceUpdater : public ParticleConfiguration
 	{
 	public:
-		float DragFactor = 1;
+		Float DragFactor = 1;
 		Vector3 Force;
 
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
@@ -301,7 +301,7 @@ namespace GraphicsEngine
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
-		bool operator()(Particle& particle, float delta);
+		bool operator()(Particle& particle, Float delta);
 	};
 
 	class CubicBezierUpdater : public ParticleConfiguration
@@ -311,13 +311,13 @@ namespace GraphicsEngine
 		Vector3 Control1;
 		Vector3 Control2;
 		Vector3 End;
-		float FinishThreshold = 0.1f;
+		Float FinishThreshold = 0.1f;
 
 		void AttachTo(const std::shared_ptr<ParticleEmitter>& emitter)
 		{
 			emitter->SetUpdate(std::ref(*this), This.lock());
 		}
 
-		bool operator()(Particle& particle, float delta);
+		bool operator()(Particle& particle, Float delta);
 	};
 }

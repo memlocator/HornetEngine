@@ -54,15 +54,15 @@ namespace Engine
 				BoundingBox.Max.Set(0, 0);
 			}
 
-			float highestPoint = -std::numeric_limits<float>::max();
-			float lowestPoint = std::numeric_limits<float>::max();
+			Float highestPoint = -std::numeric_limits<float>::max();
+			Float lowestPoint = std::numeric_limits<float>::max();
 
 			TopVertex = 0;
 			BottomVertex = 0;
 
 			for (int i = 0; i < (int)Vertices.size(); ++i)
 			{
-				float y = Vertices[i].Y;
+				Float y = Vertices[i].Y;
 
 				if (y > highestPoint)
 				{
@@ -113,7 +113,7 @@ namespace Engine
 
 			for (VertexVector::iterator i = Vertices.begin(); i != Vertices.end(); ++i)
 			{
-				float distance = (Center - *i).SquareLength();
+				Float distance = (Center - *i).SquareLength();
 
 				if (distance > RadiusSquared)
 					RadiusSquared = distance;

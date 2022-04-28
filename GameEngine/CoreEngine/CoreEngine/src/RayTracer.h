@@ -41,6 +41,7 @@ namespace GraphicsEngine
 		Pixel(const RGBA& color);
 		Pixel(unsigned char R, unsigned char G, unsigned char B) : R(float(R) / 255.0f), G(float(G) / 255.0f), B(float(B) / 255.0f) {}
 		Pixel(float R, float G, float B) : R(R), G(G), B(B) {}
+		Pixel(double R, double G, double B) : R((float)R), G((float)G), B((float)B) {}
 
 		operator RGBA();
 	};
@@ -78,15 +79,15 @@ namespace GraphicsEngine
 		bool Initialized = false;
 
 		bool AtmosphereFollowsCamera = false;
-		float PlanetRadius = 6378131*01;
-		float AtmosphereHeight = 256000 * 01;
-		float Altitude = 210000 * 01;
+		Float PlanetRadius = 6378131*01;
+		Float AtmosphereHeight = 256000 * 01;
+		Float Altitude = 210000 * 01;
 		int AtmosphereSteps = 10;
 		int OpticalDepthSteps = 10;
-		float AtmosphericDensityFalloff = 10;
+		Float AtmosphericDensityFalloff = 10;
 		Vector3 PlanetDirection = Vector3(0, -1, 0);
 		Vector3 Wavelengths = Vector3(700, 530, 400);
-		float ScatterStrength = 1;
+		Float ScatterStrength = 1;
 		int MouseX = 0;
 		int MouseY = 0;
 
@@ -119,7 +120,7 @@ namespace GraphicsEngine
 			int LastObject = -1;
 			Vector3 LightFilter;
 			Ray Data;
-			float Length = 1;
+			Float Length = 1;
 		};
 
 		typedef std::function<void(const CastResults& results)> CastResultsCallbackWrapper;
@@ -131,9 +132,9 @@ namespace GraphicsEngine
 		{
 			std::random_device RandomDevice;
 			std::mt19937 RandomAlgorithm = std::mt19937(RandomDevice());
-			std::uniform_real_distribution<float> RNG = std::uniform_real_distribution<float>(0, 1);
+			std::uniform_real_distribution<Float> RNG = std::uniform_real_distribution<Float>(0, 1);
 
-			float Next()
+			Float Next()
 			{
 				return RNG(RandomAlgorithm);
 			}
@@ -154,7 +155,7 @@ namespace GraphicsEngine
 		int RayWidth = 0;
 		int RayHeight = 0;
 		Pixel* Data = nullptr;
-		float* DepthBuffer = nullptr;
+		Float* DepthBuffer = nullptr;
 		int MaxThreads = 1;
 		int RunningThreads = 0;
 		int MaxRunningThreads = 0;
@@ -165,11 +166,11 @@ namespace GraphicsEngine
 		Vector* Rays = nullptr;
 
 		Vector3 PlanetPosition;
-		float AtmosphereRadius = 0;
-		float AtmosphereRadiusSquared = 0;
-		float PlanetRadiusSquared = 0;
-		float AtmosphereStep = 0;
-		float OpticalDepthStep = 0;
+		Float AtmosphereRadius = 0;
+		Float AtmosphereRadiusSquared = 0;
+		Float PlanetRadiusSquared = 0;
+		Float AtmosphereStep = 0;
+		Float OpticalDepthStep = 0;
 		Vector3 ScatterCoefficients;
 
 		std::mutex BatchLock;
@@ -220,7 +221,7 @@ namespace GraphicsEngine
 
 		struct LightingParameters
 		{
-			float LookDot;
+			Float LookDot;
 			const Material* MaterialProperties;
 			Vector3 Intersection;
 			Vector3 Normal;
@@ -228,21 +229,21 @@ namespace GraphicsEngine
 			Vector3 Diffuse;
 			Vector3 Look;
 			Vector3 BaseReflectivity;
-			float LookRoughness;
-			float LightRoughness;
-			float QuadRoughness;
+			Float LookRoughness;
+			Float LightRoughness;
+			Float QuadRoughness;
 		};
 
 		struct SphereIntersection
 		{
-			float Entry = 0;
-			float Exit = 0;
-			float Surface = 0;
+			Float Entry = 0;
+			Float Exit = 0;
+			Float Surface = 0;
 		};
 
 		Thread* Threads = new Thread[1] {};
 
-		void Cast(const RayInfo& info, const Ray& ray, float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack) const;
+		void Cast(const RayInfo& info, const Ray& ray, Float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack) const;
 		void CastRay(RayInfo& info, const Ray& ray, const RayCastData& rayData, const CastResultsCallbackWrapper& callback, IndexVector& stack) const;
 
 		int GetLights() const;
@@ -253,30 +254,30 @@ namespace GraphicsEngine
 
 		void QueueRay(Thread& thread, const QueuedRay& ray) const;
 
-		float Fresnel(float dot, float internalRefractiveIndex, float externalRefractiveIndex = 1) const;
-		Vector3 RefractVector(const Vector3& vector, const Vector3& normal, float dot, float internalRefractiveIndex, float externalRefractiveIndex = 1) const;
+		Float Fresnel(Float dot, Float internalRefractiveIndex, Float externalRefractiveIndex = 1) const;
+		Vector3 RefractVector(const Vector3& vector, const Vector3& normal, Float dot, Float internalRefractiveIndex, Float externalRefractiveIndex = 1) const;
 		Vector3 ReflectVector(const Vector3& vector, const Vector3& normal) const;
-		Vector3 ReflectVector(float dot, const Vector3& vector, const Vector3& normal) const;
+		Vector3 ReflectVector(Float dot, const Vector3& vector, const Vector3& normal) const;
 		Ray GetRay(int x, int y) const;
 		Vector3 ComputeLightFilter(const Vector3& color, const Vector3& filter) const;	
-		Vector3 ComputeShadowFilter(const Ray& ray, float length, RayInfo& info, const ShadowCastData& shadowData, IndexVector& stack) const;
-		float NormalDistribution(float reflectedDot, float roughness) const;
-		float GeometryShadowing(float vectorDot, float roughness) const;
-		float GeometryContribution(float lookDot, float lightDot, float roughness) const;
-		float Largest(const Vector3& vector) const;
-		float Smallest(const Vector3& vector) const;
-		Vector3 SampleNormal(FloatRNG& rng, const Vector3& normal, const Vector3& view, float roughness) const;
-		Vector3 ComputeReflectionFilter(const Vector3& direction, const Vector3& reflected, const Vector3& normal, const Vector3& microfacetNormal, const Vector3& baseReflectivity, float roughnessSquared) const;
-		Vector3 BaseReflectivity(float metalness, float refractiveIndex, float externalIndex, const Vector3& color, float dot = 1) const;
-		Vector3 FresnelSchlick(float reflectedDot, const Vector3& baseReflectivity) const;
-		Vector3 GetReflectionFilter(const Material* material, float reflectedDot, float lookDot, float lightDot, const Vector3& baseReflectivity) const;
-		Vector3 GetRefractionFilter(const Material* material, float lightDot, const Vector3& color, const Vector3& baseReflectivity, const Vector3& lightFilter) const;
-		Vector3 CookTorranceBRDF(const LightingParameters& parameters, float reflectedDot, float lightDot) const;
+		Vector3 ComputeShadowFilter(const Ray& ray, Float length, RayInfo& info, const ShadowCastData& shadowData, IndexVector& stack) const;
+		Float NormalDistribution(Float reflectedDot, Float roughness) const;
+		Float GeometryShadowing(Float vectorDot, Float roughness) const;
+		Float GeometryContribution(Float lookDot, Float lightDot, Float roughness) const;
+		Float Largest(const Vector3& vector) const;
+		Float Smallest(const Vector3& vector) const;
+		Vector3 SampleNormal(FloatRNG& rng, const Vector3& normal, const Vector3& view, Float roughness) const;
+		Vector3 ComputeReflectionFilter(const Vector3& direction, const Vector3& reflected, const Vector3& normal, const Vector3& microfacetNormal, const Vector3& baseReflectivity, Float roughnessSquared) const;
+		Vector3 BaseReflectivity(Float metalness, Float refractiveIndex, Float externalIndex, const Vector3& color, Float dot = 1) const;
+		Vector3 FresnelSchlick(Float reflectedDot, const Vector3& baseReflectivity) const;
+		Vector3 GetReflectionFilter(const Material* material, Float reflectedDot, Float lookDot, Float lightDot, const Vector3& baseReflectivity) const;
+		Vector3 GetRefractionFilter(const Material* material, Float lightDot, const Vector3& color, const Vector3& baseReflectivity, const Vector3& lightFilter) const;
+		Vector3 CookTorranceBRDF(const LightingParameters& parameters, Float reflectedDot, Float lightDot) const;
 		Vector3 ComputeLighting(const LightingParameters& parameters, LightHandle light, const Vector3& lightFilter, RayInfo& info, const ShadowCastData& shadowData, Thread& thread) const;
 		SphereIntersection ComputeAtmosphereIntersection(const Ray& ray) const;
-		float ComputeSunRayLength(LightHandle light, const Vector3& position) const;
-		float ComputeOpticalDepth(const Vector3& scatterPoint, const Vector3& direction, float rayLength) const;
-		float ComputeAtmosphericDensity(const Vector3& scatterPoint) const;
+		Float ComputeSunRayLength(LightHandle light, const Vector3& position) const;
+		Float ComputeOpticalDepth(const Vector3& scatterPoint, const Vector3& direction, Float rayLength) const;
+		Float ComputeAtmosphericDensity(const Vector3& scatterPoint) const;
 		Vector3 ComputeAtmosphericLight(LightHandle light, const Ray& ray, const SphereIntersection& intersection) const;
 		Vector3 ComputeAtmosphericLightNaive(const Vector3& direction) const;
 		Vector3 ProcessRay(const QueuedRay& ray, Thread& thread, const Vector3& lightFilter, int bounces = 0, int rayID = 0) const;

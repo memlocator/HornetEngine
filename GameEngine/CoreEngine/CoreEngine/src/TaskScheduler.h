@@ -8,13 +8,14 @@
 #include <memory>
 
 #include "IdentifierHeap.h"
+#include "Precision.h"
 
-typedef std::function<void(float delta, float elapsed, int calls)> TimerCallback;
+typedef std::function<void(Float delta, Float elapsed, int calls)> TimerCallback;
 
 extern const int infiniteCalls;
-extern const float infiniteTime;
-extern const float eachFrame;
-extern const float infinity;
+extern const Float infiniteTime;
+extern const Float eachFrame;
+extern const Float infinity;
 
 namespace Engine
 {
@@ -95,10 +96,10 @@ class TaskTimer
 public:
 	int Calls = 0;
 	int MaxCalls = 1;
-	float Delay = 1;
-	float LifeTime = 0;
-	float NextCall = 0;
-	float MaxTime = -1;
+	Float Delay = 1;
+	Float LifeTime = 0;
+	Float NextCall = 0;
+	Float MaxTime = -1;
 	int ID = 0;
 	bool Connected = false;
 	TimerCallback Callback;
@@ -108,12 +109,12 @@ public:
 class TaskScheduler
 {
 public:
-	static int Timer(float delay, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
-	static int Repeat(float delay, int calls, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
-	static int RepeatFor(float delay, float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
-	static int RepeatUntil(float delay, int calls, float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
+	static int Timer(Float delay, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
+	static int Repeat(Float delay, int calls, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
+	static int RepeatFor(Float delay, Float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
+	static int RepeatUntil(Float delay, int calls, Float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection = nullptr);
 	static void KillTimer(int id);
-	static void Update(float delta);
+	static void Update(Float delta);
 
 private:
 	typedef std::vector<TaskTimer> TimerHeap;
@@ -123,7 +124,7 @@ private:
 	static TimerHeap TimerQueue;
 	static TimerHeap NewTimers;
 	static TimerIDHeap TimerIDs;
-	static float Time;
+	static Float Time;
 	
 	static void FlushTimerBuffer();
 	static void Push(const TaskTimer& timer);

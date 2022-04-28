@@ -2,9 +2,9 @@
 
 #include <sstream>
 
-Quaternion::Quaternion(const Vector3& axis, float angle)
+Quaternion::Quaternion(const Vector3& axis, Float angle)
 {
-	*this = sinf(0.5f * angle) * Vector3(axis.X, axis.Y, axis.Z, 0).Normalize() + Vector3(0, 0, 0, cosf(0.5f * angle));
+	*this = std::sin(0.5f * angle) * Vector3(axis.X, axis.Y, axis.Z, 0).Normalize() + Vector3(0, 0, 0, std::cos(0.5f * angle));
 }
 
 Quaternion::operator std::string() const
@@ -23,15 +23,15 @@ std::ostream& operator<<(std::ostream& out, const Quaternion& quaternion)
 
 
 // returns the length of the vector
-float Quaternion::Length() const
+Float Quaternion::Length() const
 {
-	return sqrtf(SquareLength());
+	return std::sqrt(SquareLength());
 }
 
 // normalizes the vector
 Quaternion& Quaternion::Normalize()
 {
-	float length = 1 / this->Length();
+	Float length = 1 / this->Length();
 	W *= length;
 	X *= length;
 	Y *= length;
@@ -42,15 +42,15 @@ Quaternion& Quaternion::Normalize()
 
 Matrix3 Quaternion::Matrix() const
 {
-	float xx = X * X;
-	float yy = Y * Y;
-	float zz = Z * Z;
-	float xz = X * Z;
-	float xy = X * Y;
-	float yz = Y * Z;
-	float wx = W * X;
-	float wy = W * Y;
-	float wz = W * Z;
+	Float xx = X * X;
+	Float yy = Y * Y;
+	Float zz = Z * Z;
+	Float xz = X * Z;
+	Float xy = X * Y;
+	Float yz = Y * Z;
+	Float wx = W * X;
+	Float wy = W * Y;
+	Float wz = W * Z;
 
 	return Matrix3(
 		Vector3(0, 0, 0, 1),
@@ -62,22 +62,22 @@ Matrix3 Quaternion::Matrix() const
 
 Quaternion::Quaternion(const Matrix3& matrix)
 {
-	float traceW = matrix[0][0] + matrix[1][1] + matrix[2][2];
-	float traceX = matrix[0][0] - matrix[1][1] - matrix[2][2];
-	float traceY = -matrix[0][0] + matrix[1][1] - matrix[2][2];
-	float traceZ = -matrix[0][0] - matrix[1][1] + matrix[2][2];
+	Float traceW = matrix[0][0] + matrix[1][1] + matrix[2][2];
+	Float traceX = matrix[0][0] - matrix[1][1] - matrix[2][2];
+	Float traceY = -matrix[0][0] + matrix[1][1] - matrix[2][2];
+	Float traceZ = -matrix[0][0] - matrix[1][1] + matrix[2][2];
 
-	float axis1 = (matrix[2][1] + matrix[1][2]);
-	float axis2 = (matrix[0][2] + matrix[2][0]);
-	float axis3 = (matrix[1][0] + matrix[0][1]);
+	Float axis1 = (matrix[2][1] + matrix[1][2]);
+	Float axis2 = (matrix[0][2] + matrix[2][0]);
+	Float axis3 = (matrix[1][0] + matrix[0][1]);
 
-	float axis1N = (matrix[2][1] - matrix[1][2]);
-	float axis2N = (matrix[0][2] - matrix[2][0]);
-	float axis3N = (matrix[1][0] - matrix[0][1]);
+	Float axis1N = (matrix[2][1] - matrix[1][2]);
+	Float axis2N = (matrix[0][2] - matrix[2][0]);
+	Float axis3N = (matrix[1][0] - matrix[0][1]);
 
 	if (traceW > traceX && traceW > traceY && traceW > traceZ)
 	{
-		W = 0.5f * sqrtf(1 + traceW);
+		W = 0.5f * std::sqrt(1 + traceW);
 		X = axis1N;
 		Y = axis2N;
 		Z = axis3N;
@@ -89,7 +89,7 @@ Quaternion::Quaternion(const Matrix3& matrix)
 	else if (traceX > traceY && traceX > traceZ)
 	{
 		W = axis1N;
-		X = 0.5f * sqrtf(1 + traceX);
+		X = 0.5f * std::sqrt(1 + traceX);
 		Y = axis3;
 		Z = axis2;
 
@@ -101,7 +101,7 @@ Quaternion::Quaternion(const Matrix3& matrix)
 	{
 		W = axis2N;
 		X = axis3;
-		Y = 0.5f * sqrtf(1 + traceY);
+		Y = 0.5f * std::sqrt(1 + traceY);
 		Z = axis1;
 
 		W /= 4 * Y;
@@ -113,7 +113,7 @@ Quaternion::Quaternion(const Matrix3& matrix)
 		W = axis3N;
 		X = axis2;
 		Y = axis1;
-		Z = 0.5f * sqrtf(1 + traceZ);
+		Z = 0.5f * std::sqrt(1 + traceZ);
 
 		W /= 4 * Z;
 		X /= 4 * Z;
@@ -133,11 +133,11 @@ Quaternion& Quaternion::Invert()
 	return *this;
 }
 
-Quaternion Quaternion::Slerp(const Quaternion& destination, float t) const
+Quaternion Quaternion::Slerp(const Quaternion& destination, Float t) const
 {
 
-	float halfCos = Dot(destination);
-	float scalar = 1;
+	Float halfCos = Dot(destination);
+	Float scalar = 1;
 
 	if (halfCos >= 1 || halfCos <= -1)
 		return *this;
@@ -146,14 +146,14 @@ Quaternion Quaternion::Slerp(const Quaternion& destination, float t) const
 
 	halfCos *= scalar;
 
-	float halfTheta = acosf(halfCos);
-	float halfSin = sqrtf(1 - halfCos * halfCos);
+	Float halfTheta = std::acos(halfCos);
+	Float halfSin = std::sqrt(1 - halfCos * halfCos);
 
 	if (halfSin < 1e-3f && halfSin > -1e-3f)
 		return 0.5f * (*this + scalar * destination);
 
-	float ratioA = sinf((1 - t) * halfTheta) / halfSin;
-	float ratioB = scalar * sinf(t * halfTheta) / halfSin;
+	Float ratioA = std::sin((1 - t) * halfTheta) / halfSin;
+	Float ratioB = scalar * std::sin(t * halfTheta) / halfSin;
 
 	return (ratioA * *this + ratioB * destination).Normalize();
 }
@@ -185,12 +185,12 @@ Quaternion Quaternion::Unit() const
 }
 
 // returns the square length of the vector
-float Quaternion::SquareLength() const
+Float Quaternion::SquareLength() const
 {
 	return Dot(*this);
 }
 
-float Quaternion::Dot(const Quaternion& other) const
+Float Quaternion::Dot(const Quaternion& other) const
 {
 	return X * other.X + Y * other.Y + Z * other.Z + W * other.W;
 }
@@ -214,7 +214,7 @@ Quaternion Quaternion::operator-(const Quaternion& other) const
 }
 
 // scalar multiplication
-Quaternion Quaternion::operator*(float scalar) const
+Quaternion Quaternion::operator*(Float scalar) const
 {
 	return Quaternion(scalar * W, scalar * X, scalar * Y, scalar * Z);
 }
@@ -247,23 +247,23 @@ Quaternion& Quaternion::operator-=(const Quaternion& other)
 }
 
 // multiplication assignment
-Quaternion& Quaternion::operator*=(float scalar)
+Quaternion& Quaternion::operator*=(Float scalar)
 {
 	*this = *this * scalar;
 
 	return *this;
 }
 
-bool Quaternion::Compare(float x, float y, float epsilon) const
+bool Quaternion::Compare(Float x, Float y, Float epsilon) const
 {
-	float a = x - y;
+	Float a = x - y;
 
 	return a < epsilon&& a > -epsilon;
 }
 
 bool Quaternion::operator==(const Quaternion& other) const
 {
-	float epsilon = 1e-5f;
+	Float epsilon = 1e-5f;
 
 	return Compare(X, other.X, epsilon) && Compare(Y, other.Y, epsilon) && Compare(Z, other.Z, epsilon) && Compare(W, other.W, epsilon);
 }
@@ -273,14 +273,14 @@ bool Quaternion::operator!=(const Quaternion& other) const
 	return !(*this == other);
 }
 
-float Quaternion::operator[](int i) const
+Float Quaternion::operator[](int i) const
 {
-	return ((const float*)(this))[i];
+	return ((const Float*)(this))[i];
 }
 
-float& Quaternion::operator[](int i)
+Float& Quaternion::operator[](int i)
 {
-	return ((float*)(this))[i];
+	return ((Float*)(this))[i];
 }
 
 Quaternion::operator Vector3() const
@@ -288,7 +288,7 @@ Quaternion::operator Vector3() const
 	return Vector3(X, Y, Z, W);
 }
 
-Quaternion operator*(float scalar, const Quaternion& quaternion)
+Quaternion operator*(Float scalar, const Quaternion& quaternion)
 {
 	return quaternion * scalar;
 }

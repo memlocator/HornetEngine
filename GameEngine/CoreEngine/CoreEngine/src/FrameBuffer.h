@@ -16,7 +16,7 @@ namespace GraphicsEngine
 		~FrameBuffer();
 
 		void Initialize();
-		void Update(float) {}
+		void Update(Float) {}
 
 		static Dimensions WindowSize;
 

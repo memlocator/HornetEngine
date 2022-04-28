@@ -85,7 +85,7 @@ namespace GraphicsEngine
 		virtual ~Scene() {}
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 		std::weak_ptr<Camera> CurrentCamera;
 		std::weak_ptr<Light> GlobalLight;

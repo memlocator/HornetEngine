@@ -17,10 +17,10 @@ class BoundingSphere
 public:
 	typedef std::vector<Vector3> VertexVector;
 
-	float Radius = 0;
+	Float Radius = 0;
 	Vector3 Center;
 
-	constexpr BoundingSphere(float radius = 0, const Vector3& center = Vector3()) : Radius(radius), Center(center) {}
+	constexpr BoundingSphere(Float radius = 0, const Vector3& center = Vector3()) : Radius(radius), Center(center) {}
 
 	bool Contains(const Vector3& point) const;
 	void ExpandByPoint(const Vector3& point);

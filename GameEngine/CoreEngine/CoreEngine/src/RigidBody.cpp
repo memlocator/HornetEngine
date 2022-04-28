@@ -14,7 +14,7 @@ namespace Engine
 			SetTicks(true);
 		}
 
-		void RigidBody::Update(float delta)
+		void RigidBody::Update(Float delta)
 		{
 			Object::Update(delta);
 

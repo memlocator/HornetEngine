@@ -38,13 +38,13 @@ public:
 	Aabb& Expand(const Vector3& point);
 	bool ContainsPoint(const Vector3& point) const;
 	bool Intersects(const Aabb& box) const;
-	bool InRange(float x, float min, float max) const;
+	bool InRange(Float x, Float min, Float max) const;
 	Vector3 GetCenter() const;
 	Vector3 GetSize() const;
 	Aabb Transform(const Matrix3& transformation) const;
 	Aabb GetSubRegion(int region) const;
 
-	Enum::IntersectionType Intersects(const Plane& plane, float epsilon = 1e-5f) const;
+	Enum::IntersectionType Intersects(const Plane& plane, Float epsilon = 1e-5f) const;
 
 	void Compute(const std::vector<Vector3>& points);
 

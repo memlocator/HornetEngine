@@ -17,8 +17,8 @@ namespace GraphicsEngine
 
 struct SceneRayCastResults
 {
-	float Distance = -1;
-	float Reflectivity = 0;
+	Float Distance = -1;
+	Float Reflectivity = 0;
 	Vector3 Intersection;
 	Vector3 Normal;
 	Vector3 Color;

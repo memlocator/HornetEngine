@@ -2,7 +2,7 @@
 
 #include "MeshData.h"
 
-PCA PCA::Compute(const Matrix3& covariance, int maxIterations, float epsilon)
+PCA PCA::Compute(const Matrix3& covariance, int maxIterations, Float epsilon)
 {
 	Matrix3 eigenVectors;
 	Matrix3 diagonal = covariance;
@@ -46,7 +46,7 @@ Matrix3 PCA::ComputeCovariance(const MeshData::VertexVector& vertices)
 	for (int i = 0; i < int(vertices.size()); ++i)
 		mean += vertices[i].Position;
 
-	mean *= 1 / float(vertices.size());
+	mean *= 1 / Float(vertices.size());
 
 	Matrix3 covariance;
 
@@ -63,7 +63,7 @@ Matrix3 PCA::ComputeCovariance(const MeshData::VertexVector& vertices)
 	}
 
 	for (int i = 0; i < 9; ++i)
-		covariance.Data[i / 3][i % 3] /= float(vertices.size());
+		covariance.Data[i / 3][i % 3] /= Float(vertices.size());
 
 	return covariance;
 }
@@ -72,19 +72,19 @@ namespace
 {
 	struct SinCos
 	{
-		float s, c;
+		Float s, c;
 	};
 
-	SinCos computeRotation(float diag1, float diag2, float offDiag)
+	SinCos computeRotation(Float diag1, Float diag2, Float offDiag)
 	{
 		SinCos values;
 
-		float b = 0.5f * (diag2 - diag1) / offDiag;
+		Float b = 0.5f * (diag2 - diag1) / offDiag;
 
-		float tangent = (b >= 0 ? 1 : -1) / (abs(b) + sqrtf(b * b + 1));
+		Float tangent = (b >= 0 ? 1 : -1) / (std::abs(b) + std::sqrt(b * b + 1));
 
-		values.c = sqrtf(1 / (tangent * tangent + 1));
-		values.s = sqrtf(1 - values.c * values.c);
+		values.c = std::sqrt(1 / (tangent * tangent + 1));
+		values.s = std::sqrt(1 - values.c * values.c);
 
 		if (tangent < 0)
 			values.s *= -1;
@@ -95,9 +95,9 @@ namespace
 
 Matrix3 PCA::ComputeJacobiRotation(const Matrix3& matrix)
 {
-	float val1 = abs(matrix.Data[0][1]);
-	float val2 = abs(matrix.Data[0][2]);
-	float val3 = abs(matrix.Data[1][2]);
+	Float val1 = abs(matrix.Data[0][1]);
+	Float val2 = abs(matrix.Data[0][2]);
+	Float val3 = abs(matrix.Data[1][2]);
 
 	Matrix3 rotation;
 

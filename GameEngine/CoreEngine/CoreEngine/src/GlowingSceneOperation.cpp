@@ -15,18 +15,18 @@ extern "C" {
 // ADDED
 namespace HelperFunctions
 {
-  float F(float x, float y)
+	Float F(Float x, Float y)
   {
-    return cosf(x) + sinf(y) / (x + y + 1);
+    return std::cos(x) + std::sin(y) / (x + y + 1);
   }
 
-  float CalculateAmn(int m, int n, float a, float b, int x_resolution, int y_resolution)
+	Float CalculateAmn(int m, int n, Float a, Float b, int x_resolution, int y_resolution)
   {
-    float Amn = static_cast<float>(4) / (a * b);
+	  Float Amn = static_cast<Float>(4) / (a * b);
 
-    float doubleSum = 0;
+	  Float doubleSum = 0;
 
-    float x, y, dX, dY, sinTerm;
+	  Float x, y, dX, dY, sinTerm;
 
     dX = a / x_resolution;
     dY = b / y_resolution;
@@ -37,7 +37,7 @@ namespace HelperFunctions
       {
         x = i * a / x_resolution;
         y = j * b / y_resolution;
-        sinTerm = sinf(m * PI * x / a);
+        sinTerm = std::sin(m * PI * x / a);
 
         doubleSum += F(x, y) * sinTerm * sinTerm * dX * dY;
       }
@@ -48,9 +48,9 @@ namespace HelperFunctions
     return Amn;
   }
 
-  float CalculateKmn(int m, int n, float a, float b)
+	Float CalculateKmn(int m, int n, Float a, Float b)
   {
-    return PI * sqrt(static_cast<float>(m * m) / (b * b) + static_cast<float>(n * n) / (b * b));
+    return PI * std::sqrt(static_cast<Float>(m * m) / (b * b) + static_cast<Float>(n * n) / (b * b));
   }
 }
 
@@ -100,11 +100,11 @@ namespace GraphicsEngine
 		WaterBuffer = waterBuffer;
 
     // ADDED
-    float Water_A[WATER_MAT_SIDE_LENGTH * WATER_MAT_SIDE_LENGTH];
-    float Water_K[WATER_MAT_SIDE_LENGTH * WATER_MAT_SIDE_LENGTH];
-    float Water_xRange;
-    float Water_yRange;
-    float Water_c;
+    Float Water_A[WATER_MAT_SIDE_LENGTH * WATER_MAT_SIDE_LENGTH];
+    Float Water_K[WATER_MAT_SIDE_LENGTH * WATER_MAT_SIDE_LENGTH];
+    Float Water_xRange;
+    Float Water_yRange;
+    Float Water_c;
 
     Water_xRange = 32;
     Water_yRange = 32;
@@ -131,7 +131,7 @@ namespace GraphicsEngine
 
     Programs::WaterMatrix->time.Set(Programs::WaterMatrix->mTime);
 
-    Programs::WaterMatrix->resolution.Set(float(waterWidth), float(waterHeight));
+    Programs::WaterMatrix->resolution.Set(Float(waterWidth), Float(waterHeight));
 
 
 		/***************************************************************************************************
@@ -226,7 +226,7 @@ namespace GraphicsEngine
 
 		std::shared_ptr<ShadingOperation> shader = Engine::Create<ShadingOperation>();
 
-		shader->Resolution.Set(float(width), float(height));
+		shader->Resolution.Set(Float(width), Float(height));
 		shader->SetParent(This.lock());
 
 		Shader = shader;
@@ -261,7 +261,7 @@ namespace GraphicsEngine
 	// [4] = EmissiveAmbient
 	// [5] = Scene
 
-	void GlowingSceneOperation::Update(float dt)
+	void GlowingSceneOperation::Update(Float dt)
 	{
 		RenderOperation::Update(dt);
 
@@ -352,8 +352,8 @@ namespace GraphicsEngine
 			Graphics::ClearScreen(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); CheckGLErrors();
 
 			Programs::NormalMapGen->heightMap.Set(first, 1);
-			Programs::NormalMapGen->scale.Set(2);
-			Programs::NormalMapGen->resolution.Set(float(first->GetWidth()), float(first->GetHeight()));
+			Programs::NormalMapGen->scale.Set(2.f);
+			Programs::NormalMapGen->resolution.Set(Float(first->GetWidth()), Float(first->GetHeight()));
 
 			Programs::NormalMapGen->CoreMeshes.Square->Draw();
 		}
@@ -371,7 +371,7 @@ namespace GraphicsEngine
 		auto sceneBuffer = SceneBuffer.lock();
 
 		sceneBuffer->DrawTo();
-		Graphics::SetClearColor(RGBA(0, 0, 0, 1));
+		Graphics::SetClearColor(RGBA(0.f, 0.f, 0.f, 1.f));
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); CheckGLErrors();
 
 		currentScene->BuildRenderQueue(camera);
@@ -411,7 +411,7 @@ namespace GraphicsEngine
 			std::shared_ptr<CubeMapTexture> skyBox = SkyBox.lock();
 
 			Vector3 camDim = camera->GetDimensions();
-			float projectionPlane = camera->GetProjectionPlane();
+			Float projectionPlane = camera->GetProjectionPlane();
 			Matrix3 transform = camera->GetTransformation();
 
 			Programs::SkyBox->Use();
@@ -438,7 +438,7 @@ namespace GraphicsEngine
 		Programs::Phong->Use();
 
 		Programs::Phong->useOffsetMap.Set(false);
-		Programs::Phong->offsetAmplitude.Set(1);
+		Programs::Phong->offsetAmplitude.Set(1.f);
 		Programs::Phong->offsetMinCoord.Set(Vector3(-272, -256));
 		Programs::Phong->offsetMaxCoord.Set(Vector3(316, 300));
 		Programs::Phong->offsetMap.Set(WaterBuffer.lock()->GetTexture());
@@ -446,7 +446,7 @@ namespace GraphicsEngine
 		Programs::PhongForward->Use();
 
 		Programs::PhongForward->useOffsetMap.Set(false);
-		Programs::PhongForward->offsetAmplitude.Set(1);
+		Programs::PhongForward->offsetAmplitude.Set(1.f);
 		Programs::PhongForward->offsetMinCoord.Set(Vector3(-272, -256));
 		Programs::PhongForward->offsetMaxCoord.Set(Vector3(316, 300));
 		Programs::PhongForward->offsetMap.Set(WaterBuffer.lock()->GetTexture());
@@ -460,11 +460,11 @@ namespace GraphicsEngine
 
 		if (currentScene->GlobalLight.expired())
 		{
-			Programs::PhongForward->globalBrightness.Set(1);
+			Programs::PhongForward->globalBrightness.Set(1.f);
 			Programs::PhongForward->globalLightDirection.Set(-currentScene->CurrentCamera.lock()->GetTransformationInverse().UpVector());
-			Programs::PhongForward->globalDiffuse.Set(1, 1, 1);
-			Programs::PhongForward->globalSpecular.Set(1, 1, 1);
-			Programs::PhongForward->globalAmbient.Set(1, 1, 1);
+			Programs::PhongForward->globalDiffuse.Set(1.f, 1.f, 1.f);
+			Programs::PhongForward->globalSpecular.Set(1.f, 1.f, 1.f);
+			Programs::PhongForward->globalAmbient.Set(1.f, 1.f, 1.f);
 		}
 		else
 		{

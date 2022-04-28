@@ -58,7 +58,7 @@ namespace Engine
 						Argument<const Vector3&>("point1"),
 						Argument<const Vector3&>("point2"),
 						Argument<const RGBA&, Default(RGBA(0xFFFFFFFF))>("color"),
-						Argument<float, Default(0.1f)>("thickness"),
+						Argument<Float, Default(0.1f)>("thickness"),
 						Argument<bool, Default(false)>("glows")
 					).Bind<DebugDraw, &DebugDraw::DrawLine>()
 				),
@@ -72,7 +72,7 @@ namespace Engine
 						Argument<const Vector3&>("point2"),
 						Argument<const Vector3&>("point3"),
 						Argument<const RGBA&, Default(RGBA(0xFFFFFFFF))>("color"),
-						Argument<float, Default(0.1f)>("thickness"),
+						Argument<Float, Default(0.1f)>("thickness"),
 						Argument<bool, Default(false)>("glows")
 					).Bind<DebugDraw, &DebugDraw::DrawTriangle>()
 				)

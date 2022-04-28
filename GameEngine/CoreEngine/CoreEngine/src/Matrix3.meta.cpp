@@ -15,9 +15,9 @@ namespace Engine
 				Constructor(
 					Overload(),
 					Overload(
-						Argument<float>("x"),
-						Argument<float>("y"),
-						Argument<float>("z")
+						Argument<Float>("x"),
+						Argument<Float>("y"),
+						Argument<Float>("z")
 					),
 					Overload(
 						Argument<const Vector3&>("vector")
@@ -108,7 +108,7 @@ namespace Engine
 					"Det",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Matrix3, &Matrix3::Det>()
 				),
 
@@ -144,7 +144,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Matrix3>(),
-						Argument<float>("scalar")
+						Argument<Float>("scalar")
 					).Bind<Matrix3, &Matrix3::operator*>(),
 					Overload(
 						Const,
@@ -193,9 +193,9 @@ namespace Engine
 					Overload(
 						Static,
 						Returns<Matrix3>(),
-						Argument<float>("x"),
-						Argument<float>("y"),
-						Argument<float>("z")
+						Argument<Float>("x"),
+						Argument<Float>("y"),
+						Argument<Float>("z")
 					).Bind<&Matrix3::NewScale>(),
 					Overload(
 						Static,
@@ -210,7 +210,7 @@ namespace Engine
 						Static,
 						Returns<Matrix3>(),
 						Argument<const Vector3&>("axis"),
-						Argument<float>("theta")
+						Argument<Float>("theta")
 					).Bind<&Matrix3::AxisRotation>()
 				),
 
@@ -219,7 +219,7 @@ namespace Engine
 					Overload(
 						Static,
 						Returns<Matrix3>(),
-						Argument<float>("theta")
+						Argument<Float>("theta")
 					).Bind<&Matrix3::PitchRotation>()
 				),
 
@@ -228,7 +228,7 @@ namespace Engine
 					Overload(
 						Static,
 						Returns<Matrix3>(),
-						Argument<float>("theta")
+						Argument<Float>("theta")
 					).Bind<&Matrix3::YawRotation>()
 				),
 
@@ -237,7 +237,7 @@ namespace Engine
 					Overload(
 						Static,
 						Returns<Matrix3>(),
-						Argument<float>("theta")
+						Argument<Float>("theta")
 					).Bind<&Matrix3::RollRotation>()
 				),
 
@@ -246,9 +246,9 @@ namespace Engine
 					Overload(
 						Static,
 						Returns<Matrix3>(),
-						Argument<float>("pitch"),
-						Argument<float>("yaw"),
-						Argument<float>("roll")
+						Argument<Float>("pitch"),
+						Argument<Float>("yaw"),
+						Argument<Float>("roll")
 					).Bind<&Matrix3::EulerAnglesRotation>()
 				),
 
@@ -257,9 +257,9 @@ namespace Engine
 					Overload(
 						Static,
 						Returns<Matrix3>(),
-						Argument<float>("yaw"),
-						Argument<float>("pitch"),
-						Argument<float>("roll")
+						Argument<Float>("yaw"),
+						Argument<Float>("pitch"),
+						Argument<Float>("roll")
 					).Bind<&Matrix3::EulerAnglesYawRotation>()
 				),
 
@@ -268,11 +268,11 @@ namespace Engine
 					Overload(
 						Static,
 						Returns<Matrix3>(),
-						Argument<float>("distance"),
-						Argument<float>("nearPlane"),
-						Argument<float>("farPlane"),
-						Argument<float>("width"),
-						Argument<float>("height")
+						Argument<Float>("distance"),
+						Argument<Float>("nearPlane"),
+						Argument<Float>("farPlane"),
+						Argument<Float>("width"),
+						Argument<Float>("height")
 					).Bind<&Matrix3::NewProjection>()
 				),
 

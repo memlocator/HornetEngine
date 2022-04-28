@@ -34,7 +34,7 @@ namespace GraphicsEngine
 	{
 	public:
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 		bool ScrollRelativeToBar = true;
 		DeviceAxis ScrollSpeed = DeviceAxis(0.1f, 0);
@@ -45,12 +45,12 @@ namespace GraphicsEngine
 		const std::shared_ptr<DeviceTransform>& GetBarTransform() const { return BarTransform; }
 		const std::shared_ptr<ScreenCanvas>& GetBarCanvas() const { return BarCanvas; }
 
-		void SetBarSize(float percent);
-		void SetBarPercent(float percent);
+		void SetBarSize(Float percent);
+		void SetBarPercent(Float percent);
 		void SetBarOrientation(Enum::ScrollBarOrientation orientation);
 
-		float GetBarSize() const { return BarSize; }
-		float GetBarPercent() const { return BarPercent; }
+		Float GetBarSize() const { return BarSize; }
+		Float GetBarPercent() const { return BarPercent; }
 		Enum::ScrollBarOrientation GetBarOrientation() const { return BarOrientation; }
 
 		void SetBarScrollInput(const std::shared_ptr<Engine::InputObject>& input);
@@ -79,8 +79,8 @@ namespace GraphicsEngine
 		std::shared_ptr<Engine::InputObject> DefaultBarGrabInput;
 		std::shared_ptr<Engine::InputObject> DefaultBarDragInput;
 
-		float BarSize = 0.5f;
-		float BarPercent = 0;
+		Float BarSize = 0.5f;
+		Float BarPercent = 0;
 		Enum::ScrollBarOrientation BarOrientation = Enum::ScrollBarOrientation::Vertical;
 		bool Updating = false;
 		bool Initialized = false;

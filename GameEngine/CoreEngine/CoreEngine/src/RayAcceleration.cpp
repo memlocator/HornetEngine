@@ -151,8 +151,8 @@ namespace GraphicsEngine
 					255 * source->Brightness * source->GetRadius() * std::max(std::max(source->Diffuse.R, source->Diffuse.G), source->Diffuse.B),
 					source->Brightness,
 					source->GetRadius(),
-					std::cosf(source->InnerRadius),
-					std::cosf(source->OuterRadius),
+					std::cos(source->InnerRadius),
+					std::cos(source->OuterRadius),
 					source->GetAttenuationOffset(),
 					source->SpotlightFalloff,
 					source->Type,
@@ -295,7 +295,7 @@ namespace GraphicsEngine
 				int c = data->IndexBuffer[i + 2];
 
 				Vector3 normal = Vector3(data->VertexBuffer[b].Position - data->VertexBuffer[a].Position).Cross(data->VertexBuffer[c].Position - data->VertexBuffer[a].Position);
-				float length = normal.SquareLength();
+				Float length = normal.SquareLength();
 
 				if (length <= 1e-9)
 				{
@@ -395,9 +395,9 @@ namespace GraphicsEngine
 		return index;
 	}
 
-	void RayAcceleration::CastRay(const Ray& ray, float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack, int startObjectNode, int startNode) const
+	void RayAcceleration::CastRay(const Ray& ray, Float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack, int startObjectNode, int startNode) const
 	{
-		float farthest = length;
+		Float farthest = length;
 		const Object* object = nullptr;
 		Ray localRay;
 		int objectID = -1;
@@ -420,18 +420,18 @@ namespace GraphicsEngine
 
 			Vector3 normal(face.Normal.X, face.Normal.Y, face.Normal.Z);
 
-			float normalDot = normal * Vector3(localRay.Direction.X, localRay.Direction.Y, localRay.Direction.Z);
+			Float normalDot = normal * Vector3(localRay.Direction.X, localRay.Direction.Y, localRay.Direction.Z);
 
-			float distance = (normal * (vertexA - rayStart)) / normalDot;
+			Float distance = (normal * (vertexA - rayStart)) / normalDot;
 
 			if (distance > farthest || distance < 0)
 				return;
 
 			Vector3 intersection = rayStart + distance * rayDirection;
 
-			float dot1 = Vector3(vertexB - vertexA).Cross(intersection - vertexA).Dot(normal);
-			float dot2 = Vector3(vertexC - vertexB).Cross(intersection - vertexB).Dot(normal);
-			float dot3 = Vector3(vertexA - vertexC).Cross(intersection - vertexC).Dot(normal);
+			Float dot1 = Vector3(vertexB - vertexA).Cross(intersection - vertexA).Dot(normal);
+			Float dot2 = Vector3(vertexC - vertexB).Cross(intersection - vertexB).Dot(normal);
+			Float dot3 = Vector3(vertexA - vertexC).Cross(intersection - vertexC).Dot(normal);
 
 			if (!(std::signbit(dot1) == std::signbit(dot2) && std::signbit(dot1) == std::signbit(dot3)))
 				//if (!(std::signbit(dot1) & std::signbit(dot2) & std::signbit(dot3)))
@@ -449,9 +449,9 @@ namespace GraphicsEngine
 			if (filterResults != RayFilterResults::Confirm)
 				return;
 
-			float u = dot2 * face.Area;
-			float v = dot3 * face.Area;
-			float w = 1 - u - v;
+			Float u = dot2 * face.Area;
+			Float v = dot3 * face.Area;
+			Float w = 1 - u - v;
 
 			results.BaryCentric = Vector(u, v, w);
 
@@ -524,14 +524,14 @@ namespace GraphicsEngine
 			CastRay(ObjectTreeHead, ray, farthest, std::ref(processObjects), stack);
 	}
 
-	const float infinity = std::numeric_limits<float>::max();
+	const Float infinity = std::numeric_limits<Float>::max();
 
-	bool IntersectsAxis(float start, float direction, float min, float max, float& tMin, float& tMax)
+	bool IntersectsAxis(Float start, Float direction, Float min, Float max, Float& tMin, Float& tMax)
 	{
 		if (direction > -1e5f || direction < 1e5f)
 		{
-			float t1 = (min - start) * direction;
-			float t2 = (max - start) * direction;
+			Float t1 = (min - start) * direction;
+			Float t2 = (max - start) * direction;
 
 			if (t1 > t2)
 				std::swap(t1, t2);
@@ -553,10 +553,10 @@ namespace GraphicsEngine
 		return tMin <= tMax;
 	}
 
-	bool RayIntersects(const RayAcceleration::FastRay& ray, const Aabb& box, float& t)
+	bool RayIntersects(const RayAcceleration::FastRay& ray, const Aabb& box, Float& t)
 	{
-		float tMax = infinity;
-		float tMin = -tMax;
+		Float tMax = infinity;
+		Float tMin = -tMax;
 
 		if (!(
 			IntersectsAxis(ray.Start.X, ray.InverseDirection.X, box.Min.X, box.Max.X, tMin, tMax) &&
@@ -565,15 +565,15 @@ namespace GraphicsEngine
 			) || tMax < 0)
 			return false;
 
-		t = std::max(0.f, tMin);
+		t = std::max(0., tMin);
 
 		return true;
 	}
 
-	bool RayIntersects(const Ray& ray, const Aabb& box, float& t)
+	bool RayIntersects(const Ray& ray, const Aabb& box, Float& t)
 	{
-		float tMax = infinity;
-		float tMin = 0;
+		Float tMax = infinity;
+		Float tMin = 0;
 
 		if (!(
 			IntersectsAxis(ray.Start.X, 1 / ray.Direction.X, box.Min.X, box.Max.X, tMin, tMax) &&
@@ -582,12 +582,12 @@ namespace GraphicsEngine
 			) || tMax < 0)
 			return false;
 
-		t = std::max(0.f, tMin);
+		t = std::max(0., tMin);
 
 		return true;
 	}
 
-	void RayAcceleration::CastRay(int node, const Ray& ray, float& farthest, const ObjectCallback& callback, IndexVector& stack) const
+	void RayAcceleration::CastRay(int node, const Ray& ray, Float& farthest, const ObjectCallback& callback, IndexVector& stack) const
 	{
 		size_t startSize = stack.size();
 
@@ -603,7 +603,7 @@ namespace GraphicsEngine
 		{
 			const TreeNode& treeNode = Nodes[node];
 
-			float distance = infinity;
+			Float distance = infinity;
 
 			if (farthest > 0 && RayIntersects(ray, ::Aabb(treeNode.Box.Bounds[0], treeNode.Box.Bounds[1]), distance))
 			{

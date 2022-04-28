@@ -11,7 +11,7 @@ extern "C" {
 #include "ObjParser.h"
 #include "PlyParser.h"
 
-Vector3Raw operator*(float scalar, const Vector3Raw& vector)
+Vector3Raw operator*(Float scalar, const Vector3Raw& vector)
 {
 	return vector * scalar;
 }
@@ -63,16 +63,16 @@ namespace
 {
 	typedef std::map<std::string, int> IndexMap;
 
-	void compareMin(float& x, float& y)
+	void compareMin(Float& x, float& y)
 	{
 		if (y < x)
-			x = y;
+			x = (Float)y;
 	}
 
-	void compareMax(float& x, float& y)
+	void compareMax(Float& x, float& y)
 	{
 		if (y > x)
-			x = y;
+			x = (Float)y;
 	}
 
 	void compareVector(Vector3& minimum, Vector3& maximum, Vector3Raw& vector)
@@ -109,7 +109,7 @@ void MeshData::Initialize(const ObjParser* parser)
 		Vector3 uvP = uvB - uvA;
 		Vector3 uvQ = uvC - uvA;
 
-		float denominator = 1.0f / (uvP.X * uvQ.Y - uvP.Y * uvQ.X);
+		Float denominator = 1.0f / (uvP.X * uvQ.Y - uvP.Y * uvQ.X);
 
 		Vector3 tVector = denominator * (P * uvQ.Y - Q * uvP.Y);
 		Vector3 bVector = denominator * (Q * uvP.X - P * uvQ.X);
@@ -439,7 +439,7 @@ void MeshData::ConfigurePartitioning()
 
 void MeshData::CastRay(const Ray& ray, const CastResultsCallback& callback) const
 {
-	TrianglePartition.CastRay(ray, [this, &ray, &callback] (const AabbTree::Node* node, float t)
+	TrianglePartition.CastRay(ray, [this, &ray, &callback] (const AabbTree::Node* node, Float t)
 	{
 		TriangleData* triangleData = node->GetData<TriangleData>();
 
@@ -449,21 +449,21 @@ void MeshData::CastRay(const Ray& ray, const CastResultsCallback& callback) cons
 
 		Vector3 normal = Vector3(vertexB - vertexA).Cross(vertexC - vertexA);
 
-		float normalDot = normal * ray.Direction;
+		Float normalDot = normal * ray.Direction;
 
 		if (normalDot >= 0)
 			return;
 
-		float distance = (normal * (vertexA - ray.Start)) / normalDot;
+		Float distance = (normal * (vertexA - ray.Start)) / normalDot;
 
 		if (distance > 1 || distance < 0)
 			return;
 
 		Vector3 intersection = ray.Start + distance * ray.Direction;
 
-		float dot1 = Vector3(vertexB - vertexA).Cross(intersection - vertexA).Dot(normal);
-		float dot2 = Vector3(vertexC - vertexB).Cross(intersection - vertexB).Dot(normal);
-		float dot3 = Vector3(vertexA - vertexC).Cross(intersection - vertexC).Dot(normal);
+		Float dot1 = Vector3(vertexB - vertexA).Cross(intersection - vertexA).Dot(normal);
+		Float dot2 = Vector3(vertexC - vertexB).Cross(intersection - vertexB).Dot(normal);
+		Float dot3 = Vector3(vertexA - vertexC).Cross(intersection - vertexC).Dot(normal);
 
 		if (!(std::signbit(dot1) == std::signbit(dot2) && std::signbit(dot1) == std::signbit(dot3)))
 			return;
@@ -576,8 +576,8 @@ void MeshData::GenerateCylinderMap(const MeshData* meshData)
 	{
 		Vector3 vector = VertexBuffer[i].Position - center;
 
-		float r = vector.Length();
-		float theta = atan2f(vector.Z, vector.X);
+		Float r = vector.Length();
+		Float theta = std::atan2(vector.Z, vector.X);
 
 		VertexBuffer[i].UV = Vector2Raw(0.5f - 0.5f * theta / PI, 0.5f - vector.Y / GetSize().Y);
 	}
@@ -598,7 +598,7 @@ void MeshData::GenerateCylinderMap(const MeshData* meshData)
 		Vector3 uvP = uvB - uvA;
 		Vector3 uvQ = uvC - uvA;
 
-		float denominator = 1.0f / (uvP.X * uvQ.Y - uvP.Y * uvQ.X);
+		Float denominator = 1.0f / (uvP.X * uvQ.Y - uvP.Y * uvQ.X);
 
 		Vector3 tVector = denominator * (P * uvQ.Y - Q * uvP.Y);
 		Vector3 bVector = denominator * (Q * uvP.X - P * uvQ.X);
@@ -647,9 +647,9 @@ void MeshData::GenerateSphereMap(const MeshData* meshData)
 	{
 		Vector3 vector = VertexBuffer[i].Position - center;
 
-		float r = vector.Length();
-		float theta = atan2f(vector.Z, vector.X);
-		float phi = acosf(vector.Y / r);
+		Float r = vector.Length();
+		Float theta = std::atan2(vector.Z, vector.X);
+		Float phi = std::acos(vector.Y / r);
 
 		VertexBuffer[i].UV = Vector2Raw(0.5f - 0.5f * theta / PI, phi / PI);
 	}
@@ -670,7 +670,7 @@ void MeshData::GenerateSphereMap(const MeshData* meshData)
 		Vector3 uvP = uvB - uvA;
 		Vector3 uvQ = uvC - uvA;
 
-		float denominator = 1.0f / (uvP.X * uvQ.Y - uvP.Y * uvQ.X);
+		Float denominator = 1.0f / (uvP.X * uvQ.Y - uvP.Y * uvQ.X);
 
 		Vector3 tVector = denominator * (P * uvQ.Y - Q * uvP.Y);
 		Vector3 bVector = denominator * (Q * uvP.X - P * uvQ.X);
@@ -689,7 +689,7 @@ void MeshData::GenerateSphereMap(const MeshData* meshData)
 
 namespace
 {
-	float absf(float x)
+	Float absf(Float x)
 	{
 		return x < 0 ? -x : x;
 	}
@@ -707,16 +707,16 @@ void MeshData::GenerateCubeMap(const MeshData* meshData)
 	int vertices = int(IndexBuffer.size());
 
 	Vector3 size = GetSize();
-	Vector3 absoluteSize = 0.5f * Vector3(absf(size.X), absf(size.Y), absf(size.Z));
+	Vector3 absoluteSize = 0.5 * Vector3(std::abs(size.X), std::abs(size.Y), std::abs(size.Z));
 	
 	for (int i = 0; i < vertices; ++i)
 	{
 		Vector3 vector = VertexBuffer[i].Normal;
 
-		Vector3 absolute = Vector3(absf(vector.X), absf(vector.Y), absf(vector.Z));
+		Vector3 absolute = Vector3(std::abs(vector.X), std::abs(vector.Y), std::abs(vector.Z));
 
-		float u = 0;
-		float v = 0;
+		Float u = 0;
+		Float v = 0;
 
 		if (absolute.Z)
 
@@ -732,7 +732,7 @@ void MeshData::GenerateCubeMap(const MeshData* meshData)
 		}
 		else
 		{
-			float denominator = absolute.Z;
+			Float denominator = absolute.Z;
 
 			if (denominator == 0)
 				denominator = 1;
@@ -759,7 +759,7 @@ Vector3 MeshData::GetMaximumCorner() const
 
 Vector3 MeshData::GetCenter() const
 {
-	return 0.5f * (Minimum + Maximum);
+	return 0.5 * (Minimum + Maximum);
 }
 
 Vector3 MeshData::GetSize() const

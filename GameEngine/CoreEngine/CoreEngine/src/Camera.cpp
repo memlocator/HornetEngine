@@ -8,7 +8,7 @@ extern "C" {
 
 namespace GraphicsEngine
 {
-	void Camera::Update(float delta)
+	void Camera::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 
@@ -29,7 +29,7 @@ namespace GraphicsEngine
 		CalculateFrustum();
 	}
 
-	void Camera::SetProperties(float newFieldOfView, float newAspectRatio, float near, float far)
+	void Camera::SetProperties(Float newFieldOfView, Float newAspectRatio, Float near, Float far)
 	{
 		if (far < 0)
 			far *= -1;
@@ -42,7 +42,7 @@ namespace GraphicsEngine
 		FarPlane = far;
 		AspectRatio = newAspectRatio;
 		FieldOfView = newFieldOfView;
-		Height = 2 * near * (float)tan(FieldOfView / 2);
+		Height = 2 * near * (Float)std::tan(FieldOfView / 2);
 		Width = AspectRatio * Height;
 
 		if (FieldOfView >= PI)
@@ -55,7 +55,7 @@ namespace GraphicsEngine
 		MarkMoved();
 	}
 
-	void Camera::SetProperties(float newWidth, float newHeight, float newProjectionPlane, float near, float far)
+	void Camera::SetProperties(Float newWidth, Float newHeight, Float newProjectionPlane, Float near, Float far)
 	{
 		if (far < 0)
 			far *= -1;
@@ -69,7 +69,7 @@ namespace GraphicsEngine
 		NearPlane = near;
 		FarPlane = far;
 		AspectRatio = Width / Height;
-		FieldOfView = 2 * (float)atan(Height / (2 * ProjectionPlane));
+		FieldOfView = 2 * (Float)std::atan(Height / (2 * ProjectionPlane));
 
 		if (ProjectionPlane < near)
 			ProjectionPlane = near;
@@ -112,27 +112,27 @@ namespace GraphicsEngine
 		return Vector3(Width, Height);
 	}
 
-	float Camera::GetProjectionPlane() const
+	Float Camera::GetProjectionPlane() const
 	{
 		return ProjectionPlane;
 	}
 
-	float Camera::GetNearPlane() const
+	Float Camera::GetNearPlane() const
 	{
 		return NearPlane;
 	}
 
-	float Camera::GetFarPlane() const
+	Float Camera::GetFarPlane() const
 	{
 		return FarPlane;
 	}
 
-	float Camera::GetAspectRatio() const
+	Float Camera::GetAspectRatio() const
 	{
 		return AspectRatio;
 	}
 
-	float Camera::GetFieldOfView() const
+	Float Camera::GetFieldOfView() const
 	{
 		return FieldOfView;
 	}
@@ -166,11 +166,11 @@ namespace GraphicsEngine
 		return CameraFrustum;
 	}
 
-	Ray Camera::GetRay(int x, int y, int resolutionX, int resolutionY, float length) const
+	Ray Camera::GetRay(int x, int y, int resolutionX, int resolutionY, Float length) const
 	{
 		Vector3 direction = Vector3(
-			Width * (float(x) - float(0.5f * resolutionX)) / resolutionX,
-			Height * -(float(y) - float(0.5f * resolutionY)) / resolutionY,
+			Width * (Float(x) - Float(0.5f * resolutionX)) / resolutionX,
+			Height * -(Float(y) - Float(0.5f * resolutionY)) / resolutionY,
 			-ProjectionPlane
 		).Unit();
 

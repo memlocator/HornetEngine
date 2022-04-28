@@ -17,8 +17,8 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0.0f)>("scale"),
-						Argument<float, Default(0.0f)>("offset")
+						Argument<Float, Default(0.0f)>("scale"),
+						Argument<Float, Default(0.0f)>("offset")
 					)
 				),
 
@@ -27,8 +27,8 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("newScale"),
-						Argument<float>("newOffset")
+						Argument<Float>("newScale"),
+						Argument<Float>("newOffset")
 					).Bind<DeviceAxis, &DeviceAxis::Set>()
 				),
 
@@ -36,9 +36,9 @@ namespace Engine
 					"Calculate",
 					Overload(
 						Const,
-						Returns<float>(),
-						Argument<float>("base"),
-						Argument<float>("size")
+						Returns<Float>(),
+						Argument<Float>("base"),
+						Argument<Float>("size")
 					).Bind<DeviceAxis, &DeviceAxis::Calculate>()
 				),
 
@@ -87,7 +87,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<DeviceAxis>(),
-						Argument<float>("scalar")
+						Argument<Float>("scalar")
 					).Bind<DeviceAxis, &DeviceAxis::operator*>()
 				),
 
@@ -96,7 +96,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<DeviceAxis>(),
-						Argument<float>("scalar")
+						Argument<Float>("scalar")
 					).Bind<DeviceAxis, &DeviceAxis::operator/>()
 				)
 			);
@@ -113,10 +113,10 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0.0f)>("xScale"),
-						Argument<float, Default(0.0f)>("xOffset"),
-						Argument<float, Default(0.0f)>("yScale"),
-						Argument<float, Default(0.0f)>("yOffset")
+						Argument<Float, Default(0.0f)>("xScale"),
+						Argument<Float, Default(0.0f)>("xOffset"),
+						Argument<Float, Default(0.0f)>("yScale"),
+						Argument<Float, Default(0.0f)>("yOffset")
 					)
 				),
 
@@ -125,10 +125,10 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("xScale"),
-						Argument<float>("xOffset"),
-						Argument<float>("yScale"),
-						Argument<float>("yOffset")
+						Argument<Float>("xScale"),
+						Argument<Float>("xOffset"),
+						Argument<Float>("yScale"),
+						Argument<Float>("yOffset")
 					).Bind<DeviceVector, &DeviceVector::Set>(),
 					Overload(
 						Mutable,
@@ -149,10 +149,10 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Vector3>(),
-						Argument<float>("baseX"),
-						Argument<float>("sizeX"),
-						Argument<float>("baseY"),
-						Argument<float>("sizeY")
+						Argument<Float>("baseX"),
+						Argument<Float>("sizeX"),
+						Argument<Float>("baseY"),
+						Argument<Float>("sizeY")
 					).Bind<DeviceVector, &DeviceVector::Calculate>()
 				),
 
@@ -201,7 +201,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<DeviceVector>(),
-						Argument<float>("scalar")
+						Argument<Float>("scalar")
 					).Bind<DeviceVector, &DeviceVector::operator*>()
 				),
 
@@ -210,7 +210,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<DeviceVector>(),
-						Argument<float>("scalar")
+						Argument<Float>("scalar")
 					).Bind<DeviceVector, &DeviceVector::operator/>()
 				)
 			);

@@ -21,11 +21,12 @@ struct Vector2Raw
 	float Y = 0;
 
 	Vector2Raw(float x = 0, float y = 0) : X(x), Y(y) {}
-	Vector2Raw(const Vector3& vector) : X(vector.X), Y(vector.Y) {}
+	Vector2Raw(double x, double y = 0) : X((float)x), Y((float)y) {}
+	Vector2Raw(const Vector3& vector) : X((float)vector.X), Y((float)vector.Y) {}
 
 	operator Vector3()
 	{
-		return Vector3(X, Y);
+		return Vector3((Float)X, (Float)Y);
 	}
 };
 
@@ -36,11 +37,12 @@ struct Vector3Raw
 	float Z = 0;
 
 	Vector3Raw(float x = 0, float y = 0, float z = 0) : X(x), Y(y), Z(z) {}
-	Vector3Raw(const Vector3& vector) : X(vector.X), Y(vector.Y), Z(vector.Z) {}
+	Vector3Raw(double x, double y = 0, double z = 0) : X((float)x), Y((float)y), Z((float)z) {}
+	Vector3Raw(const Vector3& vector) : X((float)vector.X), Y((float)vector.Y), Z((float)vector.Z) {}
 
 	operator Vector3() const
 	{
-		return Vector3(X, Y, Z);
+		return Vector3((Float)X, (Float)Y, (Float)Z);
 	}
 
 	Vector3Raw operator+(const Vector3Raw& other) const
@@ -53,19 +55,43 @@ struct Vector3Raw
 		return Vector3Raw(X - other.X, Y - other.Y, Z - other.Z);
 	}
 
-	Vector3Raw operator*(float scalar) const
+	Vector3Raw operator*(Float scalar) const
 	{
 		return Vector3Raw(scalar * X, scalar * Y, scalar * Z);
 	}
 };
 
-Vector3Raw operator*(float scalar, const Vector3Raw& vector);
+struct Vector4Raw
+{
+	float X = 0;
+	float Y = 0;
+	float Z = 0;
+	float W = 0;
+
+	Vector4Raw(float x = 0, float y = 0, float z = 0, float w = 0) : X(x), Y(y), Z(z), W(w) {}
+	Vector4Raw(double x, double y = 0, double z = 0, double w = 0) : X((float)x), Y((float)y), Z((float)z), W((float)w) {}
+	Vector4Raw(const Vector3& vector) : X((float)vector.X), Y((float)vector.Y), Z((float)vector.Z), W((float)vector.W) {}
+
+	operator Vector3() const
+	{
+		return Vector3((Float)X, (Float)Y, (Float)Z, (Float)W);
+	}
+
+	Vector3Raw Unit() const
+	{
+		float length = std::sqrt(X * X + Y * Y + Z * Z);
+
+		return Vector3Raw(X / length, Y / length, Z / length);
+	}
+};
+
+Vector3Raw operator*(Float scalar, const Vector3Raw& vector);
 
 struct VertexData
 {
 	Vector3Raw Position, Normal;
 	Vector2Raw UV;
-	Vector3 TVector, BVector;
+	Vector4Raw TVector, BVector;
 };
 
 struct TriangleData

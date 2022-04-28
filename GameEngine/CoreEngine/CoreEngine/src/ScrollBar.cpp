@@ -42,7 +42,7 @@ namespace GraphicsEngine
 		SetTicks(true);
 	}
 
-	float GetAxis(const Vector3& vector, Enum::ScrollBarOrientation orientation)
+	Float GetAxis(const Vector3& vector, Enum::ScrollBarOrientation orientation)
 	{
 		if (orientation == Enum::ScrollBarOrientation::Horizontal)
 			return vector.X;
@@ -50,7 +50,7 @@ namespace GraphicsEngine
 		return vector.Y;
 	}
 
-	void ScrollBar::Update(float delta)
+	void ScrollBar::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 
@@ -84,29 +84,29 @@ namespace GraphicsEngine
 		if (barScrollInput == nullptr)
 			return;
 
-		float scrollDelta = -barScrollInput->GetPosition().Y;
+		Float scrollDelta = -barScrollInput->GetPosition().Y;
 
 		if (scrollDelta == 0) return;
 
-		float barSize = GetAxis(BarTransform->GetAbsoluteSize(), BarOrientation);
-		float frameSize = GetAxis(FrameTransform->GetAbsoluteSize(), BarOrientation);
+		Float barSize = GetAxis(BarTransform->GetAbsoluteSize(), BarOrientation);
+		Float frameSize = GetAxis(FrameTransform->GetAbsoluteSize(), BarOrientation);
 
 		if (std::abs(barSize - frameSize) > 1e-9f)
 		{
-			float movement = ScrollSpeed.Offset + ScrollSpeed.Scale * (ScrollRelativeToBar ? barSize : frameSize);
+			Float movement = ScrollSpeed.Offset + ScrollSpeed.Scale * (ScrollRelativeToBar ? barSize : frameSize);
 			
 			SetBarPercent(BarPercent + scrollDelta * movement / (frameSize - barSize));
 		}
 	}
 
-	void ScrollBar::SetBarSize(float percent)
+	void ScrollBar::SetBarSize(Float percent)
 	{
 		BarSize = std::max(std::min(1.f, percent), 0.f);
 
 		UpdateBar();
 	}
 
-	void ScrollBar::SetBarPercent(float percent)
+	void ScrollBar::SetBarPercent(Float percent)
 	{
 		BarPercent = std::max(std::min(1.f, percent), 0.f);
 
@@ -178,7 +178,7 @@ namespace GraphicsEngine
 
 		Updating = true;
 
-		float absSize = 0;
+		Float absSize = 0;
 		DeviceAxis axis;
 
 		if (BarOrientation == Enum::ScrollBarOrientation::Vertical)
@@ -195,8 +195,8 @@ namespace GraphicsEngine
 		if (absSize == 0)
 			absSize = 1;
 
-		float position = std::min(std::max(axis.Scale + axis.Offset / absSize, 0.f), 1.f);
-		float barSize = 1 - BarSize;
+		Float position = std::min(std::max(axis.Scale + axis.Offset / absSize, 0.f), 1.f);
+		Float barSize = 1 - BarSize;
 
 		if (barSize == 0)
 			barSize = 1;

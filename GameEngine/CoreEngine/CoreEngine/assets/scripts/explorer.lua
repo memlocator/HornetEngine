@@ -92,7 +92,7 @@ function AllocateItem(item)
 		objectTransform.Parent = explorerFrameTransform
 		
 		local backgroundCanvas = GameObject.ScreenCanvas()
-		backgroundCanvas.Appearance = backgroundAppearance 
+		backgroundCanvas.Appearance = backgroundAppearance
 		backgroundCanvas.Parent = objectTransform
 		
 		displayTransform = GameObject.DeviceTransform()

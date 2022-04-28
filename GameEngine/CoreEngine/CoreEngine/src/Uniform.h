@@ -50,6 +50,7 @@ namespace GLSL
 		Constructor(Float);
 
 		bool Set(float value);
+		bool Set(double value);
 	};
 
 	class Vec2 : public UniformBase
@@ -59,6 +60,7 @@ namespace GLSL
 
 		bool Set(const Vector3& vector);
 		bool Set(float x, float y);
+		bool Set(double x, double y);
 	};
 
 	class Vec3 : public UniformBase
@@ -69,6 +71,7 @@ namespace GLSL
 		bool Set(const Vector3& vector);
 		bool Set(const RGBA& color);
 		bool Set(float x, float y, float z);
+		bool Set(double x, double y, double z);
 		bool Set(unsigned int color);
 
 	private:
@@ -83,6 +86,7 @@ namespace GLSL
 		bool Set(const Vector3& vector);
 		bool Set(const RGBA& color);
 		bool Set(float x, float y, float z, float w);
+		bool Set(double x, double y, double z, double w);
 		bool Set(unsigned int color);
 
 	private:
@@ -138,6 +142,7 @@ namespace GLSL
 		Constructor(FloatArray);
 
 		bool Set(const float* values, int size);
+		bool Set(const double* values, int size);
 	};
 
 	class Vec2Array : public UniformBase
@@ -146,6 +151,7 @@ namespace GLSL
 		Constructor(Vec2Array);
 
 		bool Set(const float* data, int size);
+		bool Set(const double* data, int size);
 		bool Set(const Vector3* vector, int size);
 	};
 
@@ -155,6 +161,7 @@ namespace GLSL
 		Constructor(Vec3Array);
 
 		bool Set(const float* data, int size);
+		bool Set(const double* data, int size);
 		bool Set(const Vector3* vector, int size);
 	};
 }

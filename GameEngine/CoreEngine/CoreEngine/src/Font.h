@@ -17,18 +17,18 @@ namespace GraphicsEngine
 		{
 		public:
 			char Value = 0;
-			float AspectRatio = 1;
-			float KerningLeft = 0;
-			float KerningRight = 0;
-			float VerticalOffset = 0;
+			Float AspectRatio = 1;
+			Float KerningLeft = 0;
+			Float KerningRight = 0;
+			Float VerticalOffset = 0;
 			Vector3 TextOffset;
 			Vector3 TextScale;
 
 			Character();
-			Character(char character, float aspectRatio, const Vector3& textOffset, const Vector3& textScale, float kerningLeft, float kerningRight, float verticalOffset);
+			Character(char character, Float aspectRatio, const Vector3& textOffset, const Vector3& textScale, Float kerningLeft, Float kerningRight, Float verticalOffset);
 		};
 
-		float SpaceWidth = 0.3f;
+		Float SpaceWidth = 0.3f;
 		int TabSpaces = 4;
 
 		void Load(const std::string& filePath, const std::string& textureName);

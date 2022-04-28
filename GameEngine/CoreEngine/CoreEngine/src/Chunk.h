@@ -25,7 +25,7 @@ namespace Engine
 		~Chunk();
 
 		void Initialize();
-		void Update(float delta);
+		void Update(Float delta);
 
 		void SetTerrain(const std::shared_ptr<Object>& terrain, const Coordinates& chunk);
 

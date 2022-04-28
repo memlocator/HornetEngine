@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 
+#include "Precision.h"
+
 namespace GraphicsEngine
 {
 	class Camera;
@@ -18,7 +20,7 @@ namespace GraphicsEngine
 		void Clear();
 
 	private:
-		typedef std::vector<float> FloatVector;
+		typedef std::vector<Float> FloatVector;
 		typedef std::vector<int> IntVector;
 
 		FloatVector Attenuation;

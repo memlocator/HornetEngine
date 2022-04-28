@@ -56,7 +56,7 @@ public:
 	};
 
 	typedef std::function<void(const Node* node)> Callback;
-	typedef std::function<void(const Node* node, float t)> RayCallback;
+	typedef std::function<void(const Node* node, Float t)> RayCallback;
 	typedef std::function<void(const Node* node1, const Node* node2)> PairCallback;
 
 	void Clear();
@@ -80,7 +80,7 @@ public:
 	const Node* GetNode(int id) const;
 
 	// A fattening factor to use for insertion to prevent jitter from causing updates
-	static const float FatteningFactor;
+	static const Float FatteningFactor;
 
 	// Add your implementation here
 private:
@@ -94,8 +94,8 @@ private:
 	Aabb GetPairBounds(const Node* node1, const Node* node2) const;
 	Aabb GetPairBounds(const Aabb& first, const Aabb& second) const;
 	void PushDown(Node* node, Node* parent, bool fromLeft);
-	float SurfaceArea(const Aabb& box) const;
-	float Volume(const Aabb& box) const;
+	Float SurfaceArea(const Aabb& box) const;
+	Float Volume(const Aabb& box) const;
 	void RecomputeHeight(Node* node);
 	void Remove(Node* node);
 	Aabb Fatten(const Aabb& box);

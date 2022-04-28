@@ -24,7 +24,7 @@ namespace GraphicsEngine
 		ContentsAppearance = Engine::Create<Appearance>();
 		ContentsAppearance->Name = "ContentsAppearance";
 		ContentsAppearance->Texture = ContentsTexture;
-		ContentsAppearance->Color = RGBA(0, 0, 0, 0);
+		ContentsAppearance->Color = RGBA(0.f, 0.f, 0.f, 0.f);
 		ContentsAppearance->SetParent(This.lock());
 
 		TextTransform = Engine::Create<DeviceTransform>();
@@ -50,8 +50,8 @@ namespace GraphicsEngine
 			return;
 
 		Vector3 absoluteSize = transform->GetAbsoluteSize();
-		float fontSize = FontSize.Calculate(0, absoluteSize.Y);
-		float lineSpacing = LineSpacing.Calculate(0, absoluteSize.Y);
+		Float fontSize = FontSize.Calculate(0, absoluteSize.Y);
+		Float lineSpacing = LineSpacing.Calculate(0, absoluteSize.Y);
 
 		if (!TextChanged && fontSize == LastFontSize && absoluteSize == LastAbsoluteSize && AlignX == LastAlignX && AlignY == LastAlignY)
 			return;
@@ -69,7 +69,7 @@ namespace GraphicsEngine
 
 		Programs::Screen->SetClippingMask(nullptr, 1);
 		Programs::Screen->SetTexture(font->GetTexture());
-		Programs::Screen->color.Set(RGBA(0, 0, 0, 0));
+		Programs::Screen->color.Set(RGBA(0.f, 0.f, 0.f, 0.f));
 		Programs::Screen->blendTexture.Set(true);
 		Programs::Screen->resolution.Set(absoluteSize);
 		Programs::Screen->textureColor.Set(TextColor);
@@ -78,7 +78,7 @@ namespace GraphicsEngine
 
 		TextTransform->UpdateTransformation();
 
-		Graphics::SetClearColor(RGBA(0, 0, 0, 0)); CheckGLErrors();
+		Graphics::SetClearColor(RGBA(0.f, 0.f, 0.f, 0.f)); CheckGLErrors();
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT); CheckGLErrors();
 		CharacterTransform->AnchorPoint = DeviceVector(0, 0, 0, 0);
 		CharacterTransform->Position = DeviceVector(0, 0, 0, 0);
@@ -120,7 +120,7 @@ namespace GraphicsEngine
 		for (int i = SkipWhiteSpace(0); i < int(Contents.size()); i)
 		{
 			int wordEnd = GetWordEnd(i);
-			float wordWidth = GetWordWidth(font, i, wordEnd);
+			Float wordWidth = GetWordWidth(font, i, wordEnd);
 
 			if (WrapText && CharacterTransform->Position.X.Offset + wordWidth > absoluteSize.X)
 			{
@@ -153,9 +153,9 @@ namespace GraphicsEngine
 					CharacterTransform->Position.X.Offset += font->SpaceWidth * fontSize;
 				else if (Contents[i] == '\t')
 				{
-					float tabSize = font->TabSpaces * font->SpaceWidth * fontSize;
+					Float tabSize = font->TabSpaces * font->SpaceWidth * fontSize;
 
-					CharacterTransform->Position.X.Offset += (std::floorf(CharacterTransform->Position.X.Offset / tabSize) + 1) * tabSize;
+					CharacterTransform->Position.X.Offset += (std::floor(CharacterTransform->Position.X.Offset / tabSize) + 1) * tabSize;
 				}
 				else if (Contents[i] == '\r' || Contents[i] == '\n')
 				{
@@ -231,9 +231,9 @@ namespace GraphicsEngine
 		return index;
 	}
 
-	float Text::GetWordWidth(const std::shared_ptr<Font>& font, int start, int wordEnd) const
+	Float Text::GetWordWidth(const std::shared_ptr<Font>& font, int start, int wordEnd) const
 	{
-		float width = 0;
+		Float width = 0;
 
 		for (int i = start; i < wordEnd; ++i)
 		{

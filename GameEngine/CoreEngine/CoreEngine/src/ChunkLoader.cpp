@@ -15,7 +15,7 @@ namespace Engine
 		SetTicks(true);
 	}
 
-	void ChunkLoader::Update(float delta)
+	void ChunkLoader::Update(Float delta)
 	{
 		Object::Update(delta);
 
@@ -82,7 +82,7 @@ namespace Engine
 
 		Vector3 cell = terrainTransform->GetWorldTransformationInverse() * transform->GetWorldPosition();
 
-		return Coordinates(int(std::floorf(cell.X / 16)) + chunk.X, int(std::floorf(cell.Y / 16)) + chunk.Y, int(std::floorf(cell.Z / 16)) + chunk.Z);
+		return Coordinates(int(std::floor(cell.X / 16)) + chunk.X, int(std::floor(cell.Y / 16)) + chunk.Y, int(std::floor(cell.Z / 16)) + chunk.Z);
 	}
 
 	Enum::ChunkStatus ChunkLoader::GetChunkStatus(const Coordinates& chunk) const

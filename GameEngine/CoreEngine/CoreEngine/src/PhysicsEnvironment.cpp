@@ -21,7 +21,7 @@ namespace Engine
 			return Colliders[index];
 		}
 
-		float RayCastResults::GetDistance(int index) const
+		Float RayCastResults::GetDistance(int index) const
 		{
 			return Distances[index];
 		}
@@ -31,7 +31,7 @@ namespace Engine
 			return Normals[index];
 		}
 
-		void RayCastResults::Push(const std::shared_ptr<Collider2D>& collider, float distance, const Vector3& normal)
+		void RayCastResults::Push(const std::shared_ptr<Collider2D>& collider, Float distance, const Vector3& normal)
 		{
 			Colliders.push_back(collider);
 			Distances.push_back(distance);
@@ -53,7 +53,7 @@ namespace Engine
 			SetTicks(true);
 		}
 
-		void PhysicsEnvironment::Update(float delta)
+		void PhysicsEnvironment::Update(Float delta)
 		{
 			Object::Update(delta);
 
@@ -114,7 +114,7 @@ namespace Engine
 				}
 				else
 				{
-					float radiusSum = collider1->GetRadius() + collider2->GetRadius();
+					Float radiusSum = collider1->GetRadius() + collider2->GetRadius();
 
 					if ((collider1->GetCenter() - collider2->GetCenter()).SquareLength() <= radiusSum * radiusSum)
 						collision.Displacement = GetCircleMinimumTranslationVector(collider2->GetCenter() - collider1->GetCenter(), radiusSum);
@@ -240,10 +240,10 @@ namespace Engine
 			struct CastResult
 			{
 				std::shared_ptr<Collider2D> Collider;
-				float Distance = 0;
+				Float Distance = 0;
 				Vector3 Normal;
 
-				CastResult(std::shared_ptr<Collider2D> collider, float distance, Vector3 normal) : Collider(collider), Distance(distance), Normal(normal) {}
+				CastResult(std::shared_ptr<Collider2D> collider, Float distance, Vector3 normal) : Collider(collider), Distance(distance), Normal(normal) {}
 
 				bool operator<(const CastResult& other) const
 				{
@@ -260,22 +260,22 @@ namespace Engine
 
 			CastQueue hits;
 
-			ColliderPartitioning.CastRay(ray, [&ray, &hits] (const AabbTree::Node* node, float t)
+			ColliderPartitioning.CastRay(ray, [&ray, &hits] (const AabbTree::Node* node, Float t)
 			{
 				std::shared_ptr<Collider2D> collider = node->GetData<ColliderReference>()->Collider.lock();
 
 				if (collider->IsCircle)
 				{
 					Vector3 center = collider->GetCenter();
-					float radius = collider->GetRadius();
+					Float radius = collider->GetRadius();
 
 					if (VectorApproachesCollider(ray.Start, ray.Direction, center, radius * radius))
 					{
 						Vector3 offset = ray.Start - center;
-						float a = ray.Direction * ray.Direction;
-						float b = 2 * (ray.Direction * offset);
-						float c = offset * offset - radius * radius;
-						float distance = (-b - sqrtf(b * b - 4 * a * c)) / (2 * a);
+						Float a = ray.Direction * ray.Direction;
+						Float b = 2 * (ray.Direction * offset);
+						Float c = offset * offset - radius * radius;
+						Float distance = (-b - std::sqrt(b * b - 4 * a * c)) / (2 * a);
 
 						hits.push(CastResult(collider, distance, (center - ray.Start - distance * ray.Direction).Unit()));
 					}
@@ -286,7 +286,7 @@ namespace Engine
 
 					if (VectorApproachesCollider(ray.Start, ray.Direction, data.Center, data.RadiusSquared))
 					{
-						float distance = -1;
+						Float distance = -1;
 						int side = GetEntrySide(data, ray.Start, ray.Direction, distance);
 
 						if (side != -1)

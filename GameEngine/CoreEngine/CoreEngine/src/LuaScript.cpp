@@ -14,7 +14,7 @@ namespace Engine
 		SetTicks(true);
 	}
 
-	void LuaScript::Update(float delta)
+	void LuaScript::Update(Float delta)
 	{
 		Object::Update(delta);
 

@@ -417,7 +417,7 @@ namespace Engine
 		{
 			if (lua_isnumber(lua, 1))
 			{
-				float delay = float(lua_tonumber(lua, 1));
+				Float delay = Float(lua_tonumber(lua, 1));
 
 				int id = Lua::GetThreadID(lua);
 
@@ -430,7 +430,7 @@ namespace Engine
 				lua_pushthread(lua);
 				lua_settable(lua, threads);
 
-				TaskScheduler::Repeat(delay, 1, [lua, id](float, float, int)
+				TaskScheduler::Repeat(delay, 1, [lua, id](Float, Float, int)
 					{
 						if (Dead(id)) return;
 

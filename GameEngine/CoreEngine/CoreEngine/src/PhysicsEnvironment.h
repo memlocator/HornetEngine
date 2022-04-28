@@ -20,13 +20,13 @@ namespace Engine
 		public:
 			int GetCount() const;
 			std::shared_ptr<Collider2D> GetHit(int index) const;
-			float GetDistance(int index) const;
+			Float GetDistance(int index) const;
 			Vector3 GetNormal(int index) const;
-			void Push(const std::shared_ptr<Collider2D>& collider, float distance, const Vector3& normal);
+			void Push(const std::shared_ptr<Collider2D>& collider, Float distance, const Vector3& normal);
 
 		private:
 			typedef std::vector<std::shared_ptr<Collider2D>> ColliderVector;
-			typedef std::vector<float> FloatVector;
+			typedef std::vector<Float> FloatVector;
 			typedef std::vector<Vector3> NormalVector;
 
 			ColliderVector Colliders;
@@ -40,7 +40,7 @@ namespace Engine
 			~PhysicsEnvironment();
 
 			void Initialize();
-			void Update(float delta);
+			void Update(Float delta);
 
 			void AddObject(const std::shared_ptr<Collider2D>& collider);
 			void RemoveObject(const std::shared_ptr<Collider2D>& collider);

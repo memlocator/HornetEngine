@@ -13,7 +13,7 @@ namespace Engine
 	public:
 		virtual ~Transform() {}
 
-		void Update(float delta);
+		void Update(Float delta);
 
 		bool HasMoved() const;
 		bool HasMoved();

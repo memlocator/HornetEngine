@@ -39,11 +39,11 @@ void DebugDraw::Clear()
 	AvailableDebugObjects.clear();
 }
 
-void DebugDraw::DrawLine(const Vector3& point1, const Vector3& point2, const RGBA& color, float thickness, bool glows)
+void DebugDraw::DrawLine(const Vector3& point1, const Vector3& point2, const RGBA& color, Float thickness, bool glows)
 {
 
 	Vector3 vector = point2 - point1;
-	float length = vector.Length();
+	Float length = vector.Length();
 
 	vector.Normalize();
 
@@ -61,31 +61,31 @@ void DebugDraw::DrawLine(const Vector3& point1, const Vector3& point2, const RGB
 	);
 }
 
-void DebugDraw::DrawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const RGBA& color, float thickness, bool glows)
+void DebugDraw::DrawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const RGBA& color, Float thickness, bool glows)
 {
 	Vector3 ab = point2 - point1;
 	Vector3 ac = point3 - point1;
 
 	Vector3 normal = ac.Cross(ab).Normalize();
 	
-	float squareDistance = ac.Dot(ac);
-	float distance = sqrtf(squareDistance);
-	float dot = ab.Dot(ac) / squareDistance;
-	float distance1 = dot * distance;
+	Float squareDistance = ac.Dot(ac);
+	Float distance = std::sqrt(squareDistance);
+	Float dot = ab.Dot(ac) / squareDistance;
+	Float distance1 = dot * distance;
 	
-	float v2x = ac.X / distance;
-	float v2y = ac.Y / distance;
-	float v2z = ac.Z / distance;
+	Float v2x = ac.X / distance;
+	Float v2y = ac.Y / distance;
+	Float v2z = ac.Z / distance;
 	
-	float v1x = v2y * normal.Z - v2z * normal.Y;
-	float v1y = v2z * normal.X - v2x * normal.Z;
-	float v1z = v2x * normal.Y - v2y * normal.X;
+	Float v1x = v2y * normal.Z - v2z * normal.Y;
+	Float v1y = v2z * normal.X - v2x * normal.Z;
+	Float v1z = v2x * normal.Y - v2y * normal.X;
 	
-	float dx = ab.X - dot * ac.X;
-	float dy = ab.Y - dot * ac.Y;
-	float dz = ab.Z - dot * ac.Z;
+	Float dx = ab.X - dot * ac.X;
+	Float dy = ab.Y - dot * ac.Y;
+	Float dz = ab.Z - dot * ac.Z;
 	
-	float height = -(v1x * dx + v1y * dy + v1z * dz);
+	Float height = -(v1x * dx + v1y * dy + v1z * dz);
 	
 	PlaceObject(
 		(
@@ -151,7 +151,7 @@ std::shared_ptr<Engine::Transform> DebugDraw::NewObject(const Matrix3& transform
 	return object;
 }
 
-void DebugDraw::PlaceObject(const Matrix3& transformation, const RGBA& color, float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset)
+void DebugDraw::PlaceObject(const Matrix3& transformation, const RGBA& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset)
 {
 	std::shared_ptr<Engine::Transform> transform = NewObject(transformation);
 	std::shared_ptr<GraphicsEngine::Model> model = transform->Get<GraphicsEngine::Model>();

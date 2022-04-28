@@ -32,7 +32,7 @@ public:
 
   Uniform(GLSL::Matrix, transform);
 
-  float mTime = 0;
+  Float mTime = 0;
 private:
 	std::weak_ptr<GraphicsEngine::Material> CurrentMaterial;
 };

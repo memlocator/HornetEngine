@@ -36,19 +36,19 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("fieldOfView"),
-						Argument<float>("aspectRatio"),
-						Argument<float>("near"),
-						Argument<float>("far")
+						Argument<Float>("fieldOfView"),
+						Argument<Float>("aspectRatio"),
+						Argument<Float>("near"),
+						Argument<Float>("far")
 					).Bind<Camera, &Camera::SetProperties>(),
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("width"),
-						Argument<float>("height"),
-						Argument<float>("projectionPlane"),
-						Argument<float>("near"),
-						Argument<float>("far")
+						Argument<Float>("width"),
+						Argument<Float>("height"),
+						Argument<Float>("projectionPlane"),
+						Argument<Float>("near"),
+						Argument<Float>("far")
 					).Bind<Camera, &Camera::SetProperties>()
 				),
 
@@ -96,7 +96,7 @@ namespace Engine
 					"GetProjectionPlane",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Camera, &Camera::GetProjectionPlane>()
 				),
 
@@ -104,7 +104,7 @@ namespace Engine
 					"GetNearPlane",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Camera, &Camera::GetNearPlane>()
 				),
 
@@ -112,7 +112,7 @@ namespace Engine
 					"GetFarPlane",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Camera, &Camera::GetFarPlane>()
 				),
 
@@ -120,7 +120,7 @@ namespace Engine
 					"GetAspectRatio",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Camera, &Camera::GetAspectRatio>()
 				),
 
@@ -128,7 +128,7 @@ namespace Engine
 					"GetFieldOfView",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Camera, &Camera::GetFieldOfView>()
 				),
 
@@ -141,7 +141,7 @@ namespace Engine
 						Argument<int>("y"),
 						Argument<int>("width"),
 						Argument<int>("height"),
-						Argument<float, Default(1.0f)>("length")
+						Argument<Float, Default(1.0f)>("length")
 					).Bind<Camera, &Camera::GetRay>()
 				),
 

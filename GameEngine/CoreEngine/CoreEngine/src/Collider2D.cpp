@@ -66,7 +66,7 @@ namespace Engine
 			return Moved;
 		}
 
-		float Collider2D::GetRadius() const
+		Float Collider2D::GetRadius() const
 		{
 			return Radius;
 		}
@@ -76,7 +76,7 @@ namespace Engine
 			return Center;
 		}
 
-		float Collider2D::GetWidth(const Vector3& axis) const
+		Float Collider2D::GetWidth(const Vector3& axis) const
 		{
 			if (IsCircle)
 				return 2 * Radius;
@@ -84,15 +84,15 @@ namespace Engine
 			if (Data.Vertices.size() == 0)
 				return 0;
 
-			float min = std::numeric_limits<float>::max();
-			float max = std::numeric_limits<float>::lowest();
+			Float min = std::numeric_limits<Float>::max();
+			Float max = std::numeric_limits<Float>::lowest();
 
 			Vector3 vector = axis;
 			vector.Normalize();
 
 			for (int i = 0; i < int(Data.Vertices.size()); ++i)
 			{
-				float dot = Data.Vertices[i] * vector;
+				Float dot = Data.Vertices[i] * vector;
 
 				min = std::min(min, dot);
 				max = std::max(max, dot);

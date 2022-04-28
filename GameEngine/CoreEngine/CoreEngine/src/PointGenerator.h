@@ -3,6 +3,8 @@
 #include "Vector3.h"
 #include "Constants.h"
 
+#include <cmath>
+
 class VectorGenerator
 {
 public:
@@ -10,34 +12,34 @@ public:
 		return Vector3();
 	}
 
-	static float randf()
+	static Float randf()
 	{
-		return float(rand()) / RAND_MAX;
+		return Float(rand()) / RAND_MAX;
 	}
 };
 
 struct NumberRange
 {
-	float Min;
-	float Max;
+	Float Min;
+	Float Max;
 
-	float rand()
+	Float rand()
 	{
 		return Min + VectorGenerator::randf() * (Max - Min);
 	}
 
-	void Set(float min, float max)
+	void Set(Float min, Float max)
 	{
 		Min = min;
 		Max = max;
 	}
 
 	NumberRange() : Min(0), Max(1) {}
-	NumberRange(float min) : Min(min), Max(min) {}
-	NumberRange(float min, float max) : Min(min), Max(max) {}
+	NumberRange(Float min) : Min(min), Max(min) {}
+	NumberRange(Float min, Float max) : Min(min), Max(max) {}
 	NumberRange(const NumberRange& range) : Min(range.Min), Max(range.Max) {}
 
-	NumberRange& operator=(float value)
+	NumberRange& operator=(Float value)
 	{
 		Min = value;
 		Max = value;
@@ -62,11 +64,11 @@ class UnitVectorGenerator : public VectorGenerator
 public:
 	Vector3 Generate()
 	{
-		float theta = 2 * PI * randf();
-		float phi = (float)acos(1 - 2 * randf());
-		float sinPhi = (float)sin(phi);
+		Float theta = 2 * PI * randf();
+		Float phi = std::acos(1 - 2 * randf());
+		Float sinPhi = std::sin(phi);
 
-		return Vector3(sinPhi * (float)cos(theta), sinPhi * (float)sin(theta), (float)cos(phi));
+		return Vector3(sinPhi * std::cos(theta), sinPhi * std::sin(theta), std::cos(phi));
 	}
 };
 
@@ -78,19 +80,19 @@ public:
 
 	Vector3 Generate()
 	{
-		float ratio = (1 - Normal.Y) * (Normal.X * Normal.X + Normal.Z * Normal.Z);
-		float shared = -ratio * Normal.X * Normal.Z;
+		Float ratio = (1 - Normal.Y) * (Normal.X * Normal.X + Normal.Z * Normal.Z);
+		Float shared = -ratio * Normal.X * Normal.Z;
 		Vector3 vector1(shared, Normal.Z, ratio * Normal.X * Normal.X + Normal.Y);
 		Vector3 vector2(ratio * Normal.Z * Normal.Z + Normal.Y, Normal.Z, shared);
 
-		float theta = NumberRange(0, 2 * PI).rand();
+		Float theta = NumberRange(0, 2 * PI).rand();
 
-		Vector3 direction = cosf(theta) * vector1 + sinf(theta) * vector2;
+		Vector3 direction = std::cos(theta) * vector1 + std::sin(theta) * vector2;
 
-		float rangeStart = Angle.Min / Angle.Max;
+		Float rangeStart = Angle.Min / Angle.Max;
 
-		float theta2 = Angle.Min + (Angle.Max - Angle.Min) * acosf(rangeStart + VectorGenerator::randf() * (1 - rangeStart)) * 2 / PI;
+		Float theta2 = Angle.Min + (Angle.Max - Angle.Min) * std::acos(rangeStart + VectorGenerator::randf() * (1 - rangeStart)) * 2 / PI;
 
-		return (cosf(theta2) * Normal + sinf(theta2) * direction);
+		return (std::cos(theta2) * Normal + std::sin(theta2) * direction);
 	}
 };

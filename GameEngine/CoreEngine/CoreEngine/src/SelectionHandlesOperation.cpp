@@ -143,7 +143,7 @@ namespace Engine
 				}
 				else
 				{
-					float handleValue = GetMouseHandleValue(camera, GetMouseHandlePoint(camera, mouseRay));
+					Float handleValue = GetMouseHandleValue(camera, GetMouseHandlePoint(camera, mouseRay));
 
 					std::cout << "handle value: " << handleValue << std::endl;
 
@@ -263,7 +263,7 @@ namespace Engine
 
 			const MeshData* data = MeshLoader::GetMeshData(meshID);
 
-			float closest = std::numeric_limits<float>::max();
+			Float closest = std::numeric_limits<Float>::max();
 			bool hitObject = false;
 
 			auto resultsProcessorLambda = [&closest, &hitObject](const SceneRayCastResults& results)
@@ -289,7 +289,7 @@ namespace Engine
 
 		RGBA SelectionHandlesOperation::GetColor(SelectedAxis axis) const
 		{
-			const RGBA white = RGBA(1, 1, 1, 1);
+			const RGBA white = RGBA(1.f, 1.f, 1.f, 1.f);
 
 			switch (axis)
 			{
@@ -307,7 +307,7 @@ namespace Engine
 
 		RGBA SelectionHandlesOperation::GetHoverColor(SelectedAxis axis) const
 		{
-			const RGBA white = RGBA(1, 1, 1, 1);
+			const RGBA white = RGBA(1.f, 1.f, 1.f, 1.f);
 
 			switch (axis)
 			{
@@ -336,19 +336,19 @@ namespace Engine
 
 				Vector3 handlePlaneNormal = handleTangent.Cross(HandleAxis);
 
-				float mouseDistanceToPlane = (handlePlaneNormal * (HandlePosition - mouseRay.Start)) / (handlePlaneNormal * mouseRay.Direction);
+				Float mouseDistanceToPlane = (handlePlaneNormal * (HandlePosition - mouseRay.Start)) / (handlePlaneNormal * mouseRay.Direction);
 
 				return mouseRay.Start + mouseDistanceToPlane * mouseRay.Direction;
 			}
 			else
 			{
-				float mouseDistanceToPlane = (HandleAxis * (HandlePosition - mouseRay.Start)) / (HandleAxis * mouseRay.Direction);
+				Float mouseDistanceToPlane = (HandleAxis * (HandlePosition - mouseRay.Start)) / (HandleAxis * mouseRay.Direction);
 
 				return mouseRay.Start + mouseDistanceToPlane * mouseRay.Direction;
 			}
 		}
 
-		float SelectionHandlesOperation::GetMouseHandleValue(const std::shared_ptr<GraphicsEngine::Camera>& camera, const Vector3& mousePoint) const
+		Float SelectionHandlesOperation::GetMouseHandleValue(const std::shared_ptr<GraphicsEngine::Camera>& camera, const Vector3& mousePoint) const
 		{
 			if (HandleType == Enum::SelectionHandleType::Move || HandleType == Enum::SelectionHandleType::Resize)
 				return (mousePoint - HandlePosition) * HandleAxis - (InitialCursorPoint - HandlePosition) * HandleAxis;
@@ -357,21 +357,21 @@ namespace Engine
 				Vector3 axis1 = (InitialCursorPoint - HandlePosition).Unit();
 				Vector3 axis2 = (mousePoint - HandlePosition).Unit();
 
-				float sin = axis1.Cross(axis2) * HandleAxis;
-				float cos = axis1 * axis2;
+				Float sin = axis1.Cross(axis2) * HandleAxis;
+				Float cos = axis1 * axis2;
 
-				float angle = std::atan2(sin, cos);
+				Float angle = std::atan2(sin, cos);
 
 				return angle;
 			}
 		}
 
-		float round(float value, float increment)
+		Float round(Float value, Float increment)
 		{
 			return std::ceil(value / increment + 0.5f) * increment;
 		}
 
-		void SelectionHandlesOperation::UpdateObject(int index, float handleValue)
+		void SelectionHandlesOperation::UpdateObject(int index, Float handleValue)
 		{
 			MovingObjectData& object = MovingObjects[index];
 
@@ -392,11 +392,11 @@ namespace Engine
 				{
 					Vector3 scale(1, 1, 1);
 
-					float minimumObjectSize = std::max(round(MinimumObjectSize, 0.5f * GridLength), 0.5f * GridLength);
+					Float minimumObjectSize = std::max(round(MinimumObjectSize, 0.5f * GridLength), 0.5f * GridLength);
 
 					if (MovingInLocalSpace)
 					{
-						float axisSize = 1;
+						Float axisSize = 1;
 
 						if (CurrentMovementHandle == SelectedAxis::AxisX || CurrentMovementHandle == SelectedAxis::AxisNegativeX)
 							axisSize = 0.5f * object.InitialTransformation.RightVector().Length() * MovingBox.GetSize().X;
@@ -405,7 +405,7 @@ namespace Engine
 						else if (CurrentMovementHandle == SelectedAxis::AxisZ || CurrentMovementHandle == SelectedAxis::AxisNegativeZ)
 							axisSize = 0.5f * object.InitialTransformation.FrontVector().Length() * MovingBox.GetSize().Z;
 					
-						float newAxisSize = round(std::max(axisSize + 0.5f * handleValue, 0.5f * minimumObjectSize), 0.5f * GridLength);
+						Float newAxisSize = round(std::max(axisSize + 0.5f * handleValue, 0.5f * minimumObjectSize), 0.5f * GridLength);
 
 						movementAxis = object.ParentInverseTransformation * ((newAxisSize - axisSize) * HandleAxis);
 
@@ -421,7 +421,7 @@ namespace Engine
 					else
 					{
 						Vector3 boxSize = MovingBox.GetSize();
-						float axisSize = 1;
+						Float axisSize = 1;
 
 						if (CurrentMovementHandle == SelectedAxis::AxisX || CurrentMovementHandle == SelectedAxis::AxisNegativeX)
 							axisSize = boxSize.X;
@@ -430,9 +430,9 @@ namespace Engine
 						else if (CurrentMovementHandle == SelectedAxis::AxisZ || CurrentMovementHandle == SelectedAxis::AxisNegativeZ)
 							axisSize = boxSize.Z;
 
-						float newAxisSize = round(std::max(axisSize + handleValue, minimumObjectSize), GridLength);
+						Float newAxisSize = round(std::max(axisSize + handleValue, minimumObjectSize), GridLength);
 
-						float axisScaleShift = newAxisSize / axisSize;
+						Float axisScaleShift = newAxisSize / axisSize;
 
 						scale = Vector3(axisScaleShift, axisScaleShift, axisScaleShift);
 
@@ -458,7 +458,7 @@ namespace Engine
 			else
 			{
 				Matrix3 rotation;
-				float angle = round(handleValue, SnappingAngle);
+				Float angle = round(handleValue, SnappingAngle);
 
 				if (CurrentMovementHandle == SelectedAxis::AxisX)
 					rotation.RotatePitch(angle);
@@ -545,7 +545,7 @@ namespace Engine
 			{
 				Vector3 center = transformation * box.GetCenter();
 				Vector3 size = box.GetSize().Scale(transformation.ExtractScale());
-				float boxSize = 0.5f * std::sqrtf(2) * std::max(std::max(size.X, size.Y), size.Z);
+				Float boxSize = 0.5f * std::sqrtf(2) * std::max(std::max(size.X, size.Y), size.Z);
 
 				Matrix3 rotation = Matrix3().ExtractRotation(transformation);
 
@@ -585,13 +585,13 @@ namespace Engine
 					const HandleMesh& handleMesh = HandleType == Enum::SelectionHandleType::Move ? ArrowMesh : SphereMesh;
 					const Mesh* mesh = HandleType == Enum::SelectionHandleType::Move ? Programs::Screen->CoreMeshes.Arrow : Programs::Screen->CoreMeshes.Sphere;
 
-					float minSize = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleMinSize : SphereHandleMinSize;
-					float scaling = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleScaling : SphereHandleScaling;
-					float minOffset = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleMinOffset : SphereHandleMinOffset;
-					float scaledOffset = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleScaledOffset : SphereHandleScaledOffset;
+					Float minSize = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleMinSize : SphereHandleMinSize;
+					Float scaling = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleScaling : SphereHandleScaling;
+					Float minOffset = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleMinOffset : SphereHandleMinOffset;
+					Float scaledOffset = HandleType == Enum::SelectionHandleType::Move ? ArrowHandleScaledOffset : SphereHandleScaledOffset;
 
-					float scale = minSize + scaling * boxSize;
-					float offset = minOffset + scaledOffset * boxSize;
+					Float scale = minSize + scaling * boxSize;
+					Float offset = minOffset + scaledOffset * boxSize;
 
 					Vector3 right = scale * rotation.RightVector();
 					Vector3 up = scale * rotation.UpVector();

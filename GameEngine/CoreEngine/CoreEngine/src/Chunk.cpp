@@ -31,7 +31,7 @@ namespace Engine
 		SetTicks(true);
 	}
 
-	void Chunk::Update(float delta)
+	void Chunk::Update(Float delta)
 	{
 		Object::Update(delta);
 

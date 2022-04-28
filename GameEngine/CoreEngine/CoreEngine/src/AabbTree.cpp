@@ -1,6 +1,6 @@
 #include "AabbTree.h"
 
-const float AabbTree::FatteningFactor = 1.01f;
+const Float AabbTree::FatteningFactor = 1.01f;
 
 typename AabbTree::Node* AabbTree::Node::GetParent()
 {
@@ -286,13 +286,13 @@ void AabbTree::PushDown(Node* node, Node* parent, bool fromLeft)
 	Aabb newBoundsLeft = GetPairBounds(parent->GetLeft(), node);
 	Aabb newBoundsRight = GetPairBounds(parent->GetRight(), node);
 
-	float surfaceAreaLeft = SurfaceArea(parent->GetLeft()->Box);
-	float surfaceAreaRight = SurfaceArea(parent->GetRight()->Box);
-	float newSurfaceAreaLeft = SurfaceArea(newBoundsLeft);
-	float newSurfaceAreaRight = SurfaceArea(newBoundsRight);
+	Float surfaceAreaLeft = SurfaceArea(parent->GetLeft()->Box);
+	Float surfaceAreaRight = SurfaceArea(parent->GetRight()->Box);
+	Float newSurfaceAreaLeft = SurfaceArea(newBoundsLeft);
+	Float newSurfaceAreaRight = SurfaceArea(newBoundsRight);
 
-	float changeLeft = newSurfaceAreaLeft - surfaceAreaLeft;
-	float changeRight = newSurfaceAreaRight - surfaceAreaRight;
+	Float changeLeft = newSurfaceAreaLeft - surfaceAreaLeft;
+	Float changeRight = newSurfaceAreaRight - surfaceAreaRight;
 
 	if (changeRight <= changeLeft)
 		PushDown(node, parent->GetRight(), false);
@@ -300,14 +300,14 @@ void AabbTree::PushDown(Node* node, Node* parent, bool fromLeft)
 		PushDown(node, parent->GetLeft(), true);
 }
 
-float AabbTree::SurfaceArea(const Aabb& box) const
+Float AabbTree::SurfaceArea(const Aabb& box) const
 {
 	Vector3 diff = box.Max - box.Min;
 
 	return 2 * diff.X * diff.Y + 2 * diff.Y * diff.Z + 2 * diff.X * diff.Z;
 }
 
-float AabbTree::Volume(const Aabb& box) const
+Float AabbTree::Volume(const Aabb& box) const
 {
 	Vector3 diff = box.Max - box.Min;
 
@@ -451,7 +451,7 @@ bool AabbTree::NodesTouch(const Node* node1, const Node* node2) const
 
 void AabbTree::CastRay(const Ray& ray, const RayCallback& callback, const Node* node) const
 {
-	float t = -1;
+	Float t = -1;
 
 	if (ray.Intersects(node->Box, t, 1e-5f))
 	{
@@ -602,8 +602,8 @@ void AabbTree::Query(const PairCallback& callback, const Node* node1, const Node
 	}
 	else
 	{
-		float vol1 = Volume(node1->Box);
-		float vol2 = Volume(node2->Box);
+		Float vol1 = Volume(node1->Box);
+		Float vol2 = Volume(node2->Box);
 
 		if (vol1 < vol2)
 		{

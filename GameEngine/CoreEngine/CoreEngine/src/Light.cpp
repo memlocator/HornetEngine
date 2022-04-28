@@ -11,17 +11,17 @@ extern "C" {
 
 namespace GraphicsEngine
 {
-	void Light::Update(float delta)
+	void Light::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 
 		Direction = Direction.Unit();
 	}
 
-	float Light::ComputeRadius(float a, float b, float c, float value)
+	Float Light::ComputeRadius(Float a, Float b, Float c, Float value)
 	{
 		return (
-			-b + sqrtf(
+			-b + std::sqrt(
 				b * b / value - 4 * a * (c - 1 / value)
 			)
 		) / (2 * a);
@@ -29,13 +29,13 @@ namespace GraphicsEngine
 
 	void Light::RecomputeRadius()
 	{
-		float a = Attenuation.Z;
-		float b = Attenuation.Y;
-		float c = Attenuation.X;
+		Float a = Attenuation.Z;
+		Float b = Attenuation.Y;
+		Float c = Attenuation.X;
 
 		ComputedRadius = ComputeRadius(a, b, c, 10 / 255.0f / Brightness );
 
-		float maxRadius = ComputedRadius * 1.5f;
+		Float maxRadius = ComputedRadius * 1.5f;
 
 		AttenuationOffset = 1.f / (Attenuation.X + maxRadius * Attenuation.Y + maxRadius * maxRadius * Attenuation.Z);
 
@@ -48,7 +48,7 @@ namespace GraphicsEngine
 			else if (Direction == Vector3(0, 0, 1))
 				ShadowMapTransformation = Matrix3(Position) * Matrix3().RotateYaw(PI / 2);
 			else
-				ShadowMapTransformation = Matrix3(Position) * Matrix3().RotateYaw(atan2f(Direction.X, Direction.Z)) * Matrix3().RotatePitch(acosf(Direction.Y));
+				ShadowMapTransformation = Matrix3(Position) * Matrix3().RotateYaw(std::atan2(Direction.X, Direction.Z)) * Matrix3().RotatePitch(std::acos(Direction.Y));
 		}
 		else
 			ShadowMapTransformation = Matrix3(Position);

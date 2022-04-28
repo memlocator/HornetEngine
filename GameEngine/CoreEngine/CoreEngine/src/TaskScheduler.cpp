@@ -4,13 +4,13 @@ bool TaskScheduler::RunningTimer = false;
 typename TaskScheduler::TimerHeap TaskScheduler::TimerQueue = TimerHeap();
 typename TaskScheduler::TimerHeap TaskScheduler::NewTimers = TimerHeap();
 typename TaskScheduler::TimerIDHeap TaskScheduler::TimerIDs = TimerIDHeap();
-float TaskScheduler::Time = 0;
+Float TaskScheduler::Time = 0;
 typename EventBase::EventHeap EventBase::Events = EventHeap();
 
 const int infiniteCalls = -1;
-const float infiniteTime = -1;
-const float eachFrame = 0;
-const float infinity = std::numeric_limits<float>::max();
+const Float infiniteTime = -1;
+const Float eachFrame = 0;
+const Float infinity = std::numeric_limits<Float>::max();
 
 EventBase::EventBase()
 {
@@ -121,22 +121,22 @@ bool Connection::Check() const
 	return true;
 }
 
-int TaskScheduler::Timer(float delay, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
+int TaskScheduler::Timer(Float delay, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
 {
 	return RepeatUntil(delay, infiniteCalls, infiniteTime, callback, connection);
 }
 
-int TaskScheduler::Repeat(float delay, int calls, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
+int TaskScheduler::Repeat(Float delay, int calls, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
 {
 	return RepeatUntil(delay, calls, infiniteTime, callback, connection);
 }
 
-int TaskScheduler::RepeatFor(float delay, float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
+int TaskScheduler::RepeatFor(Float delay, Float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
 {
 	return RepeatUntil(delay, infiniteCalls, lifeTime, callback, connection);
 }
 
-int TaskScheduler::RepeatUntil(float delay, int calls, float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
+int TaskScheduler::RepeatUntil(Float delay, int calls, Float lifeTime, const TimerCallback& callback, const std::shared_ptr<Connection>& connection)
 {
 	int id = TimerIDs.RequestID(-1);
 
@@ -178,7 +178,7 @@ void TaskScheduler::KillTimer(int id)
 	TimerIDs.Release(id);
 }
 
-void TaskScheduler::Update(float delta)
+void TaskScheduler::Update(Float delta)
 {
 	Time += delta;
 
@@ -190,7 +190,7 @@ void TaskScheduler::Update(float delta)
 		{
 			++TimerQueue[0].Calls;
 
-			float deltaTime = TimerQueue[0].Delay + (Time - TimerQueue[0].NextCall);
+			Float deltaTime = TimerQueue[0].Delay + (Time - TimerQueue[0].NextCall);
 
 			TimerQueue[0].LifeTime += deltaTime;
 
@@ -261,8 +261,8 @@ void TaskScheduler::BalanceNodeUp(int i)
 		int right = 2 * i + 2;
 		swapped = false;
 
-		float leftValue = infinity;
-		float rightValue = infinity;
+		Float leftValue = infinity;
+		Float rightValue = infinity;
 
 		if (left < int(TimerQueue.size()))
 			leftValue = TimerQueue[left].NextCall;

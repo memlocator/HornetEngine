@@ -2,7 +2,7 @@
 
 namespace Engine
 {
-	void Transform::Update(float delta)
+	void Transform::Update(Float delta)
 	{
 		Object::Update(delta);
 

@@ -2,13 +2,13 @@
 
 #include <iostream>
 
-void DeviceAxis::Set(float newScale, float newOffset)
+void DeviceAxis::Set(Float newScale, Float newOffset)
 {
 	Scale = newScale;
 	Offset = newOffset;
 }
 
-float DeviceAxis::Calculate(float base, float size) const
+Float DeviceAxis::Calculate(Float base, Float size) const
 {
 	return base + Offset + Scale * size;
 }
@@ -38,12 +38,12 @@ DeviceAxis DeviceAxis::operator-() const
 	return DeviceAxis(-Scale, -Offset);
 }
 
-DeviceAxis DeviceAxis::operator*(float scalar) const
+DeviceAxis DeviceAxis::operator*(Float scalar) const
 {
 	return DeviceAxis(scalar * Scale, scalar * Offset);
 }
 
-DeviceAxis DeviceAxis::operator/(float scalar) const
+DeviceAxis DeviceAxis::operator/(Float scalar) const
 {
 	return DeviceAxis(Scale / scalar, Offset / scalar);
 }
@@ -64,7 +64,7 @@ DeviceAxis& DeviceAxis::operator-=(const DeviceAxis& axis)
 	return *this;
 }
 
-DeviceAxis& DeviceAxis::operator*=(float scalar)
+DeviceAxis& DeviceAxis::operator*=(Float scalar)
 {
 	Scale *= scalar;
 	Offset *= scalar;
@@ -72,7 +72,7 @@ DeviceAxis& DeviceAxis::operator*=(float scalar)
 	return *this;
 }
 
-DeviceAxis& DeviceAxis::operator/=(float scalar)
+DeviceAxis& DeviceAxis::operator/=(Float scalar)
 {
 	Scale /= scalar;
 	Offset /= scalar;
@@ -80,7 +80,7 @@ DeviceAxis& DeviceAxis::operator/=(float scalar)
 	return *this;
 }
 
-DeviceAxis operator*(float scalar, DeviceAxis axis)
+DeviceAxis operator*(Float scalar, DeviceAxis axis)
 {
 	return DeviceAxis(scalar * axis.Scale, scalar * axis.Offset);
 }
@@ -95,7 +95,7 @@ bool DeviceVector::operator!=(const DeviceVector& other) const
 	return X != other.X || Y != other.Y;
 }
 
-void DeviceVector::Set(float xScale, float xOffset, float yScale, float yOffset)
+void DeviceVector::Set(Float xScale, Float xOffset, Float yScale, Float yOffset)
 {
 	X.Set(xScale, xOffset);
 	Y.Set(yScale, yOffset);
@@ -112,12 +112,12 @@ Vector3 DeviceVector::Calculate(const Vector3& base, const Vector3& size) const
 	return Calculate(base.X, base.Y, size.X, size.Y);
 }
 
-Vector3 DeviceVector::Calculate(float baseX, float baseY, float sizeX, float sizeY) const
+Vector3 DeviceVector::Calculate(Float baseX, Float baseY, Float sizeX, Float sizeY) const
 {
 	return Vector3(X.Calculate(baseX, sizeX), Y.Calculate(baseY, sizeY));
 }
 
-DeviceVector DeviceVector::Lerp(float t, const DeviceVector& goal) const
+DeviceVector DeviceVector::Lerp(Float t, const DeviceVector& goal) const
 {
 	return (1 - t) * *this + t * goal;
 }
@@ -137,12 +137,12 @@ DeviceVector DeviceVector::operator-() const
 	return DeviceVector(-X, -Y);
 }
 
-DeviceVector DeviceVector::operator*(float scalar) const
+DeviceVector DeviceVector::operator*(Float scalar) const
 {
 	return DeviceVector(scalar * X, scalar * Y);
 }
 
-DeviceVector DeviceVector::operator/(float scalar) const
+DeviceVector DeviceVector::operator/(Float scalar) const
 {
 	return DeviceVector(X / scalar, Y / scalar);
 }
@@ -163,7 +163,7 @@ DeviceVector& DeviceVector::operator-=(const DeviceVector& vector)
 	return *this;
 }
 
-DeviceVector& DeviceVector::operator*=(float scalar)
+DeviceVector& DeviceVector::operator*=(Float scalar)
 {
 	X *= scalar;
 	Y *= scalar;
@@ -171,7 +171,7 @@ DeviceVector& DeviceVector::operator*=(float scalar)
 	return *this;
 }
 
-DeviceVector& DeviceVector::operator/=(float scalar)
+DeviceVector& DeviceVector::operator/=(Float scalar)
 {
 	X /= scalar;
 	Y /= scalar;
@@ -179,7 +179,7 @@ DeviceVector& DeviceVector::operator/=(float scalar)
 	return *this;
 }
 
-DeviceVector operator*(float scalar, const DeviceVector& vector)
+DeviceVector operator*(Float scalar, const DeviceVector& vector)
 {
 	return DeviceVector(scalar * vector.X, scalar * vector.Y);
 }

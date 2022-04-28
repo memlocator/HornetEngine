@@ -16,7 +16,7 @@ namespace Engine
 		typedef Lua::ThreadStatus ScriptStatus;
 
 		void Initialize();
-		void Update(float delta);
+		void Update(Float delta);
 
 		~LuaScript();
 

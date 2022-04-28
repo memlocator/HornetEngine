@@ -18,7 +18,7 @@ namespace Engine
 			virtual ~RigidBody() {}
 
 			void Initialize();
-			void Update(float delta);
+			void Update(Float delta);
 
 			void AddForce(const Vector3& force, const Vector3& position = Vector3());
 			int GetForceCount() const;

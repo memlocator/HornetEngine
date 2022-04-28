@@ -24,7 +24,7 @@ namespace GraphicsEngine
 		~DeviceTransform();
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 		void Draw(bool updateStencils  = false);
 		void Clip();

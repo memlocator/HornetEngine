@@ -72,7 +72,7 @@ namespace Engine
 		return Name;
 	}
 
-	void Object::Update(float delta)
+	void Object::Update(Float delta)
 	{
 		for (int i = 0; i < GetChildren(); ++i)
 		{

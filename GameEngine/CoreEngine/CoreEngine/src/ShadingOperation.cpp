@@ -55,7 +55,7 @@ namespace GraphicsEngine
 		//SetTicks(true);
 	}
 
-	void ShadingOperation::Update(float delta)
+	void ShadingOperation::Update(Float delta)
 	{
 		RenderOperation::Update(delta);
 
@@ -91,14 +91,14 @@ namespace GraphicsEngine
 
 		if (GlobalLight.expired())
 		{
-			Programs::PhongOutput->lightBrightness.Set(1);
-			Programs::PhongOutput->attenuation.Set(1, 0, 0);
-			Programs::PhongOutput->lightPosition.Set(0, 0, 0);
+			Programs::PhongOutput->lightBrightness.Set(1.f);
+			Programs::PhongOutput->attenuation.Set(1.f, 0.f, 0.f);
+			Programs::PhongOutput->lightPosition.Set(0.f, 0.f, 0.f);
 			Programs::PhongOutput->lightDirection.Set(-currentCamera->GetTransformationInverse().UpVector());
 			Programs::PhongOutput->lightDiffuse.Set(0.5f, 0.5f, 0.5f);
-			Programs::PhongOutput->lightSpecular.Set(1, 1, 1);
+			Programs::PhongOutput->lightSpecular.Set(1.f, 1.f, 1.f);
 			Programs::PhongOutput->lightAmbient.Set(0.5f, 0.5f, 0.5f);
-			Programs::PhongOutput->spotlightAngles.Set(0, 0);
+			Programs::PhongOutput->spotlightAngles.Set(0.f, 0.f);
 			Programs::PhongOutput->spotlightFalloff.Set(0);
 			Programs::PhongOutput->lightType.Set(0);
 		}
@@ -195,14 +195,14 @@ namespace GraphicsEngine
 		Programs::PhongOutput->lightDiffuse.Set(light->Diffuse);
 		Programs::PhongOutput->lightSpecular.Set(light->Specular);
 		Programs::PhongOutput->lightAmbient.Set(light->Ambient);
-		Programs::PhongOutput->spotlightAngles.Set(cosf(light->InnerRadius), cosf(light->OuterRadius));
+		Programs::PhongOutput->spotlightAngles.Set(std::cos(light->InnerRadius), std::cos(light->OuterRadius));
 		Programs::PhongOutput->spotlightFalloff.Set(light->SpotlightFalloff);
 		Programs::PhongOutput->lightType.Set(light->Type);
 
 		const Mesh* mesh = nullptr;
 		const Mesh* stencilMesh = nullptr;
 
-		float lightRadius = 0;
+		Float lightRadius = 0;
 		Matrix3 transform;
 
 		if (light->Type == Enum::LightType::Directional)
@@ -223,7 +223,7 @@ namespace GraphicsEngine
 			Programs::PhongOutput->shadowDebugView.Set(light->ShadowDebugView);
 
 			if (light->AreShadowsEnabled())
-				Programs::PhongOutput->shadowScale.Set(float(shadowMapSize.Width) / 2048, float(shadowMapSize.Height) / 2048);
+				Programs::PhongOutput->shadowScale.Set(Float(shadowMapSize.Width) / 2048, Float(shadowMapSize.Height) / 2048);
 
 			lightRadius = light->GetRadius();
 
@@ -234,12 +234,12 @@ namespace GraphicsEngine
 			if (light->Type == Enum::LightType::Spot && light->OuterRadius <= PI / 2 + 0.001f)
 			{
 				Matrix3 rotation;
-				float direction = 1;
+				Float direction = 1;
 
 				if (light->Direction == Vector3(0, -1, 0))
 					rotation = Matrix3().RotatePitch(PI);
 				else if (light->Direction != Vector3(0, 1, 0))
-					rotation = Matrix3().RotateYaw(atan2f(light->Direction.X, -light->Direction.Z)) * Matrix3().RotatePitch(-acosf(light->Direction.Y));
+					rotation = Matrix3().RotateYaw(std::atan2(light->Direction.X, -light->Direction.Z)) * Matrix3().RotatePitch(-std::acos(light->Direction.Y));
 
 				transform = currentCamera->GetProjection().FullMultiply(Matrix3().Translate(light->Position) * Matrix3().Scale(-lightRadius, lightRadius, lightRadius) * rotation);
 
@@ -304,7 +304,7 @@ namespace GraphicsEngine
 
 	void ShadingOperation::DrawShadows(const std::shared_ptr<Light>& light, int index)
 	{
-		float lightRadius = light->GetRadius() * 1.1f;
+		Float lightRadius = light->GetRadius() * 1.1f;
 
 		Matrix3 backPanelTransform = Matrix3(0, 0, -lightRadius + 0.01f) * Matrix3().Scale(lightRadius, lightRadius, 0);
 

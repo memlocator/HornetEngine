@@ -45,24 +45,24 @@ namespace GraphicsEngine
 
 		virtual ~Light() {}
 
-		void Update(float delta);
+		void Update(Float delta);
 
 		bool ShadowDebugView = false;
 		bool Enabled = true;
-		float Brightness = 1;
+		Float Brightness = 1;
 		Vector3 Attenuation;
 		Vector3 Position;
 		Vector3 Direction;
 		RGBA Diffuse = 0xFFFFFFFF;
 		RGBA Specular = 0xFFFFFFFF;
 		RGBA Ambient = 0xFFFFFFFF;
-		float InnerRadius = PI / 5;
-		float OuterRadius = PI / 3;
+		Float InnerRadius = PI / 5;
+		Float OuterRadius = PI / 3;
 		int SpotlightFalloff = 1;
 		LightType Type = LightType::Directional;
 
-		float GetRadius() const { return ComputedRadius; }
-		float GetAttenuationOffset() const { return AttenuationOffset; }
+		Float GetRadius() const { return ComputedRadius; }
+		Float GetAttenuationOffset() const { return AttenuationOffset; }
 		void RecomputeRadius();
 		Dimensions GetShadowMapSize() const;
 		void SetShadowsEnabled(bool enabled, int width = 128, int height = 128);
@@ -73,12 +73,12 @@ namespace GraphicsEngine
 		const Matrix3& GetShadowMapTransformation() const;
 		const Matrix3& GetShadowMapInverseTransformation() const;
 
-		static float ComputeRadius(float a, float b, float c, float value);
+		static Float ComputeRadius(Float a, Float b, Float c, Float value);
 
 	private:
 		bool ShadowsEnabled = false;
-		float ComputedRadius = 0;
-		float AttenuationOffset = 0;
+		Float ComputedRadius = 0;
+		Float AttenuationOffset = 0;
 		Matrix3 ShadowMapTransformation;
 		Matrix3 ShadowMapInverseTransformation;
 

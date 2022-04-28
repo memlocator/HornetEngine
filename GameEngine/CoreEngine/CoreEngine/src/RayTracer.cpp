@@ -14,12 +14,12 @@ namespace GraphicsEngine
 {
 	Vector3 Sanitize(const Vector3& contribution)
 	{
-		return Vector3(std::max(0.f, contribution.X), std::max(0.f, contribution.Y), std::max(0.f, contribution.Z));
+		return Vector3(std::max(0., contribution.X), std::max(0., contribution.Y), std::max(0., contribution.Z));
 	}
 
-	float Sanitize(float value)
+	Float Sanitize(Float value)
 	{
-		return std::max(0.f, value);
+		return std::max(0., value);
 	}
 
 	Vector3 ValidateData(const Vector3& contribution, const char* file, int line)
@@ -30,7 +30,7 @@ namespace GraphicsEngine
 		return Sanitize(contribution);
 	}
 
-	float ValidateData(float value, const char* file, int line)
+	Float ValidateData(Float value, const char* file, int line)
 	{
 		if (value < 0)
 			std::cout << "[" << file << ":" << line << "] WARNING: negative value '" << value << "'" << std::endl;
@@ -98,7 +98,7 @@ namespace GraphicsEngine
 			Rays = new Vector[bufferSize];
 
 			if (UseDepthTest)
-				DepthBuffer = new float[bufferSize];
+				DepthBuffer = new Float[bufferSize];
 		}
 		else
 		{
@@ -139,7 +139,7 @@ namespace GraphicsEngine
 			Data = new Pixel[bufferSize];
 
 			if (UseDepthTest)
-				DepthBuffer = new float[bufferSize];
+				DepthBuffer = new Float[bufferSize];
 		}
 		else
 		{
@@ -175,7 +175,7 @@ namespace GraphicsEngine
 		return batch;
 	}
 
-	float pow4(float x)
+	Float pow4(Float x)
 	{
 		x *= x;
 
@@ -199,8 +199,8 @@ namespace GraphicsEngine
 		AtmosphereRadiusSquared = AtmosphereRadius * AtmosphereRadius;
 		PlanetRadiusSquared = PlanetRadius * PlanetRadius;
 		PlanetPosition = (PlanetRadius + Altitude) * PlanetDirection;
-		AtmosphereStep = 1 / float(AtmosphereSteps);
-		OpticalDepthStep = 1 / float(OpticalDepthSteps);
+		AtmosphereStep = 1 / Float(AtmosphereSteps);
+		OpticalDepthStep = 1 / Float(OpticalDepthSteps);
 		ScatterCoefficients = ScatterStrength * Vector3(pow4(400 / Wavelengths.X), pow4(400 / Wavelengths.Y), pow4(400 / Wavelengths.Z));
 
 		if (AtmosphereFollowsCamera)
@@ -220,8 +220,8 @@ namespace GraphicsEngine
 				for (int y = 0; y < Height; ++y)
 				{
 					Vector3 direction = Vector3(
-						dimensions.X * (float(x) - float(0.5f * Width)) / Width,
-						dimensions.Y * (float(y) - float(0.5f * Height)) / Height,
+						dimensions.X * (Float(x) - Float(0.5 * Width)) / Width,
+						dimensions.Y * (Float(y) - Float(0.5 * Height)) / Height,
 						-ThisCamera->GetProjectionPlane()
 					).Unit();
 
@@ -298,7 +298,7 @@ namespace GraphicsEngine
 		{
 			Ray ray = GetRay(MouseX, MouseY);
 
-			float distance = ThisCamera->GetFarPlane();
+			Float distance = ThisCamera->GetFarPlane();
 			CastResults res;
 
 			auto processResults = [&distance, &res](const CastResults& results) -> RayFilterResults
@@ -319,7 +319,7 @@ namespace GraphicsEngine
 			Accelerator.CastRay(ray, distance, std::ref(processResults), std::ref(filter), ind);
 
 			//DrawLine(ray.Start, ray.Start + ray.Direction * distance, RGBA(0, 1, 0));
-			DrawLine(res.Intersection, res.Intersection + res.Normal, RGBA(0, 1, 0));
+			DrawLine(res.Intersection, res.Intersection + res.Normal, RGBA(0.f, 1.f, 0.f));
 		}
 
 		if (DisplayOutput)
@@ -327,7 +327,7 @@ namespace GraphicsEngine
 			auto stop = std::chrono::high_resolution_clock::now();
 			auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
 
-			float durationMS = (float(duration.count()) / 1e6f);
+			Float durationMS = (Float(duration.count()) / 1e6f);
 
 			std::cout << "time: " << durationMS << " miliseconds" << std::endl;
 
@@ -343,7 +343,7 @@ namespace GraphicsEngine
 
 			for (int i = 0; i < MaxThreads; ++i)
 			{
-				float duration = Threads[i].ThreadTotal.count() / 1e6f;
+				Float duration = Threads[i].ThreadTotal.count() / 1e6f;
 
 				std::cout << "thread[" << i << "] uptime: " << (duration / durationMS) << std::endl;
 			}
@@ -405,7 +405,7 @@ namespace GraphicsEngine
 		return Vector3(filter).Scale((1 - color.W) * filterTint);
 	}
 
-	void RayTracer::Cast(const RayInfo& info, const Ray& ray, float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack) const
+	void RayTracer::Cast(const RayInfo& info, const Ray& ray, Float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack) const
 	{
 		Accelerator.CastRay(ray, length, callback, filter, stack, info.ObjectNode, info.NodeID);
 	}
@@ -416,7 +416,7 @@ namespace GraphicsEngine
 		int LastHitTriangle = -1;
 	};
 
-	Vector3 RayTracer::ComputeShadowFilter(const Ray& ray, float length, RayInfo& info, const ShadowCastData& shadowData, IndexVector& stack) const
+	Vector3 RayTracer::ComputeShadowFilter(const Ray& ray, Float length, RayInfo& info, const ShadowCastData& shadowData, IndexVector& stack) const
 	{
 		Vector3 filter(1, 1, 1);
 
@@ -460,9 +460,9 @@ namespace GraphicsEngine
 		return filter;
 	}
 
-	Vector3 RayTracer::RefractVector(const Vector3& vector, const Vector3& normal, float dot, float materialIndex, float incidenceIndex) const
+	Vector3 RayTracer::RefractVector(const Vector3& vector, const Vector3& normal, Float dot, Float materialIndex, Float incidenceIndex) const
 	{
-		float scale = 1;
+		Float scale = 1;
 
 		if (dot < 0)
 			dot *= -1;
@@ -472,11 +472,11 @@ namespace GraphicsEngine
 			scale = -1;
 		}
 
-		float ratio = incidenceIndex / materialIndex;
-		float sine = 1 - ratio * ratio * (1 - dot * dot);
+		Float ratio = incidenceIndex / materialIndex;
+		Float sine = 1 - ratio * ratio * (1 - dot * dot);
 
 		if (sine > 0)
-			return ratio * vector + scale * (ratio * dot - std::sqrtf(sine)) * normal;
+			return ratio * vector + scale * (ratio * dot - std::sqrt(sine)) * normal;
 
 		return Vector3();
 	}
@@ -486,34 +486,34 @@ namespace GraphicsEngine
 		return vector - 2 * (vector * normal) * normal;
 	}
 
-	Vector3 RayTracer::ReflectVector(float dot, const Vector3& vector, const Vector3& normal) const
+	Vector3 RayTracer::ReflectVector(Float dot, const Vector3& vector, const Vector3& normal) const
 	{
 		return 2 * dot * normal - vector;
 	}
 
-	float RayTracer::Fresnel(float dot, float internalRefractiveIndex, float externalRefractiveIndex) const
+	Float RayTracer::Fresnel(Float dot, Float internalRefractiveIndex, Float externalRefractiveIndex) const
 	{
 		if (dot > 0)
 			std::swap(internalRefractiveIndex, externalRefractiveIndex);
 
-		float sine = externalRefractiveIndex / internalRefractiveIndex * std::sqrtf(std::max(0.f, 1 - dot * dot));
+		Float sine = externalRefractiveIndex / internalRefractiveIndex * std::sqrt(std::max(0., 1 - dot * dot));
 
 		if (sine >= 1)
 			return 1;
 
-		float refractedCosine = std::sqrtf(std::max(0.f, 1 - sine * sine));
+		Float refractedCosine = std::sqrt(std::max(0., 1 - sine * sine));
 
 		dot = std::abs(dot);
 
-		float reflectedPerpendicular = (internalRefractiveIndex * dot - externalRefractiveIndex * refractedCosine) / (internalRefractiveIndex * dot + externalRefractiveIndex * refractedCosine);
-		float reflectedParallel = (externalRefractiveIndex * dot - internalRefractiveIndex * refractedCosine) / (externalRefractiveIndex * dot + internalRefractiveIndex * refractedCosine);
+		Float reflectedPerpendicular = (internalRefractiveIndex * dot - externalRefractiveIndex * refractedCosine) / (internalRefractiveIndex * dot + externalRefractiveIndex * refractedCosine);
+		Float reflectedParallel = (externalRefractiveIndex * dot - internalRefractiveIndex * refractedCosine) / (externalRefractiveIndex * dot + internalRefractiveIndex * refractedCosine);
 
 		return 0.5f * (reflectedPerpendicular * reflectedPerpendicular + reflectedParallel * reflectedParallel);
 	}
 
-	float RayTracer::NormalDistribution(float reflectedDot, float roughness) const
+	Float RayTracer::NormalDistribution(Float reflectedDot, Float roughness) const
 	{
-		float denominator = reflectedDot * reflectedDot * (roughness - 1) + 1;
+		Float denominator = reflectedDot * reflectedDot * (roughness - 1) + 1;
 
 		if (std::abs(denominator) < 1e-9f)
 			denominator = 1;
@@ -521,103 +521,103 @@ namespace GraphicsEngine
 		return roughness / (PI * denominator * denominator);
 	}
 
-	float RayTracer::GeometryShadowing(float vectorDot, float roughness) const
+	Float RayTracer::GeometryShadowing(Float vectorDot, Float roughness) const
 	{
-		float denominator = vectorDot * (1 - roughness) + roughness;
+		Float denominator = vectorDot * (1 - roughness) + roughness;
 
-		return vectorDot / std::max(denominator, 0.0001f);
+		return vectorDot / std::max(denominator, 0.0001);
 	}
 
-	float RayTracer::GeometryContribution(float lookDot, float lightDot, float roughness) const
+	Float RayTracer::GeometryContribution(Float lookDot, Float lightDot, Float roughness) const
 	{
 		return GeometryShadowing(lookDot, (roughness + 1) * (roughness + 1) / 8) * GeometryShadowing(lightDot, roughness * roughness / 2);
 	}
 
-	float RayTracer::Largest(const Vector3& vector) const
+	Float RayTracer::Largest(const Vector3& vector) const
 	{
 		return std::max(std::max(vector.X, vector.Y), vector.Z);
 	}
 
-	float RayTracer::Smallest(const Vector3& vector) const
+	Float RayTracer::Smallest(const Vector3& vector) const
 	{
 		return std::min(std::min(vector.X, vector.Y), vector.Z);
 	}
 
-	Vector3 RayTracer::SampleNormal(FloatRNG& rng, const Vector3& normal, const Vector3& view, float roughness) const
+	Vector3 RayTracer::SampleNormal(FloatRNG& rng, const Vector3& normal, const Vector3& view, Float roughness) const
 	{
 		bool normalOnX = std::abs(normal.X) > 0.8f;
 
-		Vector3 baseAxis = Vector3(float(!normalOnX), 0, float(normalOnX));
+		Vector3 baseAxis = Vector3(Float(!normalOnX), 0, Float(normalOnX));
 		Vector3 axis1 = normal.Cross(baseAxis).Unit();
 		Vector3 axis2 = normal.Cross(axis1);
 
 		Vector3 localView = Vector3(axis1 * view, normal * view, axis2 * view);
 		Vector3 stretchedView = Vector3(localView.X * roughness, localView.Y, localView.Z * roughness).Unit();
 
-		Vector3 viewAxis1 = (stretchedView.Y < 0.999f) ? stretchedView.Cross(Vector3(0, 1, 0)).Unit() : Vector3(1, 0, 0);
+		Vector3 viewAxis1 = (stretchedView.Y < 0.999) ? stretchedView.Cross(Vector3(0, 1, 0)).Unit() : Vector3(1, 0, 0);
 		Vector3 viewAxis2 = viewAxis1.Cross(stretchedView);
 
-		float random1 = rng.Next();
-		float random2 = rng.Next();
+		Float random1 = rng.Next();
+		Float random2 = rng.Next();
 
-		float a = 1.f / (1.f + stretchedView.Y);
-		float r = std::sqrtf(random1);
-		float phi = (random2 < a) ? random2 / a * PI : PI + (random2 - a) / (1 - a) * PI;
+		Float a = 1.f / (1.f + stretchedView.Y);
+		Float r = std::sqrt(random1);
+		Float phi = (random2 < a) ? random2 / a * PI : PI + (random2 - a) / (1 - a) * PI;
 
-		float p1 = r * std::cosf(phi);
-		float p2 = r * std::sinf(phi) * ((random2 < a) ? 1 : stretchedView.Y);
+		Float p1 = r * std::cos(phi);
+		Float p2 = r * std::sin(phi) * ((random2 < a) ? 1 : stretchedView.Y);
 
-		Vector3 stretchedResult = p1 * viewAxis1 + p2 * viewAxis2 + std::sqrtf(std::max(0.f, 1.f - p1 * p1 - p2 * p2)) * stretchedView;
-		Vector3 result = Vector3(roughness * stretchedResult.X, std::max(stretchedResult.Y, 0.f), roughness * stretchedResult.Z).Unit();
+		Vector3 stretchedResult = p1 * viewAxis1 + p2 * viewAxis2 + std::sqrt(std::max((Float)0., (Float)1. - p1 * p1 - p2 * p2)) * stretchedView;
+		Vector3 result = Vector3(roughness * stretchedResult.X, std::max(stretchedResult.Y, (Float)0.), roughness * stretchedResult.Z).Unit();
 
 		return result.X * axis1 + result.Y * normal + result.Z * axis2;
 	}
 
-	Vector3 RayTracer::ComputeReflectionFilter(const Vector3& direction, const Vector3& reflected, const Vector3& normal, const Vector3& microfacetNormal, const Vector3& baseReflectivity, float roughnessSquared) const
+	Vector3 RayTracer::ComputeReflectionFilter(const Vector3& direction, const Vector3& reflected, const Vector3& normal, const Vector3& microfacetNormal, const Vector3& baseReflectivity, Float roughnessSquared) const
 	{
-		float lightDot = reflected * normal;
+		Float lightDot = reflected * normal;
 
 		if (lightDot <= 0)
 			return Vector3();
 
-		float halfLookDot = microfacetNormal * direction;
+		Float halfLookDot = microfacetNormal * direction;
 
-		float fresnelExponential = std::powf(1 - halfLookDot, 5);
+		Float fresnelExponential = (Float)std::pow(1 - halfLookDot, 5);
 		Vector3 fresnel = CHECK_VALUE(baseReflectivity + fresnelExponential * (Vector3(1, 1, 1) - baseReflectivity));
 
-		float lookDot = std::max(0.f, direction * normal);
+		Float lookDot = std::max(0., direction * normal);
 
-		float lookShadowing = std::sqrtf(roughnessSquared + (1 - roughnessSquared) * lookDot * lookDot);
+		Float lookShadowing = std::sqrt(roughnessSquared + (1 - roughnessSquared) * lookDot * lookDot);
 
-		float denomA = lookDot * std::sqrtf(roughnessSquared + (1 - roughnessSquared) * lightDot * lightDot);
-		float denomB = lightDot * lookShadowing;
-		float denomC = lookShadowing + lookDot;
+		Float denomA = lookDot * std::sqrt(roughnessSquared + (1 - roughnessSquared) * lightDot * lightDot);
+		Float denomB = lightDot * lookShadowing;
+		Float denomC = lookShadowing + lookDot;
 
-		float geometryShadowing = CHECK_VALUE(2 * lookDot * lightDot / (denomA + denomB));
-		float geometry = CHECK_VALUE(2 * lookDot / denomC);
+		Float geometryShadowing = CHECK_VALUE(2 * lookDot * lightDot / (denomA + denomB));
+		Float geometry = CHECK_VALUE(2 * lookDot / denomC);
 
 		return CHECK_VALUE((geometryShadowing / geometry) * fresnel);
 	}
 
-	Vector3 RayTracer::BaseReflectivity(float metalness, float refractiveIndex, float externalIndex, const Vector3& color, float dot) const
+	Vector3 RayTracer::BaseReflectivity(Float metalness, Float refractiveIndex, Float externalIndex, const Vector3& color, Float dot) const
 	{
-		float fresnel = Fresnel(dot, refractiveIndex, externalIndex);
+		Float fresnel = Fresnel(dot, refractiveIndex, externalIndex);
 
 		return (1 - metalness) * Vector3(fresnel, fresnel, fresnel) + metalness * Vector3(color.X, color.Y, color.Z);
 	}
 
-	Vector3 RayTracer::FresnelSchlick(float reflectedDot, const Vector3& baseReflectivity) const
+	Vector3 RayTracer::FresnelSchlick(Float reflectedDot, const Vector3& baseReflectivity) const
 	{
-		return baseReflectivity + (Vector3(1, 1, 1) - baseReflectivity) * std::powf(1 - reflectedDot, 5);
+		return baseReflectivity + (Vector3(1, 1, 1) - baseReflectivity) * (Float)std::pow(1 - reflectedDot, 5);
 	}
 
-	Vector3 RayTracer::CookTorranceBRDF(const LightingParameters& parameters, float reflectedDot, float lightDot) const
+	Vector3 RayTracer::CookTorranceBRDF(const LightingParameters& parameters, Float reflectedDot, Float lightDot) const
 	{
-		float normalDistribution = NormalDistribution(reflectedDot, parameters.QuadRoughness);
-		float geometryContribution = GeometryShadowing(parameters.LookDot, parameters.LookRoughness) * GeometryShadowing(lightDot, parameters.LightRoughness);
+		Float normalDistribution = NormalDistribution(reflectedDot, parameters.QuadRoughness);
+		Float geometryContribution = GeometryShadowing(parameters.LookDot, parameters.LookRoughness) * GeometryShadowing(lightDot, parameters.LightRoughness);
 		Vector3 fresnelSchlick = FresnelSchlick(reflectedDot, parameters.BaseReflectivity);
 
-		float denominator = std::max(4 * parameters.LookDot * lightDot, 0.0001f);
+		Float denominator = std::max(4 * parameters.LookDot * lightDot, 0.0001);
 
 		Vector3 diffuse = (Vector3(1, 1, 1) - fresnelSchlick).Scale(parameters.Diffuse);
 		Vector3 specular = ((normalDistribution * geometryContribution) / denominator) * fresnelSchlick;
@@ -625,21 +625,21 @@ namespace GraphicsEngine
 		return diffuse + specular;
 	}
 
-	Vector3 RayTracer::GetReflectionFilter(const Material* material, float reflectedDot, float lookDot, float lightDot, const Vector3& baseReflectivity) const
+	Vector3 RayTracer::GetReflectionFilter(const Material* material, Float reflectedDot, Float lookDot, Float lightDot, const Vector3& baseReflectivity) const
 	{
-		float normalDistribution = 1 / ((0.4f + material->Roughness) * std::sqrtf(2 * PI));
-		float geometryContribution = GeometryContribution(lookDot, lightDot, material->Roughness);
+		Float normalDistribution = 1 / ((0.4f + material->Roughness) * std::sqrtf(2 * PI));
+		Float geometryContribution = GeometryContribution(lookDot, lightDot, material->Roughness);
 		Vector3 fresnelSchlick = FresnelSchlick(lookDot, baseReflectivity);
 
 		return normalDistribution * geometryContribution * fresnelSchlick;
 	}
 
-	Vector3 RayTracer::GetRefractionFilter(const Material* material, float lightDot, const Vector3& color, const Vector3& baseReflectivity, const Vector3& lightFilter) const
+	Vector3 RayTracer::GetRefractionFilter(const Material* material, Float lightDot, const Vector3& color, const Vector3& baseReflectivity, const Vector3& lightFilter) const
 	{
 		return (lightDot * material->Transparency) * (Vector3(1, 1, 1) - FresnelSchlick(lightDot, baseReflectivity)).Scale(ComputeLightFilter(Vector3(color.X, color.Y, color.Z, 1 - material->Transparency), lightFilter));
 	}
 
-	bool SmallerThan(const Vector3& vector, float value)
+	bool SmallerThan(const Vector3& vector, Float value)
 	{
 		return (vector.X < value) | (vector.Y < value) | (vector.Z < value);
 	}
@@ -647,8 +647,8 @@ namespace GraphicsEngine
 	Vector3 RayTracer::ComputeLighting(const LightingParameters& parameters, LightHandle light, const Vector3& lightFilter, RayInfo& info, const ShadowCastData& shadowData, Thread& thread) const
 	{
 		Vector3 lightDirection = -Vector3(light->Direction);
-		float lightDistance = 10000;
-		float lightScale = light->Brightness;
+		Float lightDistance = 10000;
+		Float lightScale = light->Brightness;
 
 		if (light->Type != Enum::LightType::Directional)
 		{
@@ -666,28 +666,28 @@ namespace GraphicsEngine
 
 			lightScale *= light->Radius / lightDistance;
 
-			lightDistance = std::sqrtf(lightDistance);
+			lightDistance = std::sqrt(lightDistance);
 
 			lightDirection *= 1 / lightDistance;
 
 			if (light->Type == Enum::LightType::Spot)
 			{
-				float spotlightDot = -(lightDirection * Vector3(light->Direction));
+				Float spotlightDot = -(lightDirection * Vector3(light->Direction));
 
 				if (spotlightDot < light->OuterRadius)
 					return Vector3();
 
 				if (spotlightDot < light->InnerRadius)
-					lightScale *= float(std::pow((spotlightDot - light->OuterRadius) / (light->InnerRadius - light->OuterRadius), light->SpotlightFalloff));
+					lightScale *= Float(std::pow((spotlightDot - light->OuterRadius) / (light->InnerRadius - light->OuterRadius), light->SpotlightFalloff));
 			}
 		}
 
-		float lightDot = std::max(lightDirection * parameters.Normal, 0.f);
+		Float lightDot = std::max(lightDirection * parameters.Normal, 0.f);
 
 		if (lightDot <= 0)
 			return Vector3();
 
-		float reflectedDot = std::max((lightDirection + parameters.Look).Unit() * parameters.Normal, 0.f);
+		Float reflectedDot = std::max((lightDirection + parameters.Look).Unit() * parameters.Normal, 0.f);
 
 		Vector3 lightContribution = CookTorranceBRDF(parameters, reflectedDot, lightDot);
 
@@ -717,8 +717,8 @@ namespace GraphicsEngine
 
 	void RayTracer::CastRay(RayInfo& info, const Ray& ray, const RayCastData& rayData, const CastResultsCallbackWrapper& callback, IndexVector& stack) const
 	{
-		float finalDistance = rayData.RayData.Length;
-		float closestDistance = rayData.RayData.Length;
+		Float finalDistance = rayData.RayData.Length;
+		Float closestDistance = rayData.RayData.Length;
 		CastResults closest;
 
 		auto resultsQueueLambda = [&ray, &rayData, &closestDistance, &closest, &info](const CastResults& results) -> RayFilterResults
@@ -752,29 +752,29 @@ namespace GraphicsEngine
 	{
 		Vector3 offset = PlanetPosition - ray.Start;
 
-		float dot = ray.Direction * offset;
+		Float dot = ray.Direction * offset;
 
-		float distanceSquared = offset * offset - dot * dot;
+		Float distanceSquared = offset * offset - dot * dot;
 
 		if (distanceSquared > AtmosphereRadiusSquared)
 			return SphereIntersection{ -1, -1 };
 
-		float root = std::sqrtf(AtmosphereRadiusSquared - distanceSquared);
+		Float root = std::sqrt(AtmosphereRadiusSquared - distanceSquared);
 
-		float closest = dot - root;
-		float farthest = dot + root;
+		Float closest = dot - root;
+		Float farthest = dot + root;
 
 		if (farthest < 0)
 			return SphereIntersection{ -1, -1 };
 
-		float surface = -1;
+		Float surface = -1;
 
 		if (distanceSquared < PlanetRadiusSquared)
 		{
-			float root = std::sqrtf(PlanetRadiusSquared - distanceSquared);
+			Float root = std::sqrt(PlanetRadiusSquared - distanceSquared);
 
-			float closest = dot - root;
-			float farthest = dot + root;
+			Float closest = dot - root;
+			Float farthest = dot + root;
 
 			if (farthest > 0)
 				surface = std::max(closest, 0.f);
@@ -783,30 +783,30 @@ namespace GraphicsEngine
 		return SphereIntersection{ std::max(closest, 0.f), std::max(farthest, 0.f), surface };
 	}
 
-	float RayTracer::ComputeSunRayLength(LightHandle light, const Vector3& position) const
+	Float RayTracer::ComputeSunRayLength(LightHandle light, const Vector3& position) const
 	{
 		Vector3 offset = PlanetPosition - position;
 
-		float dot = -(Vector3(light->Direction) * offset);
+		Float dot = -(Vector3(light->Direction) * offset);
 
-		float distanceSquared = offset * offset - dot * dot;
+		Float distanceSquared = offset * offset - dot * dot;
 
 		if (distanceSquared > AtmosphereRadiusSquared)
 			return 0;
 
-		float root = std::sqrtf(AtmosphereRadiusSquared - distanceSquared);
+		Float root = std::sqrt(AtmosphereRadiusSquared - distanceSquared);
 
 		return std::max(dot + root, 0.f);
 	}
 
-	float RayTracer::ComputeOpticalDepth(const Vector3& scatterPoint, const Vector3& direction, float rayLength) const
+	Float RayTracer::ComputeOpticalDepth(const Vector3& scatterPoint, const Vector3& direction, Float rayLength) const
 	{
-		float opticalDepth = 0;
-		float step = rayLength * OpticalDepthStep;
+		Float opticalDepth = 0;
+		Float step = rayLength * OpticalDepthStep;
 
-		for (float t = 0; t < rayLength; t += step)
+		for (Float t = 0; t < rayLength; t += step)
 		{
-			float density = ComputeAtmosphericDensity(scatterPoint - t * direction);
+			Float density = ComputeAtmosphericDensity(scatterPoint - t * direction);
 
 			opticalDepth += density * step;
 		}
@@ -814,12 +814,12 @@ namespace GraphicsEngine
 		return opticalDepth;
 	}
 
-	float RayTracer::ComputeAtmosphericDensity(const Vector3& scatterPoint) const
+	Float RayTracer::ComputeAtmosphericDensity(const Vector3& scatterPoint) const
 	{
-		float height = (scatterPoint - PlanetPosition).Length() - PlanetRadius;
-		float relativeHeight = std::min(std::max(height / (AtmosphereRadius - PlanetRadius), 0.f), 1.f);
+		Float height = (scatterPoint - PlanetPosition).Length() - PlanetRadius;
+		Float relativeHeight = std::min(std::max(height / (AtmosphereRadius - PlanetRadius), 0.f), 1.f);
 
-		return std::expf(-relativeHeight * AtmosphericDensityFalloff) * (1 - relativeHeight);
+		return std::exp(-relativeHeight * AtmosphericDensityFalloff) * (1 - relativeHeight);
 	}
 
 	Vector3 RayTracer::ComputeAtmosphericLight(LightHandle light, const Ray& ray, const SphereIntersection& intersection) const
@@ -827,30 +827,30 @@ namespace GraphicsEngine
 		if (intersection.Exit == -1)
 			return Vector3();
 		
-		float end = intersection.Exit;
+		Float end = intersection.Exit;
 		
 		if (intersection.Surface != -1)
 			end = intersection.Surface;
 		
-		float distance = end - intersection.Entry;
+		Float distance = end - intersection.Entry;
 		Vector3 scatterPoint;
 		
 		Vector3 scatteredLight = 0;
-		float scatterPointStep = distance * AtmosphereStep;
+		Float scatterPointStep = distance * AtmosphereStep;
 		
-		for (float t = intersection.Entry; t < end; t += scatterPointStep)
+		for (Float t = intersection.Entry; t < end; t += scatterPointStep)
 		{
 			scatterPoint = ray.Start + t * ray.Direction;
 
-			float sunRayLength = ComputeSunRayLength(light, scatterPoint);
-			float sunOpticalDepth = ComputeOpticalDepth(scatterPoint, light->Direction, sunRayLength);
-			float viewOpticalDepth = ComputeOpticalDepth(scatterPoint, ray.Direction, t - intersection.Entry);
+			Float sunRayLength = ComputeSunRayLength(light, scatterPoint);
+			Float sunOpticalDepth = ComputeOpticalDepth(scatterPoint, light->Direction, sunRayLength);
+			Float viewOpticalDepth = ComputeOpticalDepth(scatterPoint, ray.Direction, t - intersection.Entry);
 			Vector3 transmittance(
-				std::expf(-(sunOpticalDepth + viewOpticalDepth) * ScatterCoefficients.X),
-				std::expf(-(sunOpticalDepth + viewOpticalDepth) * ScatterCoefficients.Y),
-				std::expf(-(sunOpticalDepth + viewOpticalDepth) * ScatterCoefficients.Z)
+				std::exp(-(sunOpticalDepth + viewOpticalDepth) * ScatterCoefficients.X),
+				std::exp(-(sunOpticalDepth + viewOpticalDepth) * ScatterCoefficients.Y),
+				std::exp(-(sunOpticalDepth + viewOpticalDepth) * ScatterCoefficients.Z)
 			);
-			float localDensity = ComputeAtmosphericDensity(scatterPoint);
+			Float localDensity = ComputeAtmosphericDensity(scatterPoint);
 
 			scatteredLight += (localDensity * scatterPointStep) * transmittance.Scale(ScatterCoefficients);
 		}
@@ -899,16 +899,16 @@ namespace GraphicsEngine
 				results.FaceIndex
 			};
 
-			float normalScale = 1;
+			Float normalScale = 1;
 
 			if (!results.HitFront)
 				normalScale *= -1;
 
 			Vector3 normal = normalScale * results.Normal.Unit();
 
-			float dot = castData.RayData.Data.Direction * normal;
-			float incidenceIndex = results.MaterialProperties->RefractiveIndex;
-			float externalIndex = 1;
+			Float dot = castData.RayData.Data.Direction * normal;
+			Float incidenceIndex = results.MaterialProperties->RefractiveIndex;
+			Float externalIndex = 1;
 
 			if (!results.HitFront)
 				std::swap(incidenceIndex, externalIndex);
@@ -916,8 +916,8 @@ namespace GraphicsEngine
 			Vector3 color = Vector3(results.Color).Scale(results.MaterialProperties->Albedo);
 			Vector3 baseReflectivity = BaseReflectivity(results.MaterialProperties->Metalness, incidenceIndex, externalIndex, color, -1);
 
-			float roughness = results.MaterialProperties->Roughness;
-			float squaredRoughness = roughness * roughness;
+			Float roughness = results.MaterialProperties->Roughness;
+			Float squaredRoughness = roughness * roughness;
 
 			if (results.HitFront)
 				castData.Illumination += CHECK_VALUE((results.MaterialProperties->Emission * Vector3(color.X, color.Y, color.Z)).Scale(castData.LightFilter));
@@ -946,7 +946,7 @@ namespace GraphicsEngine
 			if (bounces + 1 < MaxBounces)
 			{
 				int samples = std::max(1, Samples / (bounces + 1));
-				float weight = 1;
+				Float weight = 1;
 
 				{
 					Vector3 microfacetNormal;
@@ -971,8 +971,8 @@ namespace GraphicsEngine
 					{
 						Vector3 refracted = RefractVector(castData.RayData.Data.Direction, microfacetNormal, castData.RayData.Data.Direction * microfacetNormal, incidenceIndex, externalIndex).Unit();
 
-						float halfLookDot = -(microfacetNormal * refracted);
-						float fresnel = std::max(0.f, 1 - Fresnel(halfLookDot, incidenceIndex, externalIndex));
+						Float halfLookDot = -(microfacetNormal * refracted);
+						Float fresnel = std::max(0.f, 1 - Fresnel(halfLookDot, incidenceIndex, externalIndex));
 
 						Vector3 refractionFilter = fresnel * (1 - results.Color.W) * (Vector3(1, 1, 1) - results.Color.W * Vector3(1 - results.Color.X, 1 - results.Color.Y, 1 - results.Color.Z)).Scale(castData.LightFilter);
 						refractionFilter = CHECK_VALUE(refractionFilter);
@@ -1045,7 +1045,7 @@ namespace GraphicsEngine
 
 				Ray ray = GetRay(px, py);
 
-				float weight = 1 / float(Samples);
+				Float weight = 1 / Float(Samples);
 
 				Vector3 illumination;
 
@@ -1068,9 +1068,9 @@ namespace GraphicsEngine
 
 				Pixel& pixel = GetPixel(px, py);
 
-				pixel.R = illumination.X;
-				pixel.G = illumination.Y;
-				pixel.B = illumination.Z;
+				pixel.R = (float)illumination.X;
+				pixel.G = (float)illumination.Y;
+				pixel.B = (float)illumination.Z;
 			}
 		}
 
@@ -1097,8 +1097,8 @@ namespace GraphicsEngine
 		screenStart = 0.5f * screenStart + Vector3(0.5f, 0.5f, 0);
 		screenEnd = 0.5f * screenEnd + Vector3(0.5f, 0.5f, 0);
 
-		screenStart.Scale((float)Width, (float)Height, 1);
-		screenEnd.Scale((float)Width, (float)Height, 1);
+		screenStart.Scale((Float)Width, (Float)Height, 1);
+		screenEnd.Scale((Float)Width, (Float)Height, 1);
 
 		int startX = std::min((int)screenStart.X, Width);
 		int startY = std::min((int)screenStart.Y, Height);
@@ -1116,30 +1116,30 @@ namespace GraphicsEngine
 
 		int steps = std::max(std::abs(dx), std::abs(dy));
 
-		float xInc = (float)dx / (float)steps;
-		float yInc = (float)dy / (float)steps;
+		Float xInc = (Float)dx / (Float)steps;
+		Float yInc = (Float)dy / (Float)steps;
 
-		float x = (float)startX;
-		float y = (float)startY;
+		Float x = (Float)startX;
+		Float y = (Float)startY;
 
-		auto round = [](float v) -> int
+		auto round = [](Float v) -> int
 		{
-			float floor = std::floorf(v);
+			Float floor = std::floor(v);
 
 			if (v - floor > 0.5f)
-				return (int)std::ceilf(v);
+				return (int)std::ceil(v);
 
 			return (int)floor;
 		};
 
-		float startZ = -(ThisCamera->GetTransformationInverse() * start).Z;
-		float endZ = -(ThisCamera->GetTransformationInverse() * end).Z;
+		Float startZ = -(ThisCamera->GetTransformationInverse() * start).Z;
+		Float endZ = -(ThisCamera->GetTransformationInverse() * end).Z;
 
 		for (int i = 0; i <= steps; ++i)
 		{
 			int index = GetIndex(round(x), round(y));
 
-			float depth = startZ + (endZ - startZ) * ((float)(endX - startX) / xInc);
+			Float depth = startZ + (endZ - startZ) * ((Float)(endX - startX) / xInc);
 
 			x += xInc;
 			y += yInc;

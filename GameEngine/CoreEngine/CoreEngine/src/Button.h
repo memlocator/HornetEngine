@@ -20,7 +20,7 @@ namespace GraphicsEngine
 		Enum::BoundDevice Device = Enum::BoundDevice::Any;
 
 		void Initialize();
-		void Update(float);
+		void Update(Float);
 
 	private:
 		bool Down = false;

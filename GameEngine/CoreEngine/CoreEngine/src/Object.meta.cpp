@@ -54,7 +54,7 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<float>("delta")
+						Argument<Float>("delta")
 					).Bind<Object, &Object::Update>()
 				),
 

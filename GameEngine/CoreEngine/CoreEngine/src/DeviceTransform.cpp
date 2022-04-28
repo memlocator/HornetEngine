@@ -19,7 +19,7 @@ namespace GraphicsEngine
 		SetTicks(true);
 	}
 
-	void DeviceTransform::Update(float delta)
+	void DeviceTransform::Update(Float delta)
 	{
 		Engine::Object::Update(delta);
 

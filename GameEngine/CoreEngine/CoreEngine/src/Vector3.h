@@ -10,24 +10,25 @@ contains declaration of Vector3 class
 #include <string>
 
 #include "ConstMath.h"
+#include "Precision.h"
 
 class Vector3
 {
 public:
-	float X, Y, Z, W;
+	Float X, Y, Z, W;
 
-	constexpr Vector3(float x = 0, float y = 0, float z = 0, float w = 0) : X(x), Y(y), Z(z), W(w) {}
+	constexpr Vector3(Float x = 0, Float y = 0, Float z = 0, Float w = 0) : X(x), Y(y), Z(z), W(w) {}
 	constexpr Vector3(const Vector3& other) : X(other.X), Y(other.Y), Z(other.Z), W(other.W) {}
 
-	Vector3& Set(float x = 0, float y = 0, float z = 0, float w = 0);
+	Vector3& Set(Float x = 0, Float y = 0, Float z = 0, Float w = 0);
 	Vector3& Normalize();
-	float Dot(const Vector3& other) const;
+	Float Dot(const Vector3& other) const;
 	Vector3 Cross(const Vector3& other) const;
 	Vector3 Unit() const;
-	float Length() const;
-	float SquareLength() const;
+	Float Length() const;
+	Float SquareLength() const;
 	Vector3& Scale(const Vector3& other);
-	Vector3& Scale(float x, float y, float z);
+	Vector3& Scale(Float x, Float y, Float z);
 	Vector3& InvertLength();
 
 	Vector3 InvertedLength() const;
@@ -36,22 +37,22 @@ public:
 	Vector3 operator-() const;
 	Vector3 operator+(const Vector3& other) const;
 	Vector3 operator-(const Vector3& other) const;
-	Vector3 operator*(float scalar) const;
-	float operator*(const Vector3& other) const;
+	Vector3 operator*(Float scalar) const;
+	Float operator*(const Vector3& other) const;
 	Vector3& operator=(const Vector3& other);
 	Vector3& operator+=(const Vector3& other);
 	Vector3& operator-=(const Vector3& other);
-	Vector3& operator*=(float scalar);
+	Vector3& operator*=(Float scalar);
 	bool operator==(const Vector3& other) const;
 	bool operator!=(const Vector3& other) const;
-	float operator[](int i) const;
-	float& operator[](int i);
+	Float operator[](int i) const;
+	Float& operator[](int i);
 
 	operator std::string() const;
 
 private:
-	bool Compare(float x, float y, float epsilon)  const;
+	bool Compare(Float x, Float y, Float epsilon)  const;
 };
 
-Vector3 operator*(float scalar, const Vector3& vector);
+Vector3 operator*(Float scalar, const Vector3& vector);
 std::ostream& operator<<(std::ostream& out, const Vector3& vector);

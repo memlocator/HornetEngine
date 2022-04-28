@@ -19,10 +19,10 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<float, Default(0.0f)>("w"),
-						Argument<float, Default(0.0f)>("x"),
-						Argument<float, Default(0.0f)>("y"),
-						Argument<float, Default(0.0f)>("z")
+						Argument<Float, Default((Float)0.0)>("w"),
+						Argument<Float, Default((Float)0.0)>("x"),
+						Argument<Float, Default((Float)0.0)>("y"),
+						Argument<Float, Default((Float)0.0)>("z")
 					),
 
 					Overload(
@@ -31,11 +31,11 @@ namespace Engine
 
 					Overload(
 						Argument<const Vector3&>("axis"),
-						Argument<float>("angle")
+						Argument<Float>("angle")
 					),
 
 					Overload(
-						Argument<float>("w"),
+						Argument<Float>("w"),
 						Argument<const Vector3&>("vector")
 					),
 					Overload(
@@ -57,7 +57,7 @@ namespace Engine
 						Const,
 						Returns<Quaternion>(),
 						Argument<const Quaternion&>("destination"),
-						Argument<float>("t")
+						Argument<Float>("t")
 					).Bind<Quaternion, &Quaternion::Slerp>()
 				),
 
@@ -99,7 +99,7 @@ namespace Engine
 					"Length",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Quaternion, &Quaternion::Length>()
 				),
 
@@ -107,7 +107,7 @@ namespace Engine
 					"SquareLength",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<Quaternion, &Quaternion::SquareLength>()
 				),
 
@@ -115,7 +115,7 @@ namespace Engine
 					"Dot",
 					Overload(
 						Const,
-						Returns<float>(),
+						Returns<Float>(),
 						Argument<const Quaternion&>("other")
 					).Bind<Quaternion, &Quaternion::Dot>()
 				),

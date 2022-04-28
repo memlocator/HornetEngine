@@ -37,20 +37,20 @@ namespace GraphicsEngine
 		class Material
 		{
 		public:
-			RGBA Albedo = RGBA(1, 1, 1, 1);
-			float Roughness = 0.5f;
-			float Metalness = 0;
-			float RefractiveIndex = 1.1f;
-			float Transparency = 0; // (1 - transparency) * diffuse; transparency * transmitted
-			float Translucency = 0.01f; // light loss from travel distance
-			float Emission = 0;
+			RGBA Albedo = RGBA(1.f, 1.f, 1.f, 1.f);
+			Float Roughness = 0.5f;
+			Float Metalness = 0;
+			Float RefractiveIndex = 1.1f;
+			Float Transparency = 0; // (1 - transparency) * diffuse; transparency * transmitted
+			Float Translucency = 0.01f; // light loss from travel distance
+			Float Emission = 0;
 		};
 
 		class CastResults
 		{
 		public:
 			bool HitFront = false;
-			float Distance = -1;
+			Float Distance = -1;
 			const Material* MaterialProperties = nullptr;
 			int ObjectID = -1;
 			int ObjectNode = -1;
@@ -74,7 +74,7 @@ namespace GraphicsEngine
 		struct TraversalStep
 		{
 			int Index = -1;
-			float Distance = 1;
+			Float Distance = 1;
 		};
 
 		typedef std::vector<TraversalStep> TraversalVector;
@@ -90,7 +90,7 @@ namespace GraphicsEngine
 		class Matrix
 		{
 		public:
-			float Data[3][3] = {};
+			Float Data[3][3] = {};
 		};
 
 		class Object
@@ -153,12 +153,12 @@ namespace GraphicsEngine
 		class Light
 		{
 		public:
-			float Range = 0;
-			float Brightness = 1;
-			float Radius = 0;
-			float InnerRadius = PI / 5;
-			float OuterRadius = PI / 3;
-			float AttenuationOffset = 0;
+			Float Range = 0;
+			Float Brightness = 1;
+			Float Radius = 0;
+			Float InnerRadius = PI / 5;
+			Float OuterRadius = PI / 3;
+			Float AttenuationOffset = 0;
 			int SpotlightFalloff = 1;
 			Enum::LightType Type = Enum::LightType::Directional;
 			Vector Attenuation = Vector(0, 0, 0);
@@ -166,14 +166,14 @@ namespace GraphicsEngine
 			Vector Direction = Vector(0, 0, 0);
 			Vector Color = Vector(1, 1, 1);
 
-			float GetRadius() const { return Radius; }
-			float GetAttenuationOffset() const { return AttenuationOffset; }
+			Float GetRadius() const { return Radius; }
+			Float GetAttenuationOffset() const { return AttenuationOffset; }
 		};
 
 		typedef std::vector<RayTest> RayTestVector;
 
 		void Accelerate(const std::shared_ptr<Scene>& scene);
-		void CastRay(const Ray& ray, float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack, int startObjectNode = -1, int startNode = -1) const;
+		void CastRay(const Ray& ray, Float length, const ResultsCallback& callback, const ResultsCallback& filter, IndexVector& stack, int startObjectNode = -1, int startNode = -1) const;
 		const Light* GetLight(int index) const { if (index == -1) return GlobalLight; return &Lights[index]; }
 		int GetLights() const { return int(Lights.size()); }
 		const Light* GetDirectionalLight(int index) const { if (index == -1) return GlobalLight; return &Lights[DirectionalLights[index]]; }
@@ -216,8 +216,8 @@ namespace GraphicsEngine
 		int MeshLeftNodes = 0;
 		int MeshRightNodes = 0;
 
-		void CastRay(int node, const Ray& ray, float& farthest, const ObjectCallback& callback, IndexVector& stack) const;
-		void ProcessRay(int node, const Ray& ray, float& farthest, const ObjectCallback& callback) const;
+		void CastRay(int node, const Ray& ray, Float& farthest, const ObjectCallback& callback, IndexVector& stack) const;
+		void ProcessRay(int node, const Ray& ray, Float& farthest, const ObjectCallback& callback) const;
 		int PushMesh(const MeshData* data, int id, const std::string& name);
 		int PushMaterial(const std::shared_ptr<GraphicsEngine::PhysicalMaterial>& material);
 		void PushNode(const AabbTree::Node* node, bool isDynamic, const std::shared_ptr<Scene>& scene);

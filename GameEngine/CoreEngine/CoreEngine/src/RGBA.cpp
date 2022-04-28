@@ -64,7 +64,7 @@ RGBA::operator unsigned int() const
 
 RGBA::operator Vector3() const
 {
-	return Vector3(R, G, B, A);
+	return Vector3((Float)R, (Float)G, (Float)B, (Float)A);
 }
 
 RGBA& RGBA::operator=(const RGBA& other)

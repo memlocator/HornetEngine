@@ -17,7 +17,7 @@ namespace Engine
 		std::weak_ptr<Terrain> Target;
 
 		void Initialize();
-		void Update(float delta);
+		void Update(Float delta);
 
 		void SetRange(const Coordinates& range);
 		void SetRange(const Vector3& range) { SetRange(Coordinates(range)); }

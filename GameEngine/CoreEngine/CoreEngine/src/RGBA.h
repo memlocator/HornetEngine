@@ -8,6 +8,7 @@ struct RGBA
 
 	constexpr RGBA() : R(1), G(1), B(1), A(1) {}
 	constexpr RGBA(float r, float g, float b, float a = 1) : R(r), G(g), B(b), A(a) {}
+	constexpr RGBA(double r, double g, double b, double a = 1) : R((float)r), G((float)g), B((float)b), A((float)a) {}
 	constexpr RGBA(unsigned int color)
 	{
 		R = float((color >> 24) & 0xFF) / 255.0f;
@@ -15,7 +16,7 @@ struct RGBA
 		B = float((color >> 8) & 0xFF) / 255.0f;
 		A = float(color & 0xFF) / 255.0f;
 	}
-	constexpr RGBA(const Vector3& vector) : R(vector.X), G(vector.Y), B(vector.Z), A(vector.W) {}
+	constexpr RGBA(const Vector3& vector) : R(float(vector.X)), G(float(vector.Y)), B(float(vector.Z)), A(float(vector.W)) {}
 
 	RGBA& Set(float r = 1, float g = 1, float b = 1, float a = 1);
 	RGBA Lerp(const RGBA& end, float t) const;

@@ -67,12 +67,12 @@ namespace Engine
 			bool DrawSelectionBox = true;
 			bool DrawHandles = true;
 			Vector3 Resolution;
-			float SelectionRayDistance = 10000;
+			Float SelectionRayDistance = 10000;
 
 			bool SnapsToGrid = true;
-			float MinimumObjectSize = 0.01f;
-			float GridLength = 0.5f;
-			float SnappingAngle = PI / 16.f;
+			Float MinimumObjectSize = 0.01f;
+			Float GridLength = 0.5f;
+			Float SnappingAngle = PI / 16.f;
 
 			bool IsLocalSpace = false;
 			bool ObjectsShareHandles = true;
@@ -88,15 +88,15 @@ namespace Engine
 			RGBA HoverHandleColorY = RGBA(0.75f, 1, 0.75f);
 			RGBA HoverHandleColorZ = RGBA(0.75f, 0.75f, 1);
 
-			float ArrowHandleMinSize = 0.15f;
-			float ArrowHandleScaling = 0.15f;
-			float ArrowHandleMinOffset = 0.1f;
-			float ArrowHandleScaledOffset = 0.1f;
+			Float ArrowHandleMinSize = 0.15f;
+			Float ArrowHandleScaling = 0.15f;
+			Float ArrowHandleMinOffset = 0.1f;
+			Float ArrowHandleScaledOffset = 0.1f;
 
-			float SphereHandleMinSize = 0.1f;
-			float SphereHandleScaling = 0.1f;
-			float SphereHandleMinOffset = 0.2f;
-			float SphereHandleScaledOffset = 0.2f;
+			Float SphereHandleMinSize = 0.1f;
+			Float SphereHandleScaling = 0.1f;
+			Float SphereHandleMinOffset = 0.2f;
+			Float SphereHandleScaledOffset = 0.2f;
 
 			std::weak_ptr<Selection> ActiveSelection;
 			std::weak_ptr<GraphicsEngine::Scene> TargetScene;
@@ -127,7 +127,7 @@ namespace Engine
 			struct ObjectHandleHit
 			{
 				bool HitHandle = false;
-				float ClosestDistance = std::numeric_limits<float>::max();
+				Float ClosestDistance = std::numeric_limits<Float>::max();
 				GraphicsEngine::SceneObject* Object = nullptr;
 				SelectedAxis Axis = SelectedAxis::None;
 				Matrix3 Transformation;
@@ -169,8 +169,8 @@ namespace Engine
 			RGBA GetColor(SelectedAxis axis) const;
 			RGBA GetHoverColor(SelectedAxis axis) const;
 			Vector3 GetMouseHandlePoint(const std::shared_ptr<GraphicsEngine::Camera>& camera, const Ray& mouseRay) const;
-			float GetMouseHandleValue(const std::shared_ptr<GraphicsEngine::Camera>& camera, const Vector3& mousePoint) const;
-			void UpdateObject(int index, float handleValue);
+			Float GetMouseHandleValue(const std::shared_ptr<GraphicsEngine::Camera>& camera, const Vector3& mousePoint) const;
+			void UpdateObject(int index, Float handleValue);
 			HandleMesh GetCoreMesh(const std::string& name) const;
 			void ProcessInput();
 			Aabb DrawSelection(ObjectHandleHit& closestHit, const Ray& ray, const std::shared_ptr<GraphicsEngine::Camera>& camera, const std::shared_ptr<GraphicsEngine::SceneObject>& object, bool isHovered);

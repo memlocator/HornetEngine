@@ -17,7 +17,7 @@ namespace GraphicsEngine
 		SetTicks(false);
 	}
 
-	void Model::Update(float delta)
+	void Model::Update(Float delta)
 	{
 		SceneObject::Update(delta);
 		//if (Color.A <= 0.001f)

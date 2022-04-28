@@ -13,9 +13,9 @@ public:
 	constexpr Ray() {}
 	constexpr Ray(const Vector3& start, const Vector3& direction) : Start(start), Direction(direction) {}
 
-	bool Intersects(const Aabb& box, float& t, float epsilon = 1e-5f) const;
+	bool Intersects(const Aabb& box, Float& t, Float epsilon = 1e-5f) const;
 
 private:
-	bool IntersectsAxis(float start, float direction, float min, float max, float& tMin, float& tMax, float epsilon = 1e-5f) const;
+	bool IntersectsAxis(Float start, Float direction, Float min, Float max, Float& tMin, Float& tMax, Float epsilon = 1e-5f) const;
 };
 

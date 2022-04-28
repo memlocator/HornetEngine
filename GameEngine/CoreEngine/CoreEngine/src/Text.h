@@ -26,7 +26,7 @@ namespace GraphicsEngine
 		std::weak_ptr<Font> FontData;
 
 		void Initialize();
-		void Update(float) {}
+		void Update(Float) {}
 
 		void Draw(const std::shared_ptr<FrameBuffer>& output = nullptr);
 
@@ -41,8 +41,8 @@ namespace GraphicsEngine
 
 	private:
 		bool TextChanged = false;
-		float LastFontSize = 0;
-		float LastLineSpacing = 0;
+		Float LastFontSize = 0;
+		Float LastLineSpacing = 0;
 		std::string Contents;
 		Vector3 LastAbsoluteSize;
 		Enum::Alignment LastAlignX = Enum::Alignment::Minimum;
@@ -57,6 +57,6 @@ namespace GraphicsEngine
 		int GetWordEnd(int start) const;
 		bool IsWhiteSpace(int index) const;
 		int SkipWhiteSpace(int index) const;
-		float GetWordWidth(const std::shared_ptr<Font>& font, int start, int wordEnd) const;
+		Float GetWordWidth(const std::shared_ptr<Font>& font, int start, int wordEnd) const;
 	};
 }

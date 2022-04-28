@@ -33,14 +33,14 @@ namespace Engine
 			~Collider2D() {}
 
 			void Initialize();
-			void Update(float) {}
+			void Update(Float) {}
 
 			void UpdateData();
 			Aabb GetBoundingBox() const;
 			bool HasMoved() const;
-			float GetRadius() const;
+			Float GetRadius() const;
 			Vector3 GetCenter() const;
-			float GetWidth(const Vector3& axis) const;
+			Float GetWidth(const Vector3& axis) const;
 			bool CanCollideWith(const std::shared_ptr<Collider2D>& otherCollider) const;
 			void Collided(const CollisionPair& collisionPair);
 			int GetCollisions() const;
@@ -51,7 +51,7 @@ namespace Engine
 			typedef std::vector<Collision> CollisionVector;
 
 			bool Moved = false;
-			float Radius = 0;
+			Float Radius = 0;
 			Aabb BoundingBox;
 			Vector3 Center;
 			CollisionVector Collisions;

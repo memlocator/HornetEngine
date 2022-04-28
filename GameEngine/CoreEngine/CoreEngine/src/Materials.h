@@ -10,7 +10,7 @@ namespace GraphicsEngine
 		virtual ~Materials() {}
 
 		void Initialize();
-		void Update(float) {}
+		void Update(Float) {}
 	};
 
 }

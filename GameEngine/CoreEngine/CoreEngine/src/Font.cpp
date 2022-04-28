@@ -9,7 +9,7 @@ namespace GraphicsEngine
 {
 	Font::Character::Character() : Value(0), TextOffset(), TextScale() {}
 
-	Font::Character::Character(char character, float aspectRatio, const Vector3& textOffset, const Vector3& textScale, float kerningLeft, float kerningRight, float verticalOffset) : Value(character), AspectRatio(aspectRatio), TextOffset(textOffset), TextScale(textScale), KerningLeft(kerningLeft), KerningRight(kerningRight), VerticalOffset(verticalOffset) {}
+	Font::Character::Character(char character, Float aspectRatio, const Vector3& textOffset, const Vector3& textScale, Float kerningLeft, Float kerningRight, Float verticalOffset) : Value(character), AspectRatio(aspectRatio), TextOffset(textOffset), TextScale(textScale), KerningLeft(kerningLeft), KerningRight(kerningRight), VerticalOffset(verticalOffset) {}
 
 
 	void Font::Load(const std::string& filePath, const std::string& textureName)
@@ -46,13 +46,13 @@ namespace GraphicsEngine
 		{
 			Vector3 scale, offset;
 			char character;
-			float kerningLeft = 0;
-			float kerningRight = 0;
-			float verticalOffset = 0;
+			Float kerningLeft = 0;
+			Float kerningRight = 0;
+			Float verticalOffset = 0;
 
 			file >> character >> scale.X >> scale.Y >> offset.X >> offset.Y >> kerningLeft >> kerningRight >> verticalOffset;
 
-			float aspectRatio = scale.X / scale.Y;
+			Float aspectRatio = scale.X / scale.Y;
 
 			kerningLeft /= scale.Y;
 			kerningRight /= scale.Y;

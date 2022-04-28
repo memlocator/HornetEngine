@@ -40,7 +40,7 @@ namespace GraphicsEngine
 		std::weak_ptr<class FrameBuffer> Output;
 
 		void Initialize();
-		void Update(float) {}
+		void Update(Float) {}
 
 		void Render();
 

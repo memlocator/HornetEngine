@@ -16,7 +16,7 @@ namespace Engine
 			VertexVector Vertices;
 			VertexVector Normals;
 			Vector3 Center;
-			float RadiusSquared = 0;
+			Float RadiusSquared = 0;
 			int TopVertex = -1;
 			int BottomVertex = -1;
 			Aabb BoundingBox;

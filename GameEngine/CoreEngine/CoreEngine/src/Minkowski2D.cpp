@@ -7,7 +7,7 @@ namespace Engine
 {
 	namespace Physics
 	{
-		Vector3 GetCircleMinimumTranslationVector(const Vector3& difference, float radius)
+		Vector3 GetCircleMinimumTranslationVector(const Vector3& difference, Float radius)
 		{
 			if (difference.SquareLength() == 0)
 				return Vector3(0, radius);
@@ -24,12 +24,12 @@ namespace Engine
 
 		int FindLargestDotProduct(const Vector3& vector, const ColliderData& collider)
 		{
-			float largestDot = vector * (collider.Center - collider.Vertices[0]);
+			Float largestDot = vector * (collider.Center - collider.Vertices[0]);
 			int largestDotIndex = 0;
 
 			for (unsigned int i = 0; i < collider.Vertices.size(); ++i)
 			{
-				float dot = vector * (collider.Center - collider.Vertices[i]);
+				Float dot = vector * (collider.Center - collider.Vertices[i]);
 
 				if (dot > largestDot)
 				{
@@ -58,11 +58,11 @@ namespace Engine
 		int FindFarthestVertex(const Vector3& vector, const ColliderData& collider)
 		{
 			int farthestIndex = 0;
-			float largestDot = collider.Vertices[0] * vector;
+			Float largestDot = collider.Vertices[0] * vector;
 
 			for (unsigned int i = 1; i < collider.Vertices.size(); ++i)
 			{
-				float dot = collider.Vertices[i] * vector;
+				Float dot = collider.Vertices[i] * vector;
 
 				if (dot > largestDot)
 				{
@@ -152,12 +152,12 @@ namespace Engine
 		{
 			int size = int(Vertices.size());
 
-			float closestDistance = Normals[0] * Vertices[0];
+			Float closestDistance = Normals[0] * Vertices[0];
 			Vector3 closestVector = closestDistance * Normals[0];
 
 			for (int i = 1; i < size; ++i)
 			{
-				float distance = Normals[i] * Vertices[i];
+				Float distance = Normals[i] * Vertices[i];
 
 				if (distance < closestDistance)
 				{
@@ -169,7 +169,7 @@ namespace Engine
 			return closestVector;
 		}
 
-		void CircleMinkowskiDifference::Calculate(const ColliderData& collider, const Vector3& circleCenter, float radius)
+		void CircleMinkowskiDifference::Calculate(const ColliderData& collider, const Vector3& circleCenter, Float radius)
 		{
 			CircleRadius = radius;
 
@@ -221,12 +221,12 @@ namespace Engine
 				return GetCircleMinimumTranslationVector(Vertices[circle] - CircleRadius * Normals[circle - 1], CircleRadius);
 			else
 			{
-				float closestDistance = Normals[0] * Vertices[0];
+				Float closestDistance = Normals[0] * Vertices[0];
 				Vector3 closestVector = closestDistance * Normals[0];
 
 				for (int i = 2; i < size; i += 2)
 				{
-					float distance = Normals[i] * Vertices[i];
+					Float distance = Normals[i] * Vertices[i];
 
 					if (distance < closestDistance)
 					{
@@ -243,12 +243,12 @@ namespace Engine
 		{
 			int size = int(mesh.Vertices.size());
 
-			float closestDistance = mesh.Normals[0] * (mesh.Vertices[0] - point);
+			Float closestDistance = mesh.Normals[0] * (mesh.Vertices[0] - point);
 			Vector3 closestVector = closestDistance * mesh.Normals[0];
 
 			for (int i = 1; i < size; ++i)
 			{
-				float distance = mesh.Normals[i] * (mesh.Vertices[i] - point);
+				Float distance = mesh.Normals[i] * (mesh.Vertices[i] - point);
 
 				if (distance < closestDistance)
 				{
@@ -260,15 +260,15 @@ namespace Engine
 			return closestVector;
 		}
 
-		float LineIntersection(const Vector3& point1, const Vector3& vector, const Vector3& point2, const Vector3& normal)
+		Float LineIntersection(const Vector3& point1, const Vector3& vector, const Vector3& point2, const Vector3& normal)
 		{
 			return (normal * (point2 - point1)) / (normal * vector);
 		}
 
 		bool HittingSide(const Vector3& point1, const Vector3& vector, const Vector3& point2, const Vector3& normal)
 		{
-			float numerator = normal * (point2 - point1);
-			float denominator = normal * vector;
+			Float numerator = normal * (point2 - point1);
+			Float denominator = normal * vector;
 
 			if (numerator < 0 && denominator < 0)
 			{
@@ -279,10 +279,10 @@ namespace Engine
 			return numerator >= -0.01f && numerator <= denominator;
 		}
 
-		bool VectorApproachesCollider(const Vector3& point, const Vector3& vector, const Vector3& center, float radius)
+		bool VectorApproachesCollider(const Vector3& point, const Vector3& vector, const Vector3& center, Float radius)
 		{
 			Vector3 vector2 = center - point;
-			float projection = (vector * vector2) / (vector * vector);
+			Float projection = (vector * vector2) / (vector * vector);
 
 			if (projection >= 0 && projection <= 1)
 				return (vector2 - projection * vector).SquareLength() < radius;
@@ -290,7 +290,7 @@ namespace Engine
 				return (vector2.SquareLength() < radius) || ((center - (point + vector)).SquareLength() < radius);
 		}
 
-		int GetEntrySide(const ColliderData& mesh, const Vector3& point, const Vector3& vector, float& distance)
+		int GetEntrySide(const ColliderData& mesh, const Vector3& point, const Vector3& vector, Float& distance)
 		{
 			int size = int(mesh.Vertices.size());
 
@@ -298,7 +298,7 @@ namespace Engine
 			{
 				if (mesh.Normals[i] * vector < 0 && HittingSide(mesh.Vertices[i], mesh.Vertices[(i + 1) % size] - mesh.Vertices[i], point, LeftNormal(vector)))
 				{
-					float currentDistance = LineIntersection(point, vector, mesh.Vertices[i], mesh.Normals[i]);
+					Float currentDistance = LineIntersection(point, vector, mesh.Vertices[i], mesh.Normals[i]);
 
 					if (currentDistance > -0.01f && currentDistance < 1.01f)
 					{
@@ -312,7 +312,7 @@ namespace Engine
 			return -1;
 		}
 
-		int GetEntrySideFromStart(const ColliderData& mesh, const Vector3& point, const Vector3& vector, float& distance, int startIndex)
+		int GetEntrySideFromStart(const ColliderData& mesh, const Vector3& point, const Vector3& vector, Float& distance, int startIndex)
 		{
 			int size = int(mesh.Vertices.size());
 
@@ -322,7 +322,7 @@ namespace Engine
 			{
 				if (HittingSide(mesh.Vertices[i], mesh.Vertices[(i + 1) % size] - mesh.Vertices[i], point, LeftNormal(vector)))
 				{
-					float currentDistance = LineIntersection(point, vector, mesh.Vertices[i], mesh.Normals[i]);
+					Float currentDistance = LineIntersection(point, vector, mesh.Vertices[i], mesh.Normals[i]);
 
 					if (currentDistance > -0.01f && currentDistance < 1)
 					{
@@ -342,12 +342,12 @@ namespace Engine
 		{
 
 			Vector3 vector = vertex - entryPoint;
-			float squareLength = vector.SquareLength();
+			Float squareLength = vector.SquareLength();
 
 			if (squareLength != 0)
 			{
-				float dot = (vector * velocity) / squareLength;
-				float distance = 1 / dot;
+				Float dot = (vector * velocity) / squareLength;
+				Float distance = 1 / dot;
 
 				if (dot > 1)
 					dot = 1;
@@ -420,7 +420,7 @@ namespace Engine
 
 		Vector3 GetVelocityOffset(const ColliderData& mesh, Vector3 velocity)
 		{
-			float distance;
+			Float distance;
 			int entrySide = GetEntrySide(mesh, Vector3(), velocity, distance);
 
 			if (entrySide != -1)
@@ -433,7 +433,7 @@ namespace Engine
 				return Vector3();
 		}
 
-		void GetClosestCollision(const ColliderInfoVector& colliders, Vector3 point, Vector3 velocity, ColliderInfoVector::const_iterator& ignore, ColliderInfoVector::const_iterator& closestCollider, float& closestDistance, int& closestSide)
+		void GetClosestCollision(const ColliderInfoVector& colliders, Vector3 point, Vector3 velocity, ColliderInfoVector::const_iterator& ignore, ColliderInfoVector::const_iterator& closestCollider, Float& closestDistance, int& closestSide)
 		{
 			closestCollider = colliders.begin();
 			closestSide = -1;
@@ -442,7 +442,7 @@ namespace Engine
 			{
 				if (i != ignore && VectorApproachesCollider(point, velocity, i->Collider->Center, i->Collider->RadiusSquared))
 				{
-					float distance;
+					Float distance;
 					int side = GetEntrySide(*i->Collider, point, velocity, distance);
 
 					if (distance >= -1e-3 && side != -1 && (closestSide == -1 || distance <= closestDistance) && (i->LastHitIndex == -1 || (LeftNormal(i->Collider->Normals[side]) * velocity > 0) == i->Clockwise))
@@ -482,7 +482,7 @@ namespace Engine
 
 				Vector3 vector = entryPoint - lastEntryPoint;
 
-				float distance;
+				Float distance;
 				GetClosestCollision(differences, lastEntryPoint, vector, mesh, hitObject, distance, hitSide);
 
 				if (hitSide != -1)
@@ -494,7 +494,7 @@ namespace Engine
 					velocity += restoredVelocity;
 					offset += restoredVelocity - (1 - distance) * vector;
 
-					float d = LeftNormal(hitObject->Collider->Normals[hitSide]) * vector;
+					Float d = LeftNormal(hitObject->Collider->Normals[hitSide]) * vector;
 					if (clockwise == (LeftNormal(hitObject->Collider->Normals[hitSide]) * velocity < 0))
 					{
 						offset -= velocity + vel;
@@ -521,7 +521,7 @@ namespace Engine
 			while (velocity.SquareLength() > 0)
 			{
 				ColliderInfoVector::iterator collider;
-				float distance;
+				Float distance;
 				int side;
 
 				GetClosestCollision(differences, entryPoint, velocity, lastCollision, collider, distance, side);
