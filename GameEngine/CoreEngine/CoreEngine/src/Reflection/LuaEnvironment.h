@@ -20,6 +20,9 @@ namespace Engine
 
 			static int Traceback(lua_State* lua);
 			static bool RunChunk(lua_State* lua, const char* source, const char* fileName, int lineNumber, int length);
+			static int RunProtectedFunction(lua_State* lua);
+			static int RunProtectedChunk(lua_State* lua, const char* source, const char* fileName, int lineNumber, int length);
+			static int ProtectedDoFile(lua_State* lua);
 		private:
 			lua_State* State = nullptr;
 

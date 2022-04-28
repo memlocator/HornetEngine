@@ -203,7 +203,7 @@ namespace Engine
 
 				root.ObjectType = LuaObjectType::Object;
 				root.GameObject = Engine::Root();
-				root.Type = root.GameObject->GetMetaData(1);
+				root.Type = root.GameObject->GetMetaData();
 
 				lua_setglobal(lua, "Engine");
 			}
@@ -225,13 +225,16 @@ namespace Engine
 			lua_pushstring(lua, "threads");
 			lua_createtable(lua, 10, 0);
 			lua_settable(lua, LUA_REGISTRYINDEX);
+
+			//lua_pushcfunction(lua, ProtectedDoFile);
+			//lua_setglobal(lua, "dofile");
 		}
 
 		void LuaEnvironment::InitializeWaitFunction(lua_State* lua)
 		{
 
 			{
-				luaL_loadstring(lua,
+				char waitImplementation[] = (
 					"	return function(queueThread)"
 					"\n		function wait(time)"
 					"\n			time = time or 1/1000"
@@ -249,6 +252,8 @@ namespace Engine
 					"\n		return wait"
 					"\n	end"
 				);
+
+				luaL_loadbuffer(lua, waitImplementation, sizeof(waitImplementation) - 1, "wait");
 
 				lua_call(lua, 0, 1);
 				lua_pushcfunction(lua, LuaQueueThread);
@@ -274,7 +279,6 @@ namespace Engine
 		typedef IDHeap<lua_State*> LuaThreadHeap;
 
 		LuaThreadQueue resumedThreads;
-		LuaThreadHeap luaThreads;
 
 		void LuaEnvironment::UpdateLua(lua_State* lua, float delta)
 		{
@@ -293,9 +297,7 @@ namespace Engine
 
 				lua_pop(lua, 1);
 
-				lua_State* thread = luaThreads.GetNode(resumedThreads[0].ID).GetData();
-
-				luaThreads.Release(resumedThreads[0].ID);
+				lua_State* thread = GetThread(resumedThreads[0].ID);
 
 				Lua::CoroutineResume(thread);
 				lua_resume(thread, lua, 0);
@@ -312,7 +314,7 @@ namespace Engine
 
 		void LuaEnvironment::InitializeDelayFunction(lua_State* lua)
 		{
-			luaL_loadstring(lua,
+			char debugImplementation[] = (
 				"	return function(queueThread, debug)"
 				"\n		function delay(time, callback, ...)"
 				"\n			if type(callback) ~= 'function' then"
@@ -345,6 +347,8 @@ namespace Engine
 				"\n	end"
 			);
 
+			luaL_loadbuffer(lua, debugImplementation, sizeof(debugImplementation) - 1, "wait");
+
 			lua_call(lua, 0, 1);
 			lua_pushcfunction(lua, LuaQueueThread);
 			lua_getglobal(lua, "debug");
@@ -354,7 +358,7 @@ namespace Engine
 
 		void LuaEnvironment::InitializeTimerFunction(lua_State* lua)
 		{
-			luaL_loadstring(lua,
+			char timerImplementation[] = (
 				"	return function(queueThread, debug)"
 				"\n		function timer(time, callback, ...)"
 				"\n			if type(callback) ~= 'function' then"
@@ -393,6 +397,8 @@ namespace Engine
 				"\n	end"
 			);
 
+			luaL_loadbuffer(lua, timerImplementation, sizeof(timerImplementation) - 1, "wait");
+
 			lua_call(lua, 0, 1);
 			lua_pushcfunction(lua, LuaQueueThread);
 			lua_getglobal(lua, "debug");
@@ -412,7 +418,8 @@ namespace Engine
 			if (lua_isnumber(lua, 1))
 			{
 				float delay = float(lua_tonumber(lua, 1));
-				int id = luaThreads.RequestID(lua);
+
+				int id = Lua::GetThreadID(lua);
 
 				lua_pushstring(lua, "threads");
 				lua_gettable(lua, LUA_REGISTRYINDEX);
@@ -425,6 +432,8 @@ namespace Engine
 
 				TaskScheduler::Repeat(delay, 1, [lua, id](float, float, int)
 					{
+						if (Dead(id)) return;
+
 						resumedThreads.push_back(LuaThreadMarker(lua, id));
 
 						std::push_heap(resumedThreads.begin(), resumedThreads.end());
@@ -458,9 +467,104 @@ namespace Engine
 			{
 				if (lua_isstring(lua, -1))
 					std::cout << lua_tostring(lua, -1);
+
+				lua_pop(lua, 1);
 			}
 
 			return error == 0;
+		}
+
+		int LuaEnvironment::RunProtectedFunction(lua_State* lua)
+		{
+			// expect function at stack top
+
+			lua_pushcfunction(lua, Lua::LuaEnvironment::Traceback); // put traceback on stack for pcall
+
+			lua_pushvalue(lua, -2); // move function above traceback for pcall
+
+			int error = lua_pcall(lua, 0, 0, -2); // run pcall on input with traceback
+
+			if (error)
+			{
+				if (lua_isstring(lua, -1))
+					std::cout << lua_tostring(lua, -1) << std::endl;
+
+				lua_pop(lua, 1);
+			}
+
+			lua_pop(lua, 1); // remove pcall return value & traceback
+
+			return 0;
+		}
+
+		int LuaEnvironment::RunProtectedChunk(lua_State* lua, const char* source, const char* fileName, int lineNumber, int length)
+		{
+			bool succeeded = RunChunk(lua, source, fileName, lineNumber, length);
+
+			if (succeeded)
+			{
+				RunProtectedFunction(lua);
+
+				lua_pop(lua, 1);
+			}
+
+			return 0;
+		}
+
+		int LuaEnvironment::ProtectedDoFile(lua_State* lua)
+		{
+			const char* filePath = nullptr;
+
+			if (lua_isstring(lua, -1))
+				filePath = lua_tostring(lua, -1);
+
+			if (!filePath)
+				return 0;
+
+			lua_Debug ar;
+			int ret1 = lua_getstack(lua, 1, &ar);
+			int ret2 = lua_getinfo(lua, "nSl", &ar);
+
+			//std::fstream file(filePath, std::ios_base::in);
+			//
+			//if (!file.good() || !file.is_open())
+			//	return 0;
+			//
+			//char buffer[0xFFF] = {};
+			//std::string source = "";
+			//
+			//while (!file.eof())
+			//{
+			//	file.read(buffer, 0xFFF);
+			//
+			//	source.append(buffer, int(file.gcount()));
+			//}
+
+
+			int error = luaL_loadfile(lua, filePath);
+
+			if (error)
+			{
+				if (lua_isstring(lua, -1))
+				{
+					lua_error(lua);
+					//std::cout << lua_tostring(lua, -1) << std::endl;
+					//
+					//while ()
+				}
+
+				lua_pop(lua, 1);
+			}
+			else
+			{
+				RunProtectedFunction(lua);
+
+				lua_pop(lua, 1);
+			}
+
+			//RunProtectedChunk(lua, source.c_str(), ar.source, ar.currentline, (int)source.size());
+
+			return 0;
 		}
 
 		int LuaEnvironment::Traceback(lua_State* lua)

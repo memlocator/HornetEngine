@@ -160,6 +160,8 @@ local TileTypes = {
 local boardSize = Vector3(107, 60)
 local mineCount = boardSize.X * boardSize.Y * 0.15--500
 local tiles = {}
+local tilesOfInterest = {}
+local tilesOfSafeInterest = {}
 local activeMines
 local boardTransform
 local minesSpawned = 0
@@ -239,6 +241,34 @@ function ComputeNeighbors(tile)
 	tile:UpdateTile()
 end
 
+function ComputeClosedNeighbors(tile)
+	local closed = 0
+	local flagged = 0
+	
+	for x = -1, 1 do
+		for y = -1, 1 do
+			if not (x == 0 and y == 0) and IsInBounds(tile.X + x, tile.Y + y) then
+				local neighbor = GetTile(tile.X + x, tile.Y + y)
+				
+				if not neighbor.IsOpen and not neighbor.IsFlagged then
+					closed = closed + 1
+				end
+				
+				if neighbor.IsFlagged then
+					flagged = flagged + 1
+				end
+			end
+		end
+	end
+	
+	return closed, flagged
+end
+
+local DeviceTransform = GameObject.DeviceTransform
+local Appearance = GameObject.Appearance
+local ScreenCanvas = GameObject.ScreenCanvas
+local InputSubscriber = GameObject.InputSubscriber
+
 function CreateTile(x, y)
 	local row = tiles[y] or {}
 	tiles[y] = row
@@ -247,13 +277,13 @@ function CreateTile(x, y)
 		return row[x]
 	end
 	
-	local transform = GameObject.DeviceTransform()
+	local transform = DeviceTransform()
 	transform.Parent = boardTransform
 	transform.Size = DeviceVector(0, 24, 0, 24)
 	transform.Position = DeviceVector(0, (x - 1) * 24, 0, (y - 1) * 24)
 	transform.AnchorPoint = DeviceVector(0, 0, 0, 0)
 
-	local appearance = GameObject.Appearance()
+	local appearance = Appearance()
 	appearance.Name = "Appearance"
 	appearance.Parent = transform
 	appearance.Color = RGBA(1, 1, 1,1)
@@ -263,12 +293,12 @@ function CreateTile(x, y)
 	appearance.UVOffset = Vector3(0, 1)
 	appearance.BlendTexture = false
 
-	local canvas = GameObject.ScreenCanvas()
+	local canvas = ScreenCanvas()
 	canvas.Appearance = appearance
 	canvas.Name = "Canvas"
 	canvas.Parent = transform
 	
-	local subscriber = GameObject.InputSubscriber()
+	local subscriber = InputSubscriber()
 	subscriber.Parent = transform
 	
 	local tile = {
@@ -305,6 +335,16 @@ function InitializeBoard()
 	isAlive = true
 	tilesLeft = math.huge
 	tiles = {}
+	tilesOfInterest = {
+		{}, {}, {}, 
+		{}, {}, {}, 
+		{}, {}
+	}
+	tilesOfSafeInterest = {
+		{}, {}, {}, 
+		{}, {}, {}, 
+		{}, {}
+	}
 	
 	boardTransform = GameObject.DeviceTransform()
 	boardTransform.Parent = screen
@@ -385,6 +425,128 @@ end
 
 local neighborOffsets = { Vector3(1, 0), Vector3(0, 1), Vector3(-1, 0), Vector3(0, -1), Vector3(-1, -1), Vector3(-1, 1), Vector3(1, -1), Vector3(1, 1) }
 
+function RemoveFromGroup(tile, interestCategory, groupId, indexId)
+	local currentGroup = tile[groupId]
+	local index = tile[indexId]
+	
+	if currentGroup then
+		local interestGroup = interestCategory[currentGroup]
+		local lastIndex = #interestGroup
+		local last = interestGroup[lastIndex]
+		--print("b", interestGroup[index], interestGroup[lastIndex])
+		
+		if last == nil then print(#interestGroup, currentGroup, index) end
+		
+		last[indexId] = index
+		interestGroup[index] = last
+		interestGroup[lastIndex] = nil
+		
+		tile[indexId] = nil
+		tile[groupId] = nil
+		--print("a", interestGroup[index], interestGroup[lastIndex])
+	end
+end
+
+function AddToGroup(tile, group, interestCategory, groupId, indexId)
+	if tile.IsOpen and tile[groupId] ~= group and group > 0 then
+		local interestGroup = interestCategory[group]
+		local index = #interestGroup + 1
+		
+		--print("b", #interestGroup)
+		interestGroup[index] = tile
+		tile[groupId] = group
+		tile[indexId] = index
+		--print("a", #interestGroup)
+	end
+end
+
+function UpdateGroup(tile, group, interestCategory, groupId, indexId)
+	--print(tile.Neighbors, tile.X, tile.Y, group)
+	--print("bg", tile[groupId], tile[indexId])
+	if (group == 0 or not tile[groupId]) and group ~= tile[groupId] then
+		RemoveFromGroup(tile, interestCategory, groupId, indexId)
+	end
+	
+	if group > 0 and group ~= tile[groupId] then
+		AddToGroup(tile, group, interestCategory, groupId, indexId)
+	end
+	--print("ag", tile[groupId], tile[indexId])
+end
+
+function GetScore(tile)
+	local closed, flagged = ComputeClosedNeighbors(tile)
+	local remaining = (closed - (tile.Neighbors - flagged))
+	
+	if closed == 0 then remaining = -1 end
+	
+	return remaining + 1, closed, flagged, tile.Neighbors
+end
+
+function LookAtTile(tile)
+	if not tile.IsOpen or tile.Neighbors == 0 then
+		UpdateGroup(tile, 0, tilesOfInterest, "InterestGroup", "InterestGroupIndex")
+		
+		return
+	end
+	
+	local closed, flagged = ComputeClosedNeighbors(tile)
+	local remaining = (closed - (tile.Neighbors - flagged))
+	
+	if closed == 0 then remaining = -1 end
+	
+	UpdateGroup(tile, remaining + 1, tilesOfInterest, "InterestGroup", "InterestGroupIndex")
+	
+	
+	if tile.Neighbors > 0 and tile.Neighbors == flagged then
+		if closed > 0  then
+			UpdateGroup(tile, 1, tilesOfSafeInterest, "SafeInterestGroup", "SafeInterestGroupIndex")
+		else
+			UpdateGroup(tile, 0, tilesOfSafeInterest, "SafeInterestGroup", "SafeInterestGroupIndex")
+		end
+	end
+end
+
+local lookAtNext = {}
+
+function ProcessLookingAt()
+	print("looking at", #lookAtNext)
+	for i,v in pairs(lookAtNext) do
+		LookAtTile(v)
+	end
+	
+	lookAtNext = {}
+end
+
+function LookAtNext(tile)
+	lookAtNext[#lookAtNext + 1] = tile
+end
+
+function TileWasClicked(tile)
+	for x = -1, 1 do
+		for y = -1, 1 do
+			if IsInBounds(tile.X + x, tile.Y + y) then
+				local neighbor = GetTile(tile.X + x, tile.Y + y)
+				
+				LookAtNext(neighbor)
+			end
+		end
+	end
+end
+
+function FindUnopenedNeighbor(tile)
+	for x = -1, 1 do
+		for y = -1, 1 do
+			if IsInBounds(tile.X + x, tile.Y + y) then
+				local neighbor = GetTile(tile.X + x, tile.Y + y)
+				
+				if not neighbor.IsOpen and not neighbor.IsFlagged then
+					return neighbor
+				end
+			end
+		end
+	end
+end
+
 function RevealTilesAt(x, y)
 	GenerateMines(x, y)
 	
@@ -405,6 +567,8 @@ function RevealTilesAt(x, y)
 	tile:UpdateTile()
 	
 	tilesLeft = tilesLeft - 1
+	
+	TileWasClicked(tile)
 	
 	if tile.Neighbors == 0 then
 		local openNext = { tile }
@@ -428,6 +592,8 @@ function RevealTilesAt(x, y)
 					if nextTile.Neighbors == 0 then
 						count = count + 1
 						openNext[count] = nextTile
+					else
+						LookAtNext(nextTile)
 					end
 				end
 			end
@@ -507,6 +673,8 @@ end
 local mouseLeft = Engine.GameWindow.UserInput:GetInput(Enum.InputCode.MouseLeft)
 local mouseRight = Engine.GameWindow.UserInput:GetInput(Enum.InputCode.MouseRight)
 local enterKey = Engine.GameWindow.UserInput:GetInput(Enum.InputCode.Enter)
+local homeKey = Engine.GameWindow.UserInput:GetInput(Enum.InputCode.Home)
+local endKey = Engine.GameWindow.UserInput:GetInput(Enum.InputCode.End)
 local focused
 
 local changedLeft = false
@@ -543,6 +711,11 @@ while true do
 			if mouseRight:GetState() and changedRight then
 				tile.IsFlagged = not tile.IsFlagged
 				tile:UpdateTile()
+				
+				if tile.IsFlagged then
+					TileWasClicked(tile)
+					ProcessLookingAt()
+				end
 			end
 		end
 	end
@@ -550,12 +723,105 @@ while true do
 	if not mouseLeft:GetState() and focused then
 		if changedLeft and focused == tile then
 			RevealTilesAt(focused.X, focused.Y)
+			ProcessLookingAt()
 		end
 		
 		focused.IsPressing = false
 		focused:UpdateTile()
 		
 		focused = nil
+	end
+	if endKey:GetState() and endKey:GetStateChanged() and tile then
+		print(tile.X, tile.Y, GetScore(tile))
+	end
+	
+	if homeKey:GetState()then-- and homeKey:GetStateChanged() then
+		if #tilesOfInterest[1] > 0 then
+			--print("bc", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors, GetScore(tilesOfInterest[1][1]))
+			local tile = FindUnopenedNeighbor(tilesOfInterest[1][1])
+			if tile then
+				tile.IsFlagged = true
+				tile.IsPressing = false
+				tile:UpdateTile()
+				
+				print("flagging", tile.X, tile.Y)
+				
+				TileWasClicked(tile)
+				ProcessLookingAt()
+				if tilesOfInterest[1][1] then
+					--print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors)
+				else
+					print("out of prio 1 tiles")
+				end
+			else
+				print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, GetScore(tilesOfInterest[1][1]))
+				TileWasClicked(tilesOfInterest[1][1])
+				ProcessLookingAt()
+				local category = tilesOfInterest[1]
+				print(#category)
+				for i,v in ipairs(category) do
+					local score, closed = GetScore(v)
+					
+					if score == 0 then
+						category[i] = category[#category]
+						category[i].InterestGroupIndex = i
+						category[#category] = nil
+						
+						v.InterestGroup = nil
+						v.InterestGroupIndex = nil
+						
+						print("removed at", i, #category)
+					end
+					print(score, closed)
+					print(i, "|", v.X, v.Y, v.Neighbors, GetScore(v))
+				end
+				print"NIL TILE"
+			end
+		elseif #tilesOfSafeInterest[1] > 0 then
+			local tile = FindUnopenedNeighbor(tilesOfSafeInterest[1][1])
+			if tile then
+				RevealTilesAt(tile.X, tile.Y)
+				tile.IsPressing = false
+				tile:UpdateTile()
+				
+				print("clicking", tile.X, tile.Y)
+				
+				TileWasClicked(tile)
+				ProcessLookingAt()
+				if tilesOfSafeInterest[1][1] then
+					--print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors)
+				else
+					print("out of prio 1 tiles")
+				end
+			else
+				print"NIL TILE"
+				print("tiles of interest:")
+				local category = tilesOfSafeInterest[1]
+				
+				for i,v in ipairs(category) do
+					local score, closed = GetScore(v)
+					
+					if closed == 0 then
+						category[i] = category[#category]
+						category[i].SafeInterestGroupIndex = i
+						category[#category] = nil
+						
+						v.SafeInterestGroup = nil
+						v.SafeInterestGroupIndex = nil
+						
+						print("removed at", i, #category)
+					end
+					print(score, closed)
+					print(i, "|", v.X, v.Y, v.Neighbors, GetScore(v))
+				end
+			end
+		else
+			print("tiles of interest:")
+			
+			for i=1,8 do
+				print(i, #tilesOfInterest[i])
+			end
+		end
 	end
 	
 	if enterKey:GetState() and (not isAlive or tilesLeft == 0) then

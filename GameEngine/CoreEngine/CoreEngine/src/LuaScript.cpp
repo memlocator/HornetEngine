@@ -18,22 +18,15 @@ namespace Engine
 	{
 		Object::Update(delta);
 
-		if (AutoRuns && GetStatus() == Enum::ScriptStatus::Idle)
+		if (AutoRuns && Status == Enum::ScriptStatus::Uninitialized)
 			Run();
-
-		//Enum::ScriptStatus status = GetStatus();
-		//
-		//if (status != Enum::ScriptStatus::Idle)
-		//	Stop();
 
 		SetTicks(false);
 	}
 
 	LuaScript::~LuaScript()
 	{
-		Enum::ScriptStatus status = GetStatus();
-
-		if (status != Enum::ScriptStatus::Idle)
+		if (Status != Enum::ScriptStatus::Dead)
 			Stop();
 	}
 
@@ -54,7 +47,7 @@ namespace Engine
 
 	bool LuaScript::UpToDate() const
 	{
-		if (!SourceChanged && GetStatus() == Enum::ScriptStatus::Running && !SourceObject.expired())
+		if (!SourceChanged && Status == Enum::ScriptStatus::Running && !SourceObject.expired())
 			return SourceObject.lock()->GetVersion() == LoadedVersion;
 
 		return SourceChanged;
@@ -67,19 +60,7 @@ namespace Engine
 
 	Enum::ScriptStatus LuaScript::GetStatus() const
 	{
-		if (ThreadID == -1)
-			return Enum::ScriptStatus::Idle;
-
-		if (Lua::Running(ThreadID))
-			return Enum::ScriptStatus::Running;
-
-		if (Lua::Yielded(ThreadID))
-			return Enum::ScriptStatus::Yielded;
-
-		if (Lua::Dead(ThreadID))
-			return Enum::ScriptStatus::Dead;
-
-		return Enum::ScriptStatus::Idle;
+		return Status;
 	}
 
 	void LuaScript::SetSource(const std::shared_ptr<LuaSource>& source)
@@ -107,25 +88,31 @@ namespace Engine
 
 	void LuaScript::Run()
 	{
-		if (GetStatus() != Enum::ScriptStatus::Idle)
+		if (Status != ScriptStatus::Uninitialized)
 			return;
 
 		SourceChanged = false;
-		ThreadID = Lua::Spawn(Source, GetFullName() + "[" + Path + "]", [this] (lua_State* lua) -> int
-		{
-			lua_pushstring(lua, "This");
+		ThreadID = Lua::Spawn(Source, GetFullName() + "[" + Path + "]",
+			[this] (lua_State* lua) -> int
+			{
+				lua_pushstring(lua, "This");
 
-			Engine::Lua::BindType<std::shared_ptr<Object>>::Push(lua, This.lock());
+				Engine::Lua::BindType<std::shared_ptr<Object>>::Push(lua, This.lock());
 
-			lua_settable(lua, -3);
+				lua_settable(lua, -3);
 
-			return 0;
-		});
+				return 0;
+			},
+			[this](ScriptStatus status)
+			{
+				Status = status;
+			}
+		);
 	}
 
 	void LuaScript::Stop()
 	{
-		if (GetStatus() == Enum::ScriptStatus::Idle)
+		if (Lua::Dead(ThreadID))
 			return;
 
 		Lua::Kill(ThreadID);
@@ -135,10 +122,7 @@ namespace Engine
 
 	void LuaScript::Reload()
 	{
-		Enum::ScriptStatus status = GetStatus();
-
-		if (status == Enum::ScriptStatus::Running || status == Enum::ScriptStatus::Yielded)
-			Stop();
+		Stop();
 
 		if (!SourceObject.expired() && SourceObject.lock()->GetVersion() != LoadedVersion)
 			SetSource(SourceObject.lock());

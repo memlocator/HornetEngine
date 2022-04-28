@@ -12,19 +12,35 @@ namespace Engine
 {
 	namespace Lua
 	{
+
 		typedef std::vector<int> IntVector;
 		typedef std::map<lua_State*, int> IDMap;
 
 		struct Thread
 		{
+			bool IsScriptMainThread = false;
 			std::string Name;
 			std::string Source;
+			std::string Error;
 			lua_State* State = nullptr;
 			LuaCallback InitializeCallback;
+			StatusChangedCallback StatusChanged;
 			int ID = -1;
-			bool Alive = true;
-			bool Running = false;
+			ThreadStatus Status = ThreadStatus::Uninitialized;
 			std::chrono::steady_clock::time_point ThreadStarted;
+
+			void SetStatus(ThreadStatus status)
+			{
+				Status = status;
+
+				if (StatusChanged != nullptr)
+					StatusChanged(status);
+			}
+
+			void Kill()
+			{
+				SetStatus(ThreadStatus::Dead);
+			}
 
 			Thread()
 			{
@@ -61,18 +77,17 @@ namespace Engine
 			lua_pushstring(lua, "ThreadData");
 			lua_createtable(lua, 0, 0);
 
-
 			lua_settable(lua, LUA_REGISTRYINDEX);
 
 			const char coroutineWrapper[] =
-				"	return function(coroutine, created, resumed, yielded, ended, traceback, pcallwrap)"
+				"	return function(coroutine, created, resumed, yielded, traceback, pcallwrap)"
 				"\n		local create = coroutine.create"
 				"\n		local resume = coroutine.resume"
 				"\n		local yield = coroutine.yield"
 				"\n		local wrap = coroutine.wrap"
 				"\n		"
 				"\n		function coroutine.create(func)"
-				"\n			local thread = create(function(...) return pcallwrap(xpcall(func, traceback, ...)) end)"
+				"\n			local thread = create(function(...) local res, err = xpcall(func, traceback, ...) return pcallwrap(res, err) end)"
 				"\n			"
 				"\n			created(thread)"
 				"\n			"
@@ -80,9 +95,9 @@ namespace Engine
 				"\n		end"
 				"\n		"
 				"\n		function coroutine.resume(thread, var1, var2, ...)"
-				"\n			--resumed(thread)"
+				"\n			resumed(thread)"
 				"\n			"
-				"\n			return resumed(resume, thread, var1, var2, ...)"
+				"\n			return resume(thread, var1, var2, ...)"
 				"\n		end"
 				"\n		"
 				"\n		function coroutine.yield(var1, var2, ...)"
@@ -117,30 +132,11 @@ namespace Engine
 			lua_call(lua, 0, 1);
 			lua_getglobal(lua, "coroutine");
 			lua_pushcfunction(lua, CoroutineCreate);
-			lua_pushcfunction(lua, [] (lua_State* lua) -> int
-			{
-				lua_State* thread = lua_tothread(lua, 2);
-
-				CoroutineResume(thread);
-
-				lua_call(lua, lua_gettop(lua) - 1, LUA_MULTRET);
-
-				ThreadEnded(GetThreadID(thread));
-
-				return lua_gettop(lua);
-			});
+			lua_pushcfunction(lua, CoroutineResume);
 			lua_pushcfunction(lua, CoroutineYield);
-			lua_pushcfunction(lua, [](lua_State* lua) -> int
-			{
-				lua_State* thread = lua_tothread(lua, 1);
-
-				ThreadEnded(GetThreadID(thread));
-
-				return 0;
-			});
 			lua_pushcfunction(lua, Lua::LuaEnvironment::Traceback);
 			lua_pushcfunction(lua, &PCall);
-			lua_call(lua, 7, 1);
+			lua_call(lua, 6, 1);
 
 			lua_setglobal(lua, "coroutine.wrap");
 		}
@@ -149,156 +145,91 @@ namespace Engine
 		{
 			lua_pushstring(lua, "ThreadData");
 			lua_gettable(lua, LUA_REGISTRYINDEX);
-			int threadData = lua_gettop(lua);
 
 			for (int i = 0; i < int(ThreadQueue.size()); ++i)
 			{
 				if (!Threads.NodeAllocated(i))
 					continue;
 
-				{
-					int top = lua_gettop(lua);
-					top += 0;
-				}
-
 				Thread& thread = Threads.GetNode(ThreadQueue[i]).GetData();
 
-				if (thread.Alive && thread.State == nullptr)
+				if (thread.Status == ThreadStatus::Uninitialized)
 				{
-					thread.State = lua_newthread(lua);
+					lua_pushinteger(lua, lua_Integer(thread.ID));
+					lua_State* newThread = lua_newthread(lua);
+
+					thread.State = newThread;
+
+					ThreadIDs[thread.State] = thread.ID;
+
+					lua_settable(lua, -3); // push to ThreadData
+
+					const char threadWrapper[] = "return function(chunk, traceback, pcallwrap) local res, err = xpcall(chunk, traceback) return pcallwrap(res, err) end";
+
+					int wrapperError = luaL_loadbuffer(newThread, threadWrapper, sizeof(threadWrapper) - 1, "ScriptDispatcher");
+					
+					lua_call(newThread, 0, 1);
+
+					int error = luaL_loadbuffer(newThread, thread.Source.c_str(), thread.Source.size(), thread.Name.c_str());
+
+					if (error)
 					{
-						int top = lua_gettop(lua);
-						top += 0;
-					}
+						thread.SetStatus(ThreadStatus::ParseError);
 
-					lua_pushnumber(lua, lua_Number(thread.ID));
-					lua_pushvalue(lua, -2);
-
-					int type = lua_type(lua, -4);
-
-					lua_settable(lua, -4);
-
-					lua_getglobal(lua, "print");
-
-					int print = lua_gettop(lua);
-
-					{
-						int top = lua_gettop(lua);
-						top += 0;
-					}
-
-					lua_pushcfunction(lua, Lua::LuaEnvironment::Traceback);
-
-					int traceback = lua_gettop(lua);
-
-
-					std::string message;
-					int error = luaL_loadbuffer(lua, thread.Source.c_str(), thread.Source.size(), thread.Name.c_str());
-					{
-						int top = lua_gettop(lua);
-						top += 0;
-					}
-
-					if (!error)
-					{
-						lua_createtable(lua, 0, 0);
-						thread.InitializeCallback(lua);
-						thread.Running = true;
-						{
-							int top = lua_gettop(lua);
-							top += 0;
-						}
-
-						lua_createtable(lua, 0, 1);
-						lua_pushstring(lua, "__index");
-						lua_getglobal(lua, "_G");
-						lua_settable(lua, -3);
-
-						lua_setmetatable(lua, -2);
-
-						lua_setupvalue(lua, -2, 1);
-						{
-							int top = lua_gettop(lua);
-							top += 0;
-						}
-
-						lua_getglobal(lua, "coroutine.wrap");
-
-						const char threadWrapper[] = "return function(chunk, traceback, pcallwrap) return pcallwrap(xpcall(chunk, traceback)) end";
-
-						Lua::LuaEnvironment::RunChunk(lua, threadWrapper, __FILE__, __LINE__, sizeof(threadWrapper) - 1);
-
-						lua_call(lua, 0, 1);
-
-						lua_call(lua, 1, 1);
-						{
-							int top = lua_gettop(lua);
-							top += 0;
-						}
-
-						lua_pushvalue(lua, -2);
-						lua_pushcfunction(lua, Lua::LuaEnvironment::Traceback);
-						lua_pushcfunction(lua, &PCall);
-
-						error = lua_pcall(lua, 3, 1, traceback);
-
-						if (error)
-						{
-							if (lua_isstring(lua, -1))
-							std::cout << lua_tostring(lua, -1);
-						}
-
-						ThreadEnded(i);
-						{
-							int top = lua_gettop(lua);
-							top += 0;
-						}
-
-						lua_pop(lua, 5);
+						std::cout << lua_tostring(newThread, -1);
 					}
 					else
 					{
-						CheckError(lua, thread, error);
+						thread.SetStatus(ThreadStatus::Running);
 
-						lua_pop(lua, 4);
-					}
+						lua_pushcfunction(newThread, Lua::LuaEnvironment::Traceback);
+						lua_pushcfunction(newThread, &PCall);
+						
+						lua_call(newThread, 3, 1);
 
-					{
-						int top = lua_gettop(lua);
-						top += 0;
+						Thread& postCallThread = Threads.GetNode(ThreadQueue[i]).GetData();
+
+						if (postCallThread.Status != ThreadStatus::Yielded)
+							postCallThread.SetStatus(ThreadStatus::Finished);
 					}
 				}
 			}
 
-			int top = lua_gettop(lua);
-
 			lua_pop(lua, 1);
+
+			ThreadQueue.clear();
 		}
 
 		int PCall(lua_State* lua)
 		{
-			if (lua_toboolean(lua, 1))
-				return lua_gettop(lua) - 1;
-			else
+			if (!lua_toboolean(lua, 1))
 			{
-				std::cout << lua_tostring(lua, 2);
+				int threadID = GetThreadID(lua);
+				Thread& thread = Threads.GetNode(threadID).GetData();
+				thread.Error = lua_tostring(lua, 2);
 
-				return 0;
+				std::cout << thread.Error.c_str() << std::endl;
+
+				thread.SetStatus(ThreadStatus::RuntimeError);
 			}
+
+			lua_pushvalue(lua, 1);
+
+			return 1;
 		}
 
-		int Spawn(const std::string& source, const std::string& name, LuaCallback initializeCallback)
+		int Spawn(const std::string& source, const std::string& name, const LuaCallback& initializeCallback, const StatusChangedCallback& statusChangedCallback)
 		{
 			int threadID = Threads.RequestID();
 
 			Thread& thread = Threads.GetNode(threadID).GetData();
 
-			ThreadIDs[thread.State] = threadID;
-
 			thread.Name = name;
 			thread.ID = threadID;
 			thread.Source = source;
 			thread.InitializeCallback = initializeCallback;
+			thread.StatusChanged = statusChangedCallback;
+			thread.IsScriptMainThread = true;
 
 			ThreadQueue.push_back(threadID);
 
@@ -307,40 +238,59 @@ namespace Engine
 
 		void Kill(int threadID)
 		{
+			if (threadID == -1)
+				return;
+
 			if (!Threads.NodeAllocated(threadID))
 				return;
 
-			Threads.GetNode(threadID).GetData().Alive = false;
+			Thread& thread = Threads.GetNode(threadID).GetData();
+
+			thread.Kill();
 		}
 
 		bool Running(int threadID)
 		{
+			if (threadID == -1)
+				return false;
+
 			if (!Threads.NodeAllocated(threadID))
 				return false;
 
-			return Threads.GetNode(threadID).GetData().Running;
+			return Threads.GetNode(threadID).GetData().Status == ThreadStatus::Running;
 		}
 
 		bool Yielded(int threadID)
 		{
+			if (threadID == -1)
+				return false;
+
 			if (!Threads.NodeAllocated(threadID))
 				return false;
 
 			Thread& thread = Threads.GetNode(threadID).GetData();
 
-			return thread.Alive && !thread.Running;
+			return thread.Status == ThreadStatus::Yielded;
 		}
 
 		bool Dead(int threadID)
 		{
+			if (threadID == -1)
+				return false;
+
 			if (!Threads.NodeAllocated(threadID))
 				return false;
 
-			return !Threads.GetNode(threadID).GetData().Alive;
+			ThreadStatus status = Threads.GetNode(threadID).GetData().Status;
+
+			return status == ThreadStatus::Dead || status == ThreadStatus::ParseError || status == ThreadStatus::RuntimeError;
 		}
 
 		int GetData(lua_State* lua, int threadID)
 		{
+			if (threadID == -1)
+				return 0;
+
 			if (!Threads.NodeAllocated(threadID))
 				return 0;
 
@@ -364,6 +314,15 @@ namespace Engine
 				return i->second;
 
 			return -1;
+		}
+
+		lua_State* GetThread(int id)
+		{
+			if (id == -1) return nullptr;
+
+			Thread& thread = Threads.GetNode(id).GetData();
+
+			return thread.State;
 		}
 
 		int CoroutineCreate(lua_State* lua)
@@ -413,9 +372,7 @@ namespace Engine
 			{
 				Thread& thread = Threads.GetNode(threadID).GetData();
 
-				thread.Running = true;
-
-				ThreadStack.push_back(threadID);
+				thread.SetStatus(ThreadStatus::Running);
 			}
 
 			return 0;
@@ -429,26 +386,16 @@ namespace Engine
 			{
 				Thread& thread = Threads.GetNode(threadID).GetData();
 
-				thread.Running = false;
+				if (thread.IsScriptMainThread)
+				{
+					lua_pushstring(lua, "cannot yield in LuaScript main thread");
+					lua_error(lua);
+				}
 
-				if (ThreadStack.size() > 0 && ThreadStack[ThreadStack.size() - 1] == threadID)
-					ThreadStack.pop_back();
+				thread.SetStatus(ThreadStatus::Yielded);
 			}
 
 			return 0;
-		}
-
-		void ThreadEnded(int id)
-		{
-			if (ThreadStack.size() > 0 && ThreadStack[ThreadStack.size() - 1] == id)
-			{
-				Thread& thread = Threads.GetNode(id).GetData();
-
-				thread.Running = false;
-				thread.Alive = false;
-
-				ThreadStack.pop_back();
-			}
 		}
 	}
 }

@@ -2,6 +2,7 @@
 
 #include "IdentifierHeap.h"
 #include "Object.h"
+#include "Reflection/LuaThreadManager.h"
 
 struct lua_State;
 
@@ -12,18 +13,7 @@ namespace Engine
 	class LuaScript : public Object
 	{
 	public:
-		struct ScriptStatusEnum
-		{
-			enum ScriptStatus
-			{
-				Idle,
-				Running,
-				Yielded,
-				Dead
-			};
-		};
-
-		typedef ScriptStatusEnum::ScriptStatus ScriptStatus;
+		typedef Lua::ThreadStatus ScriptStatus;
 
 		void Initialize();
 		void Update(float delta);
@@ -53,6 +43,7 @@ namespace Engine
 		bool SourceChanged = false;
 		bool DataLoaded = false;
 		bool AutoRuns = false;
+		ScriptStatus Status = ScriptStatus::Uninitialized;
 	};
 }
 

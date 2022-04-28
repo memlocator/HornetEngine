@@ -487,7 +487,7 @@ namespace Engine
 
 				bound.GameObject = value;
 				bound.ObjectType = LuaObjectType::Object;
-				bound.Type = bound.GameObject->GetMetaData(0);
+				bound.Type = bound.GameObject->GetMetaData();
 			}
 
 			template <bool HasDefault>
@@ -542,7 +542,7 @@ namespace Engine
 
 				bound.GameObject = value.lock();
 				bound.ObjectType = LuaObjectType::Object;
-				bound.Type = bound.GameObject->GetMetaData(1);
+				bound.Type = bound.GameObject->GetMetaData();
 			}
 
 			template <bool HasDefault>
@@ -597,7 +597,7 @@ namespace Engine
 		
 				bound.GameObject = value->This.lock()->Cast<Type>();
 				bound.ObjectType = LuaObjectType::Object;
-				bound.Type = bound.GameObject->GetMetaData(1);
+				bound.Type = bound.GameObject->GetMetaData();
 			}
 		
 			static void Push(lua_State* lua, const Type* value)
@@ -613,7 +613,7 @@ namespace Engine
 		
 				bound.GameObject = value->This.lock()->Cast<Type>();
 				bound.ObjectType = LuaObjectType::Object;
-				bound.Type = bound.GameObject->GetMetaData(1);
+				bound.Type = bound.GameObject->GetMetaData();
 			}
 		
 			template <bool HasDefault>

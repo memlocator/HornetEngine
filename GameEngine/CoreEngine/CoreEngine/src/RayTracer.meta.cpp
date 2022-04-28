@@ -24,6 +24,8 @@ namespace Engine
 				Member<Bind(&RayTracer::MaxBounces)>("MaxBounces"),
 				Member<Bind(&RayTracer::Samples)>("Samples"),
 				Member<Bind(&RayTracer::CurrentScene)>("CurrentScene"),
+				Member<Bind(&RayTracer::MouseX)>("MouseX"),
+				Member<Bind(&RayTracer::MouseY)>("MouseY"),
 
 				Constructor(
 					Overload()

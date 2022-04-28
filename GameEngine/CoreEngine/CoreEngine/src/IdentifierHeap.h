@@ -9,7 +9,7 @@
 class IdentifierHeapException : public std::exception
 {
 public:
-	const char* Message = nullptr;
+	//const char* Message = nullptr;
 	std::source_location Caller;
 	std::string ErrorMessage;
 
@@ -19,7 +19,7 @@ public:
 
 		std::stringstream error;
 
-		error << Caller.file_name() << " [" << Caller.line() << "]: " << Caller.function_name() << ": " << Message;
+		error << Caller.file_name() << " [" << Caller.line() << "]: " << Caller.function_name() << ": " << message;
 
 		ErrorMessage = error.str();
 	}
@@ -29,7 +29,7 @@ public:
 
 		std::stringstream error;
 
-		error << Caller.file_name() << " [" << Caller.line() << "]: " << Caller.function_name() << ": " << Message;
+		error << Caller.file_name() << " [" << Caller.line() << "]: " << Caller.function_name() << ": " << message;
 
 		ErrorMessage = error.str();
 	}

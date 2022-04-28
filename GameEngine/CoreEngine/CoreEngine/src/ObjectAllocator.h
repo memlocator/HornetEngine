@@ -31,14 +31,14 @@ namespace Engine
 
 		static SelectedAllocator& Allocator;
 
-		static std::shared_ptr<T> Create()
+		template <typename... Arguments>
+		static std::shared_ptr<T> Create(Arguments&&... arguments)
 		{
-			T* object = Allocator.template Create<T>();
+			T* object = Allocator.template Create<T>(arguments...);
 
 			auto handle = std::shared_ptr<T>(object, Free);
 
 			object->This = handle;
-			object->Initialize();
 
 			return handle;
 		}

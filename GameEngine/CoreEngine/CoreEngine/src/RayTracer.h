@@ -68,6 +68,8 @@ namespace GraphicsEngine
 		static inline const bool RenderAtmosphere = false;
 		static inline const bool RenderNaiveAtmosphere = true;
 		static inline const bool UseMicrofacetNormals = true;
+		static inline const bool UseDepthTest = true;
+		static inline const bool ComputeShadows = false;
 
 		int BatchWidth = 64;
 		int BatchHeight = 64;
@@ -85,6 +87,8 @@ namespace GraphicsEngine
 		Vector3 PlanetDirection = Vector3(0, -1, 0);
 		Vector3 Wavelengths = Vector3(700, 530, 400);
 		float ScatterStrength = 1;
+		int MouseX = 0;
+		int MouseY = 0;
 
 		std::weak_ptr<Scene> CurrentScene;
 
@@ -150,6 +154,7 @@ namespace GraphicsEngine
 		int RayWidth = 0;
 		int RayHeight = 0;
 		Pixel* Data = nullptr;
+		float* DepthBuffer = nullptr;
 		int MaxThreads = 1;
 		int RunningThreads = 0;
 		int MaxRunningThreads = 0;
@@ -184,7 +189,7 @@ namespace GraphicsEngine
 		struct Thread
 		{
 			std::chrono::steady_clock::time_point ThreadStarted;
-			std::chrono::nanoseconds ThreadTotal;
+			std::chrono::nanoseconds ThreadTotal = std::chrono::nanoseconds();
 			long long RayCount = 0;
 			long long BounceRayCount = 0;
 			long long ShadowRayCount = 0;
@@ -202,6 +207,9 @@ namespace GraphicsEngine
 			IndexVector RayStack;
 
 			FloatRNG RNG;
+
+			int RayX = 0;
+			int RayY = 0;
 
 			~Thread();
 
@@ -273,5 +281,6 @@ namespace GraphicsEngine
 		Vector3 ComputeAtmosphericLightNaive(const Vector3& direction) const;
 		Vector3 ProcessRay(const QueuedRay& ray, Thread& thread, const Vector3& lightFilter, int bounces = 0, int rayID = 0) const;
 		void ProcessBatch(int x, int y, int threadID);
+		void DrawLine(const Vector3& start, const Vector3& end, const RGBA& color);
 	};
 }

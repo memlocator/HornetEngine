@@ -6,8 +6,7 @@ local meshes = GameObject.Object()
 meshes.Name = "Meshes"
 meshes.Parent = Engine --[[ meshes:SetParent(Engine) ]]
 
-local assets
-print("pcall", pcall(function() assets = json.decode("./assets/json/mapAssets.json", true) end))
+local assets, err = json.decode("./assets/json/mapAssets.json", true)
 
 for name, path in pairs(assets.meshes) do
 	print(name, path)
@@ -23,15 +22,8 @@ local robloxTextures = GameObject.Object()
 robloxTextures.Parent = textures
 robloxTextures.Name = "Roblox"
 
-local robloxMaterials
+local robloxMaterials, rerr = json.decode("./assets/json/robloxMaterials.json", true)
 
-function LoadMaterials()
-
-print("loading roblox materials", pcall(function() robloxMaterials = json.decode("./assets/json/robloxMaterials.json", true) end))
-
-end
-
-LoadMaterials()
 --[[
 print("loading material textures")
 
@@ -243,7 +235,7 @@ rayTracer.Parent = Engine
 rayTracer.CurrentScene = scene
 rayTracer.BatchWidth = 8--resX/4
 rayTracer.BatchHeight = 8--resY/3
-rayTracer.MaxBounces = 10
+rayTracer.MaxBounces = 1
 rayTracer.Samples = 1
 rayTracer:SetMaxThreads(rayTracer:GetHardwareThreads())
 rayTracer:Configure(resX, resY)
@@ -264,7 +256,7 @@ uiDraw.RenderAutomatically = true
 uiDraw.CurrentScreen = screen
 
 local rayTracedScene = GameObject.DeviceTransform()
-rayTracedScene.Parent = screen
+
 rayTracedScene.Size = DeviceVector(0, resX, 0, resY)
 
 local rayTracedSceneSub = GameObject.DeviceTransform()
@@ -286,22 +278,26 @@ rayTracedColorCorrection.Input = rayTracedTexture
 rayTracedColorCorrection.Exposure = 1
 rayTracedColorCorrection.RangeFittingType = Enum.RangeFittingMode.Reinhard
 rayTracedColorCorrection:Resize(resX, resY)
+rayTracedColorCorrection.Name = "RayTracedColorCorrection"
 
 print(rayTracedColorCorrection.Input)
 
 local rayTracedHDRTexture = GameObject.Textures.Create(resX, resY, Enum.SampleType.Nearest.Value, Enum.WrapType.ClampExtend.Value, Enum.DataType.Float.Value)
 
-local rayTracedHDRBuffer = GameObject.FrameBuffer.Create(resX, resY, rayTracedHDRTexture)
+local rayTracedHDRBuffer = GameObject.FrameBuffer.Create(resX, resY, rayTracedHDRTexture, true)
 rayTracedHDRBuffer.Parent = rayTracedColorCorrection
+rayTracedHDRTexture.Parent = rayTracedHDRBuffer
 
 rayTracedColorCorrection.Output = rayTracedHDRBuffer
 
 local rayTracedAppearance = GameObject.Appearance()
 rayTracedAppearance.Texture = rayTracedHDRTexture--rayTracedTexture
-rayTracedAppearance.Color = RGBA(0, 0, 0, 0)
+rayTracedAppearance.Color = RGBA(1, 1, 1, 1)
+rayTracedAppearance.Parent = rayTracedCanvas
 
 rayTracedCanvas.Appearance = rayTracedAppearance
 rayTracedCanvas.Visible = false
+rayTracedCanvas.Name = "RayTracedCanvas"
 
 
 
@@ -458,7 +454,6 @@ if true then
 	local Model = GameObject.Model
 	local Light = GameObject.Light
 	
-	print(pcall(function()
 	for line in file:lines() do
 		lines = lines + 1
 		local attribute, value = line:match("([^:]+):(.*)")
@@ -611,7 +606,7 @@ if true then
 			current[attribute] = value
 		end
 	end
-	end))
+	
 	print("lines processed:", lines)
 	print("objects: ", objects)
 	print("lights: ", lights)
@@ -637,10 +632,10 @@ coroutine.wrap(function()
 end)()
 
 --viewport--------------------------------------------------------
-local viewframeDrawOp = GameObject.InterfaceDrawOperation()
-viewframeDrawOp.Parent = screen
-viewframeDrawOp.RenderAutomatically = true
-viewframeDrawOp.CurrentScreen = screen
+--local viewframeDrawOp = GameObject.InterfaceDrawOperation()
+--viewframeDrawOp.Parent = screen
+--viewframeDrawOp.RenderAutomatically = true
+--viewframeDrawOp.CurrentScreen = screen
 
 
 local viewframeX = resolution.Width
@@ -669,6 +664,8 @@ viewframeCanvas.Visible = true
 viewportAppearance.Parent = viewframeCanvas
 
 sceneDraw.Output = viewframeBuffer
+
+rayTracedScene.Parent = screen
 
 print(viewframeBuffer, viewframeDrawTexture, viewframeX, viewframeY)
 -----------------------------------------------------------------------------
@@ -720,7 +717,6 @@ networkHostScript:Run()
 --
 
 coroutine.wrap(function()
-	print(pcall(function()
 	local userInput = Engine.GameWindow.UserInput
 
 	local keyW = userInput:GetInput(Enum.InputCode.W)
@@ -783,11 +779,14 @@ coroutine.wrap(function()
 	while true do
 		local delta = wait()
 		
-		print(math.floor(10/delta)/10, delta)
+		--print(math.floor(10/delta)/10, delta)
 		
 		time = time + delta
 		
 		local currentPosition = mousePosition:GetPosition()
+		
+		rayTracer.MouseX = currentPosition.X
+		rayTracer.MouseY = resY - currentPosition.Y
 		
 		local hit
 		local hits = 0
@@ -931,5 +930,4 @@ coroutine.wrap(function()
 
 		scene:Update(0)
 	end
-	end))
 end)()

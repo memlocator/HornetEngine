@@ -63,58 +63,71 @@ namespace Engine
 			lua
 		};
 
-		JsonParser parser(input, isPath);
-
-		parser.ReadKey = [&data] (const std::string& key)
-		{
-			lua_pushstring(data.Lua, Desanitize(key).c_str());
-		};
-
-		parser.ReadIndex = [&data] (int index)
-		{
-			lua_pushnumber(data.Lua, lua_Number(index + 1));
-		};
-
-		parser.ReadNumber = [&data] (float value, char modifier)
-		{
-			lua_pushnumber(data.Lua, lua_Number(value));
-			lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
-		};
-
-		parser.ReadString = [&data] (const std::string& value)
-		{
-			lua_pushstring(data.Lua, Desanitize(value).c_str());
-			lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
-		};
-
-		parser.ReadBool = [&data] (bool value)
-		{
-			lua_pushboolean(data.Lua, value);
-			lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
-		};
-
-		parser.PushContainer = [&data] (bool value)
-		{
-			lua_createtable(data.Lua, 0, 0);
-			
-			data.TableIndices.push_back(lua_gettop(data.Lua));
-		};
-
-		parser.PopContainer = [&data] ()
-		{
-			data.TableIndices.pop_back();
-
-			if (data.TableIndices.size() > 0)
-				lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
-		};
-
 		try
 		{
-			parser.Parse();
+			JsonParser parser(input, isPath);
+
+			parser.ReadKey = [&data](const std::string& key)
+			{
+				lua_pushstring(data.Lua, Desanitize(key).c_str());
+			};
+
+			parser.ReadIndex = [&data](int index)
+			{
+				lua_pushnumber(data.Lua, lua_Number(index + 1));
+			};
+
+			parser.ReadNumber = [&data](float value, char modifier)
+			{
+				lua_pushnumber(data.Lua, lua_Number(value));
+				lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
+			};
+
+			parser.ReadString = [&data](const std::string& value)
+			{
+				lua_pushstring(data.Lua, Desanitize(value).c_str());
+				lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
+			};
+
+			parser.ReadBool = [&data](bool value)
+			{
+				lua_pushboolean(data.Lua, value);
+				lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
+			};
+
+			parser.PushContainer = [&data](bool value)
+			{
+				lua_createtable(data.Lua, 0, 0);
+
+				data.TableIndices.push_back(lua_gettop(data.Lua));
+			};
+
+			parser.PopContainer = [&data]()
+			{
+				data.TableIndices.pop_back();
+
+				if (data.TableIndices.size() > 0)
+					lua_settable(data.Lua, data.TableIndices[data.TableIndices.size() - 1]);
+			};
+
+			try
+			{
+				parser.Parse();
+			}
+			catch (std::string& error)
+			{
+				lua_pushnil(lua);
+				lua_pushstring(lua, error.c_str());
+
+				return 2;
+			}
 		}
-		catch (std::string& error)
+		catch (JsonParserException e)
 		{
-			LuaError(lua, error.c_str());
+			lua_pushnil(lua);
+			lua_pushstring(lua, e.what());
+
+			return 2;
 		}
 
 		return 1;

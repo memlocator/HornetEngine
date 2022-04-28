@@ -32,7 +32,7 @@ namespace GraphicsEngine
 
 	float ValidateData(float value, const char* file, int line)
 	{
-		if (value < 0 || value < 0 || value < 0)
+		if (value < 0)
 			std::cout << "[" << file << ":" << line << "] WARNING: negative value '" << value << "'" << std::endl;
 
 		return Sanitize(value);
@@ -85,17 +85,26 @@ namespace GraphicsEngine
 		{
 			delete[] Data;
 			delete[] Rays;
+
+			if (DepthBuffer)
+				delete[] DepthBuffer;
 		}
 
 		if (width != 0 && height != 0)
 		{
-			Data = new Pixel[width * height];
-			Rays = new Vector[width * height];
+			int bufferSize = width * height;
+
+			Data = new Pixel[bufferSize];
+			Rays = new Vector[bufferSize];
+
+			if (UseDepthTest)
+				DepthBuffer = new float[bufferSize];
 		}
 		else
 		{
 			Data = nullptr;
 			Rays = nullptr;
+			DepthBuffer = nullptr;
 		}
 
 		Width = width;
@@ -120,10 +129,23 @@ namespace GraphicsEngine
 		if (Data != nullptr)
 			delete[] Data;
 
+		if (DepthBuffer)
+			delete[] DepthBuffer;
+
+		int bufferSize = width * height;
+
 		if (width != 0 && height != 0)
-			Data = new Pixel[width * height];
+		{
+			Data = new Pixel[bufferSize];
+
+			if (UseDepthTest)
+				DepthBuffer = new float[bufferSize];
+		}
 		else
+		{
 			Data = nullptr;
+			DepthBuffer = nullptr;
+		}
 	}
 
 	RayTracer::Batch RayTracer::GetNext()
@@ -271,6 +293,35 @@ namespace GraphicsEngine
 		for (int i = 0; i < MaxThreads; ++i)
 			Threads[i].Free(this);
 
+
+		if (UseDepthTest)
+		{
+			Ray ray = GetRay(MouseX, MouseY);
+
+			float distance = ThisCamera->GetFarPlane();
+			CastResults res;
+
+			auto processResults = [&distance, &res](const CastResults& results) -> RayFilterResults
+			{
+				if (results.Distance < distance && results.Color.W != 0)
+				{
+					distance = results.Distance;
+					res = results;
+				}
+
+				return RayFilterResults::Ignore;
+			};
+			auto filter = [&distance, &res](const CastResults& results) -> RayFilterResults
+			{
+				return RayFilterResults::Confirm;
+			};
+			IndexVector ind = IndexVector();
+			Accelerator.CastRay(ray, distance, std::ref(processResults), std::ref(filter), ind);
+
+			//DrawLine(ray.Start, ray.Start + ray.Direction * distance, RGBA(0, 1, 0));
+			DrawLine(res.Intersection, res.Intersection + res.Normal, RGBA(0, 1, 0));
+		}
+
 		if (DisplayOutput)
 		{
 			auto stop = std::chrono::high_resolution_clock::now();
@@ -368,6 +419,9 @@ namespace GraphicsEngine
 	Vector3 RayTracer::ComputeShadowFilter(const Ray& ray, float length, RayInfo& info, const ShadowCastData& shadowData, IndexVector& stack) const
 	{
 		Vector3 filter(1, 1, 1);
+
+		if (!ComputeShadows)
+			return filter;
 
 		auto resultsProcessorLambda = [this, &ray, &filter](const CastResults& results) -> RayFilterResults
 		{
@@ -822,7 +876,7 @@ namespace GraphicsEngine
 		if (cacheSize <= rayID)
 		{
 			thread.RayCache.resize(std::max(cacheSize, rayID + 1));
-			thread.RayShadowCache.resize(int(thread.RayCache.size()) * (GetLights() + 1));
+			thread.RayShadowCache.resize((thread.RayCache.size()) * size_t(GetLights()) + 1);
 		}
 
 		RayCastData castData{ rayData.LastFace, rayData.LastObject, bounces, rayData, Vector3(), lightFilter };
@@ -831,6 +885,11 @@ namespace GraphicsEngine
 		{
 			if (results.Color.W == 0)
 				return;
+
+			int depthIndex = GetIndex(thread.RayX, thread.RayY);
+
+			if (UseDepthTest && bounces == 0 && DepthBuffer[depthIndex] > results.Distance)
+				DepthBuffer[depthIndex] = results.Distance;
 
 			castData.HitObject = true;
 
@@ -871,7 +930,11 @@ namespace GraphicsEngine
 				LightingParameters parameters{ std::max(-dot, 0.f), results.MaterialProperties, results.Intersection, normal, color, ((1 - results.MaterialProperties->Transparency) / PI) * parameters.Color, -castData.RayData.Data.Direction, baseReflectivity, (roughness + 1) * (roughness + 1) / 8, squaredRoughness / 2, squaredRoughness * squaredRoughness };
 
 				for (int i = GetLight(-1) != nullptr ? -1 : 0; i < GetLights(); ++i)
-					castData.Illumination += ComputeLighting(parameters, GetLight(i), castData.LightFilter, thread.RayShadowCache[shadowCacheOffset + i + 1], shadowData, thread);
+				{
+					int index = shadowCacheOffset + i + 1;
+
+					castData.Illumination += ComputeLighting(parameters, GetLight(i), castData.LightFilter, thread.RayShadowCache[index], shadowData, thread);
+				}
 
 				if (PerformAnalytics)
 				{
@@ -977,11 +1040,17 @@ namespace GraphicsEngine
 				if (px >= MaxX || py >= MaxY)
 					continue;
 
+				Threads[threadID].RayX = px;
+				Threads[threadID].RayY = py;
+
 				Ray ray = GetRay(px, py);
 
 				float weight = 1 / float(Samples);
 
 				Vector3 illumination;
+
+				int depthIndex = GetIndex(px, py);
+				DepthBuffer[depthIndex] = ThisCamera->GetFarPlane();
 
 				for (int i = 0; i < Samples; ++i)
 				{
@@ -1006,6 +1075,81 @@ namespace GraphicsEngine
 		}
 
 		Threads[threadID].Finished = true;
+	}
+
+	void RayTracer::DrawLine(const Vector3& start, const Vector3& end, const RGBA& color)
+	{
+		Vector3 screenStart = start;
+		Vector3 screenEnd = end;
+
+		if (std::abs((ThisCamera->GetTransformation().Translation() - start).SquareLength()) < 1e-4)
+			screenStart = start + (end - start).Unit() * 0.001f;
+
+		if (std::abs((ThisCamera->GetTransformation().Translation() - end).SquareLength()) < 1e-4)
+			screenEnd = end + (start - end).Unit() * 0.001f;
+
+		screenStart = ThisCamera->GetProjection() * screenStart;
+		screenEnd = ThisCamera->GetProjection() * screenEnd;
+
+		screenStart *= 1 / screenStart.W;
+		screenEnd *= 1 / screenEnd.W;
+
+		screenStart = 0.5f * screenStart + Vector3(0.5f, 0.5f, 0);
+		screenEnd = 0.5f * screenEnd + Vector3(0.5f, 0.5f, 0);
+
+		screenStart.Scale((float)Width, (float)Height, 1);
+		screenEnd.Scale((float)Width, (float)Height, 1);
+
+		int startX = std::min((int)screenStart.X, Width);
+		int startY = std::min((int)screenStart.Y, Height);
+		int endX = std::min((int)screenEnd.X, Width);
+		int endY = std::min((int)screenEnd.Y, Height);
+
+		//if (startX > endX)
+		//{
+		//	std::swap(startX, endX);
+		//	std::swap(startY, endY);
+		//}
+
+		int dx = endX - startX;
+		int dy = endY - startY;
+
+		int steps = std::max(std::abs(dx), std::abs(dy));
+
+		float xInc = (float)dx / (float)steps;
+		float yInc = (float)dy / (float)steps;
+
+		float x = (float)startX;
+		float y = (float)startY;
+
+		auto round = [](float v) -> int
+		{
+			float floor = std::floorf(v);
+
+			if (v - floor > 0.5f)
+				return (int)std::ceilf(v);
+
+			return (int)floor;
+		};
+
+		float startZ = -(ThisCamera->GetTransformationInverse() * start).Z;
+		float endZ = -(ThisCamera->GetTransformationInverse() * end).Z;
+
+		for (int i = 0; i <= steps; ++i)
+		{
+			int index = GetIndex(round(x), round(y));
+
+			float depth = startZ + (endZ - startZ) * ((float)(endX - startX) / xInc);
+
+			x += xInc;
+			y += yInc;
+
+			if (depth < DepthBuffer[index])
+			{
+				Data[index] = color;
+				DepthBuffer[index] = depth;
+			}
+		}
 	}
 
 	int RayTracer::GetLights() const

@@ -115,6 +115,11 @@ namespace Engine
 						Mutable,
 						Returns<void>()
 					).Bind<LuaScript, &LuaScript::Reload>()
+				),
+
+				Function(
+					"GetData",
+					LuaOverload<LuaScript, &LuaScript::GetData>()
 				)
 			);
 		}
@@ -125,9 +130,12 @@ namespace Engine
 			Reflect<Enum::ScriptStatus>::Enum
 			(
 				"ScriptStatus",
-				Value<Enum::ScriptStatus::Idle>("Idle"),
+				Value<Enum::ScriptStatus::Uninitialized>("Uninitialized"),
+				Value<Enum::ScriptStatus::ParseError>("ParseError"),
 				Value<Enum::ScriptStatus::Running>("Running"),
+				Value<Enum::ScriptStatus::RuntimeError>("RuntimeError"),
 				Value<Enum::ScriptStatus::Yielded>("Yielded"),
+				Value<Enum::ScriptStatus::Finished>("Finished"),
 				Value<Enum::ScriptStatus::Dead>("Dead")
 			);
 		}

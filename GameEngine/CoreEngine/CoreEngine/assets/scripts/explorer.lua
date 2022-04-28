@@ -129,18 +129,20 @@ end
 local userInput = Engine.GameWindow.UserInput
 local mouseWheel = userInput:GetInput(Enum.InputCode.MouseWheel)
 
-while true do
-	local delta = wait()
-	
-	local wheelChange = -mouseWheel:GetPosition().Y
-	
-	--explorerScrollBar.BarPercent = math.max(0, math.min(1, explorerScrollBar.BarPercent + wheelChange * scrollSpeed))
+coroutine.wrap(function()
+	while true do
+		local delta = wait()
+		
+		local wheelChange = -mouseWheel:GetPosition().Y
+		
+		--explorerScrollBar.BarPercent = math.max(0, math.min(1, explorerScrollBar.BarPercent + wheelChange * scrollSpeed))
 
-	renderedObjects = 0
-	
-	explorerDisplay:UpdateHierarchy()
+		renderedObjects = 0
+		
+		explorerDisplay:UpdateHierarchy()
 
-	for i = 1, math.min(maxItems, explorerDisplay:GetHierarchyItems()) do
-		AllocateItem(explorerDisplay:GetObjectInHierarchy(maxItems, explorerScrollBar.BarPercent, i - 1))
+		for i = 1, math.min(maxItems, explorerDisplay:GetHierarchyItems()) do
+			AllocateItem(explorerDisplay:GetObjectInHierarchy(maxItems, explorerScrollBar.BarPercent, i - 1))
+		end
 	end
-end
+end)()

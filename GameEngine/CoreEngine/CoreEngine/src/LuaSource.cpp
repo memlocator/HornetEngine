@@ -13,6 +13,8 @@ namespace Engine
 
 	void LuaSource::LoadSource(const std::string& path)
 	{
+		FileName = path;
+
 		std::fstream file(path, std::ios_base::in);
 
 		if (!file.good() || !file.is_open())

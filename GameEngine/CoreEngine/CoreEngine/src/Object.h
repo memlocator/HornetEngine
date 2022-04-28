@@ -98,7 +98,7 @@ namespace Engine
 
 		static bool IsAlive(int objectID, unsigned long long creationOrderId);
 
-		const Meta::ReflectedType* GetMetaData(int) const
+		const Meta::ReflectedType* GetMetaData() const
 		{
 			return ObjectMetaData;
 		}
@@ -155,29 +155,23 @@ namespace Engine
 		return std::dynamic_pointer_cast<T>(This.lock());
 	}
 
-
-	template <typename T>
-	std::shared_ptr<T> Create()
-	{
-		std::shared_ptr<T> object = GameObjectAllocator<T>::Create();
-
-		object->SetMetaData(Meta::Reflected<T>::GetMeta());
-		object->Name = object->GetTypeName();
-
-		return object;
-	}
-
 	template <typename T, typename... Arguments>
 	std::shared_ptr<T> Create(Arguments&&... arguments)
 	{
-		return Create<T>();
+		std::shared_ptr<T> object = GameObjectAllocator<T>::Create(arguments...);
+
+		object->SetMetaData(Meta::Reflected<T>::GetMeta());
+		object->Name = object->GetTypeName();
+		object->Initialize();
+
+		return object;
 	}
 
 	template <typename T>
 	std::shared_ptr<T> Object::Get(bool inherited)
 	{
 		for (int i = 0; i < GetChildren(); ++i)
-			if (MetaMatches(Get(i)->GetMetaData(0), Engine::Meta::Reflected<T>::GetMeta(), inherited))
+			if (MetaMatches(Get(i)->GetMetaData(), Engine::Meta::Reflected<T>::GetMeta(), inherited))
 				return Get(i)->Cast<T>();
 
 		return nullptr;
@@ -202,7 +196,7 @@ namespace Engine
 
 		while (ancestor != nullptr)
 		{
-			if (MetaMatches(ancestor->GetMetaData(0), Engine::Meta::Reflected<T>::GetMeta(), inherited))
+			if (MetaMatches(ancestor->GetMetaData(), Engine::Meta::Reflected<T>::GetMeta(), inherited))
 				return ancestor;
 
 			ancestor = ancestor->Parent;
@@ -231,7 +225,7 @@ namespace Engine
 	template <typename T>
 	bool Object::IsA(bool inherited)
 	{
-		return MetaMatches(GetMetaData(0), Meta::Reflected<T>::GetMeta(), inherited);
+		return MetaMatches(GetMetaData(), Meta::Reflected<T>::GetMeta(), inherited);
 	}
 
 	template <typename T>

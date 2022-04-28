@@ -27,12 +27,12 @@ namespace Engine
 
 	std::string Object::GetTypeName() const
 	{
-		return GetMetaData(0)->Name;
+		return GetMetaData()->Name;
 	}
 
 	bool Object::IsA(const std::string& className, bool inherited) const
 	{
-		const Meta::ReflectedType* data = GetMetaData(0);
+		const Meta::ReflectedType* data = GetMetaData();
 		
 		if (data->Name == className) return true;
 
@@ -46,7 +46,7 @@ namespace Engine
 
 	bool Object::IsA(const Meta::ReflectedType* metadata, bool inherited) const
 	{
-		const Meta::ReflectedType* data = GetMetaData(0);
+		const Meta::ReflectedType* data = GetMetaData();
 
 		return data == metadata || data->InheritsType(metadata);
 	}
