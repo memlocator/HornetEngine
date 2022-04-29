@@ -192,7 +192,7 @@ namespace GraphicsEngine
 		return Vector{ vector.X, vector.Y, vector.Z};
 	}
 
-	RayAcceleration::Matrix mat(const Matrix3& matrix)
+	RayAcceleration::Matrix mat(const Matrix4& matrix)
 	{
 		return RayAcceleration::Matrix{ {
 			{ matrix.Data[0][0], matrix.Data[0][1], matrix.Data[0][2] },
@@ -414,9 +414,9 @@ namespace GraphicsEngine
 			const Vector& vertexBRaw = Vertices[face.B].Position;
 			const Vector& vertexCRaw = Vertices[face.C].Position;
 
-			Vector3 vertexA = Vector3(vertexARaw.X, vertexARaw.Y, vertexARaw.Z, 1);
-			Vector3 vertexB = Vector3(vertexBRaw.X, vertexBRaw.Y, vertexBRaw.Z, 1);
-			Vector3 vertexC = Vector3(vertexCRaw.X, vertexCRaw.Y, vertexCRaw.Z, 1);
+			Vector3 vertexA = Vector3(vertexARaw.X, vertexARaw.Y, vertexARaw.Z, 1._F);
+			Vector3 vertexB = Vector3(vertexBRaw.X, vertexBRaw.Y, vertexBRaw.Z, 1._F);
+			Vector3 vertexC = Vector3(vertexCRaw.X, vertexCRaw.Y, vertexCRaw.Z, 1._F);
 
 			Vector3 normal(face.Normal.X, face.Normal.Y, face.Normal.Z);
 
@@ -460,7 +460,7 @@ namespace GraphicsEngine
 			Vector intersectionData = add(object->Position, transform(object->Transformation, vec(intersection)));
 
 			results.Normal = Vector3(normalData.X, normalData.Y, normalData.Z);
-			results.Intersection = Vector3(intersectionData.X, intersectionData.Y, intersectionData.Z, 1);
+			results.Intersection = Vector3(intersectionData.X, intersectionData.Y, intersectionData.Z, 1._F);
 
 			filterResults = callback(results);
 

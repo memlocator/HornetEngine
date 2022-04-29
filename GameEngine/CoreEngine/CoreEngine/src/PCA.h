@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Vector3.h"
-#include "Matrix3.h"
+#include "Matrix4.h"
 
 struct VertexData;
 
@@ -16,7 +16,7 @@ public:
 	Vector3 Axis3;
 	Vector3 EigenValues;
 
-	static PCA Compute(const Matrix3& covariance, int maxIterations = 50, Float epsilon = 0.0001f);
-	static Matrix3 ComputeCovariance(const std::vector<VertexData>& vertices);
-	static Matrix3 ComputeJacobiRotation(const Matrix3& matrix);
+	static PCA Compute(const Matrix4& covariance, int maxIterations = 50, Float epsilon = 0.0001f);
+	static Matrix4 ComputeCovariance(const std::vector<VertexData>& vertices);
+	static Matrix4 ComputeJacobiRotation(const Matrix4& matrix);
 };

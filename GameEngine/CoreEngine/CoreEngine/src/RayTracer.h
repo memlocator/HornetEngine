@@ -69,7 +69,7 @@ namespace GraphicsEngine
 		static inline const bool RenderAtmosphere = false;
 		static inline const bool RenderNaiveAtmosphere = true;
 		static inline const bool UseMicrofacetNormals = true;
-		static inline const bool UseDepthTest = true;
+		static inline const bool UseDepthTest = false;
 		static inline const bool ComputeShadows = false;
 
 		int BatchWidth = 64;

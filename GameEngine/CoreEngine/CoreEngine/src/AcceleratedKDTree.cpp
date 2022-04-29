@@ -223,8 +223,8 @@ namespace GraphicsEngine
 		boxMax += 2 * Epsilon;
 
 		Float extents = bounds[1][axis] - bounds[0][axis];
-		Float marginBefore = std::max(boxMin - bounds[0][axis], (Float)0.0);
-		Float marginAfter = std::max(bounds[1][axis] - boxMax, (Float)0.0);
+		Float marginBefore = std::max(boxMin - bounds[0][axis], 0.0_F);
+		Float marginAfter = std::max(bounds[1][axis] - boxMax, 0.0_F);
 
 		if (std::max(marginBefore, marginAfter) > std::max(MarginThreshold * extents, MinimumMargin))
 		{

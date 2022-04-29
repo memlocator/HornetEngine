@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Matrix3.h"
+#include "Matrix4.h"
 #include "Object.h"
 #include "DeviceVector.h"
 #include "Alignment.h"
@@ -29,10 +29,10 @@ namespace GraphicsEngine
 		void Draw(bool updateStencils  = false);
 		void Clip();
 
-		Matrix3 GetTransformation() const;
-		Matrix3 GetTransformation();
-		Matrix3 GetInverseTransformation() const;
-		Matrix3 GetInverseTransformation();
+		Matrix4 GetTransformation() const;
+		Matrix4 GetTransformation();
+		Matrix4 GetInverseTransformation() const;
+		Matrix4 GetInverseTransformation();
 
 		Vector3 GetAbsoluteSize() const;
 		Vector3 GetAbsoluteSize();
@@ -68,8 +68,8 @@ namespace GraphicsEngine
 		DeviceVector LastAnchorPoint = DeviceVector(0, 0, 0, 0);
 		DeviceVector LastRotationAnchor = DeviceVector(0, 0, 0, 0);
 		Vector3 AbsoluteSize;
-		Matrix3 Transformation;
-		Matrix3 InverseTransformation;
+		Matrix4 Transformation;
+		Matrix4 InverseTransformation;
 
 		void Draw(std::shared_ptr<Object> object, bool updateStencils);
 	};

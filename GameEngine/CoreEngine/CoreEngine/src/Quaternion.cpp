@@ -4,7 +4,7 @@
 
 Quaternion::Quaternion(const Vector3& axis, Float angle)
 {
-	*this = std::sin(0.5f * angle) * Vector3(axis.X, axis.Y, axis.Z, 0).Normalize() + Vector3(0, 0, 0, std::cos(0.5f * angle));
+	*this = std::sin(0.5_F * angle) * Vector3(axis.X, axis.Y, axis.Z, 0._F).Normalize() + Vector3(0._F, 0._F, 0._F, std::cos(0.5_F * angle));
 }
 
 Quaternion::operator std::string() const
@@ -40,7 +40,7 @@ Quaternion& Quaternion::Normalize()
 	return *this;
 }
 
-Matrix3 Quaternion::Matrix() const
+Matrix4 Quaternion::Matrix() const
 {
 	Float xx = X * X;
 	Float yy = Y * Y;
@@ -52,7 +52,7 @@ Matrix3 Quaternion::Matrix() const
 	Float wy = W * Y;
 	Float wz = W * Z;
 
-	return Matrix3(
+	return Matrix4(
 		Vector3(0, 0, 0, 1),
 		Vector3(1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy)).Normalize(),
 		Vector3(2 * (xy - wz), 1 - 2 * (xx + zz), 2 * (yz + wx)).Normalize(),
@@ -60,7 +60,7 @@ Matrix3 Quaternion::Matrix() const
 	);
 }
 
-Quaternion::Quaternion(const Matrix3& matrix)
+Quaternion::Quaternion(const Matrix4& matrix)
 {
 	Float traceW = matrix[0][0] + matrix[1][1] + matrix[2][2];
 	Float traceX = matrix[0][0] - matrix[1][1] - matrix[2][2];
@@ -149,8 +149,8 @@ Quaternion Quaternion::Slerp(const Quaternion& destination, Float t) const
 	Float halfTheta = std::acos(halfCos);
 	Float halfSin = std::sqrt(1 - halfCos * halfCos);
 
-	if (halfSin < 1e-3f && halfSin > -1e-3f)
-		return 0.5f * (*this + scalar * destination);
+	if (halfSin < 1e-3_F && halfSin > -1e-3_F)
+		return 0.5_F * (*this + scalar * destination);
 
 	Float ratioA = std::sin((1 - t) * halfTheta) / halfSin;
 	Float ratioB = scalar * std::sin(t * halfTheta) / halfSin;

@@ -100,7 +100,7 @@ namespace Engine
 		);
 	}
 
-	void ChunkColumn::Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix3& transformation)
+	void ChunkColumn::Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix4& transformation)
 	{
 		if (GridScale == 0)
 		{
@@ -308,7 +308,7 @@ namespace Engine
 		);
 	}
 
-	void ChunkTree::Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix3& transformation) const
+	void ChunkTree::Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix4& transformation) const
 	{
 		if (GridScale == 0)
 			CenterColumn->Draw(drawLiquid, targetCamera, transformation);

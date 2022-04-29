@@ -2,7 +2,7 @@
 
 #include "Object.h"
 #include "Vector3.h"
-#include "Matrix3.h"
+#include "Matrix4.h"
 #include "Quaternion.h"
 #include "TaskScheduler.h"
 
@@ -21,8 +21,8 @@ namespace Engine
 		void SetStatic(bool isStatic);
 		bool IsTransformStatic() const;
 
-		void SetTransformation(const Matrix3& matrix);
-		const Matrix3& GetTransformation();
+		void SetTransformation(const Matrix4& matrix);
+		const Matrix4& GetTransformation();
 
 		void SetInheritsTransformation(bool inherits);
 		bool InheritsTransformation() const;
@@ -34,16 +34,16 @@ namespace Engine
 
 		Vector3 GetWorldPosition() const;
 		Vector3 GetWorldPosition();
-		const Matrix3& GetWorldTransformation() const;
-		const Matrix3& GetWorldTransformation();
-		const Matrix3& GetWorldTransformationInverse() const;
-		const Matrix3& GetWorldTransformationInverse();
-		const Matrix3& GetWorldRotation() const;
-		const Matrix3& GetWorldRotation();
+		const Matrix4& GetWorldTransformation() const;
+		const Matrix4& GetWorldTransformation();
+		const Matrix4& GetWorldTransformationInverse() const;
+		const Matrix4& GetWorldTransformationInverse();
+		const Matrix4& GetWorldRotation() const;
+		const Matrix4& GetWorldRotation();
 		Quaternion GetWorldOrientation() const;
 		Quaternion GetWorldOrientation();
-		const Matrix3& GetWorldNormalTransformation() const;
-		const Matrix3& GetWorldNormalTransformation() ;
+		const Matrix4& GetWorldNormalTransformation() const;
+		const Matrix4& GetWorldNormalTransformation() ;
 
 		Quaternion GetOrientation() const;
 		Quaternion GetOrientation();
@@ -70,19 +70,19 @@ namespace Engine
 		void SetScale(const Vector3& scale);
 		void Rescale(const Vector3& scale);
 
-		void TransformBy(const Matrix3& transformation);
+		void TransformBy(const Matrix4& transformation);
 		void TransformBy(const Quaternion& transformation, const Vector3& point = Vector3());
-		void TransformByRelative(const Matrix3& transformation);
+		void TransformByRelative(const Matrix4& transformation);
 		void TransformByRelative(const Quaternion& transformation, const Vector3& point = Vector3());
 
 		Event<Transform*> TransformMoved;
 
 	private:
-		Matrix3 Transformation;
-		Matrix3 WorldTransformation;
-		Matrix3 WorldTransformationInverse;
-		Matrix3 WorldRotation;
-		Matrix3 WorldNormalTransformation;
+		Matrix4 Transformation;
+		Matrix4 WorldTransformation;
+		Matrix4 WorldTransformationInverse;
+		Matrix4 WorldRotation;
+		Matrix4 WorldNormalTransformation;
 
 		bool HasChanged();
 		void Recompute();
@@ -91,6 +91,6 @@ namespace Engine
 		bool InheritTransformation = true;
 		bool Moved = false;
 		bool HadParent = false;
-		Matrix3 OldParentTransform;
+		Matrix4 OldParentTransform;
 	};
 }

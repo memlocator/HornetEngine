@@ -130,6 +130,7 @@ namespace Engine
 			bool IsEnum = false;
 			const char* Name = nullptr;
 			StringVector Namespaces;
+			StringVector Aliases;
 			Function Constructor;
 			const ReflectedType* Parent = nullptr;
 			MemberVector Members;

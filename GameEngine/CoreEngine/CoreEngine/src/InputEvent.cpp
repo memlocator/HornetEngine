@@ -334,7 +334,7 @@ void InputHandler::ResetDeltas()
 {
 	for (int i = 0; i < Enum::InputCode::Codes; ++i)
 	{
-		Inputs[i].Delta.Set();
+		Inputs[i].Delta.Set(0);
 		Inputs[i].StateChanged = false;
 		Inputs[i].Refresh.Fire(&Inputs[i]);
 	}

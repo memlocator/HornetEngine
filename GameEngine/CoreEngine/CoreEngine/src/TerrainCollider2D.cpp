@@ -46,7 +46,7 @@ namespace Engine
 	{
 		Aabb box = node->Box;
 
-		Float cellZ = std::floor((Float)0.5 * (box.Min.Z + box.Max.Z));
+		Float cellZ = std::floor(0.5_F * (box.Min.Z + box.Max.Z));
 
 		box.Min.Z = cellZ + 0.1f;
 		box.Max.Z = cellZ + 0.9f;
@@ -389,7 +389,7 @@ namespace Engine
 					y = lerpEdge(query.Occupancy[1], query.Occupancy[3]);
 			}
 
-			query.Collider.Push(Vector3(x, y, z, 1) + Vector3(query.Index));
+			query.Collider.Push(Vector3(x, y, z, 1._F) + Vector3(query.Index));
 		});
 
 		if (query.Collider.Vertices.size() > 0)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Matrix3.h"
+#include "Matrix4.h"
 
 namespace Engine
 {
@@ -25,7 +25,7 @@ namespace Engine
 			Vector3 GetForce(int index) const;
 			int GetPointMassCount() const;
 			std::shared_ptr<PointMass> GetPointMass(int index);
-			float GetMass() const;
+			Float GetMass() const;
 			Vector3 GetCenterOfMass() const;
 			void ProcessDisplacement(const Vector3& displacement, const Vector3& position = Vector3());
 			void AddMass(const std::shared_ptr<PointMass>& mass);

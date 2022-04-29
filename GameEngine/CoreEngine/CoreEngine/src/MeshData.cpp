@@ -310,7 +310,7 @@ void MeshData::GenerateVertexNormals(const MeshData* meshData)
 
 		VertexData vertex2;
 
-		vertex2.Position = meshVertex.Position + 0.25f * vertex1.Normal;
+		vertex2.Position = meshVertex.Position + 0.25_F * vertex1.Normal;
 		vertex2.Normal = meshVertex.Normal;
 
 		IndexBuffer.push_back(int(VertexBuffer.size()));
@@ -329,7 +329,7 @@ void MeshData::GenerateFaceNormals(const MeshData* meshData)
 		Vector3Raw point2 = meshData->VertexBuffer[i + 1].Position;
 		Vector3Raw point3 = meshData->VertexBuffer[i + 2].Position;
 
-		Vector3 point = (1.0f / 3) * point1 + (1.0f / 3) * point2 + (1.0f / 3) * point3;
+		Vector3 point = (1._F / 3._F) * point1 + (1.0_F / 3) * point2 + (1.0_F / 3) * point3;
 		Vector3Raw normal = meshData->VertexBuffer[i].Normal;
 
 		VertexData vertex1;
@@ -342,7 +342,7 @@ void MeshData::GenerateFaceNormals(const MeshData* meshData)
 
 		VertexData vertex2;
 
-		vertex2.Position = point + 0.25f * normal;
+		vertex2.Position = point + 0.25_F * normal;
 		vertex2.Normal = normal;
 
 		IndexBuffer.push_back(int(VertexBuffer.size()));
@@ -420,16 +420,16 @@ void MeshData::ConfigurePartitioning()
 		
 		Aabb triangleBox(
 			Vector3(
-				std::min(std::min(vertexA.X, vertexB.X), vertexC.X) - 0.01f,
-				std::min(std::min(vertexA.Y, vertexB.Y), vertexC.Y) - 0.01f,
-				std::min(std::min(vertexA.Z, vertexB.Z), vertexC.Z) - 0.01f,
-				1
+				std::min(std::min(vertexA.X, vertexB.X), vertexC.X) - 0.01_F,
+				std::min(std::min(vertexA.Y, vertexB.Y), vertexC.Y) - 0.01_F,
+				std::min(std::min(vertexA.Z, vertexB.Z), vertexC.Z) - 0.01_F,
+				1._F
 			),
 			Vector3(
-				std::max(std::max(vertexA.X, vertexB.X), vertexC.X) + 0.01f,
-				std::max(std::max(vertexA.Y, vertexB.Y), vertexC.Y) + 0.01f,
-				std::max(std::max(vertexA.Z, vertexB.Z), vertexC.Z) + 0.01f,
-				1
+				std::max(std::max(vertexA.X, vertexB.X), vertexC.X) + 0.01_F,
+				std::max(std::max(vertexA.Y, vertexB.Y), vertexC.Y) + 0.01_F,
+				std::max(std::max(vertexA.Z, vertexB.Z), vertexC.Z) + 0.01_F,
+				1._F
 			)
 		);
 

@@ -83,8 +83,8 @@ namespace GraphicsEngine
 
 	void Model::DrawShadow(const std::shared_ptr<Camera>& camera, const Mesh* mesh) const
 	{
-		Matrix3 transform = camera->GetTransformationInverse() * TransformObject->GetWorldTransformation();
-		Programs::ShadowMap->transform.Set(camera->GetProjectionMatrix().FullMultiply(transform));
+		Matrix4 transform = camera->GetTransformationInverse() * TransformObject->GetWorldTransformation();
+		Programs::ShadowMap->transform.Set(camera->GetProjectionMatrix() * transform);
 		Programs::ShadowMap->objectZTransform.Set(transform.Data[2][0], transform.Data[2][1], transform.Data[2][2], transform.Data[2][3]);
 
 		mesh->Draw();
@@ -92,9 +92,9 @@ namespace GraphicsEngine
 
 	void Model::DrawDepth(const std::shared_ptr<Camera>& camera, const Mesh* mesh) const
 	{
-		Matrix3 transform = camera->GetTransformationInverse() * TransformObject->GetWorldTransformation();
+		Matrix4 transform = camera->GetTransformationInverse() * TransformObject->GetWorldTransformation();
 
-		Programs::DepthTrace->transform.Set(camera->GetProjectionMatrix().FullMultiply(transform));
+		Programs::DepthTrace->transform.Set(camera->GetProjectionMatrix() * transform);
 		Programs::DepthTrace->objectTransform.Set(transform);
 
 		mesh->Draw();
@@ -162,7 +162,7 @@ namespace GraphicsEngine
 		return Aabb(data->GetMinimumCorner(), data->GetMaximumCorner());
 	}
 
-	Matrix3 Model::GetTransformation() const
+	Matrix4 Model::GetTransformation() const
 	{
 		Engine::Transform* transform = TransformObject;
 
@@ -170,12 +170,12 @@ namespace GraphicsEngine
 			transform = GetComponent<Engine::Transform>().get();
 
 		if (transform == nullptr)
-			return Matrix3();
+			return Matrix4();
 
 		return transform->GetWorldTransformation();
 	}
 
-	Matrix3 Model::GetInverseTransformation() const
+	Matrix4 Model::GetInverseTransformation() const
 	{
 		Engine::Transform* transform = TransformObject;
 
@@ -183,7 +183,7 @@ namespace GraphicsEngine
 			transform = GetComponent<Engine::Transform>().get();
 
 		if (transform == nullptr)
-			return Matrix3();
+			return Matrix4();
 
 		return transform->GetWorldTransformationInverse();
 	}
@@ -235,7 +235,7 @@ namespace GraphicsEngine
 		int meshID = asset->GetMeshID();
 
 		const MeshData* data = MeshLoader::GetMeshData(meshID);
-		const Matrix3& transformation = transform->GetWorldTransformationInverse();
+		const Matrix4& transformation = transform->GetWorldTransformationInverse();
 
 		auto resultsProcessorLambda = [this, &callback, &transform] (const SceneRayCastResults& results)
 		{
@@ -245,7 +245,7 @@ namespace GraphicsEngine
 				transform->GetWorldTransformation() * results.Intersection,
 				transform->GetWorldNormalTransformation() * results.Normal,
 				Color,
-				GlowColor.A * Vector3(GlowColor).Scale(Vector3(1, 1, 1)),
+				(Float)GlowColor.A * Vector3(GlowColor).Scale(Vector3(1, 1, 1)),
 				GetMaterial(),
 				This.lock()
 			});

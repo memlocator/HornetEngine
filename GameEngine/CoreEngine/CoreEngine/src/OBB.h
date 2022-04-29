@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Matrix3.h"
+#include "Matrix4.h"
 #include <memory>
 
 struct VertexData;
@@ -18,7 +18,7 @@ public:
 
 	Vector3 Size;
 	Vector3 Center;
-	Matrix3 Transformation;
+	Matrix4 Transformation;
 
 	static OBB Compute(const std::vector<VertexData>& vertices);
 	static OBB Compute(const std::shared_ptr<Engine::ModelAsset>& model);

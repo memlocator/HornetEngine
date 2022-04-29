@@ -67,7 +67,7 @@ namespace Engine
 			}
 
 			if (ObjectsShareHandles && SelectedObjects > 0)
-				DrawSelection(closestHit, mouseRay, camera, bounds, Matrix3(), Matrix3(), !(IsLocalSpace && SelectedObjects == 1), false);
+				DrawSelection(closestHit, mouseRay, camera, bounds, Matrix4(), Matrix4(), !(IsLocalSpace && SelectedObjects == 1), false);
 
 			std::shared_ptr<InputObject> dragButton = DragButton.lock();
 			std::shared_ptr<InputObject> resetButton = ResetButton.lock();
@@ -76,7 +76,7 @@ namespace Engine
 			{
 				Graphics::ClearScreen(GL_DEPTH_BUFFER_BIT); CheckGLErrors();
 
-				Programs::Screen->transform.Set(camera->GetProjection().FullMultiply(closestHit.Transformation));
+				Programs::Screen->transform.Set(camera->GetProjection() * closestHit.Transformation);
 				Programs::Screen->color.Set(GetHoverColor(closestHit.Axis));
 
 				closestHit.RenderMesh->Draw();
@@ -108,7 +108,7 @@ namespace Engine
 						std::shared_ptr<Transform> objectTransform = object->GetComponent<Transform>();
 						std::shared_ptr<Transform> objectParentTransform = objectTransform->GetComponent<Transform>();
 
-						MovingObjects.push_back({ object, objectTransform, objectTransform->GetTransformation(), objectParentTransform == nullptr ? Matrix3() : objectParentTransform->GetWorldTransformationInverse(), objectParentTransform == nullptr ? Matrix3() : objectParentTransform->GetWorldTransformation() });
+						MovingObjects.push_back({ object, objectTransform, objectTransform->GetTransformation(), objectParentTransform == nullptr ? Matrix4() : objectParentTransform->GetWorldTransformationInverse(), objectParentTransform == nullptr ? Matrix4() : objectParentTransform->GetWorldTransformation() });
 					}
 					else
 					{
@@ -118,7 +118,7 @@ namespace Engine
 							std::shared_ptr<Transform> objectTransform = object->GetComponent<Transform>();
 							std::shared_ptr<Transform> objectParentTransform = objectTransform->GetComponent<Transform>();
 
-							MovingObjects.push_back({ object, objectTransform, objectTransform->GetTransformation(), objectParentTransform == nullptr ? Matrix3() : objectParentTransform->GetWorldTransformationInverse(), objectParentTransform == nullptr ? Matrix3() : objectParentTransform->GetWorldTransformation() });
+							MovingObjects.push_back({ object, objectTransform, objectTransform->GetTransformation(), objectParentTransform == nullptr ? Matrix4() : objectParentTransform->GetWorldTransformationInverse(), objectParentTransform == nullptr ? Matrix4() : objectParentTransform->GetWorldTransformation() });
 						}
 					}
 				}
@@ -240,8 +240,8 @@ namespace Engine
 		{
 			Aabb objectBounds = object->GetBoundingBox();
 			Aabb objectLocalBounds = object->GetLocalBoundingBox();
-			Matrix3 objectTransformation = object->GetTransformation();
-			Matrix3 objectInverseTransformation = object->GetInverseTransformation();
+			Matrix4 objectTransformation = object->GetTransformation();
+			Matrix4 objectInverseTransformation = object->GetInverseTransformation();
 
 			bool hitObject = false;
 
@@ -249,7 +249,7 @@ namespace Engine
 				hitObject = DrawSelection(closestHit, ray, camera, objectLocalBounds, objectTransformation, objectInverseTransformation, !isHovered && (!ObjectsShareHandles || SelectedObjects == 1), isHovered);
 
 			if (ObjectsShareHandles || !IsLocalSpace)
-				hitObject |= DrawSelection(closestHit, ray, camera, objectBounds, Matrix3(), Matrix3(), /*!isHovered && (SelectedObjects == 1 || !IsLocalSpace)*/ false, isHovered);
+				hitObject |= DrawSelection(closestHit, ray, camera, objectBounds, Matrix4(), Matrix4(), /*!isHovered && (SelectedObjects == 1 || !IsLocalSpace)*/ false, isHovered);
 
 			if (hitObject)
 				closestHit.Object = object.get();
@@ -257,7 +257,7 @@ namespace Engine
 			return objectBounds;
 		}
 
-		void CastRay(const Ray& ray, const std::shared_ptr<Engine::ModelAsset>& asset, const Matrix3& transformation)
+		void CastRay(const Ray& ray, const std::shared_ptr<Engine::ModelAsset>& asset, const Matrix4& transformation)
 		{
 			int meshID = asset->GetMeshID();
 
@@ -387,7 +387,7 @@ namespace Engine
 				Vector3 movementAxis = object.ParentInverseTransformation * (round(handleValue, GridLength) * HandleAxis);
 
 				if (HandleType == Enum::SelectionHandleType::Move)
-					object.ObjectTransform->SetTransformation(Matrix3(movementAxis) * object.InitialTransformation);
+					object.ObjectTransform->SetTransformation(Matrix4(movementAxis) * object.InitialTransformation);
 				else
 				{
 					Vector3 scale(1, 1, 1);
@@ -416,7 +416,7 @@ namespace Engine
 						else if (CurrentMovementHandle == SelectedAxis::AxisZ || CurrentMovementHandle == SelectedAxis::AxisNegativeZ)
 							scale.Z = newAxisSize / axisSize;
 
-						object.ObjectTransform->SetTransformation(Matrix3(movementAxis) * object.InitialTransformation * Matrix3::NewScale(scale));
+						object.ObjectTransform->SetTransformation(Matrix4(movementAxis) * object.InitialTransformation * Matrix4::NewScale(scale));
 					}
 					else
 					{
@@ -449,15 +449,15 @@ namespace Engine
 
 						movementAxis *= 0.5f;
 
-						object.ObjectTransform->SetTransformation(object.ParentInverseTransformation * Matrix3(MovingBox.GetCenter() + movementAxis) * Matrix3::NewScale(scale) * Matrix3(-MovingBox.GetCenter()) * object.ParentTransformation * object.InitialTransformation);
+						object.ObjectTransform->SetTransformation(object.ParentInverseTransformation * Matrix4(MovingBox.GetCenter() + movementAxis) * Matrix4::NewScale(scale) * Matrix4(-MovingBox.GetCenter()) * object.ParentTransformation * object.InitialTransformation);
 					}
 
-					//object.ObjectTransform->SetTransformation(Matrix3(movementAxis) * object.InitialTransformation * Matrix3::NewScale(scale));
+					//object.ObjectTransform->SetTransformation(Matrix4(movementAxis) * object.InitialTransformation * Matrix4::NewScale(scale));
 				}
 			}
 			else
 			{
-				Matrix3 rotation;
+				Matrix4 rotation;
 				Float angle = round(handleValue, SnappingAngle);
 
 				if (CurrentMovementHandle == SelectedAxis::AxisX)
@@ -471,11 +471,11 @@ namespace Engine
 
 				if (MovingInLocalSpace)
 				{
-					Matrix3 objectRotation;
+					Matrix4 objectRotation;
 
 					objectRotation.ExtractRotation(object.InitialTransformation, object.InitialTransformation.Translation());
 
-					Matrix3 objectScale = Matrix3::NewScale(object.InitialTransformation.ExtractScale());
+					Matrix4 objectScale = Matrix4::NewScale(object.InitialTransformation.ExtractScale());
 					
 					//transformation.SetTranslation(Vector3());
 
@@ -485,12 +485,12 @@ namespace Engine
 				else
 				{
 
-					object.ObjectTransform->SetTransformation(object.ParentInverseTransformation * Matrix3(MovingBox.GetCenter()) * rotation * Matrix3(-MovingBox.GetCenter()) * object.ParentTransformation * object.InitialTransformation);
+					object.ObjectTransform->SetTransformation(object.ParentInverseTransformation * Matrix4(MovingBox.GetCenter()) * rotation * Matrix4(-MovingBox.GetCenter()) * object.ParentTransformation * object.InitialTransformation);
 				}
 			}
 		}
 
-		bool SelectionHandlesOperation::DrawAxisHandle(const HandleMesh& mesh, const Ray& ray, const Matrix3& transformation, const Matrix3& cameraTransformation, ObjectHandleHit& closestHit, SelectedAxis axis)
+		bool SelectionHandlesOperation::DrawAxisHandle(const HandleMesh& mesh, const Ray& ray, const Matrix4& transformation, const Matrix4& cameraTransformation, ObjectHandleHit& closestHit, SelectedAxis axis)
 		{
 			bool hitObject = false;
 
@@ -504,7 +504,7 @@ namespace Engine
 				}
 			};
 
-			Matrix3 inverseTransformation(Vector3(), transformation.RightVector().InvertedLength(), transformation.UpVector().InvertedLength(), transformation.FrontVector().InvertedLength());
+			Matrix4 inverseTransformation(Vector3(), transformation.RightVector().InvertedLength(), transformation.UpVector().InvertedLength(), transformation.FrontVector().InvertedLength());
 
 			inverseTransformation.Transpose();
 			inverseTransformation.SetTransformedTranslation(-transformation.Translation());
@@ -520,7 +520,7 @@ namespace Engine
 				closestHit.Transformation = transformation;
 			}
 
-			Programs::Screen->transform.Set(cameraTransformation.FullMultiply(transformation));
+			Programs::Screen->transform.Set(cameraTransformation * transformation);
 			Programs::Screen->color.Set(GetColor(axis));
 
 			mesh.RenderMesh->Draw();
@@ -528,13 +528,13 @@ namespace Engine
 			return hitObject;
 		}
 
-		bool SelectionHandlesOperation::DrawSelection(ObjectHandleHit& closestHit, const Ray& ray, const std::shared_ptr<GraphicsEngine::Camera>& camera, const Aabb& box, const Matrix3& transformation, const Matrix3& transformationInverse, bool drawHandles, bool isHovered)
+		bool SelectionHandlesOperation::DrawSelection(ObjectHandleHit& closestHit, const Ray& ray, const std::shared_ptr<GraphicsEngine::Camera>& camera, const Aabb& box, const Matrix4& transformation, const Matrix4& transformationInverse, bool drawHandles, bool isHovered)
 		{
 			GraphicsEngine::SceneObject* object = nullptr;
 
-			Matrix3 boxTransformation = transformation * Matrix3(box.GetCenter())* Matrix3::NewScale(0.5f * box.GetSize());
+			Matrix4 boxTransformation = transformation * Matrix4(box.GetCenter())* Matrix4::NewScale(0.5_F * box.GetSize());
 
-			Programs::Screen->transform.Set(camera->GetProjection().FullMultiply(boxTransformation));
+			Programs::Screen->transform.Set(camera->GetProjection() * boxTransformation);
 			Programs::Screen->color.Set(isHovered ? HoverBoxColor : BoxColor);
 
 			Programs::Screen->CoreMeshes.WireCube->Draw();
@@ -547,16 +547,16 @@ namespace Engine
 				Vector3 size = box.GetSize().Scale(transformation.ExtractScale());
 				Float boxSize = 0.5f * std::sqrtf(2) * std::max(std::max(size.X, size.Y), size.Z);
 
-				Matrix3 rotation = Matrix3().ExtractRotation(transformation);
+				Matrix4 rotation = Matrix4(true).ExtractRotation(transformation);
 
 				if (HandleType == Enum::SelectionHandleType::Rotate)
 				{
-					rotation = rotation * Matrix3::NewScale(boxSize, boxSize, boxSize);
+					rotation = rotation * Matrix4::NewScale(boxSize, boxSize, boxSize);
 
 					hitObject |= DrawAxisHandle(
 						RingMesh,
 						ray,
-						Matrix3(center, -rotation.UpVector(), rotation.RightVector(), rotation.FrontVector()),
+						Matrix4(center, -rotation.UpVector(), rotation.RightVector(), rotation.FrontVector()),
 						camera->GetProjection(),
 						closestHit,
 						SelectedAxis::AxisX
@@ -565,7 +565,7 @@ namespace Engine
 					hitObject |= DrawAxisHandle(
 						RingMesh,
 						ray,
-						Matrix3(center, rotation.RightVector(), rotation.UpVector(), rotation.FrontVector()),
+						Matrix4(center, rotation.RightVector(), rotation.UpVector(), rotation.FrontVector()),
 						camera->GetProjection(),
 						closestHit,
 						SelectedAxis::AxisY
@@ -574,7 +574,7 @@ namespace Engine
 					hitObject |= DrawAxisHandle(
 						RingMesh,
 						ray,
-						Matrix3(center, rotation.RightVector(), -rotation.FrontVector(), rotation.UpVector()),
+						Matrix4(center, rotation.RightVector(), -rotation.FrontVector(), rotation.UpVector()),
 						camera->GetProjection(),
 						closestHit,
 						SelectedAxis::AxisZ
@@ -602,7 +602,7 @@ namespace Engine
 					Vector3 frontOffset = (offset + 0.5f * size.Z) * rotation.FrontVector();
 
 					// x
-					Matrix3 rotationX(center + rightOffset, -up, right, front);
+					Matrix4 rotationX(center + rightOffset, -up, right, front);
 
 					hitObject |= DrawAxisHandle(
 						handleMesh,
@@ -625,7 +625,7 @@ namespace Engine
 					);
 
 					// y
-					Matrix3 rotationY(center + upOffset, right, up, front);
+					Matrix4 rotationY(center + upOffset, right, up, front);
 
 					hitObject |= DrawAxisHandle(
 						handleMesh,
@@ -648,7 +648,7 @@ namespace Engine
 					);
 
 					// z
-					Matrix3 rotationZ(center + frontOffset, right, front, -up);
+					Matrix4 rotationZ(center + frontOffset, right, front, -up);
 
 					hitObject |= DrawAxisHandle(
 						handleMesh,

@@ -294,6 +294,9 @@ namespace Engine
 				currentNamespace = next;
 			}
 
+			for (int i = 0; i < (int)meta->Aliases.size(); ++i)
+				currentNamespace->MetaKeys[meta->Aliases[i]] = int(currentNamespace->Reflected.size());
+
 			currentNamespace->MetaKeys[meta->Name] = int(currentNamespace->Reflected.size());
 			currentNamespace->Reflected.push_back(meta);
 		}

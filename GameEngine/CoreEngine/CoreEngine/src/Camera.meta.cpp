@@ -27,7 +27,7 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<const Matrix3&>("newTransformation")
+						Argument<const Matrix4&>("newTransformation")
 					).Bind<Camera, &Camera::SetTransformation>()
 				),
 
@@ -56,7 +56,7 @@ namespace Engine
 					"GetTransformation",
 					Overload(
 						Const,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Camera, &Camera::GetTransformation>()
 				),
 
@@ -64,7 +64,7 @@ namespace Engine
 					"GetTransformationInverse",
 					Overload(
 						Const,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Camera, &Camera::GetTransformationInverse>()
 				),
 
@@ -72,7 +72,7 @@ namespace Engine
 					"GetProjectionMatrix",
 					Overload(
 						Const,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Camera, &Camera::GetProjectionMatrix>()
 				),
 
@@ -80,7 +80,7 @@ namespace Engine
 					"GetProjection",
 					Overload(
 						Const,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Camera, &Camera::GetProjection>()
 				),
 

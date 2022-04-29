@@ -22,7 +22,7 @@ namespace GraphicsEngine
 
 	void ScreenCanvas::DrawScreen(const std::shared_ptr<DeviceTransform>& transform)
 	{
-		Matrix3 transformation = transform->GetTransformation();
+		Matrix4 transformation = transform->GetTransformation();
 		Programs::Screen->transform.Set(transformation);
 		Programs::Screen->resolution.Set(transform->GetResolution());
 

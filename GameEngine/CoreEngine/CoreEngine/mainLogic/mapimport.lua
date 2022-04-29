@@ -126,7 +126,7 @@ local defaultFar = 5000
 local camera = GameObject.Camera()
 camera.Parent = level --[[ camera:SetParent(level) ]]
 camera:SetProperties(defaultWidth, defaultHeight, defaultProjection, defaultNear, defaultFar)--120, resolution.Width / resolution.Height, 0.1, 10000)
-camera:SetTransformation(Matrix3(0, 200, 100))
+camera:SetTransformation(Matrix4(0, 200, 100))
 
 local light = GameObject.Light()
 light.Enabled = true
@@ -142,7 +142,7 @@ light.Parent = simulation
 local lightOrb = GameObject.Transform()
 lightOrb.Parent = simulation --[[ lightOrb:SetParent(simulation) ]]
 lightOrb.IsStatic = false
-lightOrb.Transformation = Matrix3(0, 1000, 10) * Matrix3.PitchRotation(math.pi / 2) * Matrix3.NewScale(1, 1, 1)
+lightOrb.Transformation = Matrix4(0, 1000, 10) * Matrix4.PitchRotation(math.pi / 2) * Matrix4.NewScale(1, 1, 1)
 lightOrb:Update(0)
 
 local lightOrbModel = GameObject.Model()
@@ -230,13 +230,33 @@ local viewMinY = centerY - 0.5 * viewportY
 local viewMaxX = centerX + 0.5 * viewportX
 local viewMaxY = centerY + 0.5 * viewportY
 
+print(Vector3())
+print(Vector3F())
+print(Vector3D())
+print(Vector3I())
+
+print(Vector3S())
+print(Vector3SF())
+print(Vector3SD())
+print(Vector3SI())
+
+print(Vector2())
+print(Vector2F())
+print(Vector2D())
+print(Vector2I())
+
+print(Vector2S())
+print(Vector2SF())
+print(Vector2SD())
+print(Vector2SI())
+
 local rayTracer = GameObject.RayTracer()
 rayTracer.Parent = Engine
 rayTracer.CurrentScene = scene
 rayTracer.BatchWidth = 8--resX/4
 rayTracer.BatchHeight = 8--resY/3
-rayTracer.MaxBounces = 1
-rayTracer.Samples = 1
+rayTracer.MaxBounces = 3
+rayTracer.Samples = 5
 rayTracer:SetMaxThreads(rayTracer:GetHardwareThreads())
 rayTracer:Configure(resX, resY)
 
@@ -360,7 +380,7 @@ lightOrbModel.PhysicalMaterialProperties = physicalMaterial
 for i=1,0 do
 	local transform = GameObject.Transform()
 	transform.Parent = simulation --[[ transform:SetParent(simulation) ]]
-	transform.Transformation = Matrix3(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)) * Matrix3.AxisRotation(Vector3(-1, 2, 0.5), 3*math.random())
+	transform.Transformation = Matrix4(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)) * Matrix4.AxisRotation(Vector3(-1, 2, 0.5), 3*math.random())
 	transform:Update(0)
 
 	local model = GameObject.Model()
@@ -499,12 +519,12 @@ if true then
 				end
 				
 				transform.Parent = mapContainer --[[ transform:SetParent(mapContainer) ]]
-				transform.Transformation = Matrix3(
+				transform.Transformation = Matrix4(
 					Vector3(tonumber(current.pos[1]), tonumber(current.pos[2]), tonumber(current.pos[3]), 1) + mapOffset,
 					Vector3(tonumber(current.right[1]), tonumber(current.right[2]), tonumber(current.right[3])),
 					Vector3(tonumber(current.up[1]), tonumber(current.up[2]), tonumber(current.up[3])),
 					Vector3(tonumber(current.front[1]), tonumber(current.front[2]), tonumber(current.front[3]))
-				) * Matrix3.NewScale(size * 0.5 + sizeOffset)
+				) * Matrix4.NewScale(size * 0.5 + sizeOffset)
 				--transform.IsStatic = false
 				transform.InheritTransformation = false
 
@@ -923,10 +943,10 @@ coroutine.wrap(function()
 			previousPosition = mousePosition:GetPosition()
 		end
 
-		local transform = camera:GetTransformation() * Matrix3(x, y, z)
-		local rotation = (Matrix3.YawRotation(yaw) * Matrix3.PitchRotation(pitch)):TransformedAround(transform:Translation())
+		local transform = camera:GetTransformation() * Matrix4(x, y, z)
+		local rotation = (Matrix4.YawRotation(yaw) * Matrix4.PitchRotation(pitch)):TransformedAround(transform:Translation())
 		
-		camera:SetTransformation(rotation * Matrix3(transform:Translation()))
+		camera:SetTransformation(rotation * Matrix4(transform:Translation()))
 
 		scene:Update(0)
 	end

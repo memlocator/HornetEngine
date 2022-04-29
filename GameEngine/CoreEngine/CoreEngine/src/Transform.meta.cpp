@@ -26,8 +26,8 @@ namespace Engine
 
 				Property(
 					"Transformation",
-					Getter<const Matrix3&>(Mutable).Bind<Transform, &Transform::GetTransformation>(),
-					Setter<const Matrix3&>(Mutable).Bind<Transform, &Transform::SetTransformation>()
+					Getter<const Matrix4&>(Mutable).Bind<Transform, &Transform::GetTransformation>(),
+					Setter<const Matrix4&>(Mutable).Bind<Transform, &Transform::SetTransformation>()
 				),
 
 				Property(
@@ -66,7 +66,7 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<const Matrix3&>("matrix")
+						Argument<const Matrix4&>("matrix")
 					).Bind<Transform, &Transform::SetTransformation>()
 				),
 
@@ -74,7 +74,7 @@ namespace Engine
 					"GetTransformation",
 					Overload(
 						Mutable,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Transform, &Transform::GetTransformation>()
 				),
 
@@ -133,7 +133,7 @@ namespace Engine
 					"GetWorldTransformation",
 					Overload(
 						Mutable,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Transform, &Transform::GetWorldTransformation>()
 				),
 
@@ -141,7 +141,7 @@ namespace Engine
 					"GetWorldTransformationInverse",
 					Overload(
 						Mutable,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Transform, &Transform::GetWorldTransformationInverse>()
 				),
 
@@ -149,7 +149,7 @@ namespace Engine
 					"GetWorldRotation",
 					Overload(
 						Mutable,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Transform, &Transform::GetWorldRotation>()
 				),
 
@@ -165,7 +165,7 @@ namespace Engine
 					"GetWorldNormalTransformation",
 					Overload(
 						Mutable,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Transform, &Transform::GetWorldNormalTransformation>()
 				),
 
@@ -268,7 +268,7 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<const Matrix3&>("transformation")
+						Argument<const Matrix4&>("transformation")
 					).Bind<Transform, &Transform::TransformBy>(),
 					Overload(
 						Mutable,
@@ -283,7 +283,7 @@ namespace Engine
 					Overload(
 						Mutable,
 						Returns<void>(),
-						Argument<const Matrix3&>("transformation")
+						Argument<const Matrix4&>("transformation")
 					).Bind<Transform, &Transform::TransformByRelative>(),
 					Overload(
 						Mutable,

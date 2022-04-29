@@ -547,7 +547,7 @@ namespace GraphicsEngine
 	{
 		bool normalOnX = std::abs(normal.X) > 0.8f;
 
-		Vector3 baseAxis = Vector3(Float(!normalOnX), 0, Float(normalOnX));
+		Vector3 baseAxis = Vector3(Float(!normalOnX), 0._F, Float(normalOnX));
 		Vector3 axis1 = normal.Cross(baseAxis).Unit();
 		Vector3 axis2 = normal.Cross(axis1);
 
@@ -567,8 +567,8 @@ namespace GraphicsEngine
 		Float p1 = r * std::cos(phi);
 		Float p2 = r * std::sin(phi) * ((random2 < a) ? 1 : stretchedView.Y);
 
-		Vector3 stretchedResult = p1 * viewAxis1 + p2 * viewAxis2 + std::sqrt(std::max((Float)0., (Float)1. - p1 * p1 - p2 * p2)) * stretchedView;
-		Vector3 result = Vector3(roughness * stretchedResult.X, std::max(stretchedResult.Y, (Float)0.), roughness * stretchedResult.Z).Unit();
+		Vector3 stretchedResult = p1 * viewAxis1 + p2 * viewAxis2 + std::sqrt(std::max(0._F, 1._F - p1 * p1 - p2 * p2)) * stretchedView;
+		Vector3 result = Vector3(roughness * stretchedResult.X, std::max(stretchedResult.Y, 0._F), roughness * stretchedResult.Z).Unit();
 
 		return result.X * axis1 + result.Y * normal + result.Z * axis2;
 	}
@@ -641,7 +641,7 @@ namespace GraphicsEngine
 
 	bool SmallerThan(const Vector3& vector, Float value)
 	{
-		return (vector.X < value) | (vector.Y < value) | (vector.Z < value);
+		return (vector.X < value) || (vector.Y < value) || (vector.Z < value);
 	}
 
 	Vector3 RayTracer::ComputeLighting(const LightingParameters& parameters, LightHandle light, const Vector3& lightFilter, RayInfo& info, const ShadowCastData& shadowData, Thread& thread) const
@@ -1049,8 +1049,11 @@ namespace GraphicsEngine
 
 				Vector3 illumination;
 
-				int depthIndex = GetIndex(px, py);
-				DepthBuffer[depthIndex] = ThisCamera->GetFarPlane();
+				if (UseDepthTest)
+				{
+					int depthIndex = GetIndex(px, py);
+					DepthBuffer[depthIndex] = ThisCamera->GetFarPlane();
+				}
 
 				for (int i = 0; i < Samples; ++i)
 				{
@@ -1094,8 +1097,8 @@ namespace GraphicsEngine
 		screenStart *= 1 / screenStart.W;
 		screenEnd *= 1 / screenEnd.W;
 
-		screenStart = 0.5f * screenStart + Vector3(0.5f, 0.5f, 0);
-		screenEnd = 0.5f * screenEnd + Vector3(0.5f, 0.5f, 0);
+		screenStart = 0.5_F * screenStart + Vector3(0.5f, 0.5f, 0.f);
+		screenEnd = 0.5_F * screenEnd + Vector3(0.5f, 0.5f, 0.f);
 
 		screenStart.Scale((Float)Width, (Float)Height, 1);
 		screenEnd.Scale((Float)Width, (Float)Height, 1);

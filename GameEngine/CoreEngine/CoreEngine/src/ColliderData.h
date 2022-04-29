@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Matrix3.h"
+#include "Matrix4.h"
 #include "Aabb.h"
 
 namespace Engine
@@ -22,9 +22,9 @@ namespace Engine
 			Aabb BoundingBox;
 
 			ColliderData();
-			ColliderData(const ColliderData& other, const Matrix3& transformation = Matrix3());
+			ColliderData(const ColliderData& other, const Matrix4& transformation = Matrix4());
 
-			void TransformFrom(const ColliderData& other, const Matrix3& transformation);
+			void TransformFrom(const ColliderData& other, const Matrix4& transformation);
 			void Translate(const Vector3& translation);
 			void RecalculateLimitVertices();
 			void RecalculateNormals();

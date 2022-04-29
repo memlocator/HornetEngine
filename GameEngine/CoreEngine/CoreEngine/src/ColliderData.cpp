@@ -10,7 +10,7 @@ namespace Engine
 	{
 		ColliderData::ColliderData() { }
 
-		ColliderData::ColliderData(const ColliderData& other, const Matrix3& transformation)
+		ColliderData::ColliderData(const ColliderData& other, const Matrix4& transformation)
 		{
 			TransformFrom(other, transformation);
 
@@ -20,7 +20,7 @@ namespace Engine
 			RecalculateBoundingRadius();
 		}
 
-		void ColliderData::TransformFrom(const ColliderData& other, const Matrix3& transformation)
+		void ColliderData::TransformFrom(const ColliderData& other, const Matrix4& transformation)
 		{
 			Vertices.clear();
 
@@ -104,7 +104,7 @@ namespace Engine
 			int size = int(Vertices.size());
 
 			for (VertexVector::iterator i = Vertices.begin(); i != Vertices.end(); ++i)
-				Center += 1.0f / size * *i;
+				Center += 1.0_F / size * *i;
 		}
 
 		void ColliderData::RecalculateBoundingRadius()

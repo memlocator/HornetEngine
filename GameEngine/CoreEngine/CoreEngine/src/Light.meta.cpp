@@ -116,7 +116,7 @@ namespace Engine
 					"GetShadowMapTransformation",
 					Overload(
 						Const,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Light, &Light::GetShadowMapTransformation>()
 				),
 
@@ -124,7 +124,7 @@ namespace Engine
 					"GetShadowMapInverseTransformation",
 					Overload(
 						Const,
-						Returns<const Matrix3&>()
+						Returns<const Matrix4&>()
 					).Bind<Light, &Light::GetShadowMapInverseTransformation>()
 				),
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Matrix3.h"
+#include "Matrix4.h"
 
 extern "C" {
 #include <math.h>
@@ -16,7 +16,7 @@ public:
 	constexpr Quaternion(const Vector3& vec) : X(vec.X), Y(vec.Y), Z(vec.Z), W(vec.W) {}
 	Quaternion(const Vector3& axis, Float angle);
 	constexpr Quaternion(Float w, const Vector3& vector) : X(vector.X), Y(vector.Y), Z(vector.Z), W(w) {}
-	Quaternion(const Matrix3& matrix);
+	Quaternion(const Matrix4& matrix);
 
 	Quaternion& Invert();
 	Quaternion Inverse() const { return Quaternion(*this).Invert(); }
@@ -24,7 +24,7 @@ public:
 
 	Quaternion operator*(const Quaternion& rhs) const;
 
-	Matrix3 Matrix() const;
+	Matrix4 Matrix() const;
 
 	Quaternion& Normalize();
 	Quaternion Cross(const Quaternion& other) const;

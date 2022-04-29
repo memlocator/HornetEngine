@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ShaderProgram.h"
-#include "Matrix3.h"
+#include "Matrix4.h"
 #include "Object.h"
 #include "Frustum.h"
 #include "Ray.h"
@@ -17,13 +17,13 @@ namespace GraphicsEngine
 
 		Vector3 LightDirection;
 
-		void SetTransformation(const Matrix3& newTransformation);
+		void SetTransformation(const Matrix4& newTransformation);
 		void SetProperties(Float fieldOfView, Float aspectRatio, Float near, Float far);
 		void SetProperties(Float width, Float height, Float projectionPlane, Float near, Float far);
-		const Matrix3& GetTransformation() const;
-		const Matrix3& GetTransformationInverse() const;
-		const Matrix3& GetProjectionMatrix() const;
-		const Matrix3& GetProjection() const;
+		const Matrix4& GetTransformation() const;
+		const Matrix4& GetTransformationInverse() const;
+		const Matrix4& GetProjectionMatrix() const;
+		const Matrix4& GetProjection() const;
 		Vector3 GetDimensions() const;
 		Float GetProjectionPlane() const;
 		Float GetNearPlane() const;
@@ -35,10 +35,10 @@ namespace GraphicsEngine
 		bool Moved() const;
 
 	private:
-		Matrix3 PerspectiveProjection;
-		Matrix3 Transformation;
-		Matrix3 InverseTransformation;
-		Matrix3 Projection;
+		Matrix4 PerspectiveProjection;
+		Matrix4 Transformation;
+		Matrix4 InverseTransformation;
+		Matrix4 Projection;
 		Frustum CameraFrustum;
 		bool HasMoved = false;
 

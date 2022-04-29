@@ -22,7 +22,7 @@ namespace Engine
 
 			std::shared_ptr<Transform> transform = GetComponent<Transform>();
 
-			Matrix3 transformation;
+			Matrix4 transformation;
 
 			if (transform != nullptr)
 				transformation = transform->GetWorldTransformation();
@@ -37,8 +37,8 @@ namespace Engine
 				Radius = std::max(std::max(scale.X, scale.Y), scale.Z);
 
 				boundingBox = Aabb(
-					Center - Vector3(Radius, Radius, 1),
-					Center + Vector3(Radius, Radius, 1)
+					Center - Vector3(Radius, Radius, 1._F),
+					Center + Vector3(Radius, Radius, 1._F)
 				);
 			}
 			else
@@ -133,14 +133,14 @@ namespace Engine
 			std::shared_ptr<RigidBody> body = GetComponent<RigidBody>();
 			std::shared_ptr<RigidBody> otherBody = collision.OtherCollider.lock()->GetComponent<RigidBody>();
 
-			float mass1 = body->GetMass();
-			float mass2 = otherBody->GetMass();
-			float massSum = mass1 + mass2;
+			Float mass1 = body->GetMass();
+			Float mass2 = otherBody->GetMass();
+			Float massSum = mass1 + mass2;
 
 			if (massSum == 0)
 				massSum = 1;
 
-			float coefficient = (massSum - mass1) / massSum;
+			Float coefficient = (massSum - mass1) / massSum;
 
 			if (mass1 == 0)
 				coefficient = 0;

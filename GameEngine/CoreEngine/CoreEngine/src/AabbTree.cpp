@@ -406,7 +406,7 @@ Aabb AabbTree::Fatten(const Aabb& box)
 {
 	Vector3 diff = box.Max - box.Min;
 
-	diff = 0.5f * (FatteningFactor * diff - box.Max + box.Min);
+	diff = 0.5_F * (FatteningFactor * diff - box.Max + box.Min);
 
 	return Aabb(box.Min - diff, box.Max + diff);
 }

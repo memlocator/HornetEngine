@@ -50,7 +50,7 @@ namespace Engine
 		std::shared_ptr<Transform> transform = Engine::Create<Transform>();
 
 		transform->SetParent(This.lock());
-		transform->SetTransformation(Matrix3(float(chunk.X) * 16, float(chunk.Y) * 16, float(chunk.Z) * 16));
+		transform->SetTransformation(Matrix4(float(chunk.X) * 16, float(chunk.Y) * 16, float(chunk.Z) * 16));
 
 		std::shared_ptr<GraphicsEngine::Model> model = Engine::Create<GraphicsEngine::Model>();
 
@@ -287,7 +287,7 @@ namespace Engine
 		if (Index.X == 3 && Index.Y == 1 && Index.Z == -7 && cellX == 1 && cellY == 0 && cellZ == 4)
 			cellX += 0;
 
-		triangulator.Center.Set(float(cellX) + 0.5f, float(cellY) + 0.5f, float(cellZ) + 0.5f, 1);
+		triangulator.Center.Set(float(cellX) + 0.5f, float(cellY) + 0.5f, float(cellZ) + 0.5f, 1.f);
 		triangulator.Triangulate();
 	}
 

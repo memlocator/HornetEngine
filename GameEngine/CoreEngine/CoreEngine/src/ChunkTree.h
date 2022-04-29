@@ -23,7 +23,7 @@ namespace Engine
 		bool RemoveChunk(const Coordinates& chunk);
 		std::shared_ptr<Chunk> GetChunk(const Coordinates& chunk) const;
 		Aabb GetBoundingBox() const;
-		void Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix3& transformation);
+		void Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix4& transformation);
 
 		ChunkColumn(const Coordinates& position, int gridScale, BaseAllocator* allocator);
 		~ChunkColumn();
@@ -54,7 +54,7 @@ namespace Engine
 		bool RemoveChunk(const Coordinates& chunk);
 		std::shared_ptr<Chunk> GetChunk(const Coordinates& chunk) const;
 		Aabb GetBoundingBox() const;
-		void Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix3& transformation) const;
+		void Draw(bool drawLiquid, const std::shared_ptr<GraphicsEngine::Camera>& targetCamera, const Matrix4& transformation) const;
 
 		ChunkTree(int positionX, int positionZ, int gridScale, BaseAllocator* allocator, PageAllocator<sizeof(ChunkColumn)>* columnAllocator);
 		~ChunkTree();

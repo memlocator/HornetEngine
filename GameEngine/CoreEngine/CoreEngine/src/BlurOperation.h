@@ -28,7 +28,7 @@ namespace GraphicsEngine
 		int Radius = 1;
 		float Sigma = 1;
 		Vector3 Resolution;
-		Matrix3 Transform;
+		Matrix4 Transform;
 		std::weak_ptr<Texture> Input;
 		std::weak_ptr<FrameBuffer> Output;
 		bool Detatch = true;

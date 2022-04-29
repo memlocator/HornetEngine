@@ -73,7 +73,7 @@ namespace Engine
 					"GetMass",
 					Overload(
 						Const,
-						Returns<float>()
+						Returns<Float>()
 					).Bind<RigidBody, &RigidBody::GetMass>()
 				),
 

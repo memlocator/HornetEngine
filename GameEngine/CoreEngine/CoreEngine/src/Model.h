@@ -33,8 +33,8 @@ namespace GraphicsEngine
 		bool IsTransparent() const;
 		Aabb GetBoundingBox() const;
 		Aabb GetLocalBoundingBox() const;
-		Matrix3 GetTransformation() const;
-		Matrix3 GetInverseTransformation() const;
+		Matrix4 GetTransformation() const;
+		Matrix4 GetInverseTransformation() const;
 		bool HasMoved() const;
 		bool IsStatic() const;
 		void CastRay(const Ray& ray, const CastResultsCallback& callback) const;

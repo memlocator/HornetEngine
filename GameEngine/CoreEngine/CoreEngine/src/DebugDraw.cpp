@@ -53,7 +53,7 @@ void DebugDraw::DrawLine(const Vector3& point1, const Vector3& point2, const RGB
 		up = Vector3(1, 0, 0);
 
 	PlaceObject(
-		Matrix3().Translate(0.5f * length * vector) * Matrix3(point1, vector, up) * Matrix3().Scale(thickness, thickness, 0.5f * length),
+		Matrix4(true).Translate(0.5f * length * vector) * Matrix4(point1, vector, up) * Matrix4(true).Scale(thickness, thickness, 0.5f * length),
 		color,
 		thickness,
 		glows,
@@ -89,13 +89,13 @@ void DebugDraw::DrawTriangle(const Vector3& point1, const Vector3& point2, const
 	
 	PlaceObject(
 		(
-			Matrix3(
+			Matrix4(
 				Vector3(0.5f * (point1.X + point2.X) + 0.1f * normal.X, 0.5f * (point1.Y + point2.Y) + 0.1f * normal.Y, 0.5f * (point1.Z + point2.Z) + 0.1f * normal.Z),
 				Vector3(normal.X, -v2x, v1x),
 				Vector3(normal.Y, -v2y, v1y),
 				Vector3(normal.Z, -v2z, v1z)
 			) *
-			Matrix3().Scale(thickness, 0.5f * distance1, 0.5f * height)
+			Matrix4(true).Scale(thickness, 0.5f * distance1, 0.5f * height)
 		),
 		color,
 		thickness,
@@ -105,13 +105,13 @@ void DebugDraw::DrawTriangle(const Vector3& point1, const Vector3& point2, const
 
 	PlaceObject(
 		(
-			Matrix3(
+			Matrix4(
 				Vector3(0.5f * (point2.X + point3.X) + 0.1f * normal.X, 0.5f * (point2.Y + point3.Y) + 0.1f * normal.Y, 0.5f * (point3.Z + point3.Z) + 0.1f * normal.Z),
 				Vector3(normal.X, -v1x, -v2x),
 				Vector3(normal.Y, -v1y, -v2y),
 				Vector3(normal.Z, -v1z, -v2z)
 			) *
-			Matrix3().Scale(thickness, 0.5f * height, 0.5f * (distance - distance1))
+			Matrix4(true).Scale(thickness, 0.5f * height, 0.5f * (distance - distance1))
 			),
 		color,
 		thickness,
@@ -120,7 +120,7 @@ void DebugDraw::DrawTriangle(const Vector3& point1, const Vector3& point2, const
 	);
 }
 
-std::shared_ptr<Engine::Transform> DebugDraw::NewObject(const Matrix3& transformation)
+std::shared_ptr<Engine::Transform> DebugDraw::NewObject(const Matrix4& transformation)
 {
 	std::shared_ptr<Engine::Transform> object;
 
@@ -151,7 +151,7 @@ std::shared_ptr<Engine::Transform> DebugDraw::NewObject(const Matrix3& transform
 	return object;
 }
 
-void DebugDraw::PlaceObject(const Matrix3& transformation, const RGBA& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset)
+void DebugDraw::PlaceObject(const Matrix4& transformation, const RGBA& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset)
 {
 	std::shared_ptr<Engine::Transform> transform = NewObject(transformation);
 	std::shared_ptr<GraphicsEngine::Model> model = transform->Get<GraphicsEngine::Model>();

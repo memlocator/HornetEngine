@@ -70,8 +70,8 @@ namespace GraphicsEngine
 		std::shared_ptr<FrameBuffer> GetShadowMap(LightDirection map) const;
 		Aabb GetBoundingBox() const;
 		Aabb ComputeSpotlightBoundingBox() const;
-		const Matrix3& GetShadowMapTransformation() const;
-		const Matrix3& GetShadowMapInverseTransformation() const;
+		const Matrix4& GetShadowMapTransformation() const;
+		const Matrix4& GetShadowMapInverseTransformation() const;
 
 		static Float ComputeRadius(Float a, Float b, Float c, Float value);
 
@@ -79,8 +79,8 @@ namespace GraphicsEngine
 		bool ShadowsEnabled = false;
 		Float ComputedRadius = 0;
 		Float AttenuationOffset = 0;
-		Matrix3 ShadowMapTransformation;
-		Matrix3 ShadowMapInverseTransformation;
+		Matrix4 ShadowMapTransformation;
+		Matrix4 ShadowMapInverseTransformation;
 
 		std::weak_ptr<FrameBuffer> RightMap;
 		std::weak_ptr<FrameBuffer> LeftMap;

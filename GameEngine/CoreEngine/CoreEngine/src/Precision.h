@@ -3,6 +3,8 @@
 typedef double Float;
 typedef int Int;
 
+constexpr Float operator ""_F(long double x) { return (Float)x; }
+
 namespace std
 {
 	template <typename T1, typename T2>

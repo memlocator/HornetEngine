@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "Vector3.h"
 #include "RGBA.h"
-#include "Matrix3.h"
+#include "Matrix4.h"
 
 namespace Engine
 {
@@ -46,6 +46,6 @@ private:
 	ObjectVector AvailableDebugObjects;
 	ObjectVector DebugObjects;
 	
-	std::shared_ptr<Engine::Transform> NewObject(const Matrix3& transformation);
-	void PlaceObject(const Matrix3& transformation, const RGBA& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset);
+	std::shared_ptr<Engine::Transform> NewObject(const Matrix4& transformation);
+	void PlaceObject(const Matrix4& transformation, const RGBA& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset);
 };

@@ -44,14 +44,14 @@ namespace GraphicsEngine
 			Direction.Normalize();
 
 			if (Direction == Vector3(0, 0, -1))
-				ShadowMapTransformation = Matrix3(Position);
+				ShadowMapTransformation = Matrix4(Position);
 			else if (Direction == Vector3(0, 0, 1))
-				ShadowMapTransformation = Matrix3(Position) * Matrix3().RotateYaw(PI / 2);
+				ShadowMapTransformation = Matrix4(Position) * Matrix4(true).RotateYaw(PI / 2);
 			else
-				ShadowMapTransformation = Matrix3(Position) * Matrix3().RotateYaw(std::atan2(Direction.X, Direction.Z)) * Matrix3().RotatePitch(std::acos(Direction.Y));
+				ShadowMapTransformation = Matrix4(Position) * Matrix4(true).RotateYaw(std::atan2(Direction.X, Direction.Z)) * Matrix4(true).RotatePitch(std::acos(Direction.Y));
 		}
 		else
-			ShadowMapTransformation = Matrix3(Position);
+			ShadowMapTransformation = Matrix4(Position);
 
 		ShadowMapInverseTransformation = ShadowMapTransformation;
 		ShadowMapInverseTransformation.Inverse();
@@ -122,12 +122,12 @@ namespace GraphicsEngine
 		return Aabb(minCorner, maxCorner);
 	}
 
-	const Matrix3& Light::GetShadowMapTransformation() const
+	const Matrix4& Light::GetShadowMapTransformation() const
 	{
 		return ShadowMapTransformation;
 	}
 
-	const Matrix3& Light::GetShadowMapInverseTransformation() const
+	const Matrix4& Light::GetShadowMapInverseTransformation() const
 	{
 		return ShadowMapInverseTransformation;
 	}

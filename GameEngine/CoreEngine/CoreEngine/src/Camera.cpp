@@ -17,14 +17,14 @@ namespace GraphicsEngine
 		SetTicks(false);
 	}
 
-	void Camera::SetTransformation(const Matrix3& newTransformation)
+	void Camera::SetTransformation(const Matrix4& newTransformation)
 	{
 		if (newTransformation != Transformation)
 			MarkMoved();
 
 		Transformation = newTransformation;
 		InverseTransformation.Invert(Transformation);
-		Projection = PerspectiveProjection.FullMultiply(InverseTransformation);
+		Projection = PerspectiveProjection * InverseTransformation;
 
 		CalculateFrustum();
 	}
@@ -42,7 +42,7 @@ namespace GraphicsEngine
 		FarPlane = far;
 		AspectRatio = newAspectRatio;
 		FieldOfView = newFieldOfView;
-		Height = 2 * near * (Float)std::tan(FieldOfView / 2);
+		Height = 2 * near * std::tan(FieldOfView / 2);
 		Width = AspectRatio * Height;
 
 		if (FieldOfView >= PI)
@@ -69,7 +69,7 @@ namespace GraphicsEngine
 		NearPlane = near;
 		FarPlane = far;
 		AspectRatio = Width / Height;
-		FieldOfView = 2 * (Float)std::atan(Height / (2 * ProjectionPlane));
+		FieldOfView = 2 * std::atan(Height / (2 * ProjectionPlane));
 
 		if (ProjectionPlane < near)
 			ProjectionPlane = near;
@@ -83,26 +83,26 @@ namespace GraphicsEngine
 
 	void Camera::CalculateProjectionMatrix()
 	{
-		PerspectiveProjection = Matrix3().Projection(ProjectionPlane, NearPlane, FarPlane, Width, Height);
-		Projection = PerspectiveProjection.FullMultiply(InverseTransformation);
+		PerspectiveProjection = Matrix4(true).Projection(ProjectionPlane, NearPlane, FarPlane, Width, Height);
+		Projection = PerspectiveProjection * InverseTransformation;
 	}
 
-	const Matrix3& Camera::GetTransformation() const
+	const Matrix4& Camera::GetTransformation() const
 	{
 		return Transformation;
 	}
 
-	const Matrix3& Camera::GetTransformationInverse() const
+	const Matrix4& Camera::GetTransformationInverse() const
 	{
 		return InverseTransformation;
 	}
 
-	const Matrix3& Camera::GetProjectionMatrix() const
+	const Matrix4& Camera::GetProjectionMatrix() const
 	{
 		return PerspectiveProjection;
 	}
 
-	const Matrix3& Camera::GetProjection() const
+	const Matrix4& Camera::GetProjection() const
 	{
 		return Projection;
 	}
@@ -169,8 +169,8 @@ namespace GraphicsEngine
 	Ray Camera::GetRay(int x, int y, int resolutionX, int resolutionY, Float length) const
 	{
 		Vector3 direction = Vector3(
-			Width * (Float(x) - Float(0.5f * resolutionX)) / resolutionX,
-			Height * -(Float(y) - Float(0.5f * resolutionY)) / resolutionY,
+			Width * (Float(x) - 0.5f * Float(resolutionX)) / resolutionX,
+			Height * -(Float(y) - 0.5f * Float(resolutionY)) / resolutionY,
 			-ProjectionPlane
 		).Unit();
 

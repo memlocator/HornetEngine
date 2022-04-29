@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Matrix3.h"
+#include "Matrix4.h"
 #include "DeviceVector.h"
 #include "InputEvent.h"
 #include "FrameBuffer.h"
@@ -61,8 +61,8 @@ public:
 	Vector3 GetAbsolutePosition(const DeviceVector& point = DeviceVector(0, 0, 0, 0)) const;
 	Vector3 GetLocalPosition() const;
 	Vector3 GetLocalPosition(const Vector3& point) const;
-	const Matrix3& GetTransformation() const;
-	const Matrix3& GetTransformationInverse() const;
+	const Matrix4& GetTransformation() const;
+	const Matrix4& GetTransformationInverse() const;
 	float GetAspectRatio() const;
 	bool AspectRatioLocked() const;
 	Alignment GetAlignmentX() const;
@@ -73,9 +73,9 @@ public:
 	bool GetClipsDescendants() const;
 	std::shared_ptr<GraphicsEngine::Texture> GetClippingMask() const;
 	bool ContainsPoint(const Vector3& point) const;
-	Matrix3 CalculateLocalTransformation(const Vector3& size, const Vector3& position) const;
+	Matrix4 CalculateLocalTransformation(const Vector3& size, const Vector3& position) const;
 
-	static Matrix3 CalculateScreenTransformation(const Vector3& size, const Vector3& position, const Vector3& resolution);
+	static Matrix4 CalculateScreenTransformation(const Vector3& size, const Vector3& position, const Vector3& resolution);
 	static void ClampSize(float& x, float& y, float aspectRatio);
 
 	class ChildWrapper
@@ -108,9 +108,9 @@ private:
 	DeviceVector PivotPoint = DeviceVector(0.5f, 0, 0.5f, 0);
 	Vector3 AbsoluteSize;
 	Vector3 LocalPosition;
-	Matrix3 Transformation;
-	Matrix3 InverseTransformation;
-	Matrix3 Movement;
+	Matrix4 Transformation;
+	Matrix4 InverseTransformation;
+	Matrix4 Movement;
 	std::shared_ptr<GraphicsEngine::FrameBuffer> ClippingBuffer;
 	std::shared_ptr<GraphicsEngine::Texture> ClippingMask;
 	bool ClipsDescendants = false;

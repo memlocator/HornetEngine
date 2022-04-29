@@ -224,7 +224,7 @@ namespace Engine
 		else
 			Programs::Phong->SetMaterial(MaterialProperties.lock().get());
 
-		const Matrix3& transformation = transform->GetWorldTransformation();
+		const Matrix4& transformation = transform->GetWorldTransformation();
 
 		if (Head != nullptr && targetCamera->GetFrustum().Intersects(Head->GetBoundingBox().Transform(transformation)) != Enum::IntersectionType::Outside)
 			Head->Draw(drawLiquid, targetCamera, transformation);

@@ -77,16 +77,16 @@ namespace Engine
 			(ReflectType<Types>(), ...);
 		}
 
-		template <typename ClassType, typename Parent = void>
+		template <typename ClassType, typename Parent = void, typename... AllowedClasses>
 		struct Reflect
 		{
 			template <typename... Members>
-			static void Class(const char* name, const std::vector<std::string>& namespaces, Members... members)
+			static void Class(const char* name, const std::vector<std::string>& namespaces, const std::vector<std::string>& aliases, Members... members)
 			{
 				static_assert(Core::template ParentCheck<ClassType>::template IsValid<Parent>::Value);
 				static_assert(std::is_base_of_v<Object, ClassType>);
 
-				Meta::ReflectedType reflected{ true, false, false, name, namespaces };
+				Meta::ReflectedType reflected{ true, false, false, name, namespaces, aliases };
 
 				auto bindMembers = [&reflected]<typename Member>(Member member)
 				{
@@ -120,23 +120,36 @@ namespace Engine
 
 				reflected.AllowedTypes.push_back(Meta::Reflected<void>::GetMeta());
 
+				auto addAllowed = [] <typename Allowed> (Meta::ReflectedType & reflected, Allowed allowed)
+				{
+					reflected.AllowedTypes.push_back(Meta::Reflected<Allowed::Type>::GetMeta());
+				};
+
+				(addAllowed(reflected, Core::TypeContainer<AllowedClasses>{}), ...);
+
 				Meta::ReflectedType* meta = Meta::Reflected<ClassType>::template SetMeta<Parent>(reflected);
 
 				reflected.Binding.CacheOperators(*meta);
 			}
 
 			template <typename... Members>
-			static void Class(const char* name, Members... members)
+			static void Class(const char* name, const std::vector<std::string>& namespaces, Members... members)
 			{
-				Class<Members...>(name, {}, members...);
+				Class<Members...>(name, namespaces, {}, members...);
 			}
 
 			template <typename... Members>
-			static void Type(const char* name, const std::vector<std::string>& namespaces, Members... members)
+			static void Class(const char* name, Members... members)
+			{
+				Class<Members...>(name, {}, {}, members...);
+			}
+
+			template <typename... Members>
+			static void Type(const char* name, const std::vector<std::string>& namespaces, const std::vector<std::string>& aliases, Members... members)
 			{
 				static_assert(!std::is_base_of_v<Object, ClassType>);
 
-				Meta::ReflectedType reflected{ true, false, false, name, namespaces };
+				Meta::ReflectedType reflected{ true, false, false, name, namespaces, aliases };
 
 				auto bindMembers = [&reflected]<typename Member>(Member member)
 				{
@@ -167,15 +180,28 @@ namespace Engine
 				reflected.Constructor.Binding.Validate();
 				reflected.Binding.Validate();
 
+				auto addAllowed = [] <typename Allowed> (Meta::ReflectedType & reflected, Allowed allowed)
+				{
+					reflected.AllowedTypes.push_back(Meta::Reflected<Allowed::Type>::GetMeta());
+				};
+
+				(addAllowed(reflected, Core::TypeContainer<AllowedClasses>{}), ...);
+
 				Meta::ReflectedType* meta = Meta::Reflected<ClassType>::template SetMeta<Parent>(reflected);
 
 				reflected.Binding.CacheOperators(*meta);
 			}
 
 			template <typename... Members>
+			static void Type(const char* name, const std::vector<std::string>& namespaces, Members... members)
+			{
+				Type<Members...>(name, namespaces, {}, members...);
+			}
+
+			template <typename... Members>
 			static void Type(const char* name, Members... members)
 			{
-				Type<Members...>(name, {}, members...);
+				Type<Members...>(name, {}, {}, members...);
 			}
 
 			template <typename... AllowedTypes>

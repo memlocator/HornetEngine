@@ -6,16 +6,23 @@ namespace Engine
 {
 	namespace Reflection
 	{
-		template <>
-		void ReflectType<Vector3>()
+		template <typename Vector, typename Number, typename DistanceType, typename... Allowed>
+		void ReflectVector3(const char* name, const char* alias)
 		{
-			Reflect<Vector3>::Type(
-				"Vector3",
+			std::vector<std::string> aliases;
 
-				Member<Bind(&Vector3::X)>("X"),
-				Member<Bind(&Vector3::Y)>("Y"),
-				Member<Bind(&Vector3::Z)>("Z"),
-				Member<Bind(&Vector3::W)>("W"),
+			if (alias != nullptr)
+				aliases.push_back(alias);
+
+			Reflect<Vector, void, Allowed...>::Type(
+				name,
+				{},
+				aliases,
+
+				Member<Bind(&Vector::X)>("X"),
+				Member<Bind(&Vector::Y)>("Y"),
+				Member<Bind(&Vector::Z)>("Z"),
+				Member<Bind(&Vector::W)>("W"),
 
 				Constructor(
 					Overload()
@@ -23,10 +30,10 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<Float, Default(0.0f)>("x"),
-						Argument<Float, Default(0.0f)>("y"),
-						Argument<Float, Default(0.0f)>("z"),
-						Argument<Float, Default(0.0f)>("w")
+						Argument<Number, Default((Number)0.0)>("x"),
+						Argument<Number, Default((Number)0.0)>("y"),
+						Argument<Number, Default((Number)0.0)>("z"),
+						Argument<Number, Default((Number)0.0)>("w")
 					)
 				),
 
@@ -34,86 +41,86 @@ namespace Engine
 					"Dot",
 					Overload(
 						Const,
-						Returns<Float>(),
-						Argument<const Vector3&>("other")
-					).Bind<Vector3, &Vector3::Dot>()
+						Returns<DistanceType>(),
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::Dot>()
 				),
 
 				Function(
 					"Cross",
 					Overload(
 						Const,
-						Returns<Vector3>(),
-						Argument<const Vector3&>("other")
-					).Bind<Vector3, &Vector3::Cross>()
+						Returns<Vector>(),
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::Cross>()
 				),
 
 				Function(
 					"Unit",
 					Overload(
 						Const,
-						Returns<Vector3>()
-					).Bind<Vector3, &Vector3::Unit>()
+						Returns<Vector>()
+					).Bind<Vector, &Vector::Unit>()
 				),
 
 				Function(
 					"Length",
 					Overload(
 						Const,
-						Returns<Float>()
-					).Bind<Vector3, &Vector3::Length>()
+						Returns<DistanceType>()
+					).Bind<Vector, &Vector::Length>()
 				),
 
 				Function(
 					"SquareLength",
 					Overload(
 						Const,
-						Returns<Float>()
-					).Bind<Vector3, &Vector3::SquareLength>()
+						Returns<DistanceType>()
+					).Bind<Vector, &Vector::SquareLength>()
 				),
 
 				Function(
 					"InvertedLength",
 					Overload(
 						Const,
-						Returns<Vector3>()
-					).Bind<Vector3, &Vector3::InvertedLength>()
+						Returns<Vector>()
+					).Bind<Vector, &Vector::InvertedLength>()
 				),
 
 				Function(
 					"operator-",
 					Overload(
 						Const,
-						Returns<Vector3>()
-					).Bind<Vector3, &Vector3::operator- >(),
+						Returns<Vector>()
+					).Bind<Vector, &Vector::operator- >(),
 					Overload(
 						Const,
-						Returns<Vector3>(),
-						Argument<const Vector3&>("other")
-					).Bind<Vector3, &Vector3::operator- >()
+						Returns<Vector>(),
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::operator- >()
 				),
 
 				Function(
 					"operator+",
 					Overload(
 						Const,
-						Returns<Vector3>(),
-						Argument<const Vector3&>("other")
-					).Bind<Vector3, &Vector3::operator+>()
+						Returns<Vector>(),
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::operator+>()
 				),
 
 				Function(
 					"operator*",
 					Overload(
 						Const,
-						Returns<Vector3>(),
-						Argument<Float>("scalar")
-					).Bind<Vector3, &Vector3::operator*>(),
+						Returns<Vector>(),
+						Argument<Number>("scalar")
+					).Bind<Vector, &Vector::operator*>(),
 					Overload(
 						Const,
-						Returns<Float>(),
-						Argument<const Vector3&>("other")
-					).Bind<Vector3, &Vector3::operator*>()
+						Returns<DistanceType>(),
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::operator*>()
 				),
 
 				Function(
@@ -121,8 +128,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const Vector3&>("other")
-					).Bind<Vector3, &Vector3::operator==>()
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::operator==>()
 				),
 
 				Function(
@@ -130,8 +137,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const Vector3&>("other")
-					).Bind<Vector3, &Vector3::operator!=>()
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::operator!=>()
 				),
 
 				Function(
@@ -139,9 +146,29 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<std::string>()
-					).Bind<Vector3, &Vector3::operator std::string>()
+					).Bind<Vector, &Vector::operator std::string>()
 				)
 			);
+		}
+
+		template <typename T>
+		struct Vector3TypeAlias
+		{
+			static inline bool ShouldAlias = false;
+		};
+
+		template <>
+		struct Vector3TypeAlias<Float>
+		{
+			static inline bool ShouldAlias = true;
+		};
+
+		template <>
+		void ReflectType<Vector3>()
+		{
+			ReflectVector3<Vector3F, float, float>("Vector3F", Vector3TypeAlias<float>::ShouldAlias ? "Vector3" : nullptr);
+			ReflectVector3<Vector3D, double, double>("Vector3D", Vector3TypeAlias<double>::ShouldAlias ? "Vector3" : nullptr);
+			ReflectVector3<Vector3I, int, float>("Vector3I", nullptr);
 		}
 	}
 }

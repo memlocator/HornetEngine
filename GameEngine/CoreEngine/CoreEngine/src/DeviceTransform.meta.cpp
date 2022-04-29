@@ -34,7 +34,7 @@ namespace Engine
 					"GetTransformation",
 					Overload(
 						Mutable,
-						Returns<Matrix3>()
+						Returns<Matrix4>()
 					).Bind<DeviceTransform, &DeviceTransform::GetTransformation>()
 				),
 
@@ -42,7 +42,7 @@ namespace Engine
 					"GetInverseTransformation",
 					Overload(
 						Mutable,
-						Returns<Matrix3>()
+						Returns<Matrix4>()
 					).Bind<DeviceTransform, &DeviceTransform::GetInverseTransformation>()
 				),
 

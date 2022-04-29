@@ -23,8 +23,8 @@ void BoundingSphere::ExpandByPoint(const Vector3& point)
 	length = std::sqrt(length);
 	diff *= 1 / length;
 
-	Center = 0.5f * (Center - Radius * diff + point);
-	Radius = 0.5f * (length + Radius);
+	Center = 0.5_F * (Center - Radius * diff + point);
+	Radius = 0.5_F * (length + Radius);
 }
 
 BoundingSphere BoundingSphere::ComputeCentroid(const std::shared_ptr<Engine::ModelAsset>& model)
@@ -78,7 +78,7 @@ BoundingSphere BoundingSphere::ComputeCentroid(const MeshData::VertexVector& ver
 
 	Vector3 center;
 
-	center = 0.5f * (minPoint + maxPoint);
+	center = 0.5_F * (minPoint + maxPoint);
 	Float maxRadius = 0;
 
 	for (int i = 0; i < int(vertices.size()); ++i)
@@ -167,7 +167,7 @@ BoundingSphere BoundingSphere::ComputeRitter(const MeshData::VertexVector& verti
 		bound2 = vertices[maxZ].Position;
 	}
 
-	BoundingSphere sphere((Float)0.5 * (bound1 - bound2).Length(), (Float)0.5 * (bound1 + bound2));
+	BoundingSphere sphere(0.5_F * (bound1 - bound2).Length(), 0.5_F * (bound1 + bound2));
 
 	for (int i = 0; i < int(vertices.size()); ++i)
 		sphere.ExpandByPoint(vertices[i].Position);
@@ -305,7 +305,7 @@ BoundingSphere BoundingSphere::ComputeExactSphere(const MeshData::VertexVector& 
 		}
 	}
 
-	Vector3 center = 0.5f * (Vector3(vertices[indices[farthest1]].Position) + vertices[indices[farthest2]].Position);
+	Vector3 center = 0.5_F * (Vector3(vertices[indices[farthest1]].Position) + vertices[indices[farthest2]].Position);
 	Float radiusSquared = (center + vertices[indices[farthest2]].Position).SquareLength();
 	Float radius = std::sqrt(radiusSquared);
 
@@ -351,7 +351,7 @@ BoundingSphere BoundingSphere::ComputePCA(const MeshData::VertexVector& vertices
 	else if (vertices.size() == 1)
 		return BoundingSphere(0, vertices[0].Position);
 
-	Matrix3 covariance = PCA::ComputeCovariance(vertices);
+	Matrix4 covariance = PCA::ComputeCovariance(vertices);
 
 	PCA eigenData = PCA::Compute(covariance);
 
@@ -388,7 +388,7 @@ BoundingSphere BoundingSphere::ComputePCA(const MeshData::VertexVector& vertices
 		}
 	}
 
-	BoundingSphere sphere((Float)0.5 * Vector3(vertices[i1].Position - vertices[i2].Position).Length(), (Float)0.5 * (vertices[i1].Position + vertices[i2].Position));
+	BoundingSphere sphere(0.5_F * Vector3(vertices[i1].Position - vertices[i2].Position).Length(), 0.5_F * (vertices[i1].Position + vertices[i2].Position));
 
 	for (int i = 0; i < int(vertices.size()); ++i)
 		sphere.ExpandByPoint(vertices[i].Position);

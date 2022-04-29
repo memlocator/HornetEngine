@@ -10,7 +10,7 @@ namespace Engine
 		Vector3 GetCircleMinimumTranslationVector(const Vector3& difference, Float radius)
 		{
 			if (difference.SquareLength() == 0)
-				return Vector3(0, radius);
+				return Vector3(0._F, radius);
 
 			return (1 - radius / difference.Length()) * difference;
 		}
@@ -188,7 +188,7 @@ namespace Engine
 				Normals.push_back(collider.Normals[i]);
 
 				Vertices.push_back(collider.Vertices[(i + 1) % size] + radius * collider.Normals[i] - circleCenter);
-				Normals.push_back(0.5f * (collider.Normals[i] + collider.Normals[(i + 1) % size]));
+				Normals.push_back(0.5_F * (collider.Normals[i] + collider.Normals[(i + 1) % size]));
 			}
 		}
 

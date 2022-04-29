@@ -64,7 +64,7 @@ namespace GraphicsEngine
 		}
 
 		if (ParticlesAlive > 0)
-			BoundingBox = Aabb(Particles[0].Position - 0.5f * Particles[0].Size, Particles[0].Position + 0.5f * Particles[0].Size);
+			BoundingBox = Aabb(Particles[0].Position - 0.5_F * Particles[0].Size, Particles[0].Position + 0.5_F * Particles[0].Size);
 		else
 			BoundingBox = Aabb();
 
@@ -81,7 +81,7 @@ namespace GraphicsEngine
 				--i;
 			}
 			else
-				BoundingBox = GetPairBounds(BoundingBox, Aabb(Particles[i].Position - 0.5f * Particles[i].Size, Particles[i].Position + 0.5f * Particles[i].Size));
+				BoundingBox = GetPairBounds(BoundingBox, Aabb(Particles[i].Position - 0.5_F * Particles[i].Size, Particles[i].Position + 0.5_F * Particles[i].Size));
 		}
 	}
 
@@ -140,7 +140,7 @@ namespace GraphicsEngine
 	{
 		particle.Time = 10 - delta;
 		particle.Position.Set(0, 0, -1, 1);
-		particle.Direction = 0.1f * UnitVectorGenerator().Generate();
+		particle.Direction = 0.1_F * UnitVectorGenerator().Generate();
 		particle.Size.Set(.1f, .1f, .1f);
 	}
 
@@ -155,16 +155,16 @@ namespace GraphicsEngine
 	void ParticleEmitter::DefaultDraw(const Particle& particle, const std::shared_ptr<Camera>& camera, const Mesh* particleMesh)
 	{
 		// v this is equivalent to this ^ but faster
-		Matrix3 inv = camera->GetTransformationInverse();
+		Matrix4 inv = camera->GetTransformationInverse();
 
 		Vector3 translation = Vector3(
 			inv[0][0] * particle.Position.X + inv[0][1] * particle.Position.Y + inv[0][2] * particle.Position.Z + inv[0][3],
 			inv[1][0] * particle.Position.X + inv[1][1] * particle.Position.Y + inv[1][2] * particle.Position.Z + inv[1][3],
 			inv[2][0] * particle.Position.X + inv[2][1] * particle.Position.Y + inv[2][2] * particle.Position.Z + inv[2][3],
-			1
+			1._F
 		);
 
-		Matrix3 persp = camera->GetProjectionMatrix();
+		Matrix4 persp = camera->GetProjectionMatrix();
 		persp[0][3] = persp[0][0] * translation.X;
 		persp[1][3] = persp[1][1] * translation.Y;
 		persp[2][3] = persp[2][2] * translation.Z + persp[2][3];

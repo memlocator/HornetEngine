@@ -78,7 +78,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Aabb>(),
-						Argument<const Matrix3&>("transformation")
+						Argument<const Matrix4&>("transformation")
 					).Bind<Aabb, &Aabb::Transform>()
 				),
 

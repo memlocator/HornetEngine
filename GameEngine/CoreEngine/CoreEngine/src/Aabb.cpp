@@ -48,7 +48,7 @@ Vector3 Aabb::GetSize() const
 
 typename Enum::IntersectionType Aabb::Intersects(const Plane& plane, Float epsilon) const
 {
-	Vector3 center = 0.5f * (Min + Max);
+	Vector3 center = 0.5_F * (Min + Max);
 	Vector3 halfExtent = Max - center;
 
 	Vector3 normal = plane;
@@ -84,7 +84,7 @@ void Aabb::Compute(const std::vector<Vector3>& points)
 	}
 }
 
-Aabb Aabb::Transform(const Matrix3& transformation) const
+Aabb Aabb::Transform(const Matrix4& transformation) const
 {
 	Vector3 translation = transformation.Translation();
 
@@ -110,8 +110,8 @@ Aabb Aabb::Transform(const Matrix3& transformation) const
 	}
 
 	return Aabb(
-		Vector3(outMin[0], outMin[1], outMin[2], 1),
-		Vector3(outMax[0], outMax[1], outMax[2], 1)
+		Vector3(outMin[0], outMin[1], outMin[2], 1._F),
+		Vector3(outMax[0], outMax[1], outMax[2], 1._F)
 	);
 }
 

@@ -42,7 +42,7 @@ namespace GraphicsEngine
 		Programs::Luminescence->Use();
 
 		Programs::Luminescence->firstPass.Set(true);
-		Programs::Luminescence->transform.Set(Matrix3());
+		Programs::Luminescence->transform.Set(Matrix4());
 		Programs::Luminescence->inputData.Set(input);
 
 		Programs::Luminescence->resolution.Set(Graphics::ActiveWindow->Resolution);
@@ -94,7 +94,7 @@ namespace GraphicsEngine
 
 		Programs::ToneMap->Use();
 
-		Programs::ToneMap->transform.Set(Matrix3());
+		Programs::ToneMap->transform.Set(Matrix4());
 		Programs::ToneMap->inputData.Set(input);
 		Programs::ToneMap->luminescenceData.Set(back->GetTexture(), 1);
 		Programs::ToneMap->resolution.Set(Graphics::ActiveWindow->Resolution);

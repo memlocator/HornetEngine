@@ -323,14 +323,14 @@ namespace GraphicsEngine
 
 			Programs::WaterMatrix->Use();
 
-			Programs::WaterMatrix->transform.Set(Matrix3());
+			Programs::WaterMatrix->transform.Set(Matrix4());
 
 			Programs::WaterMatrix->CoreMeshes.Square->Draw();
 		}
 
 		Programs::NormalMapGen->Use();
 
-		Programs::NormalMapGen->transform.Set(Matrix3());
+		Programs::NormalMapGen->transform.Set(Matrix4());
 
 		for (int i = 0; i < int(NormalMapQueue.size()); ++i)
 		{
@@ -412,7 +412,7 @@ namespace GraphicsEngine
 
 			Vector3 camDim = camera->GetDimensions();
 			Float projectionPlane = camera->GetProjectionPlane();
-			Matrix3 transform = camera->GetTransformation();
+			Matrix4 transform = camera->GetTransformation();
 
 			Programs::SkyBox->Use();
 
@@ -492,7 +492,7 @@ namespace GraphicsEngine
 		Programs::BlurBlend->resolution.Set(Resolution);
 		Programs::BlurBlend->textureData.Set(LightingBuffer.lock()->GetTexture());
 		Programs::BlurBlend->blurData.Set(BlurResult.lock()->GetTexture(), 1);
-		Programs::BlurBlend->transform.Set(Matrix3());
+		Programs::BlurBlend->transform.Set(Matrix4());
 
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); CheckGLErrors();
 

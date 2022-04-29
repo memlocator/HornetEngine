@@ -830,7 +830,7 @@ namespace Engine
 						{
 							lua_State* lua = GetGlobalLuaState();
 
-							FetchConnectedFunction(lua, functionId);
+							//FetchConnectedFunction(lua, functionId);
 
 							(CoreTypes<Arguments::Type>::Push(lua, arguments), ...);
 

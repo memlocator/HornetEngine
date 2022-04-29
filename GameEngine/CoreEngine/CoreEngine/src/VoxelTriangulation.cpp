@@ -57,9 +57,9 @@ namespace Engine
 		{
 			Face& face = identity.Faces[i];
 
-			Vector3 point1 = 0.5f * Interpolate(GetPoint(face.Point1, transformation)) + Center;
-			Vector3 point2 = 0.5f * Interpolate(GetPoint(face.Point2, transformation)) + Center;
-			Vector3 point3 = 0.5f * Interpolate(GetPoint(face.Point3, transformation)) + Center;
+			Vector3 point1 = 0.5_F * Interpolate(GetPoint(face.Point1, transformation)) + Center;
+			Vector3 point2 = 0.5_F * Interpolate(GetPoint(face.Point2, transformation)) + Center;
+			Vector3 point3 = 0.5_F * Interpolate(GetPoint(face.Point3, transformation)) + Center;
 
 			if ((point2 - point1).Cross(point3 - point1).SquareLength() > 0.0000001f)
 			{

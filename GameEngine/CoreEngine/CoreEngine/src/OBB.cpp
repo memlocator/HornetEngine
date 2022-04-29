@@ -9,7 +9,7 @@
 
 OBB OBB::Compute(const MeshData::VertexVector& vertices)
 {
-	Matrix3 covariance = PCA::ComputeCovariance(vertices);
+	Matrix4 covariance = PCA::ComputeCovariance(vertices);
 
 	PCA eigenData = PCA::Compute(covariance);
 
@@ -44,13 +44,13 @@ OBB OBB::Compute(const MeshData::VertexVector& vertices)
 		);
 	}
 
-	Vector3 middle = 0.5f * (min + max);
+	Vector3 middle = 0.5_F * (min + max);
 
 	OBB boundingBox;
 
 	boundingBox.Center = middle.X * eigenData.Axis1 + middle.Y * eigenData.Axis2 + middle.Z * eigenData.Axis3;
 	boundingBox.Size = max - min;
-	boundingBox.Transformation = Matrix3(boundingBox.Center, eigenData.Axis1, eigenData.Axis2, eigenData.Axis3) * Matrix3().Scale(boundingBox.Size);
+	boundingBox.Transformation = Matrix4(boundingBox.Center, eigenData.Axis1, eigenData.Axis2, eigenData.Axis3) * Matrix4(true).Scale(boundingBox.Size);
 
 	return boundingBox;
 }

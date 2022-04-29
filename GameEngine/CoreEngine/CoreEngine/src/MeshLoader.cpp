@@ -314,7 +314,7 @@ Vector3 MeshLoader::GetMeshCenter(int id)
 
 	const MeshInfo& data = MeshContainer.GetNode(id).GetData();
 
-	return 0.5f * (data.MinimumCorner + data.MaximumCorner);
+	return 0.5_F * (data.MinimumCorner + data.MaximumCorner);
 }
 
 Vector3 MeshLoader::GetMeshSize(int id)

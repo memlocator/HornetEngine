@@ -186,7 +186,7 @@ namespace GLSL
 		glUniformMatrix4fv(handle, 1, GL_TRUE, mat); CheckGLErrors();
 	}
 
-	bool Matrix::Set(const Matrix3& matrix)
+	bool Matrix::Set(const Matrix4& matrix)
 	{
 		Validate();
 

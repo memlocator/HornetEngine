@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "RGBA.h"
 #include "Aabb.h"
-#include "Matrix3.h"
+#include "Matrix4.h"
 #include "InputEnums.h"
 #include "Constants.h"
 
@@ -130,7 +130,7 @@ namespace Engine
 				Float ClosestDistance = std::numeric_limits<Float>::max();
 				GraphicsEngine::SceneObject* Object = nullptr;
 				SelectedAxis Axis = SelectedAxis::None;
-				Matrix3 Transformation;
+				Matrix4 Transformation;
 				const Mesh* RenderMesh = nullptr;
 			};
 
@@ -144,9 +144,9 @@ namespace Engine
 			{
 				std::shared_ptr<GraphicsEngine::SceneObject> Object;
 				std::shared_ptr<Transform> ObjectTransform;
-				Matrix3 InitialTransformation;
-				Matrix3 ParentInverseTransformation;
-				Matrix3 ParentTransformation;
+				Matrix4 InitialTransformation;
+				Matrix4 ParentInverseTransformation;
+				Matrix4 ParentTransformation;
 			};
 
 			typedef std::vector<MovingObjectData> MovingObjectVector;
@@ -174,8 +174,8 @@ namespace Engine
 			HandleMesh GetCoreMesh(const std::string& name) const;
 			void ProcessInput();
 			Aabb DrawSelection(ObjectHandleHit& closestHit, const Ray& ray, const std::shared_ptr<GraphicsEngine::Camera>& camera, const std::shared_ptr<GraphicsEngine::SceneObject>& object, bool isHovered);
-			bool DrawSelection(ObjectHandleHit& closestHit, const Ray& ray, const std::shared_ptr<GraphicsEngine::Camera>& camera, const Aabb& box, const Matrix3& transformation, const Matrix3& transformationInverse, bool drawHandles, bool isHovered);
-			bool DrawAxisHandle(const HandleMesh& mesh, const Ray& ray, const Matrix3& transformation, const Matrix3& inverseTransformation, ObjectHandleHit& closestHit, SelectedAxis axis);
+			bool DrawSelection(ObjectHandleHit& closestHit, const Ray& ray, const std::shared_ptr<GraphicsEngine::Camera>& camera, const Aabb& box, const Matrix4& transformation, const Matrix4& transformationInverse, bool drawHandles, bool isHovered);
+			bool DrawAxisHandle(const HandleMesh& mesh, const Ray& ray, const Matrix4& transformation, const Matrix4& inverseTransformation, ObjectHandleHit& closestHit, SelectedAxis axis);
 			void ProcessObjectInput(const std::shared_ptr<GraphicsEngine::SceneObject>& object, const Vector3& intersection);
 			void ProcessObjectInput(const std::shared_ptr<GraphicsEngine::SceneObject>& object, const Vector3& intersection, SelectedAxis axis);
 

@@ -129,7 +129,7 @@ float Window::Update()
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 
-	MouseInput.Position.Set(float(x), float(y), 0, 1);
+	MouseInput.Position.Set(x, y, 0, 1);
 	MouseInput.Delta = MouseInput.Position - MouseInput.LastPosition;
 	KeyboardInput.Keys = SDL_GetKeyboardState(0);
 

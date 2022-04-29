@@ -38,7 +38,7 @@ namespace Engine
 
 		WorldTransformationInverse.Invert(WorldTransformation);
 		WorldNormalTransformation = WorldTransformation.Inverted().Transpose();
-		WorldRotation = Matrix3().ExtractRotation(WorldTransformation);
+		WorldRotation = Matrix4(true).ExtractRotation(WorldTransformation);
 
 		if (HadParent)
 			OldParentTransform = inherited->GetWorldTransformation();
@@ -96,7 +96,7 @@ namespace Engine
 		return IsStaticTransformation;
 	}
 
-	void Transform::SetTransformation(const Matrix3& matrix)
+	void Transform::SetTransformation(const Matrix4& matrix)
 	{
 		Transformation = matrix;
 
@@ -105,7 +105,7 @@ namespace Engine
 		Recompute();
 	}
 
-	const Matrix3& Transform::GetTransformation()
+	const Matrix4& Transform::GetTransformation()
 	{
 		return Transformation;
 	}
@@ -175,12 +175,12 @@ namespace Engine
 		return WorldTransformation.Translation();
 	}
 
-	const Matrix3& Transform::GetWorldTransformation() const
+	const Matrix4& Transform::GetWorldTransformation() const
 	{
 		return WorldTransformation;
 	}
 
-	const Matrix3& Transform::GetWorldTransformation()
+	const Matrix4& Transform::GetWorldTransformation()
 	{
 		if (Moved || InheritTransformation)
 			Recompute();
@@ -188,12 +188,12 @@ namespace Engine
 		return WorldTransformation;
 	}
 
-	const Matrix3& Transform::GetWorldTransformationInverse() const
+	const Matrix4& Transform::GetWorldTransformationInverse() const
 	{
 		return WorldTransformationInverse;
 	}
 
-	const Matrix3& Transform::GetWorldTransformationInverse()
+	const Matrix4& Transform::GetWorldTransformationInverse()
 	{
 		if (Moved || InheritTransformation)
 			Recompute();
@@ -201,12 +201,12 @@ namespace Engine
 		return WorldTransformationInverse;
 	}
 
-	const Matrix3& Transform::GetWorldRotation() const
+	const Matrix4& Transform::GetWorldRotation() const
 	{
 		return WorldRotation;
 	}
 
-	const Matrix3& Transform::GetWorldRotation()
+	const Matrix4& Transform::GetWorldRotation()
 	{
 		if (Moved || InheritTransformation)
 			Recompute();
@@ -227,12 +227,12 @@ namespace Engine
 		return Quaternion(WorldTransformation);
 	}
 
-	const Matrix3& Transform::GetWorldNormalTransformation() const
+	const Matrix4& Transform::GetWorldNormalTransformation() const
 	{
 		return WorldNormalTransformation;
 	}
 
-	const Matrix3& Transform::GetWorldNormalTransformation()
+	const Matrix4& Transform::GetWorldNormalTransformation()
 	{
 		if (Moved || InheritTransformation)
 			Recompute();
@@ -255,7 +255,7 @@ namespace Engine
 
 	void Transform::SetOrientation(const Quaternion& orientation)
 	{
-		Transformation = Matrix3(orientation).SetTranslation(Transformation.Translation());
+		Transformation = Matrix4(orientation).SetTranslation(Transformation.Translation());
 	}
 
 	void Transform::Rotate(const Quaternion& rotation)
@@ -264,7 +264,7 @@ namespace Engine
 
 		Transformation.SetTranslation(Vector3());
 		
-		Transformation = (Matrix3(rotation) * Transformation).SetTranslation(translation);
+		Transformation = (Matrix4(rotation) * Transformation).SetTranslation(translation);
 	}
 
 	void Transform::Rotate(const Vector3& axis, float angle)
@@ -273,7 +273,7 @@ namespace Engine
 
 		Transformation.SetTranslation(Vector3());
 
-		Transformation = (Matrix3().RotateAxis(axis, angle) * Transformation).SetTranslation(translation);
+		Transformation = (Matrix4(true).RotateAxis(axis, angle) * Transformation).SetTranslation(translation);
 	}
 
 	Vector3 Transform::GetEulerAngles() const
@@ -291,12 +291,12 @@ namespace Engine
 
 	void Transform::SetEulerAngles(const Vector3& angles)
 	{
-		Transformation = Matrix3::EulerAnglesRotation(angles.X, angles.Y, angles.Z).SetTranslation(Transformation.Translation());
+		Transformation = Matrix4::EulerAnglesRotation(angles.X, angles.Y, angles.Z).SetTranslation(Transformation.Translation());
 	}
 
 	void Transform::SetEulerAngles(float pitch, float roll, float yaw)
 	{
-		Transformation = Matrix3::EulerAnglesRotation(pitch, roll, yaw).SetTranslation(Transformation.Translation());
+		Transformation = Matrix4::EulerAnglesRotation(pitch, roll, yaw).SetTranslation(Transformation.Translation());
 	}
 
 	void Transform::Rotate(const Vector3& angles)
@@ -305,7 +305,7 @@ namespace Engine
 
 		Transformation.SetTranslation(Vector3());
 
-		Transformation = (Matrix3::EulerAnglesRotation(angles.X, angles.Y, angles.Z) * Transformation).SetTranslation(translation);
+		Transformation = (Matrix4::EulerAnglesRotation(angles.X, angles.Y, angles.Z) * Transformation).SetTranslation(translation);
 	}
 
 	void Transform::Rotate(float pitch, float roll, float yaw)
@@ -314,7 +314,7 @@ namespace Engine
 
 		Transformation.SetTranslation(Vector3());
 
-		Transformation = (Matrix3::EulerAnglesRotation(pitch, roll, yaw) * Transformation).SetTranslation(translation);
+		Transformation = (Matrix4::EulerAnglesRotation(pitch, roll, yaw) * Transformation).SetTranslation(translation);
 	}
 
 	Vector3 Transform::GetEulerAnglesYaw() const
@@ -332,12 +332,12 @@ namespace Engine
 
 	void Transform::SetEulerAnglesYaw(float yaw, float pitch, float roll)
 	{
-		Transformation = Matrix3::EulerAnglesYawRotation(yaw, pitch, roll).SetTranslation(Transformation.Translation());
+		Transformation = Matrix4::EulerAnglesYawRotation(yaw, pitch, roll).SetTranslation(Transformation.Translation());
 	}
 
 	void Transform::SetEulerAnglesYaw(const Vector3& angles)
 	{
-		Transformation = Matrix3::EulerAnglesYawRotation(angles.X, angles.Y, angles.Z).SetTranslation(Transformation.Translation());
+		Transformation = Matrix4::EulerAnglesYawRotation(angles.X, angles.Y, angles.Z).SetTranslation(Transformation.Translation());
 	}
 
 	void Transform::RotateYaw(const Vector3& angles)
@@ -346,7 +346,7 @@ namespace Engine
 
 		Transformation.SetTranslation(Vector3());
 
-		Transformation = (Matrix3::EulerAnglesYawRotation(angles.X, angles.Y, angles.Z) * Transformation).SetTranslation(translation);
+		Transformation = (Matrix4::EulerAnglesYawRotation(angles.X, angles.Y, angles.Z) * Transformation).SetTranslation(translation);
 	}
 
 	void Transform::RotateYaw(float yaw, float pitch, float roll)
@@ -355,7 +355,7 @@ namespace Engine
 
 		Transformation.SetTranslation(Vector3());
 
-		Transformation = (Matrix3::EulerAnglesYawRotation(yaw, pitch, roll) * Transformation).SetTranslation(translation);
+		Transformation = (Matrix4::EulerAnglesYawRotation(yaw, pitch, roll) * Transformation).SetTranslation(translation);
 	}
 
 	Vector3 Transform::GetScale() const
@@ -385,17 +385,17 @@ namespace Engine
 		Transformation.SetFront(Transformation.FrontVector() * scale.Z);
 	}
 
-	void Transform::TransformBy(const Matrix3& transformation)
+	void Transform::TransformBy(const Matrix4& transformation)
 	{
 		Transformation = transformation * Transformation;
 	}
 
 	void Transform::TransformBy(const Quaternion& transformation, const Vector3& point)
 	{
-		Transformation = Matrix3(transformation).SetTranslation(point) * Transformation;
+		Transformation = Matrix4(transformation).SetTranslation(point) * Transformation;
 	}
 
-	void Transform::TransformByRelative(const Matrix3& transformation)
+	void Transform::TransformByRelative(const Matrix4& transformation)
 	{
 		Vector3 translation = Transformation.Translation();
 
@@ -410,6 +410,6 @@ namespace Engine
 
 		Transformation.SetTranslation(Vector3());
 
-		Transformation = (Matrix3(transformation).SetTranslation(point) * Transformation).SetTranslation(translation);
+		Transformation = (Matrix4(transformation).SetTranslation(point) * Transformation).SetTranslation(translation);
 	}
 }

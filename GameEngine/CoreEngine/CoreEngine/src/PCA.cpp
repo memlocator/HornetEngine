@@ -2,14 +2,14 @@
 
 #include "MeshData.h"
 
-PCA PCA::Compute(const Matrix3& covariance, int maxIterations, Float epsilon)
+PCA PCA::Compute(const Matrix4& covariance, int maxIterations, Float epsilon)
 {
-	Matrix3 eigenVectors;
-	Matrix3 diagonal = covariance;
+	Matrix4 eigenVectors;
+	Matrix4 diagonal = covariance;
 
 	for (int i = 0; i < maxIterations; ++i)
 	{
-		Matrix3 rotation = ComputeJacobiRotation(diagonal);
+		Matrix4 rotation = ComputeJacobiRotation(diagonal);
 
 		eigenVectors = eigenVectors * rotation;
 		diagonal = diagonal * rotation;
@@ -39,7 +39,7 @@ PCA PCA::Compute(const Matrix3& covariance, int maxIterations, Float epsilon)
 	return results;
 }
 
-Matrix3 PCA::ComputeCovariance(const MeshData::VertexVector& vertices)
+Matrix4 PCA::ComputeCovariance(const MeshData::VertexVector& vertices)
 {
 	Vector3 mean(0, 0, 0);
 
@@ -48,7 +48,7 @@ Matrix3 PCA::ComputeCovariance(const MeshData::VertexVector& vertices)
 
 	mean *= 1 / Float(vertices.size());
 
-	Matrix3 covariance;
+	Matrix4 covariance;
 
 	covariance.Data[0][0] = 0;
 	covariance.Data[1][1] = 0;
@@ -93,13 +93,13 @@ namespace
 	}
 }
 
-Matrix3 PCA::ComputeJacobiRotation(const Matrix3& matrix)
+Matrix4 PCA::ComputeJacobiRotation(const Matrix4& matrix)
 {
 	Float val1 = abs(matrix.Data[0][1]);
 	Float val2 = abs(matrix.Data[0][2]);
 	Float val3 = abs(matrix.Data[1][2]);
 
-	Matrix3 rotation;
+	Matrix4 rotation;
 
 	if (val1 > val2&& val1 > val3)
 	{

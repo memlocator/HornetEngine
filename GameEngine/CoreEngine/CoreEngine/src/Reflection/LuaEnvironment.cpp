@@ -154,6 +154,22 @@ namespace Engine
 				bound.Scope = scope;
 
 				lua_setglobal(lua, type->Name);
+
+				for (int j = 0; j < (int)type->Aliases.size(); ++j)
+				{
+					int scopeIndex = global->GetScopeIndexFromName(type->Aliases[j]);
+					const Meta::ReflectedTypes* scope = global->GetScope(scopeIndex);
+
+					if (scopeIndex != -1)
+						pushedScopes[scopeIndex] = true;
+
+					BoundScope& bound = BoundScope::MakeBinding(lua);
+
+					bound.Type = type;
+					bound.Scope = scope;
+
+					lua_setglobal(lua, type->Aliases[j].c_str());
+				}
 			}
 
 			for (int i = 0; i < global->GetScopeCount(); ++i)

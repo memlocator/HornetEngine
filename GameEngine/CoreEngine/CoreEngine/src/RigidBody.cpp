@@ -23,7 +23,7 @@ namespace Engine
 			if (transform == nullptr)
 				return;
 
-			float mass = GetMass();
+			Float mass = GetMass();
 			Vector3 acceleration;
 
 			if (mass != 0)
@@ -62,9 +62,9 @@ namespace Engine
 			return Mass[index].lock();
 		}
 
-		float RigidBody::GetMass() const
+		Float RigidBody::GetMass() const
 		{
-			float total = 0;
+			Float total = 0;
 
 			for (int i = 0; i < int(Mass.size()); ++i)
 				if (!Mass[i].expired())
@@ -78,7 +78,7 @@ namespace Engine
 			if (Mass.size() == 0)
 				return Vector3();
 
-			float mass = 0;
+			Float mass = 0;
 			Vector3 center;
 
 			for (int i = 0; i < int(Mass.size()); ++i)

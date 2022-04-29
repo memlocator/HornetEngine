@@ -98,10 +98,10 @@ namespace GLSL
 	public:
 		Constructor(Matrix);
 
-		bool Set(const Matrix3& matrix);
+		bool Set(const Matrix4& matrix);
 
 	private:
-		Matrix3 CurrentValue;
+		Matrix4 CurrentValue;
 		bool Initialized = false;
 	};
 

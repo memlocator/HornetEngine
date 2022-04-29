@@ -12,7 +12,7 @@ namespace Engine
 		public:
 			~PointMass() {}
 
-			float Mass = 1;
+			Float Mass = 1;
 			Vector3 Position;
 		};
 	}

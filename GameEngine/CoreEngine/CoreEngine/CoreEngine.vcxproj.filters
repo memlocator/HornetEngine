@@ -178,6 +178,12 @@
     <Filter Include="Source Files\Source\Engine\MetaReflection\Lua">
       <UniqueIdentifier>{8e03a61f-a8a3-41c0-a664-ad94641aae29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Source\Engine\Types\Math">
+      <UniqueIdentifier>{0dc9a54c-8c62-49d7-a0f5-a7c55d735796}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Source\Engine\Types\Primitives">
+      <UniqueIdentifier>{75d5f5dd-4325-483a-b7a6-492b1db0e8f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Graphics.cpp">
@@ -261,15 +267,6 @@
     <ClCompile Include="src\RGBA.cpp">
       <Filter>Source Files\Source\Engine\Types</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vector3.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Quaternion.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Matrix3.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
     <ClCompile Include="src\TaskScheduler.cpp">
       <Filter>Source Files\Source\Engine\Scheduling</Filter>
     </ClCompile>
@@ -317,18 +314,6 @@
     </ClCompile>
     <ClCompile Include="src\AabbTree.cpp">
       <Filter>Source Files\Source\Engine\Structures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Aabb.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frustum.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ray.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Plane.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
     </ClCompile>
     <ClCompile Include="src\OcclusionTree.cpp">
       <Filter>Source Files\Source\Engine\Structures</Filter>
@@ -383,12 +368,6 @@
     </ClCompile>
     <ClCompile Include="src\CanvasStencil.cpp">
       <Filter>Source Files\Source\Graphics\Objects\Screen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoundingSphere.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OBB.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
     </ClCompile>
     <ClCompile Include="src\PCA.cpp">
       <Filter>Source Files\Source\Engine\Types</Filter>
@@ -558,34 +537,13 @@
     <ClCompile Include="src\Event.cpp">
       <Filter>Source Files\Source\Engine\Scheduling</Filter>
     </ClCompile>
-    <ClCompile Include="src\Aabb.meta.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoundingSphere.meta.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
     <ClCompile Include="src\DeviceVector.meta.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Matrix3.meta.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OBB.meta.cpp">
       <Filter>Source Files\Source\Engine\Types</Filter>
     </ClCompile>
     <ClCompile Include="src\PointGenerator.meta.cpp">
       <Filter>Source Files\Source\Engine\Types</Filter>
     </ClCompile>
-    <ClCompile Include="src\Quaternion.meta.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ray.meta.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
     <ClCompile Include="src\RGBA.meta.cpp">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Vector3.meta.cpp">
       <Filter>Source Files\Source\Engine\Types</Filter>
     </ClCompile>
     <ClCompile Include="src\Environment.meta.cpp">
@@ -873,6 +831,72 @@
     <ClCompile Include="src\Precision.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vector3.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector3.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quaternion.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quaternion.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Matrix4.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Matrix4.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Aabb.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Aabb.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoundingSphere.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoundingSphere.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frustum.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OBB.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OBB.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Plane.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ray.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ray.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2S.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector3S.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector3S.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2S.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">
@@ -962,15 +986,6 @@
     <ClInclude Include="src\RGBA.h">
       <Filter>Source Files\Source\Engine\Types</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vector3.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Quaternion.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Matrix3.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
     <ClInclude Include="src\Constants.h">
       <Filter>Source Files\Source\Engine</Filter>
     </ClInclude>
@@ -1031,18 +1046,6 @@
     <ClInclude Include="src\AabbTree.h">
       <Filter>Source Files\Source\Engine\Structures</Filter>
     </ClInclude>
-    <ClInclude Include="src\Aabb.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frustum.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ray.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Plane.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
     <ClInclude Include="src\OcclusionTree.h">
       <Filter>Source Files\Source\Engine\Structures</Filter>
     </ClInclude>
@@ -1096,12 +1099,6 @@
     </ClInclude>
     <ClInclude Include="src\CanvasStencil.h">
       <Filter>Source Files\Source\Graphics\Objects\Screen</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BoundingSphere.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OBB.h">
-      <Filter>Source Files\Source\Engine\Types</Filter>
     </ClInclude>
     <ClInclude Include="src\PCA.h">
       <Filter>Source Files\Source\Engine\Types</Filter>
@@ -1345,6 +1342,42 @@
     </ClInclude>
     <ClInclude Include="src\Precision.h">
       <Filter>Source Files\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector3.h">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Quaternion.h">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Matrix4.h">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Aabb.h">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BoundingSphere.h">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frustum.h">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OBB.h">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Plane.h">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ray.h">
+      <Filter>Source Files\Source\Engine\Types\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector2.h">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector2S.h">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector3S.h">
+      <Filter>Source Files\Source\Engine\Types\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

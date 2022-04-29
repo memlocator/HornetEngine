@@ -53,7 +53,7 @@ namespace Engine
 					"GetTransformation",
 					Overload(
 						Const,
-						Returns<Matrix3>()
+						Returns<Matrix4>()
 					).Bind<SceneObject, &SceneObject::GetTransformation>()
 				),
 
@@ -61,7 +61,7 @@ namespace Engine
 					"GetInverseTransformation",
 					Overload(
 						Const,
-						Returns<Matrix3>()
+						Returns<Matrix4>()
 					).Bind<SceneObject, &SceneObject::GetInverseTransformation>()
 				),
 

@@ -19,10 +19,10 @@ namespace Engine
 
 				Constructor(
 					Overload(
-						Argument<Float, Default((Float)0.0)>("w"),
-						Argument<Float, Default((Float)0.0)>("x"),
-						Argument<Float, Default((Float)0.0)>("y"),
-						Argument<Float, Default((Float)0.0)>("z")
+						Argument<Float, Default(0.0_F)>("w"),
+						Argument<Float, Default(0.0_F)>("x"),
+						Argument<Float, Default(0.0_F)>("y"),
+						Argument<Float, Default(0.0_F)>("z")
 					),
 
 					Overload(
@@ -39,7 +39,7 @@ namespace Engine
 						Argument<const Vector3&>("vector")
 					),
 					Overload(
-						Argument<const Matrix3&>("matrix")
+						Argument<const Matrix4&>("matrix")
 					)
 				),
 
@@ -74,7 +74,7 @@ namespace Engine
 					"Matrix",
 					Overload(
 						Const,
-						Returns<Matrix3>()
+						Returns<Matrix4>()
 					).Bind<Quaternion, &Quaternion::Matrix>()
 				),
 
