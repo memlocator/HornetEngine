@@ -3,7 +3,7 @@
 #include "Vector3.h"
 #include "Constants.h"
 
-#include <cmath>
+import <cmath>;
 
 class VectorGenerator
 {

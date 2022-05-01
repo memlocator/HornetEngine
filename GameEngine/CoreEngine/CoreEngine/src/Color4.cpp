@@ -1,8 +1,8 @@
-#include "RGBA.h"
+#include "Color4.h"
 
-#include <sstream>
+import <sstream>;
 
-RGBA& RGBA::Set(float r, float g, float b, float a)
+Color4& Color4::Set(float r, float g, float b, float a)
 {
 	R = r;
 	G = g;
@@ -12,9 +12,9 @@ RGBA& RGBA::Set(float r, float g, float b, float a)
 	return *this;
 }
 
-RGBA RGBA::Lerp(const RGBA& end, float t) const
+Color4 Color4::Lerp(const Color4& end, float t) const
 {
-	return RGBA(
+	return Color4(
 		(1 - t) * R + t * end.R,
 		(1 - t) * G + t * end.G,
 		(1 - t) * B + t * end.B,
@@ -22,7 +22,7 @@ RGBA RGBA::Lerp(const RGBA& end, float t) const
 	);
 }
 
-unsigned int RGBA::ARGB() const
+unsigned int Color4::ARGB() const
 {
 	return (
 		(int(A * 255) << 24) +
@@ -32,7 +32,7 @@ unsigned int RGBA::ARGB() const
 		);
 }
 
-unsigned int RGBA::ABGR() const
+unsigned int Color4::ABGR() const
 {
 	return (
 		(int(A * 255) % 256 << 24) +
@@ -42,17 +42,17 @@ unsigned int RGBA::ABGR() const
 		);
 }
 
-bool RGBA::operator==(const RGBA& color) const
+bool Color4::operator==(const Color4& color) const
 {
 	return (R == color.R) && (G == color.G) && (B == color.B) && (A == color.A);
 }
 
-bool RGBA::operator!=(const RGBA& color) const
+bool Color4::operator!=(const Color4& color) const
 {
 	return !(*this == color);
 }
 
-RGBA::operator unsigned int() const
+Color4::operator unsigned int() const
 {
 	return (
 		(int(R * 255) << 24) +
@@ -62,19 +62,19 @@ RGBA::operator unsigned int() const
 		);
 }
 
-RGBA::operator Vector3() const
+Color4::operator Vector3() const
 {
 	return Vector3((Float)R, (Float)G, (Float)B, (Float)A);
 }
 
-RGBA& RGBA::operator=(const RGBA& other)
+Color4& Color4::operator=(const Color4& other)
 {
 	Set(other.R, other.G, other.B, other.A);
 
 	return *this;
 }
 
-RGBA::operator std::string() const
+Color4::operator std::string() const
 {
 	std::stringstream out;
 
@@ -83,7 +83,7 @@ RGBA::operator std::string() const
 	return out.str();
 }
 
-std::ostream& operator<<(std::ostream& out, const RGBA& color)
+std::ostream& operator<<(std::ostream& out, const Color4& color)
 {
 	return out << "{ R: " << color.R << ", G: " << color.G << ", B: " << color.B << ", A: " << color.A << " }";
 }

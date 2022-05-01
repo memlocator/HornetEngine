@@ -29,15 +29,15 @@ explorerFrameTransform.Parent = explorerTransform
 
 local barAppearance = GameObject.Appearance()
 barAppearance.Parent = explorerTransform
-barAppearance.Color = RGBA(1, 1, 1, 1)
+barAppearance.Color = Color4(1, 1, 1, 1)
 
 local backgroundAppearance = GameObject.Appearance()
 backgroundAppearance.Parent = explorerTransform
-backgroundAppearance.Color = RGBA(0, 0, 0, 0.5)
+backgroundAppearance.Color = Color4(0, 0, 0, 0.5)
 
 local splitterAppearance = GameObject.Appearance()
 splitterAppearance.Parent = explorerTransform
-splitterAppearance.Color = RGBA(0.8, 0.8, 0.8, 0.4)
+splitterAppearance.Color = Color4(0.8, 0.8, 0.8, 0.4)
 
 local explorerScrollBar = GameObject.ScrollBar()
 explorerScrollBar.FrameTransform.Size = DeviceVector(0, 20, 1, 0)

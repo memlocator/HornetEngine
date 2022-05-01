@@ -1,6 +1,6 @@
 #include "DebugPrintMeta.h"
 
-#include <iostream>
+import <iostream>;
 
 namespace Engine
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+import <memory>;
 
 #include "ObjectAllocator.h"
 #include "Reflection/Reflected.h"

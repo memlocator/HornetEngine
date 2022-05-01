@@ -1,7 +1,7 @@
 #include "BoundingSphere.h"
 
-#include <algorithm>
-#include <numeric>
+import <algorithm>;
+import <numeric>;
 #include "PCA.h"
 #include "MeshLoader.h"
 #include "ModelAsset.h"

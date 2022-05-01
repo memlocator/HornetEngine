@@ -1,10 +1,10 @@
 #pragma once
 
-#include <forward_list>
-#include <vector>
-#include <exception>
-#include <sstream>
-#include <source_location>
+import <forward_list>;
+import <vector>;
+import <exception>;
+import <sstream>;
+import <source_location>;
 
 class IdentifierHeapException : public std::exception
 {

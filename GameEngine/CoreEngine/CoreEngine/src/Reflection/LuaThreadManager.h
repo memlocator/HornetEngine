@@ -1,7 +1,7 @@
 #pragma once
 
-#include <functional>
-#include <string>
+import <functional>;
+import <string>;
 
 struct lua_State;
 

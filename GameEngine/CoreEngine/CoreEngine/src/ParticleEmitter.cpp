@@ -1,6 +1,6 @@
 #include "ParticleEmitter.h"
 
-#include <iostream>
+import <iostream>;
 
 #include "PointGenerator.h"
 #include "Graphics.h"

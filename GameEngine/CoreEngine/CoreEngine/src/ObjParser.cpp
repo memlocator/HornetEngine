@@ -1,9 +1,9 @@
 #include "ObjParser.h"
-#include <cmath>
+import <cmath>;
 
-#include <fstream>
-#include <sstream>
-#include <exception>
+import <fstream>;
+import <sstream>;
+import <exception>;
 
 std::string ObjParser::Output(const std::string& filePath, int lineNumber, const std::string& error)
 {
@@ -40,8 +40,8 @@ void ObjParser::Parse(const std::string& filePath)
 	if (!file.is_open() || !file.good())
 		throw std::string(std::system_error(errno, std::system_category(), "failed to open " + filePath).what());
 
-	unsigned int col = RGBA(0.5f, 1, 0.25f, 1);
-	RGBA rgb = RGBA(col);
+	unsigned int col = Color4(0.5f, 1, 0.25f, 1);
+	Color4 rgb = Color4(col);
 
 	Mode = ParseMode::Seek;
 
@@ -119,7 +119,7 @@ void ObjParser::Parse(const std::string& filePath)
 			}
 		}
 
-		Colors.push_back(RGBA(1.f, 1.f, 1.f, 1.f));
+		Colors.push_back(Color4(1.f, 1.f, 1.f, 1.f));
 		UVs.push_back(Vector3());
 	}
 	catch (std::string& error)

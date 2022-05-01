@@ -1,8 +1,8 @@
 #include "ColliderData.h"
 
-#include <cstdarg>
-#include <limits>
-#include <algorithm>
+import <cstdarg>;
+import <limits>;
+import <algorithm>;
 
 namespace Engine
 {

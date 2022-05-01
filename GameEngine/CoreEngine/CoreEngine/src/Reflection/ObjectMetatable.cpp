@@ -1,6 +1,6 @@
 #include "ObjectMetatable.h"
 
-#include <iostream>
+import <iostream>;
 
 #include "MetaData.h"
 #include "LuaError.h"

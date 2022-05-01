@@ -2,8 +2,8 @@
 
 #include "Font.h"
 
-#include <vector>
-#include <map>
+import <vector>;
+import <map>;
 
 #include "Object.h"
 

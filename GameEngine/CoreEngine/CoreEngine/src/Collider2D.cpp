@@ -1,6 +1,6 @@
 #include "Collider2D.h"
 
-#include <algorithm>
+import <algorithm>;
 
 #include "Transform.h"
 #include "RigidBody.h"

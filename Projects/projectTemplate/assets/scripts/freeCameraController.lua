@@ -44,6 +44,8 @@ coroutine.wrap(function()
 
 		local camera = This:GetComponent("Camera")
 
+		--print(delta, camera, This)
+
 		if camera then
 			local x = 0
 			local y = 0
@@ -78,7 +80,7 @@ coroutine.wrap(function()
 			if bindings.UpKey:GetState() then
 				y = delta * speed
 			end
-			
+
 			if bindings.TurnKey:GetState() then
 				local currentPosition = bindings.MovementInput:GetPosition()
 				local mouseDelta = currentPosition - previousPosition
@@ -91,10 +93,10 @@ coroutine.wrap(function()
 				previousPosition = bindings.MovementInput:GetPosition()
 			end
 
-			local transform = camera:GetTransformation() * Matrix3(x, y, z)
-			local rotation = (Matrix3.YawRotation(yaw) * Matrix3.PitchRotation(pitch)):TransformedAround(transform:Translation())
+			local transform = camera:GetTransformation() * Matrix4(x, y, z)
+			local rotation = (Matrix4.YawRotation(yaw) * Matrix4.PitchRotation(pitch)):TransformedAround(transform:Translation())
 
-			camera:SetTransformation(rotation * Matrix3(transform:Translation()))
+			camera:SetTransformation(rotation * Matrix4(transform:Translation()))
 		end
 	end
 end)()

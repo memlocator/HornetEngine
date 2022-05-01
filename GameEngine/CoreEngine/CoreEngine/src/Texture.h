@@ -1,12 +1,12 @@
 #pragma once
 
-#include <string>
+import <string>;
 extern "C" {
 #include "glew.h"
 }
 
 #include "Vector3.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Object.h"
 #include "Dimensions.h"
 
@@ -40,9 +40,9 @@ namespace GraphicsEngine
 		{
 			enum InternalFormat
 			{
-				RGBA = GL_RGBA,
+				Color4 = GL_RGBA,
 				Depth24Stencil8 = GL_DEPTH24_STENCIL8,
-				RGBA16F = GL_RGBA16F,
+				Color416F = GL_RGBA16F,
 				RGB32F = GL_RGB32F,
 				RGB8 = GL_RGB8,
 				RG32F = GL_RG32F,
@@ -54,7 +54,7 @@ namespace GraphicsEngine
 		{
 			enum Format
 			{
-				RGBA = GL_RGBA,
+				Color4 = GL_RGBA,
 				RGB = GL_RGB,
 				RG = GL_RG,
 				Red = GL_RED,
@@ -82,19 +82,19 @@ namespace GraphicsEngine
 
 		void Resize(int width, int height);
 		void Resize(Dimensions size);
-		void Load(int width, int height, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte , EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA, bool invertedY = false);
-		void Load(const std::string& fileName, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA, bool isDXT5 = false);
-		void Load(int width, int height, unsigned char* pixelData, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA, bool invertedY = false);
-		void Upload(int width, int height, void* pixelData, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA);
+		void Load(int width, int height, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte , EInternalFormat internalFormat = EInternalFormat::Color4, EFormat format = EFormat::Color4, bool invertedY = false);
+		void Load(const std::string& fileName, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::Color4, EFormat format = EFormat::Color4, bool isDXT5 = false);
+		void Load(int width, int height, unsigned char* pixelData, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::Color4, EFormat format = EFormat::Color4, bool invertedY = false);
+		void Upload(int width, int height, void* pixelData, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::Color4, EFormat format = EFormat::Color4);
 		GLuint GetTextureID() const;
 		int GetWidth() const;
 		int GetHeight() const;
 		Vector3 GetResolution() const;
 		unsigned char* GetPixelData();
-		RGBA GetPixel(int x, int y) const;
+		Color4 GetPixel(int x, int y) const;
 		bool HasInvertedY() const;
 
-		void LoadPiece(const std::string& fileName, int x, int y, int width, int height, EDataType dataType = EDataType::UnsignedByte, EFormat format = EFormat::RGBA);
+		void LoadPiece(const std::string& fileName, int x, int y, int width, int height, EDataType dataType = EDataType::UnsignedByte, EFormat format = EFormat::Color4);
 
 	private:
 		GLint SampleType = GL_NEAREST;

@@ -5,6 +5,8 @@
 #include "Reflection/LuaTypeBinding.h"
 #include <lua.hpp>
 
+import <iostream>;
+
 namespace Engine
 {
 	void LuaScript::Initialize()
@@ -95,6 +97,7 @@ namespace Engine
 		ThreadID = Lua::Spawn(Source, GetFullName() + "[" + Path + "]",
 			[this] (lua_State* lua) -> int
 			{
+				std::cout << "pushing This" << std::endl;
 				lua_pushstring(lua, "This");
 
 				Engine::Lua::BindType<std::shared_ptr<Object>>::Push(lua, This.lock());

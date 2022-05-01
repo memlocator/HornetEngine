@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+import <vector>;
 #include <glew.h>
 
 #include "Dimensions.h"

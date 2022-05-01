@@ -36,8 +36,8 @@ namespace GraphicsEngine
 			Programs::Screen->SetTexture(nullptr);
 			Programs::Screen->blendTexture.Set(false);
 
-			Programs::Screen->color.Set(RGBA());
-			Programs::Screen->textureColor.Set(RGBA());
+			Programs::Screen->color.Set(Color4());
+			Programs::Screen->textureColor.Set(Color4());
 
 			Programs::Screen->uvScale.Set(Vector3(1, 1));
 			Programs::Screen->uvOffset.Set(Vector3());

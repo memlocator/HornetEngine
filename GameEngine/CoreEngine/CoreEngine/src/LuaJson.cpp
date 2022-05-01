@@ -1,8 +1,8 @@
 #include "LuaJson.h"
 
-#include <fstream>
-#include <sstream>
-#include <iostream>
+import <fstream>;
+import <sstream>;
+import <iostream>;
 #include <lua.hpp>
 
 #include "Reflection/LuaError.h"

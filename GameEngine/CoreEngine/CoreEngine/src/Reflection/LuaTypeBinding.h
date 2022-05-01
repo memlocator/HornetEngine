@@ -1,8 +1,8 @@
 #pragma once
 
 #include <lua.hpp>
-#include <string>
-#include <memory>
+import <string>;
+import <memory>;
 
 #include "BoundObject.h"
 #include "../Object.h"

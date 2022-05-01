@@ -73,18 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\fmod;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(SolutionDir)CoreEngine\dependencies\include\asio\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\fmod\;$(SolutionDir)CoreEngine\dependencies\lib\glew\glew_release\Win32\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs32\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x86\;$(LibraryPath)</LibraryPath>
+    <PublicIncludeDirectories>$(SolutionDir)CoreEngin\CoreEngine\src</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\fmod;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(SolutionDir)CoreEngine\dependencies\include\asio\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\fmod\;$(SolutionDir)CoreEngine\dependencies\lib\glew\glew_release\Win32\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs32\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x86\;$(LibraryPath)</LibraryPath>
+    <PublicIncludeDirectories>$(SolutionDir)CoreEngin\CoreEngine\src</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\asio\;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\glew\Release\x64\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs64\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x64\;$(LibraryPath)</LibraryPath>
+    <PublicIncludeDirectories>$(SolutionDir)CoreEngin\CoreEngine\src</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)CoreEngine\dependencies\include\asio\;$(SolutionDir)CoreEngine\dependencies\include\GL\;$(SolutionDir)CoreEngine\dependencies\include\lua\;$(SolutionDir)CoreEngine\dependencies\include\sdl\;$(SolutionDir)CoreEngine\dependencies\include\stb\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)CoreEngine\dependencies\lib\glew\Release\x64\;$(SolutionDir)CoreEngine\dependencies\lib\lua\msvs64\;$(SolutionDir)CoreEngine\dependencies\lib\sdl\x64\;$(LibraryPath)</LibraryPath>
+    <PublicIncludeDirectories>$(SolutionDir)CoreEngin\CoreEngine\src</PublicIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -94,15 +98,17 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
-      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26812;4005;5105;5106</DisableSpecificWarnings>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <AdditionalOptions>/we4244 /we4838 %(AdditionalOptions)</AdditionalOptions>
+      <EnableModules>true</EnableModules>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -117,11 +123,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
-      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26812;4005;5105;5106</DisableSpecificWarnings>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <AdditionalOptions>/we4244 /we4838 %(AdditionalOptions)</AdditionalOptions>
+      <EnableModules>true</EnableModules>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <AdditionalDependencies>fmod_vc.lib;lua53.lib;opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -134,10 +142,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableSpecificWarnings>26812;4005;5105;5106</DisableSpecificWarnings>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <AdditionalOptions>/we4244 /we4838 %(AdditionalOptions)</AdditionalOptions>
+      <EnableModules>true</EnableModules>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lua53.lib;opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -152,9 +162,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
-      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26812;4005;5105;5106</DisableSpecificWarnings>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -162,6 +172,8 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <InlineFunctionExpansion>
       </InlineFunctionExpansion>
+      <EnableModules>true</EnableModules>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -212,6 +224,7 @@
     <ClCompile Include="src\CollisionGroup.meta.cpp" />
     <ClCompile Include="src\Connection.cpp" />
     <ClCompile Include="src\Connection.meta.cpp" />
+    <ClCompile Include="src\Coordinates.cpp" />
     <ClCompile Include="src\Coordinates.meta.cpp" />
     <ClCompile Include="src\CubeMap.meta.cpp" />
     <ClCompile Include="src\DebugDraw.cpp" />
@@ -260,6 +273,7 @@
     <ClCompile Include="src\HalfBoundingVolume.cpp" />
     <ClCompile Include="src\HDRColorCorrectionOperation.cpp" />
     <ClCompile Include="src\HDRColorCorrectionOperation.meta.cpp" />
+    <ClCompile Include="src\ImportSTL.ixx" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\InputContext.cpp" />
     <ClCompile Include="src\InputContext.meta.cpp" />
@@ -287,7 +301,7 @@
     <ClCompile Include="src\Material.meta.cpp" />
     <ClCompile Include="src\Materials.cpp" />
     <ClCompile Include="src\Materials.meta.cpp" />
-    <ClCompile Include="src\Matrix4.cpp" />
+    <ClCompile Include="src\Matrix3.meta.cpp" />
     <ClCompile Include="src\Matrix4.meta.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshData.cpp" />
@@ -344,8 +358,8 @@
     <ClCompile Include="src\Reflection\Reflection.cpp" />
     <ClCompile Include="src\RenderOperation.cpp" />
     <ClCompile Include="src\RenderOperation.meta.cpp" />
-    <ClCompile Include="src\RGBA.cpp" />
-    <ClCompile Include="src\RGBA.meta.cpp" />
+    <ClCompile Include="src\Color4.cpp" />
+    <ClCompile Include="src\Color4.meta.cpp" />
     <ClCompile Include="src\RigidBody.cpp" />
     <ClCompile Include="src\RigidBody.meta.cpp" />
     <ClCompile Include="src\RingMesh.cpp" />
@@ -402,13 +416,9 @@
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\Transform.meta.cpp" />
     <ClCompile Include="src\Uniform.cpp" />
-    <ClCompile Include="src\Vector2.cpp" />
     <ClCompile Include="src\Vector2.meta.cpp" />
-    <ClCompile Include="src\Vector2S.cpp" />
     <ClCompile Include="src\Vector2S.meta.cpp" />
-    <ClCompile Include="src\Vector3.cpp" />
     <ClCompile Include="src\Vector3.meta.cpp" />
-    <ClCompile Include="src\Vector3S.cpp" />
     <ClCompile Include="src\Vector3S.meta.cpp" />
     <ClCompile Include="src\VertexModeEnum.meta.cpp" />
     <ClCompile Include="src\Voxel.cpp" />
@@ -454,6 +464,9 @@
     <ClInclude Include="src\LightBuffer.h" />
     <ClInclude Include="src\LinkedReference.h" />
     <ClInclude Include="src\LuaPackage.h" />
+    <ClInclude Include="src\Matrix3-decl.h" />
+    <ClInclude Include="src\Matrix3.h" />
+    <ClInclude Include="src\Matrix4-decl.h" />
     <ClInclude Include="src\NetworkingPackage.h" />
     <ClInclude Include="src\NetworkPrint.h" />
     <ClInclude Include="src\Packet.h" />
@@ -552,7 +565,7 @@
     <ClInclude Include="src\Quaternion.h" />
     <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\RenderOperation.h" />
-    <ClInclude Include="src\RGBA.h" />
+    <ClInclude Include="src\Color4.h" />
     <ClInclude Include="src\RigidBody.h" />
     <ClInclude Include="src\Rope.h" />
     <ClInclude Include="src\Scene.h" />
@@ -572,9 +585,13 @@
     <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\TypeTemplate.h" />
     <ClInclude Include="src\Uniform.h" />
+    <ClInclude Include="src\Vector2-decl.h" />
     <ClInclude Include="src\Vector2.h" />
+    <ClInclude Include="src\Vector2S-decl.h" />
     <ClInclude Include="src\Vector2S.h" />
+    <ClInclude Include="src\Vector3-decl.h" />
     <ClInclude Include="src\Vector3.h" />
+    <ClInclude Include="src\Vector3S-decl.h" />
     <ClInclude Include="src\Vector3S.h" />
     <ClInclude Include="src\VertexModeEnum.h" />
     <ClInclude Include="src\Voxel.h" />

@@ -1,7 +1,7 @@
 #include "AcceleratedKDTree.h"
 
-#include <iostream>
-#include <algorithm>
+import <iostream>;
+import <algorithm>;
 
 #include "AabbTree.h"
 

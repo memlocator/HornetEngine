@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <fstream>
-#include <map>
+import <vector>;
+import <string>;
+import <fstream>;
+import <map>;
 
 class PlyParser
 {

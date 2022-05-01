@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+import <string>;
 
 /*****
 	TODO: Register new type to ObjectRegistration.cpp. Use the #include as a shortcut to open it.

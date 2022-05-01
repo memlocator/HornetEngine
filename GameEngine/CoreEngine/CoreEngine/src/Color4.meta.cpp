@@ -1,4 +1,4 @@
-#include "RGBA.h"
+#include "Color4.h"
 
 #include "Reflection/Reflection.h"
 
@@ -7,15 +7,15 @@ namespace Engine
 	namespace Reflection
 	{
 		template <>
-		void ReflectType<RGBA>()
+		void ReflectType<Color4>()
 		{
-			Reflect<RGBA>::Type(
-				"RGBA",
+			Reflect<Color4>::Type(
+				"Color4",
 
-				Member<Bind(&RGBA::R)>("R"),
-				Member<Bind(&RGBA::G)>("G"),
-				Member<Bind(&RGBA::B)>("B"),
-				Member<Bind(&RGBA::A)>("A"),
+				Member<Bind(&Color4::R)>("R"),
+				Member<Bind(&Color4::G)>("G"),
+				Member<Bind(&Color4::B)>("B"),
+				Member<Bind(&Color4::A)>("A"),
 
 				Constructor(
 					Overload(),
@@ -34,10 +34,10 @@ namespace Engine
 					"Lerp",
 					Overload(
 						Const,
-						Returns<RGBA>(),
-						Argument<const RGBA&>("end"),
+						Returns<Color4>(),
+						Argument<const Color4&>("end"),
 						Argument<float>("t")
-					).Bind<RGBA, &RGBA::Lerp>()
+					).Bind<Color4, &Color4::Lerp>()
 				),
 
 				Function(
@@ -45,7 +45,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<RGBA, &RGBA::ARGB>()
+					).Bind<Color4, &Color4::ARGB>()
 				),
 
 				Function(
@@ -53,7 +53,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<RGBA, &RGBA::ABGR>()
+					).Bind<Color4, &Color4::ABGR>()
 				),
 
 				Function(
@@ -61,7 +61,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<RGBA, &RGBA::operator unsigned int>()
+					).Bind<Color4, &Color4::operator unsigned int>()
 				),
 
 				Function(
@@ -69,7 +69,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Vector3>()
-					).Bind<RGBA, &RGBA::operator Vector3>()
+					).Bind<Color4, &Color4::operator Vector3>()
 				),
 
 				Function(
@@ -77,7 +77,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<std::string>()
-					).Bind<RGBA, &RGBA::operator std::string>()
+					).Bind<Color4, &Color4::operator std::string>()
 				),
 
 				Function(
@@ -85,8 +85,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const RGBA&>("other")
-					).Bind<RGBA, &RGBA::operator==>()
+						Argument<const Color4&>("other")
+					).Bind<Color4, &Color4::operator==>()
 				),
 
 				Function(
@@ -94,8 +94,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const RGBA&>("other")
-					).Bind < RGBA, &RGBA::operator!=>()
+						Argument<const Color4&>("other")
+					).Bind < Color4, &Color4::operator!=>()
 				)
 			);
 		}

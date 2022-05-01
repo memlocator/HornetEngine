@@ -18,8 +18,8 @@ namespace GraphicsEngine
 		std::weak_ptr<CubeMapTexture> SkyBox;
 		float SkyBrightness = 1;
 		float SkyBackgroundBrightness = 1;
-		RGBA SkyColor;
-		RGBA SkyBackgroundColor;
+		Color4 SkyColor;
+		Color4 SkyBackgroundColor;
 		int Radius = 1;
 		float Sigma = 1;
 		Vector3 Resolution;

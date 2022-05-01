@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
-#include <map>
+import <string>;
+import <map>;
 
 #include "Vector3.h"
 #include "Object.h"

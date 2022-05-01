@@ -1,6 +1,6 @@
 #include "ShaderProgram.h"
 
-#include <functional>
+import <functional>;
 
 #include "Mesh.h"
 #include "Uniform.h"

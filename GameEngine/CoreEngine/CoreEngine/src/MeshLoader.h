@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <map>
+import <string>;
+import <vector>;
+import <map>;
 
 #include "Mesh.h"
 #include "IdentifierHeap.h"

@@ -5,7 +5,7 @@
 #include "Coordinates.h"
 #include "Aabb.h"
 
-#include <memory>
+import <memory>;
 
 namespace GraphicsEngine
 {

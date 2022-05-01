@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-#include <fstream>
+import <fstream>;
 
 #include "Graphics.h"
 #include "FrameBuffer.h"
@@ -330,7 +330,7 @@ namespace GraphicsEngine
 		return PixelData;
 	}
 
-	RGBA Texture::GetPixel(int x, int y) const
+	Color4 Texture::GetPixel(int x, int y) const
 	{
 		if (PixelData == nullptr)
 			return 0x00000000;

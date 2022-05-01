@@ -45,8 +45,8 @@ namespace Engine
 						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
 						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
 						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
-						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
-						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::Color4)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::Color4)>("format"),
 						Argument<bool, Default(false)>("invertedY")
 					).Bind<Texture, &Texture::Load>(),
 					Overload(
@@ -56,8 +56,8 @@ namespace Engine
 						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
 						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
 						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
-						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
-						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format"),
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::Color4)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::Color4)>("format"),
 						Argument<bool, Default(false)>("isDXT5")
 					).Bind<Texture, &Texture::Load>()
 				),
@@ -98,7 +98,7 @@ namespace Engine
 					"GetPixel",
 					Overload(
 						Const,
-						Returns<RGBA>(),
+						Returns<Color4>(),
 						Argument<int>("x"),
 						Argument<int>("y")
 					).Bind<Texture, &Texture::GetPixel>()
@@ -123,7 +123,7 @@ namespace Engine
 						Argument<int>("width"),
 						Argument<int>("height"),
 						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
-						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format")
+						Argument<Enum::Format, Default(Enum::Format::Color4)>("format")
 					).Bind<Texture, &Texture::LoadPiece>()
 				)
 			);

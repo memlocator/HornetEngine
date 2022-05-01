@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+import <vector>;
 
 #include "Vector3.h"
-#include "RGBA.h"
+#include "Color4.h"
 
 namespace GraphicsEngine
 {
@@ -30,16 +30,16 @@ namespace GraphicsEngine
 
 		Vector(Float x = 0, Float y = 0, Float z = 0) : X(x), Y(y), Z(z) {}
 		Vector(const Vector3& other) : X(other.X), Y(other.Y), Z(other.Z) {}
-		Vector(const RGBA& other) : X(other.R), Y(other.G), Z(other.B) {}
+		Vector(const Color4& other) : X(other.R), Y(other.G), Z(other.B) {}
 
 		operator Vector3() const
 		{
 			return Vector3(X, Y, Z);
 		}
 
-		operator RGBA() const
+		operator Color4() const
 		{
-			return RGBA(X, Y, Z);
+			return Color4(X, Y, Z);
 		}
 
 		Float& operator[](int index) { return (&X)[index]; }

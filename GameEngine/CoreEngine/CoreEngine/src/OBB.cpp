@@ -1,7 +1,7 @@
 #include "OBB.h"
 
-#include <numeric>
-#include <algorithm>
+import <numeric>;
+import <algorithm>;
 #include "PCA.h"
 #include "MeshLoader.h"
 #include "ModelAsset.h"

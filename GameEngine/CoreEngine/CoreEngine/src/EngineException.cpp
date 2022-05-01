@@ -1,6 +1,6 @@
 #include "EngineException.h"
 
-#include <sstream>
+import <sstream>;
 
 InternalEngineException::InternalEngineException(const char* message, const std::source_location& caller) throw()
 {

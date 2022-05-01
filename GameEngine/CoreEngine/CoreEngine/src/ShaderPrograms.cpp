@@ -5,7 +5,7 @@
 #include "Material.h"
 
 extern "C" {
-#include <math.h>
+import <cmath>;
 }
 
 void PhongProgram::SetTexture(const std::shared_ptr<GraphicsEngine::Texture>& texture, int sampler)

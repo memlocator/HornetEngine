@@ -1,7 +1,7 @@
 #pragma once
-#include <exception>
-#include <source_location>
-#include <string>
+import <exception>;
+import <source_location>;
+import <string>;
 
 class InternalEngineException : public std::exception
 {

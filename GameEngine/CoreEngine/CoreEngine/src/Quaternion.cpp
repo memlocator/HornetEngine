@@ -1,6 +1,6 @@
 #include "Quaternion.h"
 
-#include <sstream>
+import <sstream>;
 
 Quaternion::Quaternion(const Vector3& axis, Float angle)
 {

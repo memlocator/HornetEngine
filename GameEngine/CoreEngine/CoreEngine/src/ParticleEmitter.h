@@ -1,6 +1,6 @@
 #pragma once
 
-#include <functional>
+import <functional>;
 
 #include "ShaderPrograms.h"
 #include "PointGenerator.h"
@@ -32,8 +32,8 @@ namespace GraphicsEngine
 	class EmitterConfig : public Engine::Object
 	{
 	public:
-		RGBA Color = 0xFFFFFFFF;
-		RGBA GlowColor = 0xFFFFFFFF;
+		Color4 Color = 0xFFFFFFFF;
+		Color4 GlowColor = 0xFFFFFFFF;
 		Vector3 UVScale = Vector3(1, 1);
 		Vector3 UVOffset;
 		Vector3 BoxScale = Vector3(1, 1, 1);

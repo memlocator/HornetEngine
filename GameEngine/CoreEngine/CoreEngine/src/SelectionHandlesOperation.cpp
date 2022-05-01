@@ -1,6 +1,6 @@
 #include "SelectionHandlesOperation.h"
 
-#include <iostream>
+import <iostream>;
 
 #include "Camera.h"
 #include "Selection.h"
@@ -287,9 +287,9 @@ namespace Engine
 			};
 		}
 
-		RGBA SelectionHandlesOperation::GetColor(SelectedAxis axis) const
+		Color4 SelectionHandlesOperation::GetColor(SelectedAxis axis) const
 		{
-			const RGBA white = RGBA(1.f, 1.f, 1.f, 1.f);
+			const Color4 white = Color4(1.f, 1.f, 1.f, 1.f);
 
 			switch (axis)
 			{
@@ -305,9 +305,9 @@ namespace Engine
 			return white;
 		}
 
-		RGBA SelectionHandlesOperation::GetHoverColor(SelectedAxis axis) const
+		Color4 SelectionHandlesOperation::GetHoverColor(SelectedAxis axis) const
 		{
-			const RGBA white = RGBA(1.f, 1.f, 1.f, 1.f);
+			const Color4 white = Color4(1.f, 1.f, 1.f, 1.f);
 
 			switch (axis)
 			{

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <unordered_map>
-#include <vector>
-#include <string>
-#include <utility>
+import <unordered_map>;
+import <vector>;
+import <string>;
+import <utility>;
 
 #include "LuaBinding.h"
 

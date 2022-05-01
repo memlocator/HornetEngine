@@ -1,6 +1,6 @@
 #include "Precision.h"
 
-#include <cmath>
+import <cmath>;
 
 namespace std
 {

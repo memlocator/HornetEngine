@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include <queue>
+import <queue>;
 
 #include "Materials.h"
 #include "Graphics.h"

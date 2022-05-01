@@ -1,6 +1,6 @@
 #include "Minkowski2D.h"
 
-#include <sstream>
+import <sstream>;
 #include <Windows.h>
 
 namespace Engine

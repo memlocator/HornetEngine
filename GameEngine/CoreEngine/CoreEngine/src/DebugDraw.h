@@ -1,10 +1,10 @@
 #pragma once
 
-#include <memory>
+import <memory>;
 
 #include "Object.h"
 #include "Vector3.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Matrix4.h"
 
 namespace Engine
@@ -35,8 +35,8 @@ public:
 	std::shared_ptr<GraphicsEngine::Scene> GetScene();
 	void Reset();
 	void Clear();
-	void DrawLine(const Vector3& point1, const Vector3& point2, const RGBA& color = 0xFFFFFFFF, Float thickness = 0.1f, bool glows = false);
-	void DrawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const RGBA& color = 0xFFFFFFFF, Float thickness = 0.1f, bool glows = false);
+	void DrawLine(const Vector3& point1, const Vector3& point2, const Color4& color = 0xFFFFFFFF, Float thickness = 0.1f, bool glows = false);
+	void DrawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Color4& color = 0xFFFFFFFF, Float thickness = 0.1f, bool glows = false);
 
 private:
 	typedef std::vector<std::weak_ptr<Engine::Transform>> ObjectVector;
@@ -47,5 +47,5 @@ private:
 	ObjectVector DebugObjects;
 	
 	std::shared_ptr<Engine::Transform> NewObject(const Matrix4& transformation);
-	void PlaceObject(const Matrix4& transformation, const RGBA& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset);
+	void PlaceObject(const Matrix4& transformation, const Color4& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset);
 };

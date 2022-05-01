@@ -1,7 +1,7 @@
 #pragma once
 
-#include <forward_list>
-#include <string>
+import <forward_list>;
+import <string>;
 
 // Here be dragons! Abandon all hope ye who enter here!
 // this is all mostly book keeping shit

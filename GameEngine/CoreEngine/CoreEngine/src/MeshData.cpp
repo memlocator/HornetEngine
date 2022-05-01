@@ -1,11 +1,11 @@
 #include "MeshData.h"
 
-#include <map>
+import <map>;
 extern "C" {
-#include <math.h>
+import <cmath>;
 }
 
-#include <algorithm>
+import <algorithm>;
 
 #include "Constants.h"
 #include "ObjParser.h"

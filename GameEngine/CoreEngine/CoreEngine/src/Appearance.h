@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Vector3.h"
 
 namespace GraphicsEngine
@@ -12,8 +12,8 @@ namespace GraphicsEngine
 	{
 	public:
 		bool BlendTexture = true;
-		RGBA Color;
-		RGBA TextureColor;
+		Color4 Color;
+		Color4 TextureColor;
 		Vector3 UVScale = Vector3(1, 1);
 		Vector3 UVOffset = Vector3(0, 0);
 		std::weak_ptr<Texture> Texture;

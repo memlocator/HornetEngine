@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
+import <vector>;
 
 extern "C" {
 #include <glew.h>
 }
 #include "Vector3.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "VertexModeEnum.h"
 #include "Ray.h"
 #include "SceneRayCastResults.h"

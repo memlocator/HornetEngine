@@ -1,13 +1,13 @@
 #pragma once
 
-#include <vector>
+import <vector>;
 
 #include "Vector3.h"
 #include "Constants.h"
 #include "Object.h"
 #include "AabbTree.h"
 #include "Dimensions.h"
-#include "RGBA.h"
+#include "Color4.h"
 
 namespace GraphicsEngine
 {
@@ -53,9 +53,9 @@ namespace GraphicsEngine
 		Vector3 Attenuation;
 		Vector3 Position;
 		Vector3 Direction;
-		RGBA Diffuse = 0xFFFFFFFF;
-		RGBA Specular = 0xFFFFFFFF;
-		RGBA Ambient = 0xFFFFFFFF;
+		Color4 Diffuse = 0xFFFFFFFF;
+		Color4 Specular = 0xFFFFFFFF;
+		Color4 Ambient = 0xFFFFFFFF;
 		Float InnerRadius = PI / 5;
 		Float OuterRadius = PI / 3;
 		int SpotlightFalloff = 1;

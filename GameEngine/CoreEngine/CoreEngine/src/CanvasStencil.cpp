@@ -55,7 +55,7 @@ namespace GraphicsEngine
 
 		stencilBuffer->DrawTo();
 
-		Graphics::SetClearColor(RGBA(0x00000000));
+		Graphics::SetClearColor(Color4(0x00000000));
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Programs::ClippingMask->transform.Set(transform->GetTransformation());

@@ -1,156 +1,207 @@
 #pragma once
 
-#include <iosfwd>
-#include <string>
-#include <cmath>
+#include "Vector3S-decl.h"
 
-#include "Precision.h"
+import <iostream>;
+import <sstream>;
 
 template <typename Number, typename DistanceType>
-class Vector3SType
+constexpr Vector3SType<Number, DistanceType>::Vector3SType() : X(0), Y(0), Z(0) {}
+
+template <typename Number, typename DistanceType>
+constexpr Vector3SType<Number, DistanceType>::Vector3SType(Number x, Number y, Number z) : X(x), Y(y), Z(z) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector3SType<Number, DistanceType>::Vector3SType(const Vector2Type<OtherNumber, OtherDistanceType>& other) : X((Number)other.X), Y((Number)other.Y), Z((Number)other.Z) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector3SType<Number, DistanceType>::Vector3SType(const Vector2SType<OtherNumber, OtherDistanceType>& other, Number z) : X((Number)other.X), Y((Number)other.Y), Z(z) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector3SType<Number, DistanceType>::Vector3SType(const Vector3Type<OtherNumber, OtherDistanceType>& other) : X((Number)other.X), Y((Number)other.Y), Z((Number)other.Z) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector3SType<Number, DistanceType>::Vector3SType(const Vector3SType<OtherNumber, OtherDistanceType>& other) : X((Number)other.X), Y((Number)other.Y), Z((Number)other.Z) {}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::Set(Number x, Number y, Number z)
 {
-public:
-	Number X, Y, Z;
+	X = x; Y = y; Z = z;
+	return *this;
+}
 
-	constexpr Vector3SType() : X(0), Y(0), Z(0) {}
-	constexpr Vector3SType(Number x, Number y = 0, Number z = 0) : X(x), Y(y), Z(z) {}
-	constexpr Vector3SType(const Vector3SType<float, float>& other) : X((Number)other.X), Y((Number)other.Y), Z((Number)other.Z) {}
-	constexpr Vector3SType(const Vector3SType<double, double>& other) : X((Number)other.X), Y((Number)other.Y), Z((Number)other.Z) {}
-	constexpr Vector3SType(const Vector3SType<int, float>& other) : X((Number)other.X), Y((Number)other.Y), Z((Number)other.Z) {}
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::Normalize()
+{
+	return *this *= (Number)(1 / Length());
+}
 
-	Vector3SType& Set(Number x, Number y = 0, Number z = 0)
-	{
-		X = x; Y = y; Z = z;
-		return *this;
-	}
-	Vector3SType& Normalize()
-	{
-		return *this *= (Number)(1 / Length());
-	}
-	DistanceType Dot(const Vector3SType& other) const
-	{
-		return (DistanceType)(X * other.X + Y * other.Y + Z * other.Z);
-	}
-	Vector3SType Cross(const Vector3SType& other) const
-	{
-		return Vector3SType(
-			Y * other.Z - Z * other.Y,
-			Z * other.X - X * other.Z,
-			X * other.Y - Y * other.X
-		);
-	}
-	Vector3SType Unit() const
-	{
-		return (Number)(1 / Length()) * *this;
-	}
-	DistanceType Length() const
-	{
-		return std::sqrt(SquareLength());
-	}
-	DistanceType SquareLength() const
-	{
-		return Dot(*this);
-	}
-	Vector3SType& Scale(const Vector3SType& other)
-	{
-		return Scale(other.X, other.Y, other.Z);
-	}
-	Vector3SType& Scale(Number x, Number y, Number z)
-	{
-		return Set(X * x, Y * y, Z * z);
-	}
-	Vector3SType& InvertLength()
-	{
-		return *this *= (Number)(1 / SquareLength());
-	}
+template <typename Number, typename DistanceType>
+DistanceType Vector3SType<Number, DistanceType>::Dot(const Vector3SType& other) const
+{
+	return (DistanceType)(X * other.X + Y * other.Y + Z * other.Z);
+}
 
-	Vector3SType InvertedLength() const
-	{
-		return *this * (Number)(1 / SquareLength());
-	}
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::Cross(const Vector3SType& other) const
+{
+	return Vector3SType(
+		Y * other.Z - Z * other.Y,
+		Z * other.X - X * other.Z,
+		X * other.Y - Y * other.X
+	);
+}
 
-	Vector3SType Negate() const { return -*this; }
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::Unit() const
+{
+	return (Number)(1 / Length()) * *this;
+}
 
-	Vector3SType operator-() const
-	{
-		return Vector3SType(-X, -Y, -Z);
-	}
-	Vector3SType operator+(const Vector3SType& other) const
-	{
-		return Vector3SType(X + other.X, Y + other.Y, Z + other.Z);
-	}
-	Vector3SType operator-(const Vector3SType& other) const
-	{
-		return Vector3SType(X - other.X, Y - other.Y, Z - other.Z);
-	}
-	Vector3SType operator*(Number scalar) const
-	{
-		return Vector3SType(X * scalar, Y * scalar, Z * scalar);
-	}
-	DistanceType operator*(const Vector3SType& other) const
-	{
-		return Dot(other);
-	}
-	Vector3SType& operator=(const Vector3SType& other)
-	{
-		return Set(other.X, other.Y, other.Z);
-	}
-	Vector3SType& operator+=(const Vector3SType& other)
-	{
-		return Set(X + other.X, Y + other.Y, Z + other.Z);
-	}
-	Vector3SType& operator-=(const Vector3SType& other)
-	{
-		return Set(X - other.X, Y - other.Y, Z - other.Z);
-	}
-	Vector3SType& operator*=(Number scalar)
-	{
-		return Set(X * scalar, Y * scalar, Z * scalar);
-	}
-	bool operator==(const Vector3SType& other) const
-	{
-		return Compare(X, other.X) && Compare(Y, other.Y) && Compare(Z, other.Z);
-	}
-	bool operator!=(const Vector3SType& other) const
-	{
-		return !(*this == other);
-	}
-	Number operator[](int i) const
-	{
-		return (&X)[i];
-	}
-	Number& operator[](int i)
-	{
-		return (&X)[i];
-	}
+template <typename Number, typename DistanceType>
+DistanceType Vector3SType<Number, DistanceType>::Length() const
+{
+	return std::sqrt(SquareLength());
+}
 
-	operator std::string() const;
+template <typename Number, typename DistanceType>
+DistanceType Vector3SType<Number, DistanceType>::SquareLength() const
+{
+	return Dot(*this);
+}
 
-private:
-	bool Compare(Number x, Number y, Number epsilon = (Number)1e-5) const
-	{
-		return std::abs(x - y) < epsilon;
-	}
-};
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::Scale(const Vector3SType& other)
+{
+	return Scale(other.X, other.Y, other.Z);
+}
 
-using Vector3SF = Vector3SType<float, float>;
-using Vector3SD = Vector3SType<double, double>;
-using Vector3SI = Vector3SType<int, float>;
-using Vector3S = Vector3SType<Float, Float>;
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::Scale(Number x, Number y, Number z)
+{
+	return Set(X * x, Y * y, Z * z);
+}
 
-Vector3SF operator*(float scalar, const Vector3SF& vector);
-Vector3SD operator*(double scalar, const Vector3SD& vector);
-Vector3SI operator*(int scalar, const Vector3SI& vector);
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::InvertLength()
+{
+	return *this *= (Number)(1 / SquareLength());
+}
 
-std::ostream& operator<<(std::ostream& out, const Vector3SF& vector);
-std::ostream& operator<<(std::ostream& out, const Vector3SD& vector);
-std::ostream& operator<<(std::ostream& out, const Vector3SI& vector);
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::InvertedLength() const
+{
+	return *this * (Number)(1 / SquareLength());
+}
 
-template <>
-Vector3SType<float, float>::operator std::string() const;
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::Negate() const { return -*this; }
 
-template <>
-Vector3SType<double, double>::operator std::string() const;
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::operator-() const
+{
+	return Vector3SType(-X, -Y, -Z);
+}
 
-template <>
-Vector3SType<int, float>::operator std::string() const;
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::operator+(const Vector3SType& other) const
+{
+	return Vector3SType(X + other.X, Y + other.Y, Z + other.Z);
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::operator-(const Vector3SType& other) const
+{
+	return Vector3SType(X - other.X, Y - other.Y, Z - other.Z);
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> Vector3SType<Number, DistanceType>::operator*(Number scalar) const
+{
+	return Vector3SType(X * scalar, Y * scalar, Z * scalar);
+}
+
+template <typename Number, typename DistanceType>
+DistanceType Vector3SType<Number, DistanceType>::operator*(const Vector3SType& other) const
+{
+	return Dot(other);
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::operator=(const Vector3SType& other)
+{
+	return Set(other.X, other.Y, other.Z);
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::operator+=(const Vector3SType& other)
+{
+	return Set(X + other.X, Y + other.Y, Z + other.Z);
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::operator-=(const Vector3SType& other)
+{
+	return Set(X - other.X, Y - other.Y, Z - other.Z);
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>& Vector3SType<Number, DistanceType>::operator*=(Number scalar)
+{
+	return Set(X * scalar, Y * scalar, Z * scalar);
+}
+
+template <typename Number, typename DistanceType>
+bool Vector3SType<Number, DistanceType>::operator==(const Vector3SType& other) const
+{
+	return Compare(X, other.X) && Compare(Y, other.Y) && Compare(Z, other.Z);
+}
+
+template <typename Number, typename DistanceType>
+bool Vector3SType<Number, DistanceType>::operator!=(const Vector3SType& other) const
+{
+	return !(*this == other);
+}
+
+template <typename Number, typename DistanceType>
+Number Vector3SType<Number, DistanceType>::operator[](int i) const
+{
+	return (&X)[i];
+}
+
+template <typename Number, typename DistanceType>
+Number& Vector3SType<Number, DistanceType>::operator[](int i)
+{
+	return (&X)[i];
+}
+
+template <typename Number, typename DistanceType>
+bool Vector3SType<Number, DistanceType>::Compare(Number x, Number y, Number epsilon) const
+{
+	return std::abs(x - y) < epsilon;
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType> operator*(Number scalar, const Vector3SType<Number, DistanceType>& vector)
+{
+	return vector * scalar;
+}
+
+template <typename Number, typename DistanceType>
+std::ostream& operator<<(std::ostream& out, const Vector3SType<Number, DistanceType>& vector)
+{
+	return out << "< " << vector.X << ", " << vector.Y << ", " << vector.Z << " >";
+}
+
+template <typename Number, typename DistanceType>
+Vector3SType<Number, DistanceType>::operator std::string() const
+{
+	std::stringstream out;
+	out << *this;
+
+	return out.str();
+}

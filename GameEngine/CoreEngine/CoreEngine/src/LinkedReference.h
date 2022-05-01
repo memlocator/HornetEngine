@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+import <vector>;
 
 template <typename ReferenceType, typename OtherReferenceType>
 class LinkedReference

@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 extern "C" {
-#include <math.h>
+import <cmath>;
 }
 
 #include "Constants.h"

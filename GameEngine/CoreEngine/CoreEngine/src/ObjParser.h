@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+import <vector>;
 
 #include "Vector3.h"
-#include "RGBA.h"
+#include "Color4.h"
 
 struct Vertex
 {
@@ -37,7 +37,7 @@ struct ParseModeEnum
 typedef ParseModeEnum::Enum ParseMode;
 typedef std::vector<Face> FaceVector;
 typedef std::vector<Vector3> VertexVector;
-typedef std::vector<RGBA> ColorVector;
+typedef std::vector<Color4> ColorVector;
 typedef std::vector<char> String;
 
 class ObjParser

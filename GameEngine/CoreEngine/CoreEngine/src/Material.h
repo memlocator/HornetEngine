@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RGBA.h"
+#include "Color4.h"
 #include "Object.h"
 #include "IdentifierHeap.h"
 
@@ -15,13 +15,13 @@ namespace GraphicsEngine
 
 		void Initialize();
 
-		RGBA Diffuse = RGBA(0.5f, 0.5f, 0.5f, 1);
-		RGBA Specular = RGBA(0.5f, 0.5f, 0.5f, 1);
-		RGBA Ambient = RGBA(0.1f, 0.1f, 0.1f, 1);
-		RGBA Emission = RGBA(0.f, 0.f, 0.f, 0.f);
+		Color4 Diffuse = Color4(0.5f, 0.5f, 0.5f, 1);
+		Color4 Specular = Color4(0.5f, 0.5f, 0.5f, 1);
+		Color4 Ambient = Color4(0.1f, 0.1f, 0.1f, 1);
+		Color4 Emission = Color4(0.f, 0.f, 0.f, 0.f);
 		int Shininess = 1;
 
-		RGBA TextureColor;
+		Color4 TextureColor;
 		bool BlendTexture = true;
 		Vector3 UVScale = Vector3(1, 1);
 		Vector3 UVOffset;

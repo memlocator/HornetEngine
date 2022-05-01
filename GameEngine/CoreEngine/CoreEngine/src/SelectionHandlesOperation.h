@@ -2,7 +2,7 @@
 
 #include "RenderOperation.h"
 #include "Object.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Aabb.h"
 #include "Matrix4.h"
 #include "InputEnums.h"
@@ -78,15 +78,15 @@ namespace Engine
 			bool ObjectsShareHandles = true;
 			Enum::SelectionHandleType HandleType = Enum::SelectionHandleType::Move;
 
-			RGBA BoxColor = RGBA(0, 0.75f, 1);
-			RGBA HoverBoxColor = RGBA(0.85f, 0.95f, 1);
-			RGBA HandleColorX = RGBA(1, 0.2f, 0.2f);
-			RGBA HandleColorY = RGBA(0.2f, 1, 0.2f);
-			RGBA HandleColorZ = RGBA(0.2f, 0.2f, 1);
+			Color4 BoxColor = Color4(0, 0.75f, 1);
+			Color4 HoverBoxColor = Color4(0.85f, 0.95f, 1);
+			Color4 HandleColorX = Color4(1, 0.2f, 0.2f);
+			Color4 HandleColorY = Color4(0.2f, 1, 0.2f);
+			Color4 HandleColorZ = Color4(0.2f, 0.2f, 1);
 
-			RGBA HoverHandleColorX = RGBA(1, 0.75f, 0.75f);
-			RGBA HoverHandleColorY = RGBA(0.75f, 1, 0.75f);
-			RGBA HoverHandleColorZ = RGBA(0.75f, 0.75f, 1);
+			Color4 HoverHandleColorX = Color4(1, 0.75f, 0.75f);
+			Color4 HoverHandleColorY = Color4(0.75f, 1, 0.75f);
+			Color4 HoverHandleColorZ = Color4(0.75f, 0.75f, 1);
 
 			Float ArrowHandleMinSize = 0.15f;
 			Float ArrowHandleScaling = 0.15f;
@@ -166,8 +166,8 @@ namespace Engine
 			Aabb MovingBox;
 			MovingObjectVector MovingObjects;
 
-			RGBA GetColor(SelectedAxis axis) const;
-			RGBA GetHoverColor(SelectedAxis axis) const;
+			Color4 GetColor(SelectedAxis axis) const;
+			Color4 GetHoverColor(SelectedAxis axis) const;
 			Vector3 GetMouseHandlePoint(const std::shared_ptr<GraphicsEngine::Camera>& camera, const Ray& mouseRay) const;
 			Float GetMouseHandleValue(const std::shared_ptr<GraphicsEngine::Camera>& camera, const Vector3& mousePoint) const;
 			void UpdateObject(int index, Float handleValue);

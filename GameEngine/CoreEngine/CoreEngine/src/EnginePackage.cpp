@@ -5,12 +5,13 @@
 #include "Vector3S.h"
 #include "Vector2.h"
 #include "Vector2S.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Ray.h"
 #include "PointGenerator.h"
 #include "Quaternion.h"
 #include "OBB.h"
 #include "Matrix4.h"
+#include "Matrix3.h"
 #include "DeviceVector.h"
 #include "BoundingSphere.h"
 #include "Aabb.h"
@@ -47,7 +48,7 @@ namespace Engine
 		extern void ReflectType<Vector2S>();
 
 		template <>
-		extern void ReflectType<RGBA>();
+		extern void ReflectType<Color4>();
 
 		template <>
 		extern void ReflectType<Ray>();
@@ -75,6 +76,9 @@ namespace Engine
 
 		template <>
 		extern void ReflectType<Matrix4>();
+
+		template <>
+		extern void ReflectType<Matrix3>();
 
 		template <>
 		extern void ReflectType<DeviceVector>();
@@ -163,7 +167,7 @@ namespace Engine
 				Vector3S,
 				Vector2,
 				Vector2S,
-				RGBA,
+				Color4,
 				Ray,
 				Quaternion,
 				VectorGenerator,
@@ -173,6 +177,7 @@ namespace Engine
 				ConeUnitVectorGenerator,
 				OBB,
 				Matrix4,
+				Matrix3,
 				DeviceVector,
 				DeviceAxis,
 				BoundingSphere,

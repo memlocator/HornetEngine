@@ -39,7 +39,7 @@ void DebugDraw::Clear()
 	AvailableDebugObjects.clear();
 }
 
-void DebugDraw::DrawLine(const Vector3& point1, const Vector3& point2, const RGBA& color, Float thickness, bool glows)
+void DebugDraw::DrawLine(const Vector3& point1, const Vector3& point2, const Color4& color, Float thickness, bool glows)
 {
 
 	Vector3 vector = point2 - point1;
@@ -61,7 +61,7 @@ void DebugDraw::DrawLine(const Vector3& point1, const Vector3& point2, const RGB
 	);
 }
 
-void DebugDraw::DrawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const RGBA& color, Float thickness, bool glows)
+void DebugDraw::DrawTriangle(const Vector3& point1, const Vector3& point2, const Vector3& point3, const Color4& color, Float thickness, bool glows)
 {
 	Vector3 ab = point2 - point1;
 	Vector3 ac = point3 - point1;
@@ -151,7 +151,7 @@ std::shared_ptr<Engine::Transform> DebugDraw::NewObject(const Matrix4& transform
 	return object;
 }
 
-void DebugDraw::PlaceObject(const Matrix4& transformation, const RGBA& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset)
+void DebugDraw::PlaceObject(const Matrix4& transformation, const Color4& color, Float thickness, bool glows, const std::shared_ptr<Engine::ModelAsset>& asset)
 {
 	std::shared_ptr<Engine::Transform> transform = NewObject(transformation);
 	std::shared_ptr<GraphicsEngine::Model> model = transform->Get<GraphicsEngine::Model>();

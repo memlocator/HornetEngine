@@ -1,11 +1,11 @@
 #pragma once
 
-#include <functional>
-#include <map>
-#include <vector>
-#include <set>
-#include <limits>
-#include <memory>
+import <functional>;
+import <map>;
+import <vector>;
+import <set>;
+import <limits>;
+import <memory>;
 
 #include "IdentifierHeap.h"
 #include "Precision.h"

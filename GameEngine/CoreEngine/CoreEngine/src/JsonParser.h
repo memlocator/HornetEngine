@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>
-#include <functional>
-#include <vector>
-#include <source_location>
-#include <sstream>
+import <string>;
+import <functional>;
+import <vector>;
+import <source_location>;
+import <sstream>;
 
 class JsonParserException : public std::exception
 {

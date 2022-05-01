@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
-#include <functional>
+import <memory>;
+import <functional>;
 
 #include "Vector3.h"
 

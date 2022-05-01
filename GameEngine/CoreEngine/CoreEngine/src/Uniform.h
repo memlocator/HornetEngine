@@ -69,7 +69,7 @@ namespace GLSL
 		Constructor(Vec3);
 
 		bool Set(const Vector3& vector);
-		bool Set(const RGBA& color);
+		bool Set(const Color4& color);
 		bool Set(float x, float y, float z);
 		bool Set(double x, double y, double z);
 		bool Set(unsigned int color);
@@ -84,7 +84,7 @@ namespace GLSL
 		Constructor(Vec4);
 
 		bool Set(const Vector3& vector);
-		bool Set(const RGBA& color);
+		bool Set(const Color4& color);
 		bool Set(float x, float y, float z, float w);
 		bool Set(double x, double y, double z, double w);
 		bool Set(unsigned int color);

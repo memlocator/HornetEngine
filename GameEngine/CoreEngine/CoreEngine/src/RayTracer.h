@@ -1,15 +1,15 @@
 #pragma once
 
-#include <memory>
-#include <string>
-#include <thread>
-#include <algorithm>
-#include <chrono>
-#include <mutex>
-#include <random>
+import <memory>;
+import <string>;
+import <thread>;
+import <algorithm>;
+import <chrono>;
+import <mutex>;
+import <random>;
 
 #include "Object.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Ray.h"
 #include "SceneRayCastResults.h"
 #include "RayAcceleration.h"
@@ -38,12 +38,12 @@ namespace GraphicsEngine
 		float B = 0;
 
 		Pixel() {}
-		Pixel(const RGBA& color);
+		Pixel(const Color4& color);
 		Pixel(unsigned char R, unsigned char G, unsigned char B) : R(float(R) / 255.0f), G(float(G) / 255.0f), B(float(B) / 255.0f) {}
 		Pixel(float R, float G, float B) : R(R), G(G), B(B) {}
 		Pixel(double R, double G, double B) : R((float)R), G((float)G), B((float)B) {}
 
-		operator RGBA();
+		operator Color4();
 	};
 
 	class RayTracer : public Engine::Object
@@ -282,6 +282,6 @@ namespace GraphicsEngine
 		Vector3 ComputeAtmosphericLightNaive(const Vector3& direction) const;
 		Vector3 ProcessRay(const QueuedRay& ray, Thread& thread, const Vector3& lightFilter, int bounces = 0, int rayID = 0) const;
 		void ProcessBatch(int x, int y, int threadID);
-		void DrawLine(const Vector3& start, const Vector3& end, const RGBA& color);
+		void DrawLine(const Vector3& start, const Vector3& end, const Color4& color);
 	};
 }

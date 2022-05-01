@@ -92,7 +92,7 @@ namespace GLSL
 		return Set(vector.X, vector.Y, vector.Z);
 	}
 
-	bool Vec3::Set(const RGBA& color)
+	bool Vec3::Set(const Color4& color)
 	{
 		Validate();
 
@@ -122,7 +122,7 @@ namespace GLSL
 	{
 		Validate();
 
-		RGBA rgb(color);
+		Color4 rgb(color);
 
 		return Set(rgb.R, rgb.G, rgb.B);
 	}
@@ -134,7 +134,7 @@ namespace GLSL
 		return Set(vector.X, vector.Y, vector.Z, vector.W);
 	}
 
-	bool Vec4::Set(const RGBA& color)
+	bool Vec4::Set(const Color4& color)
 	{
 		Validate();
 
@@ -164,7 +164,7 @@ namespace GLSL
 	{
 		Validate();
 
-		return Set(RGBA(color));
+		return Set(Color4(color));
 	}
 
 	template <typename T>

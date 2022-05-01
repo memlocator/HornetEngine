@@ -1,6 +1,6 @@
 #include "RayAcceleration.h"
 
-#include <iostream>
+import <iostream>;
 
 #include "Vector3.h"
 #include "Scene.h"

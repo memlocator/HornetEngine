@@ -1,7 +1,7 @@
 #include "Chunk.h"
 
-#include <fstream>
-#include <iostream>
+import <fstream>;
+import <iostream>;
 
 #include "Terrain.h"
 #include "Model.h"

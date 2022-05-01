@@ -2,7 +2,7 @@
 
 #include "Object.h"
 
-#include <map>
+import <map>;
 
 namespace Engine
 {

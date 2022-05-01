@@ -1,6 +1,6 @@
 #include "TerrainCollider2D.h"
 
-#include <algorithm>
+import <algorithm>;
 
 #include "ColliderData.h"
 #include "ChunkTree.h"

@@ -41,7 +41,7 @@ namespace GraphicsEngine
 		typedef Enum::Format EFormat;
 		typedef Enum::DataType EDataType;
 
-		void Configure(int width, int height, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::RGBA, EFormat format = EFormat::RGBA);
+		void Configure(int width, int height, ESampleType sampleType = ESampleType::Nearest, EWrapType wrapType = EWrapType::Repeat, EDataType dataType = EDataType::UnsignedByte, EInternalFormat internalFormat = EInternalFormat::Color4, EFormat format = EFormat::Color4);
 
 		void SetInput(const std::shared_ptr<Texture>& texture);
 		void Render();

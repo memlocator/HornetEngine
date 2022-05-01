@@ -134,38 +134,38 @@ local defaultFar = 5000
 local camera = GameObject.Camera()
 camera.Parent = level --[[ camera:SetParent(level) ]]
 camera:SetProperties(defaultWidth, defaultHeight, defaultProjection, defaultNear, defaultFar)--120, resolution.Width / resolution.Height, 0.1, 10000)
-camera:SetTransformation(Matrix3(0, 200, 100))
+camera:SetTransformation(Matrix4(0, 200, 100))
 
 local light = GameObject.Light()
 light.Enabled = true
 light.Direction = Vector3(0.25, -1, 0.25):Unit()
 light.Brightness = 0.5
-light.Diffuse = RGBA(1, 1, 1, 1)--RGBA(0.6, 0.55, 0.85, 1)
-light.Specular = RGBA(1, 1, 1, 1)--RGBA(0.6, 0.55, 0.95, 1)
-light.Ambient = RGBA(1, 1, 1, 1)--RGBA(0.05, 0.05, 0.05, 1)
+light.Diffuse = Color4(1, 1, 1, 1)--Color4(0.6, 0.55, 0.85, 1)
+light.Specular = Color4(1, 1, 1, 1)--Color4(0.6, 0.55, 0.95, 1)
+light.Ambient = Color4(1, 1, 1, 1)--Color4(0.05, 0.05, 0.05, 1)
 light.Type = Enum.LightType.Directional
---light.Ambient = RGBA(0.5, 0.5, 0.5, 1)
+--light.Ambient = Color4(0.5, 0.5, 0.5, 1)
 light.Parent = simulation 
 
 local lightOrb = GameObject.Transform()
 lightOrb.Parent = simulation --[[ lightOrb:SetParent(simulation) ]]
 lightOrb.IsStatic = false
-lightOrb.Transformation = Matrix3(0, 1000, 10) * Matrix3.PitchRotation(math.pi / 2) * Matrix3.NewScale(1, 1, 1)
+lightOrb.Transformation = Matrix4(0, 1000, 10) * Matrix4.PitchRotation(math.pi / 2) * Matrix4.NewScale(1, 1, 1)
 lightOrb:Update(0)
 
 local lightOrbModel = GameObject.Model()
 lightOrbModel.Asset = Engine.Meshes.Sphere
 lightOrbModel.Parent = lightOrb --[[ lightOrbModel:SetParent(lightOrb) ]]
-lightOrbModel.Color = RGBA(1, 1, 1, 0.5)
-lightOrbModel.GlowColor = RGBA(1, 1, 1, 0.99)
+lightOrbModel.Color = Color4(1, 1, 1, 0.5)
+lightOrbModel.GlowColor = Color4(1, 1, 1, 0.99)
 
 local testLight = GameObject.Light()
 testLight.Enabled = true
 testLight.Position = Vector3(0, 1000, 0)
 testLight.Direction = Vector3(0, -1, 0)
-testLight.Diffuse = RGBA(1, 1, 1, 1)
-testLight.Specular = RGBA(1, 1, 1, 1)
-testLight.Ambient = RGBA(1, 1, 1, 1)
+testLight.Diffuse = Color4(1, 1, 1, 1)
+testLight.Specular = Color4(1, 1, 1, 1)
+testLight.Ambient = Color4(1, 1, 1, 1)
 testLight.Type = Enum.LightType.Spot
 testLight.InnerRadius = math.pi / 5
 testLight.OuterRadius = math.pi / 4
@@ -182,14 +182,14 @@ lightOrb2:Update(0)
 local lightOrbModel2 = GameObject.Model()
 lightOrbModel2.Asset = Engine.Meshes.Sphere
 lightOrbModel2.Parent = lightOrb2 --[[ lightOrbModel2:SetParent(lightOrb2) ]]
-lightOrbModel2.Color = RGBA(0.2, 1, 0.4, 0.99)
-lightOrbModel2.GlowColor = RGBA(0.2, 1, 0.4, 0.99)
+lightOrbModel2.Color = Color4(0.2, 1, 0.4, 0.99)
+lightOrbModel2.GlowColor = Color4(0.2, 1, 0.4, 0.99)
 
 local testLight2 = GameObject.Light()
 testLight2.Enabled = true
-testLight2.Diffuse = RGBA(0.2, 1, 0.4, 0.99)
-testLight2.Specular = RGBA(0.2, 1, 0.4, 0.99)
-testLight2.Ambient = RGBA(0.2, 1, 0.4, 0.99)
+testLight2.Diffuse = Color4(0.2, 1, 0.4, 0.99)
+testLight2.Specular = Color4(0.2, 1, 0.4, 0.99)
+testLight2.Ambient = Color4(0.2, 1, 0.4, 0.99)
 testLight2.Type = Enum.LightType.Spot
 testLight2.InnerRadius = math.pi / 8
 testLight2.OuterRadius = math.pi / 4
@@ -219,8 +219,8 @@ sceneDraw.Radius = 10
 sceneDraw.Sigma = 20
 sceneDraw.SkyBrightness = 1
 sceneDraw.SkyBackgroundBrightness = 1
-sceneDraw.SkyColor = RGBA(15/255, 5/255, 15/255, 1)--RGBA(1, 167/255 +.1, 124/255+.08, 1)
-sceneDraw.SkyBackgroundColor = RGBA(0, 0, 0, 0)
+sceneDraw.SkyColor = Color4(15/255, 5/255, 15/255, 1)--Color4(1, 167/255 +.1, 124/255+.08, 1)
+sceneDraw.SkyBackgroundColor = Color4(0, 0, 0, 0)
 sceneDraw.Resolution = Vector3(resolution.Width, resolution.Height)
 sceneDraw.RenderAutomatically = true
 sceneDraw:GetHDRColorCorrection().RangeFittingType = Enum.RangeFittingMode.Exposure
@@ -298,7 +298,7 @@ rayTracedColorCorrection.Output = rayTracedHDRBuffer
 
 local rayTracedAppearance = GameObject.Appearance()
 rayTracedAppearance.Texture = rayTracedHDRTexture--rayTracedTexture
-rayTracedAppearance.Color = RGBA(0, 0, 0, 0)
+rayTracedAppearance.Color = Color4(0, 0, 0, 0)
 
 rayTracedCanvas.Appearance = rayTracedAppearance
 rayTracedCanvas.Visible = false
@@ -324,10 +324,10 @@ materials.Parent = Engine --[[ materials:SetParent(Engine) ]]
 
 local material = GameObject.Material()
 material.Shininess = 75
-material.Diffuse = RGBA(0.5, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
-material.Specular = RGBA(0.5, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
-material.Ambient = RGBA(0.5, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
-material.Emission = RGBA(0, 0, 0, 0)
+material.Diffuse = Color4(0.5, 0.5, 0.5, 0)--Color4(0.5, 0.5, 0.5, 0)
+material.Specular = Color4(0.5, 0.5, 0.5, 0)--Color4(0.5, 0.5, 0.5, 0)
+material.Ambient = Color4(0.5, 0.5, 0.5, 0)--Color4(0.5, 0.5, 0.5, 0)
+material.Emission = Color4(0, 0, 0, 0)
 
 local physicalMaterial = GameObject.PhysicalMaterial()
 physicalMaterial.Parent = materials
@@ -335,26 +335,26 @@ physicalMaterial.Parent = materials
 local waterMaterial = GameObject.Material()
 waterMaterial.Name = "WaterMaterial"
 waterMaterial.Shininess = 3
-waterMaterial.Diffuse = RGBA(1, 1, 1, 1)--RGBA(0.5, 0.5, 0.5, 0)
-waterMaterial.Specular = RGBA(1, 1, 1, 1)--RGBA(0.5, 0.5, 0.5, 0)
-waterMaterial.Ambient = RGBA(1, 1, 1, 1)--RGBA(0.5, 0.5, 0.5, 0)
-waterMaterial.Emission = RGBA(0, 0, 0, 0)
+waterMaterial.Diffuse = Color4(1, 1, 1, 1)--Color4(0.5, 0.5, 0.5, 0)
+waterMaterial.Specular = Color4(1, 1, 1, 1)--Color4(0.5, 0.5, 0.5, 0)
+waterMaterial.Ambient = Color4(1, 1, 1, 1)--Color4(0.5, 0.5, 0.5, 0)
+waterMaterial.Emission = Color4(0, 0, 0, 0)
 
 local fireMaterial = GameObject.Material()
 fireMaterial.Name = "FireMaterial"
 fireMaterial.Shininess = 250
-fireMaterial.Diffuse = RGBA(0, 0, 0, 0)--RGBA(0.5, 0.5, 0.5, 0)
-fireMaterial.Specular = RGBA(0, 0, 0, 0)--RGBA(0.5, 0.5, 0.5, 0)
-fireMaterial.Ambient = RGBA(0, 0, 0, 0)--RGBA(0.5, 0.5, 0.5, 0)
-fireMaterial.Emission = RGBA(0, 0, 0, 0)
+fireMaterial.Diffuse = Color4(0, 0, 0, 0)--Color4(0.5, 0.5, 0.5, 0)
+fireMaterial.Specular = Color4(0, 0, 0, 0)--Color4(0.5, 0.5, 0.5, 0)
+fireMaterial.Ambient = Color4(0, 0, 0, 0)--Color4(0.5, 0.5, 0.5, 0)
+fireMaterial.Emission = Color4(0, 0, 0, 0)
 
 local underwaterMaterial = GameObject.Material()
 underwaterMaterial.Name = "UnderwaterMaterial"
 underwaterMaterial.Shininess = 250
-underwaterMaterial.Diffuse = RGBA(0.2, 0.2, 0.2, 0)--RGBA(0.5, 0.5, 0.5, 0)
-underwaterMaterial.Specular = RGBA(0.1, 0.1, 0.1, 0)--RGBA(0.5, 0.5, 0.5, 0)
-underwaterMaterial.Ambient = RGBA(1, 1, 1, 0)--RGBA(0.5, 0.5, 0.5, 0)
-underwaterMaterial.Emission = RGBA(0, 0, 0, 0)
+underwaterMaterial.Diffuse = Color4(0.2, 0.2, 0.2, 0)--Color4(0.5, 0.5, 0.5, 0)
+underwaterMaterial.Specular = Color4(0.1, 0.1, 0.1, 0)--Color4(0.5, 0.5, 0.5, 0)
+underwaterMaterial.Ambient = Color4(1, 1, 1, 0)--Color4(0.5, 0.5, 0.5, 0)
+underwaterMaterial.Emission = Color4(0, 0, 0, 0)
 
 lightOrbModel.MaterialProperties = material
 lightOrbModel.PhysicalMaterialProperties = physicalMaterial
@@ -362,7 +362,7 @@ lightOrbModel.PhysicalMaterialProperties = physicalMaterial
 for i=1,0 do
 	local transform = GameObject.Transform()
 	transform.Parent = simulation --[[ transform:SetParent(simulation) ]]
-	transform.Transformation = Matrix3(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)) * Matrix3.AxisRotation(Vector3(-1, 2, 0.5), 3*math.random())
+	transform.Transformation = Matrix4(math.random(-100, 100), math.random(-100, 100), math.random(-100, 100)) * Matrix4.AxisRotation(Vector3(-1, 2, 0.5), 3*math.random())
 	transform:Update(0)
 
 	local model = GameObject.Model()
@@ -496,12 +496,12 @@ if true then
 				end
 				
 				transform.Parent = mapContainer --[[ transform:SetParent(mapContainer) ]]
-				transform.Transformation = Matrix3(
+				transform.Transformation = Matrix4(
 					Vector3(tonumber(current.pos[1]), tonumber(current.pos[2]), tonumber(current.pos[3]), 1) + mapOffset,
 					Vector3(tonumber(current.right[1]), tonumber(current.right[2]), tonumber(current.right[3])),
 					Vector3(tonumber(current.up[1]), tonumber(current.up[2]), tonumber(current.up[3])),
 					Vector3(tonumber(current.front[1]), tonumber(current.front[2]), tonumber(current.front[3]))
-				) * Matrix3.NewScale(size * 0.5 + sizeOffset)
+				) * Matrix4.NewScale(size * 0.5 + sizeOffset)
 				--transform.IsStatic = false
 				transform.InheritTransformation = false
 
@@ -510,12 +510,12 @@ if true then
 				local model = GameObject.Model()
 
 				--if a ~= 1 then a = 0.5 end
-				local color = RGBA(tonumber(current.color[1]), tonumber(current.color[2]), tonumber(current.color[3]), 1)
+				local color = Color4(tonumber(current.color[1]), tonumber(current.color[2]), tonumber(current.color[3]), 1)
 
 				model.Parent = transform --[[ model:SetParent(transform) ]]
 				model.Color = color
 				model.Reflectivity = current.reflectivity
-				model.GlowColor = (current.material == "Neon") and color or (current.material == "ForceField" and RGBA(color.R*.5,color.G*.5,color.B*.5,color.A*.5) or RGBA(0, 0, 0, 0))
+				model.GlowColor = (current.material == "Neon") and color or (current.material == "ForceField" and Color4(color.R*.5,color.G*.5,color.B*.5,color.A*.5) or Color4(0, 0, 0, 0))
 				--model.TextureColor = color
 
 				--[[local materialTextures = Engine.Textures.Roblox:GetByName(current.material)
@@ -570,7 +570,7 @@ if true then
 
 			light.Enabled = current.enabled == "t"
 			light.Attenuation = Vector3(1, 0, 0.1 * 255 / (tonumber(current.range))^2)
-			light.Diffuse = RGBA(tonumber(current.color[1]), tonumber(current.color[2]), tonumber(current.color[3]), 1)
+			light.Diffuse = Color4(tonumber(current.color[1]), tonumber(current.color[2]), tonumber(current.color[3]), 1)
 			light.Specular = light.Diffuse
 			light.Ambient = light.Diffuse
 			light.Brightness = tonumber(current.brightness)
@@ -613,8 +613,8 @@ if true then
 end
 
 local multiplier = 0.2
-local globalLighting = RGBA(1, 1, 1, 1)
-local blackColor = RGBA(0, 0, 0, 1)
+local globalLighting = Color4(1, 1, 1, 1)
+local blackColor = Color4(0, 0, 0, 1)
 
 coroutine.wrap(function()
 	local userInput = Engine.GameWindow.UserInput
@@ -695,10 +695,10 @@ coroutine.wrap(function()
 	
 	local hitMaterial = GameObject.Material()
 	hitMaterial.Shininess = 75
-	hitMaterial.Diffuse = RGBA(1, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
-	hitMaterial.Specular = RGBA(1, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
-	hitMaterial.Ambient = RGBA(1, 0.5, 0.5, 0)--RGBA(0.5, 0.5, 0.5, 0)
-	hitMaterial.Emission = RGBA(1, 0, 0, 0)
+	hitMaterial.Diffuse = Color4(1, 0.5, 0.5, 0)--Color4(0.5, 0.5, 0.5, 0)
+	hitMaterial.Specular = Color4(1, 0.5, 0.5, 0)--Color4(0.5, 0.5, 0.5, 0)
+	hitMaterial.Ambient = Color4(1, 0.5, 0.5, 0)--Color4(0.5, 0.5, 0.5, 0)
+	hitMaterial.Emission = Color4(1, 0, 0, 0)
 
 	local lastHit
 	local lastHitMaterial
@@ -847,10 +847,10 @@ coroutine.wrap(function()
 			previousPosition = mousePosition:GetPosition()
 		end
 
-		local transform = camera:GetTransformation() * Matrix3(x, y, z)
-		local rotation = (Matrix3.YawRotation(yaw) * Matrix3.PitchRotation(pitch)):TransformedAround(transform:Translation())
+		local transform = camera:GetTransformation() * Matrix4(x, y, z)
+		local rotation = (Matrix4.YawRotation(yaw) * Matrix4.PitchRotation(pitch)):TransformedAround(transform:Translation())
 		
-		camera:SetTransformation(rotation * Matrix3(transform:Translation()))
+		camera:SetTransformation(rotation * Matrix4(transform:Translation()))
 
 		scene:Update(0)
 	end

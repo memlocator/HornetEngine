@@ -53,9 +53,9 @@ local skyLight = GameObject.Light()
 skyLight.Enabled = true
 skyLight.Direction = Vector3(0.25, -1, 0.25):Unit()
 skyLight.Brightness = 0.5
-skyLight.Diffuse = RGBA(1, 1, 1, 1)
-skyLight.Specular = RGBA(1, 1, 1, 1)
-skyLight.Ambient = RGBA(1, 1, 1, 1)
+skyLight.Diffuse = Color4(1, 1, 1, 1)
+skyLight.Specular = Color4(1, 1, 1, 1)
+skyLight.Ambient = Color4(1, 1, 1, 1)
 skyLight.Type = Enum.LightType.Directional
 skyLight.Parent = simulation
 
@@ -73,7 +73,7 @@ local defaultFar = 5000
 local camera = GameObject.Camera()
 camera.Parent = level --[[ camera:SetParent(level) ]]
 camera:SetProperties(defaultWidth, defaultHeight, defaultProjection, defaultNear, defaultFar)
-camera:SetTransformation(Matrix3(0, 5, 10))
+camera:SetTransformation(Matrix4(0, 5, 10))
 
 --[[
 	Initialize the scene where objects are tracked for rendering purposes.
@@ -98,8 +98,8 @@ sceneDraw.Radius = 10
 sceneDraw.Sigma = 20
 sceneDraw.SkyBrightness = 1
 sceneDraw.SkyBackgroundBrightness = 1
-sceneDraw.SkyColor = RGBA(15/255, 5/255, 15/255, 1)
-sceneDraw.SkyBackgroundColor = RGBA(1, 0, 0, 0)
+sceneDraw.SkyColor = Color4(15/255, 5/255, 15/255, 1)
+sceneDraw.SkyBackgroundColor = Color4(1, 0, 0, 0)
 sceneDraw.Resolution = Vector3(resolution.Width, resolution.Height)
 sceneDraw.RenderAutomatically = true
 
@@ -286,9 +286,9 @@ function CreateTile(x, y)
 	local appearance = Appearance()
 	appearance.Name = "Appearance"
 	appearance.Parent = transform
-	appearance.Color = RGBA(1, 1, 1,1)
+	appearance.Color = Color4(1, 1, 1,1)
 	appearance.Texture = tileTexture
-	appearance.TextureColor = RGBA(1, 1, 1, 1)
+	appearance.TextureColor = Color4(1, 1, 1, 1)
 	appearance.UVScale = Vector3(1 / 7, -0.5)
 	appearance.UVOffset = Vector3(0, 1)
 	appearance.BlendTexture = false
@@ -624,10 +624,10 @@ freeCamScript:Run()
 -- Create some example objects in the scene
 local defaultMaterial = GameObject.Material()
 defaultMaterial.Shininess = 75
-defaultMaterial.Diffuse = RGBA(0.5, 0.5, 0.5, 0)
-defaultMaterial.Specular = RGBA(0.5, 0.5, 0.5, 0)
-defaultMaterial.Ambient = RGBA(0.5, 0.5, 0.5, 0)
-defaultMaterial.Emission = RGBA(0, 0, 0, 0)
+defaultMaterial.Diffuse = Color4(0.5, 0.5, 0.5, 0)
+defaultMaterial.Specular = Color4(0.5, 0.5, 0.5, 0)
+defaultMaterial.Ambient = Color4(0.5, 0.5, 0.5, 0)
+defaultMaterial.Emission = Color4(0, 0, 0, 0)
 defaultMaterial.Parent = level
 
 function CreateObject(scene, meshAsset, material)
@@ -661,7 +661,7 @@ local objectsCreated = 0
 
 for name in pairs(assets.meshes) do
 	local object = CreateObject(scene, meshes[name])
-	object.Transformation = Matrix3.EulerAnglesYawRotation(math.pi * objectsCreated / 5, 0, 0) * Matrix3(0, 0, 10)
+	object.Transformation = Matrix4.EulerAnglesYawRotation(math.pi * objectsCreated / 5, 0, 0) * Matrix4(0, 0, 10)
 	object.Parent = simulation
 	object.Name = name
 	
@@ -684,147 +684,149 @@ local lastRight = false
 
 math.randomseed(os.clock())
 
-while true do
-	wait()
-	
-	changedLeft = mouseLeft:GetState() ~= lastLeft
-	lastLeft = mouseLeft:GetState()
-	
-	changedRight = mouseRight:GetState() ~= lastRight
-	lastRight = mouseRight:GetState()
-	
-	local tileSelected = input:GetFocus(Enum.BoundDevice.Mouse1)
-	local tile
-	
-	if isAlive and tilesLeft > 0 and tileSelected then
-		local position = tileSelected.Parent.Position
-		tile = GetTile(position.X.Offset / 24 + 1, position.Y.Offset / 24 + 1)
+coroutine.wrap(function()
+	while true do
+		wait()
 		
-		if not tile.IsOpen then
-			if not tile.IsFlagged and mouseLeft:GetState() and changedLeft then
-				focused = tile
+		changedLeft = mouseLeft:GetState() ~= lastLeft
+		lastLeft = mouseLeft:GetState()
+		
+		changedRight = mouseRight:GetState() ~= lastRight
+		lastRight = mouseRight:GetState()
+		
+		local tileSelected = input:GetFocus(Enum.BoundDevice.Mouse1)
+		local tile
+		
+		if isAlive and tilesLeft > 0 and tileSelected then
+			local position = tileSelected.Parent.Position
+			tile = GetTile(position.X.Offset / 24 + 1, position.Y.Offset / 24 + 1)
+			
+			if not tile.IsOpen then
+				if not tile.IsFlagged and mouseLeft:GetState() and changedLeft then
+					focused = tile
+					
+					focused.IsPressing = true
+					focused:UpdateTile()
+				end
 				
-				focused.IsPressing = true
-				focused:UpdateTile()
+				if mouseRight:GetState() and changedRight then
+					tile.IsFlagged = not tile.IsFlagged
+					tile:UpdateTile()
+					
+					if tile.IsFlagged then
+						TileWasClicked(tile)
+						ProcessLookingAt()
+					end
+				end
+			end
+		end
+		
+		if not mouseLeft:GetState() and focused then
+			if changedLeft and focused == tile then
+				RevealTilesAt(focused.X, focused.Y)
+				ProcessLookingAt()
 			end
 			
-			if mouseRight:GetState() and changedRight then
-				tile.IsFlagged = not tile.IsFlagged
-				tile:UpdateTile()
-				
-				if tile.IsFlagged then
+			focused.IsPressing = false
+			focused:UpdateTile()
+			
+			focused = nil
+		end
+		if endKey:GetState() and endKey:GetStateChanged() and tile then
+			print(tile.X, tile.Y, GetScore(tile))
+		end
+		
+		if homeKey:GetState()then-- and homeKey:GetStateChanged() then
+			if #tilesOfInterest[1] > 0 then
+				--print("bc", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors, GetScore(tilesOfInterest[1][1]))
+				local tile = FindUnopenedNeighbor(tilesOfInterest[1][1])
+				if tile then
+					tile.IsFlagged = true
+					tile.IsPressing = false
+					tile:UpdateTile()
+					
+					print("flagging", tile.X, tile.Y)
+					
 					TileWasClicked(tile)
 					ProcessLookingAt()
-				end
-			end
-		end
-	end
-	
-	if not mouseLeft:GetState() and focused then
-		if changedLeft and focused == tile then
-			RevealTilesAt(focused.X, focused.Y)
-			ProcessLookingAt()
-		end
-		
-		focused.IsPressing = false
-		focused:UpdateTile()
-		
-		focused = nil
-	end
-	if endKey:GetState() and endKey:GetStateChanged() and tile then
-		print(tile.X, tile.Y, GetScore(tile))
-	end
-	
-	if homeKey:GetState()then-- and homeKey:GetStateChanged() then
-		if #tilesOfInterest[1] > 0 then
-			--print("bc", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors, GetScore(tilesOfInterest[1][1]))
-			local tile = FindUnopenedNeighbor(tilesOfInterest[1][1])
-			if tile then
-				tile.IsFlagged = true
-				tile.IsPressing = false
-				tile:UpdateTile()
-				
-				print("flagging", tile.X, tile.Y)
-				
-				TileWasClicked(tile)
-				ProcessLookingAt()
-				if tilesOfInterest[1][1] then
-					--print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors)
-				else
-					print("out of prio 1 tiles")
-				end
-			else
-				print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, GetScore(tilesOfInterest[1][1]))
-				TileWasClicked(tilesOfInterest[1][1])
-				ProcessLookingAt()
-				local category = tilesOfInterest[1]
-				print(#category)
-				for i,v in ipairs(category) do
-					local score, closed = GetScore(v)
-					
-					if score == 0 then
-						category[i] = category[#category]
-						category[i].InterestGroupIndex = i
-						category[#category] = nil
-						
-						v.InterestGroup = nil
-						v.InterestGroupIndex = nil
-						
-						print("removed at", i, #category)
+					if tilesOfInterest[1][1] then
+						--print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors)
+					else
+						print("out of prio 1 tiles")
 					end
-					print(score, closed)
-					print(i, "|", v.X, v.Y, v.Neighbors, GetScore(v))
-				end
-				print"NIL TILE"
-			end
-		elseif #tilesOfSafeInterest[1] > 0 then
-			local tile = FindUnopenedNeighbor(tilesOfSafeInterest[1][1])
-			if tile then
-				RevealTilesAt(tile.X, tile.Y)
-				tile.IsPressing = false
-				tile:UpdateTile()
-				
-				print("clicking", tile.X, tile.Y)
-				
-				TileWasClicked(tile)
-				ProcessLookingAt()
-				if tilesOfSafeInterest[1][1] then
-					--print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors)
 				else
-					print("out of prio 1 tiles")
+					print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, GetScore(tilesOfInterest[1][1]))
+					TileWasClicked(tilesOfInterest[1][1])
+					ProcessLookingAt()
+					local category = tilesOfInterest[1]
+					print(#category)
+					for i,v in ipairs(category) do
+						local score, closed = GetScore(v)
+						
+						if score == 0 then
+							category[i] = category[#category]
+							category[i].InterestGroupIndex = i
+							category[#category] = nil
+							
+							v.InterestGroup = nil
+							v.InterestGroupIndex = nil
+							
+							print("removed at", i, #category)
+						end
+						print(score, closed)
+						print(i, "|", v.X, v.Y, v.Neighbors, GetScore(v))
+					end
+					print"NIL TILE"
+				end
+			elseif #tilesOfSafeInterest[1] > 0 then
+				local tile = FindUnopenedNeighbor(tilesOfSafeInterest[1][1])
+				if tile then
+					RevealTilesAt(tile.X, tile.Y)
+					tile.IsPressing = false
+					tile:UpdateTile()
+					
+					print("clicking", tile.X, tile.Y)
+					
+					TileWasClicked(tile)
+					ProcessLookingAt()
+					if tilesOfSafeInterest[1][1] then
+						--print("ac", tilesOfInterest[1][1].X, tilesOfInterest[1][1].Y, tilesOfInterest[1][1].Neighbors)
+					else
+						print("out of prio 1 tiles")
+					end
+				else
+					print"NIL TILE"
+					print("tiles of interest:")
+					local category = tilesOfSafeInterest[1]
+					
+					for i,v in ipairs(category) do
+						local score, closed = GetScore(v)
+						
+						if closed == 0 then
+							category[i] = category[#category]
+							category[i].SafeInterestGroupIndex = i
+							category[#category] = nil
+							
+							v.SafeInterestGroup = nil
+							v.SafeInterestGroupIndex = nil
+							
+							print("removed at", i, #category)
+						end
+						print(score, closed)
+						print(i, "|", v.X, v.Y, v.Neighbors, GetScore(v))
+					end
 				end
 			else
-				print"NIL TILE"
 				print("tiles of interest:")
-				local category = tilesOfSafeInterest[1]
 				
-				for i,v in ipairs(category) do
-					local score, closed = GetScore(v)
-					
-					if closed == 0 then
-						category[i] = category[#category]
-						category[i].SafeInterestGroupIndex = i
-						category[#category] = nil
-						
-						v.SafeInterestGroup = nil
-						v.SafeInterestGroupIndex = nil
-						
-						print("removed at", i, #category)
-					end
-					print(score, closed)
-					print(i, "|", v.X, v.Y, v.Neighbors, GetScore(v))
+				for i=1,8 do
+					print(i, #tilesOfInterest[i])
 				end
 			end
-		else
-			print("tiles of interest:")
-			
-			for i=1,8 do
-				print(i, #tilesOfInterest[i])
-			end
+		end
+		
+		if enterKey:GetState() and (not isAlive or tilesLeft == 0) then
+			InitializeBoard()
 		end
 	end
-	
-	if enterKey:GetState() and (not isAlive or tilesLeft == 0) then
-		InitializeBoard()
-	end
-end
+end)()

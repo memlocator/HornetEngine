@@ -1,7 +1,7 @@
 #include "JsonParser.h"
 
-#include <fstream>
-#include <sstream>
+import <fstream>;
+import <sstream>;
 
 JsonParser::JsonParser(const std::string& data, bool isPath)
 {

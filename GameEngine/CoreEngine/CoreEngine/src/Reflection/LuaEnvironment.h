@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
-#include <string>
+import <vector>;
+import <string>;
 
 struct lua_State;
 

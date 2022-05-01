@@ -1,8 +1,8 @@
 #include "RayTracer.h"
 
-#include <chrono>
-#include <cmath>
-#include <iostream>
+import <chrono>;
+import <cmath>;
+import <iostream>;
 
 #include "Texture.h"
 #include "Scene.h"
@@ -38,16 +38,16 @@ namespace GraphicsEngine
 		return Sanitize(value);
 	}
 
-	Pixel::Pixel(const RGBA& color)
+	Pixel::Pixel(const Color4& color)
 	{
 		R = color.R;
 		G = color.G;
 		B = color.B;
 	}
 
-	Pixel::operator RGBA()
+	Pixel::operator Color4()
 	{
-		return RGBA(R, G, B, 1);
+		return Color4(R, G, B, 1);
 	}
 
 	RayTracer::~RayTracer()
@@ -318,8 +318,8 @@ namespace GraphicsEngine
 			IndexVector ind = IndexVector();
 			Accelerator.CastRay(ray, distance, std::ref(processResults), std::ref(filter), ind);
 
-			//DrawLine(ray.Start, ray.Start + ray.Direction * distance, RGBA(0, 1, 0));
-			DrawLine(res.Intersection, res.Intersection + res.Normal, RGBA(0.f, 1.f, 0.f));
+			//DrawLine(ray.Start, ray.Start + ray.Direction * distance, Color4(0, 1, 0));
+			DrawLine(res.Intersection, res.Intersection + res.Normal, Color4(0.f, 1.f, 0.f));
 		}
 
 		if (DisplayOutput)
@@ -1080,7 +1080,7 @@ namespace GraphicsEngine
 		Threads[threadID].Finished = true;
 	}
 
-	void RayTracer::DrawLine(const Vector3& start, const Vector3& end, const RGBA& color)
+	void RayTracer::DrawLine(const Vector3& start, const Vector3& end, const Color4& color)
 	{
 		Vector3 screenStart = start;
 		Vector3 screenEnd = end;

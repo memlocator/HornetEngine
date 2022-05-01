@@ -1,7 +1,7 @@
 #include "GlowingSceneOperation.h"
 
 extern "C" {
-#include <math.h>
+import <cmath>;
 }
 
 #include "Graphics.h"
@@ -171,7 +171,7 @@ namespace GraphicsEngine
 		std::shared_ptr<BlurOperation> blur = Engine::Create<BlurOperation>();
 		blur->Output = BlurResult;
 		blur->Detatch = false;
-		blur->Configure(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA);
+		blur->Configure(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::Color416F, Enum::Format::Color4);
 		blur->SetParent(This.lock());
 
 		Blur = blur;
@@ -186,18 +186,18 @@ namespace GraphicsEngine
 
 		sceneBuffer->AttachTexture(0, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGB32F, Enum::Format::RGB), GL_COLOR_ATTACHMENT0, true);
 		sceneBuffer->AttachTexture(1, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGB32F, Enum::Format::RGB), GL_COLOR_ATTACHMENT1, true);
-		sceneBuffer->AttachTexture(2, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGBA, Enum::Format::RGBA), GL_COLOR_ATTACHMENT2, true);
+		sceneBuffer->AttachTexture(2, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::Color4, Enum::Format::Color4), GL_COLOR_ATTACHMENT2, true);
 		sceneBuffer->AttachTexture(3, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGB8, Enum::Format::RGB), GL_COLOR_ATTACHMENT3, true);
 		sceneBuffer->AttachTexture(4, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGB8, Enum::Format::RGB), GL_COLOR_ATTACHMENT4, true);
 		sceneBuffer->AttachTexture(5, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGB8, Enum::Format::RGB), GL_COLOR_ATTACHMENT5, true);
-		sceneBuffer->AttachTexture(6, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA), GL_COLOR_ATTACHMENT6, true);
+		sceneBuffer->AttachTexture(6, Textures::Create(width, height, Enum::SampleType::Linear, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::Color416F, Enum::Format::Color4), GL_COLOR_ATTACHMENT6, true);
 
 		sceneBuffer->BindAttachments();
 
 		accumulationBuffer->DrawTo();
 		accumulationBuffer->SetAttachmentCount(1);
 
-		accumulationBuffer->AttachTexture(0, Textures::Create(width, height, Enum::SampleType::Nearest, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA), GL_COLOR_ATTACHMENT0, true);
+		accumulationBuffer->AttachTexture(0, Textures::Create(width, height, Enum::SampleType::Nearest, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::Color416F, Enum::Format::Color4), GL_COLOR_ATTACHMENT0, true);
 
 		accumulationBuffer->BindAttachments();
 
@@ -212,7 +212,7 @@ namespace GraphicsEngine
 		blur->SetInput(sceneBuffer->GetTexture(6));
 
 
-		std::shared_ptr<FrameBuffer> hdrBuffer = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Nearest, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::RGBA16F, Enum::Format::RGBA), true, false);
+		std::shared_ptr<FrameBuffer> hdrBuffer = FrameBuffer::Create(width, height, Textures::Create(width, height, Enum::SampleType::Nearest, Enum::WrapType::ClampExtend, Enum::DataType::Float, Enum::InternalFormat::Color416F, Enum::Format::Color4), true, false);
 
 		hdrBuffer->Name = "HDRBuffer";
 
@@ -234,7 +234,7 @@ namespace GraphicsEngine
 
 	std::shared_ptr<Texture> GlowingSceneOperation::GenerateNormalMap(const std::shared_ptr<Texture>& heightMap)
 	{
-		std::shared_ptr<Texture> normalMap = Textures::Create(heightMap->GetWidth(), heightMap->GetHeight(), Enum::SampleType::Linear, Enum::WrapType::Repeat, Enum::DataType::UnsignedByte, Enum::InternalFormat::RGBA, Enum::Format::RGBA);
+		std::shared_ptr<Texture> normalMap = Textures::Create(heightMap->GetWidth(), heightMap->GetHeight(), Enum::SampleType::Linear, Enum::WrapType::Repeat, Enum::DataType::UnsignedByte, Enum::InternalFormat::Color4, Enum::Format::Color4);
 
 		NormalMapQueue.push_back(TexturePair());
 
@@ -371,7 +371,7 @@ namespace GraphicsEngine
 		auto sceneBuffer = SceneBuffer.lock();
 
 		sceneBuffer->DrawTo();
-		Graphics::SetClearColor(RGBA(0.f, 0.f, 0.f, 1.f));
+		Graphics::SetClearColor(Color4(0.f, 0.f, 0.f, 1.f));
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); CheckGLErrors();
 
 		currentScene->BuildRenderQueue(camera);

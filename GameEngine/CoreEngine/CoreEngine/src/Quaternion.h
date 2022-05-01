@@ -3,7 +3,7 @@
 #include "Matrix4.h"
 
 extern "C" {
-#include <math.h>
+import <cmath>;
 }
 
 class Quaternion

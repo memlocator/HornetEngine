@@ -2,7 +2,7 @@
 
 #include "Object.h"
 #include "DeviceVector.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Alignment.h"
 
 namespace GraphicsEngine
@@ -17,7 +17,7 @@ namespace GraphicsEngine
 	class Text : public Engine::Object
 	{
 	public:
-		RGBA TextColor;
+		Color4 TextColor;
 		bool WrapText = true;
 		Enum::Alignment AlignX = Enum::Alignment::Minimum;
 		Enum::Alignment AlignY = Enum::Alignment::Minimum;

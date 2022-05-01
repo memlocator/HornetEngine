@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RGBA.h"
+#include "Color4.h"
 #include "Object.h"
 
 namespace GraphicsEngine
@@ -8,7 +8,7 @@ namespace GraphicsEngine
 	class PhysicalMaterial : public Engine::Object
 	{
 	public:
-		RGBA Albedo = RGBA(1.f, 1.f, 1.f, 0.f);
+		Color4 Albedo = Color4(1.f, 1.f, 1.f, 0.f);
 		float Roughness = 0.5f;
 		float Metalness = 0;
 		float RefractiveIndex = 1.1f;

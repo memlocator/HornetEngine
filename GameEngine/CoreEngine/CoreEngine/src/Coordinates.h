@@ -2,7 +2,7 @@
 
 #include "Vector3.h"
 
-#include <cmath>
+import <cmath>;
 
 namespace Engine
 {
@@ -16,5 +16,9 @@ namespace Engine
 		Coordinates(const Vector3& vector) : X(int(std::floor(vector.X))), Y(int(std::floor(vector.Y))), Z(int(std::floor(vector.Z))) {}
 
 		operator Vector3() const { return Vector3(Float(X), Float(Y), Float(Z)); }
+
+		Coordinates operator+(const Coordinates& c) { return Coordinates(X + c.X, Y + c.Y, Z + c.Z); }
 	};
+
+	Coordinates operator*(int x, const Coordinates& coords);
 }

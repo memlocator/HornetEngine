@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <map>
-#include <fstream>
+import <string>;
+import <map>;
+import <fstream>;
 
 extern "C" {
 #include "glew.h"

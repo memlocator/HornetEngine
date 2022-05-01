@@ -1,6 +1,6 @@
 #pragma once
 
-#include <algorithm>
+import <algorithm>;
 
 #include "Reflected.h"
 #include "LuaTypeBinding.h"

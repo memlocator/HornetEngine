@@ -11,7 +11,7 @@ namespace GraphicsEngine
 
 	void DrawSceneOperation::Render()
 	{
-		Graphics::SetClearColor(RGBA(0x000000FF));
+		Graphics::SetClearColor(Color4(0x000000FF));
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		CurrentScene.lock()->Draw();

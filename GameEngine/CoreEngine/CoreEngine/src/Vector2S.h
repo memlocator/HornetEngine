@@ -1,148 +1,198 @@
 #pragma once
 
-#include <iosfwd>
-#include <string>
-#include <cmath>
+#include "Vector2S-decl.h"
 
-#include "Precision.h"
+import <iostream>;
+import <sstream>;
+
 
 template <typename Number, typename DistanceType>
-class Vector2SType
+constexpr Vector2SType<Number, DistanceType>::Vector2SType() : X(0), Y(0) {}
+
+template <typename Number, typename DistanceType>
+constexpr Vector2SType<Number, DistanceType>::Vector2SType(Number x, Number y) : X(x), Y(y) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector2SType<Number, DistanceType>::Vector2SType(const Vector2Type<OtherNumber, OtherDistanceType>& other) : X((Number)other.X), Y((Number)other.Y) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector2SType<Number, DistanceType>::Vector2SType(const Vector2SType<OtherNumber, OtherDistanceType>& other) : X((Number)other.X), Y((Number)other.Y) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector2SType<Number, DistanceType>::Vector2SType(const Vector3Type<OtherNumber, OtherDistanceType>& other) : X((Number)other.X), Y((Number)other.Y) {}
+
+template <typename Number, typename DistanceType>
+template <typename OtherNumber, typename OtherDistanceType>
+constexpr Vector2SType<Number, DistanceType>::Vector2SType(const Vector3SType<OtherNumber, OtherDistanceType>& other) : X((Number)other.X), Y((Number)other.Y) {}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::Set(Number x, Number y)
 {
-public:
-	Number X, Y;
+	X = x; Y = y;
+	return *this;
+}
 
-	constexpr Vector2SType() : X(0), Y(0) {}
-	constexpr Vector2SType(Number x, Number y = 0) : X(x), Y(y) {}
-	constexpr Vector2SType(const Vector2SType<float, float>& other) : X((Number)other.X), Y((Number)other.Y) {}
-	constexpr Vector2SType(const Vector2SType<double, double>& other) : X((Number)other.X), Y((Number)other.Y) {}
-	constexpr Vector2SType(const Vector2SType<int, float>& other) : X((Number)other.X), Y((Number)other.Y) {}
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::Normalize()
+{
+	return *this *= (Number)(1 / Length());
+}
 
-	Vector2SType& Set(Number x, Number y = 0)
-	{
-		X = x; Y = y;
-		return *this;
-	}
-	Vector2SType& Normalize()
-	{
-		return *this *= (Number)(1 / Length());
-	}
-	DistanceType Dot(const Vector2SType& other) const
-	{
-		return (DistanceType)(X * other.X + Y * other.Y);
-	}
-	Vector2SType Unit() const
-	{
-		return (Number)(1 / Length()) * *this;
-	}
-	DistanceType Length() const
-	{
-		return std::sqrt(SquareLength());
-	}
-	DistanceType SquareLength() const
-	{
-		return Dot(*this);
-	}
-	Vector2SType& InvertLength()
-	{
-		return *this *= (Number)(1 / SquareLength());
-	}
+template <typename Number, typename DistanceType>
+DistanceType Vector2SType<Number, DistanceType>::Dot(const Vector2SType& other) const
+{
+	return (DistanceType)(X * other.X + Y * other.Y);
+}
 
-	Vector2SType InvertedLength() const
-	{
-		return *this * (Number)(1 / SquareLength());
-	}
-	Vector2SType& Scale(const Vector2SType& other)
-	{
-		return Scale(other.X, other.Y);
-	}
-	Vector2SType& Scale(Number x, Number y)
-	{
-		return Set(X * x, Y * y);
-	}
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> Vector2SType<Number, DistanceType>::Unit() const
+{
+	return (Number)(1 / Length()) * *this;
+}
 
-	Vector2SType Negate() const { return -*this; }
+template <typename Number, typename DistanceType>
+DistanceType Vector2SType<Number, DistanceType>::Length() const
+{
+	return std::sqrt(SquareLength());
+}
 
-	Vector2SType operator-() const
-	{
-		return Vector2SType(-X, -Y);
-	}
-	Vector2SType operator+(const Vector2SType& other) const
-	{
-		return Vector2SType(X + other.X, Y + other.Y);
-	}
-	Vector2SType operator-(const Vector2SType& other) const
-	{
-		return Vector2SType(X - other.X, Y - other.Y);
-	}
-	Vector2SType operator*(Number scalar) const
-	{
-		return Vector2SType(X * scalar, Y * scalar);
-	}
-	DistanceType operator*(const Vector2SType& other) const
-	{
-		return Dot(other);
-	}
-	Vector2SType& operator=(const Vector2SType& other)
-	{
-		return Set(other.X, other.Y);
-	}
-	Vector2SType& operator+=(const Vector2SType& other)
-	{
-		return Set(X + other.X, Y + other.Y);
-	}
-	Vector2SType& operator-=(const Vector2SType& other)
-	{
-		return Set(X - other.X, Y - other.Y);
-	}
-	Vector2SType& operator*=(Number scalar)
-	{
-		return Set(X * scalar, Y * scalar);
-	}
-	bool operator==(const Vector2SType& other) const
-	{
-		return Compare(X, other.X) && Compare(Y, other.Y);
-	}
-	bool operator!=(const Vector2SType& other) const
-	{
-		return !(*this == other);
-	}
-	Number operator[](int i) const
-	{
-		return (&X)[i];
-	}
-	Number& operator[](int i)
-	{
-		return (&X)[i];
-	}
+template <typename Number, typename DistanceType>
+DistanceType Vector2SType<Number, DistanceType>::SquareLength() const
+{
+	return Dot(*this);
+}
 
-	operator std::string() const;
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::InvertLength()
+{
+	return *this *= (Number)(1 / SquareLength());
+}
 
-private:
-	bool Compare(Number x, Number y, Number epsilon = (Number)1e-5) const
-	{
-		return std::abs(x - y) < epsilon;
-	}
-};
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> Vector2SType<Number, DistanceType>::InvertedLength() const
+{
+	return *this * (Number)(1 / SquareLength());
+}
 
-using Vector2SF = Vector2SType<float, float>;
-using Vector2SD = Vector2SType<double, double>;
-using Vector2SI = Vector2SType<int, float>;
-using Vector2S = Vector2SType<Float, Float>;
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::Scale(const Vector2SType& other)
+{
+	return Scale(other.X, other.Y);
+}
 
-Vector2SF operator*(float scalar, const Vector2SF& vector);
-Vector2SD operator*(double scalar, const Vector2SD& vector);
-Vector2SI operator*(int scalar, const Vector2SI& vector);
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::Scale(Number x, Number y)
+{
+	return Set(X * x, Y * y);
+}
 
-std::ostream& operator<<(std::ostream& out, const Vector2SF& vector);
-std::ostream& operator<<(std::ostream& out, const Vector2SD& vector);
-std::ostream& operator<<(std::ostream& out, const Vector2SI& vector);
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> Vector2SType<Number, DistanceType>::Negate() const { return -*this; }
 
-template <>
-Vector2SType<float, float>::operator std::string() const;
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> Vector2SType<Number, DistanceType>::operator-() const
+{
+	return Vector2SType(-X, -Y);
+}
 
-template <>
-Vector2SType<double, double>::operator std::string() const;
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> Vector2SType<Number, DistanceType>::operator+(const Vector2SType& other) const
+{
+	return Vector2SType(X + other.X, Y + other.Y);
+}
 
-template <>
-Vector2SType<int, float>::operator std::string() const;
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> Vector2SType<Number, DistanceType>::operator-(const Vector2SType& other) const
+{
+	return Vector2SType(X - other.X, Y - other.Y);
+}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> Vector2SType<Number, DistanceType>::operator*(Number scalar) const
+{
+	return Vector2SType(X * scalar, Y * scalar);
+}
+
+template <typename Number, typename DistanceType>
+DistanceType Vector2SType<Number, DistanceType>::operator*(const Vector2SType& other) const
+{
+	return Dot(other);
+}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::operator=(const Vector2SType& other)
+{
+	return Set(other.X, other.Y);
+}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::operator+=(const Vector2SType& other)
+{
+	return Set(X + other.X, Y + other.Y);
+}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::operator-=(const Vector2SType& other)
+{
+	return Set(X - other.X, Y - other.Y);
+}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>& Vector2SType<Number, DistanceType>::operator*=(Number scalar)
+{
+	return Set(X * scalar, Y * scalar);
+}
+
+template <typename Number, typename DistanceType>
+bool Vector2SType<Number, DistanceType>::operator==(const Vector2SType& other) const
+{
+	return Compare(X, other.X) && Compare(Y, other.Y);
+}
+
+template <typename Number, typename DistanceType>
+bool Vector2SType<Number, DistanceType>::operator!=(const Vector2SType& other) const
+{
+	return !(*this == other);
+}
+
+template <typename Number, typename DistanceType>
+Number Vector2SType<Number, DistanceType>::operator[](int i) const
+{
+	return (&X)[i];
+}
+
+template <typename Number, typename DistanceType>
+Number& Vector2SType<Number, DistanceType>::operator[](int i)
+{
+	return (&X)[i];
+}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType> operator*(Number scalar, const Vector2SType<Number, DistanceType>& vector)
+{
+	return vector * scalar;
+}
+
+template <typename Number, typename DistanceType>
+std::ostream& operator<<(std::ostream& out, const Vector2SType<Number, DistanceType>& vector)
+{
+	return out << "< " << vector.X << ", " << vector.Y << " >";
+}
+
+template <typename Number, typename DistanceType>
+Vector2SType<Number, DistanceType>::operator std::string() const
+{
+	std::stringstream out;
+	out << *this;
+
+	return out.str();
+}
+
+template <typename Number, typename DistanceType>
+bool Vector2SType<Number, DistanceType>::Compare(Number x, Number y, Number epsilon) const
+{
+	return std::abs(x - y) < epsilon;
+}

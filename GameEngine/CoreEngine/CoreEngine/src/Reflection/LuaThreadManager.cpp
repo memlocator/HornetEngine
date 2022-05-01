@@ -1,8 +1,8 @@
 #include "LuaThreadManager.h"
 
-#include <iostream>
-#include <chrono>
-#include <map>
+import <iostream>;
+import <chrono>;
+import <map>;
 #include <lua.hpp>
 
 #include "../IdentifierHeap.h"
@@ -180,6 +180,21 @@ namespace Engine
 					}
 					else
 					{
+						{
+							lua_createtable(newThread, 0, 0);
+
+							thread.InitializeCallback(newThread);
+
+							lua_createtable(newThread, 0, 1);
+							lua_pushstring(newThread, "__index");
+							lua_getglobal(newThread, "_G");
+							lua_settable(newThread, -3);
+
+							lua_setmetatable(newThread, -2);
+
+							lua_setupvalue(newThread, -2, 1);
+						}
+
 						thread.SetStatus(ThreadStatus::Running);
 
 						lua_pushcfunction(newThread, Lua::LuaEnvironment::Traceback);

@@ -27,7 +27,7 @@ public:
 
 	static void Initialize();
 	static void Clean();
-	static void SetClearColor(const RGBA& color);
+	static void SetClearColor(const Color4& color);
 	static void ClearScreen(GLbitfield mask);
 	static void SetBlendMode(GLenum sMode, GLenum dMode);
 	static const std::shared_ptr<Engine::ModelAsset>& GetCoreMesh(const std::string& name);

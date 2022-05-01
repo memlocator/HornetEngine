@@ -68,8 +68,8 @@ namespace Engine
 						Argument<Enum::SampleType, Default(Enum::SampleType::Nearest)>("sampleType"),
 						Argument<Enum::WrapType, Default(Enum::WrapType::Repeat)>("wrapType"),
 						Argument<Enum::DataType, Default(Enum::DataType::UnsignedByte)>("dataType"),
-						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::RGBA)>("internalFormat"),
-						Argument<Enum::Format, Default(Enum::Format::RGBA)>("format")
+						Argument<Enum::InternalFormat, Default(Enum::InternalFormat::Color4)>("internalFormat"),
+						Argument<Enum::Format, Default(Enum::Format::Color4)>("format")
 					).Bind<BlurOperation, &BlurOperation::Configure>()
 				)
 			);

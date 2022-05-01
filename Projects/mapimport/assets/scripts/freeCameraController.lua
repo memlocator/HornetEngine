@@ -93,10 +93,10 @@ coroutine.wrap(function()
 				previousPosition = bindings.MovementInput:GetPosition()
 			end
 
-			local transform = camera:GetTransformation() * Matrix3(x, y, z)
-			local rotation = (Matrix3.YawRotation(yaw) * Matrix3.PitchRotation(pitch)):TransformedAround(transform:Translation())
+			local transform = camera:GetTransformation() * Matrix4(x, y, z)
+			local rotation = (Matrix4.YawRotation(yaw) * Matrix4.PitchRotation(pitch)):TransformedAround(transform:Translation())
 
-			camera:SetTransformation(rotation * Matrix3(transform:Translation()))
+			camera:SetTransformation(rotation * Matrix4(transform:Translation()))
 		end
 	end
 end)()

@@ -1,11 +1,11 @@
 #include "Graphics.h"
 
-#include <sstream>
+import <sstream>;
 extern "C" {
 #include <Windows.h>
 }
 
-#include <iostream>
+import <iostream>;
 
 #include "Textures.h"
 #include "Fonts.h"
@@ -114,7 +114,7 @@ void Graphics::Clean()
 	System = nullptr;
 }
 
-void Graphics::SetClearColor(const RGBA& color)
+void Graphics::SetClearColor(const Color4& color)
 {
 	glClearColor(color.R, color.G, color.B, color.A); CheckGLErrors();
 }

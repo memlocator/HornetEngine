@@ -1,7 +1,7 @@
 #include "Light.h"
 
 extern "C" {
-#include <math.h>
+import <cmath>;
 }
 
 #include "Graphics.h"

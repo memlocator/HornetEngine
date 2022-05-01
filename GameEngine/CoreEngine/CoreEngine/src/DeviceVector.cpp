@@ -1,6 +1,6 @@
 #include "DeviceVector.h"
 
-#include <iostream>
+import <iostream>;
 
 void DeviceAxis::Set(Float newScale, Float newOffset)
 {

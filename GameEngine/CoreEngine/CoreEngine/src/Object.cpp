@@ -1,6 +1,6 @@
 #include "Object.h"
 
-#include <iostream>
+import <iostream>;
 
 #include "IdentifierHeap.h"
 #include "Reflection/MetaData.h"

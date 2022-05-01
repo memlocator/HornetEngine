@@ -1,10 +1,10 @@
-#include <vector>
-#include <map>
-#include <memory>
-#include <functional>
+import <vector>;
+import <map>;
+import <memory>;
+import <functional>;
 
 #include "Vector3.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "AabbTree.h"
 #include "Light.h"
 #include "AcceleratedKDTree.h"
@@ -37,7 +37,7 @@ namespace GraphicsEngine
 		class Material
 		{
 		public:
-			RGBA Albedo = RGBA(1.f, 1.f, 1.f, 1.f);
+			Color4 Albedo = Color4(1.f, 1.f, 1.f, 1.f);
 			Float Roughness = 0.5f;
 			Float Metalness = 0;
 			Float RefractiveIndex = 1.1f;

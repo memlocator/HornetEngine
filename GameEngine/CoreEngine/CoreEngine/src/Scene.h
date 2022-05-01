@@ -1,13 +1,13 @@
 #pragma once
 
-#include <queue>
+import <queue>;
 
 #include "Object.h"
 #include "AabbTree.h"
 #include "PageAllocator.h"
 #include "Ray.h"
 #include "SceneRayCastResults.h"
-#include "RGBA.h"
+#include "Color4.h"
 #include "Reference.h"
 
 namespace Engine
@@ -90,13 +90,13 @@ namespace GraphicsEngine
 		std::weak_ptr<Camera> CurrentCamera;
 		std::weak_ptr<Light> GlobalLight;
 
-		RGBA FogColor = 0xFFFFFFFF;
+		Color4 FogColor = 0xFFFFFFFF;
 		float FogNear = 3;
 		float FogFar = 25;
 
-		RGBA GlobalDiffuse = 0xFFFFFFFF;
-		RGBA GlobalSpecular = 0xFFFFFFFF;
-		RGBA GlobalAmbient = 0xFFFFFFFF;
+		Color4 GlobalDiffuse = 0xFFFFFFFF;
+		Color4 GlobalSpecular = 0xFFFFFFFF;
+		Color4 GlobalAmbient = 0xFFFFFFFF;
 
 		void RefreshWatches();
 		const AabbTree& GetWatched(int lightIndex) const;

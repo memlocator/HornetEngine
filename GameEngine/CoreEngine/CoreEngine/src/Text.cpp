@@ -24,7 +24,7 @@ namespace GraphicsEngine
 		ContentsAppearance = Engine::Create<Appearance>();
 		ContentsAppearance->Name = "ContentsAppearance";
 		ContentsAppearance->Texture = ContentsTexture;
-		ContentsAppearance->Color = RGBA(0.f, 0.f, 0.f, 0.f);
+		ContentsAppearance->Color = Color4(0.f, 0.f, 0.f, 0.f);
 		ContentsAppearance->SetParent(This.lock());
 
 		TextTransform = Engine::Create<DeviceTransform>();
@@ -69,7 +69,7 @@ namespace GraphicsEngine
 
 		Programs::Screen->SetClippingMask(nullptr, 1);
 		Programs::Screen->SetTexture(font->GetTexture());
-		Programs::Screen->color.Set(RGBA(0.f, 0.f, 0.f, 0.f));
+		Programs::Screen->color.Set(Color4(0.f, 0.f, 0.f, 0.f));
 		Programs::Screen->blendTexture.Set(true);
 		Programs::Screen->resolution.Set(absoluteSize);
 		Programs::Screen->textureColor.Set(TextColor);
@@ -78,7 +78,7 @@ namespace GraphicsEngine
 
 		TextTransform->UpdateTransformation();
 
-		Graphics::SetClearColor(RGBA(0.f, 0.f, 0.f, 0.f)); CheckGLErrors();
+		Graphics::SetClearColor(Color4(0.f, 0.f, 0.f, 0.f)); CheckGLErrors();
 		Graphics::ClearScreen(GL_COLOR_BUFFER_BIT); CheckGLErrors();
 		CharacterTransform->AnchorPoint = DeviceVector(0, 0, 0, 0);
 		CharacterTransform->Position = DeviceVector(0, 0, 0, 0);

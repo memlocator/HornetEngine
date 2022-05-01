@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <memory>
+import <vector>;
+import <string>;
+import <memory>;
 
 namespace Engine
 {

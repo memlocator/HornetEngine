@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+import <memory>;
 #include "../IdentifierHeap.h"
 
 struct lua_State;

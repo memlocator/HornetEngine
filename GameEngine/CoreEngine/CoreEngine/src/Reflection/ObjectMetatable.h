@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+import <unordered_map>;
 
 struct lua_State;
 struct luaL_Reg;

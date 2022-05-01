@@ -1,5 +1,10 @@
 #include "Vector3S.h"
 
+#include "Vector2-decl.h"
+#include "Vector2S-decl.h"
+#include "Vector3-decl.h"
+#include "Vector3S-decl.h"
+
 #include "Reflection/Reflection.h"
 
 namespace Engine
@@ -24,14 +29,49 @@ namespace Engine
 				Member<Bind(&Vector::Z)>("Z"),
 
 				Constructor(
-					Overload()
-				),
-
-				Constructor(
 					Overload(
 						Argument<Number, Default((Number)0.0)>("x"),
 						Argument<Number, Default((Number)0.0)>("y"),
 						Argument<Number, Default((Number)0.0)>("z")
+					),
+					Overload(
+						Argument<const Vector2Type<float, float>&>("vector")
+					),
+					Overload(
+						Argument<const Vector2Type<double, double>&>("vector")
+					),
+					Overload(
+						Argument<const Vector2Type<int, float>&>("vector")
+					),
+					Overload(
+						Argument<const Vector2SType<float, float>&>("vector"),
+						Argument<Number>("z")
+					),
+					Overload(
+						Argument<const Vector2SType<double, double>&>("vector"),
+						Argument<Number>("z")
+					),
+					Overload(
+						Argument<const Vector2SType<int, float>&>("vector"),
+						Argument<Number>("z")
+					),
+					Overload(
+						Argument<const Vector3Type<float, float>&>("vector")
+					),
+					Overload(
+						Argument<const Vector3Type<double, double>&>("vector")
+					),
+					Overload(
+						Argument<const Vector3Type<int, float>&>("vector")
+					),
+					Overload(
+						Argument<const Vector3SType<float, float>&>("vector")
+					),
+					Overload(
+						Argument<const Vector3SType<double, double>&>("vector")
+					),
+					Overload(
+						Argument<const Vector3SType<int, float>&>("vector")
 					)
 				),
 

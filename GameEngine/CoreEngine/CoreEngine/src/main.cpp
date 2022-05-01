@@ -1,7 +1,7 @@
 
-#include <iostream>
-#include <forward_list>
-#include <chrono>
+import <iostream>;
+import <forward_list>;
+import <chrono>;
 extern "C" {
 #include <Windows.h>
 }

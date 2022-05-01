@@ -51,9 +51,9 @@ local skyLight = GameObject.Light()
 skyLight.Enabled = true
 skyLight.Direction = Vector3(0.25, -1, 0.25):Unit()
 skyLight.Brightness = 0.5
-skyLight.Diffuse = RGBA(1, 1, 1, 1)
-skyLight.Specular = RGBA(1, 1, 1, 1)
-skyLight.Ambient = RGBA(1, 1, 1, 1)
+skyLight.Diffuse = Color4(1, 1, 1, 1)
+skyLight.Specular = Color4(1, 1, 1, 1)
+skyLight.Ambient = Color4(1, 1, 1, 1)
 skyLight.Type = Enum.LightType.Directional
 skyLight.Parent = simulation
 
@@ -71,7 +71,7 @@ local defaultFar = 5000
 local camera = GameObject.Camera()
 camera.Parent = level --[[ camera:SetParent(level) ]]
 camera:SetProperties(defaultWidth, defaultHeight, defaultProjection, defaultNear, defaultFar)
-camera:SetTransformation(Matrix3(0, 5, 10))
+camera:SetTransformation(Matrix4(0, 5, 10))
 
 --[[
 	Initialize the scene where objects are tracked for rendering purposes.
@@ -96,8 +96,8 @@ sceneDraw.Radius = 10
 sceneDraw.Sigma = 20
 sceneDraw.SkyBrightness = 1
 sceneDraw.SkyBackgroundBrightness = 1
-sceneDraw.SkyColor = RGBA(15/255, 5/255, 15/255, 1)
-sceneDraw.SkyBackgroundColor = RGBA(1, 0, 0, 0)
+sceneDraw.SkyColor = Color4(15/255, 5/255, 15/255, 1)
+sceneDraw.SkyBackgroundColor = Color4(1, 0, 0, 0)
 sceneDraw.Resolution = Vector3(resolution.Width, resolution.Height)
 sceneDraw.RenderAutomatically = true
 
@@ -119,10 +119,10 @@ freeCamScript:Run()
 -- Create some example objects in the scene
 local defaultMaterial = GameObject.Material()
 defaultMaterial.Shininess = 75
-defaultMaterial.Diffuse = RGBA(0.5, 0.5, 0.5, 0)
-defaultMaterial.Specular = RGBA(0.5, 0.5, 0.5, 0)
-defaultMaterial.Ambient = RGBA(0.5, 0.5, 0.5, 0)
-defaultMaterial.Emission = RGBA(0, 0, 0, 0)
+defaultMaterial.Diffuse = Color4(0.5, 0.5, 0.5, 0)
+defaultMaterial.Specular = Color4(0.5, 0.5, 0.5, 0)
+defaultMaterial.Ambient = Color4(0.5, 0.5, 0.5, 0)
+defaultMaterial.Emission = Color4(0, 0, 0, 0)
 defaultMaterial.Parent = level
 
 function CreateObject(scene, meshAsset, material)
@@ -156,7 +156,7 @@ local objectsCreated = 0
 
 for name in pairs(assets.meshes) do
 	local object = CreateObject(scene, meshes[name])
-	object.Transformation = Matrix3.EulerAnglesYawRotation(math.pi * objectsCreated / 5, 0, 0) * Matrix3(0, 0, 10)
+	object.Transformation = Matrix4.EulerAnglesYawRotation(math.pi * objectsCreated / 5, 0, 0) * Matrix4(0, 0, 10)
 	object.Parent = simulation
 	object.Name = name
 	
