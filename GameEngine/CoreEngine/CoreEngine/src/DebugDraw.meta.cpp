@@ -3,6 +3,7 @@
 #include "ModelAsset.h"
 #include "Material.h"
 #include "Scene.h"
+#include "Color4.h"
 
 #include "Reflection/Reflection.h"
 
@@ -57,7 +58,7 @@ namespace Engine
 						Returns<void>(),
 						Argument<const Vector3&>("point1"),
 						Argument<const Vector3&>("point2"),
-						Argument<const Color4&, Default(Color4(0xFFFFFFFF))>("color"),
+						Argument<const Color4&, Default(Color4(0xFFFFFFFFu))>("color"),
 						Argument<Float, Default(0.1f)>("thickness"),
 						Argument<bool, Default(false)>("glows")
 					).Bind<DebugDraw, &DebugDraw::DrawLine>()
@@ -71,7 +72,7 @@ namespace Engine
 						Argument<const Vector3&>("point1"),
 						Argument<const Vector3&>("point2"),
 						Argument<const Vector3&>("point3"),
-						Argument<const Color4&, Default(Color4(0xFFFFFFFF))>("color"),
+						Argument<const Color4&, Default(Color4(0xFFFFFFFFu))>("color"),
 						Argument<Float, Default(0.1f)>("thickness"),
 						Argument<bool, Default(false)>("glows")
 					).Bind<DebugDraw, &DebugDraw::DrawTriangle>()

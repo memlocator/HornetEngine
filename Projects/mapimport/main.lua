@@ -213,13 +213,13 @@ scene:AddLight(testLight2)
 scene:AddObject(lightOrbModel)
 
 local sceneDraw = GameObject.GlowingSceneOperation()
-sceneDraw.Parent = level --[[ sceneDraw:SetParent(level) ]]
+sceneDraw.Parent = level
 sceneDraw:Configure(resolution.Width, resolution.Height, scene)
 sceneDraw.Radius = 10
 sceneDraw.Sigma = 20
 sceneDraw.SkyBrightness = 1
 sceneDraw.SkyBackgroundBrightness = 1
-sceneDraw.SkyColor = Color4(15/255, 5/255, 15/255, 1)--Color4(1, 167/255 +.1, 124/255+.08, 1)
+sceneDraw.SkyColor = Color4(15/255, 5/255, 15/255, 1)
 sceneDraw.SkyBackgroundColor = Color4(0, 0, 0, 0)
 sceneDraw.Resolution = Vector3(resolution.Width, resolution.Height)
 sceneDraw.RenderAutomatically = true

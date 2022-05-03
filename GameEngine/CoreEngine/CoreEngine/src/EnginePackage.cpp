@@ -5,7 +5,14 @@
 #include "Vector3S.h"
 #include "Vector2.h"
 #include "Vector2S.h"
+#include "Color1.h"
+#include "Color1I.h"
+#include "Color2.h"
+#include "Color2I.h"
+#include "Color3.h"
+#include "Color3I.h"
 #include "Color4.h"
+#include "Color4I.h"
 #include "Ray.h"
 #include "PointGenerator.h"
 #include "Quaternion.h"
@@ -48,7 +55,28 @@ namespace Engine
 		extern void ReflectType<Vector2S>();
 
 		template <>
+		extern void ReflectType<Color1>();
+
+		template <>
+		extern void ReflectType<Color1I>();
+
+		template <>
+		extern void ReflectType<Color2>();
+
+		template <>
+		extern void ReflectType<Color2I>();
+
+		template <>
+		extern void ReflectType<Color3>();
+
+		template <>
+		extern void ReflectType<Color3I>();
+
+		template <>
 		extern void ReflectType<Color4>();
+
+		template <>
+		extern void ReflectType<Color4I>();
 
 		template <>
 		extern void ReflectType<Ray>();
@@ -167,7 +195,14 @@ namespace Engine
 				Vector3S,
 				Vector2,
 				Vector2S,
+				Color1,
+				Color1I,
+				Color2,
+				Color2I,
+				Color3,
+				Color3I,
 				Color4,
+				Color4I,
 				Ray,
 				Quaternion,
 				VectorGenerator,

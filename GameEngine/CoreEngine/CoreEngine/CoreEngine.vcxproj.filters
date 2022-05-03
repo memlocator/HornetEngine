@@ -894,6 +894,48 @@
     <ClCompile Include="src\Color4.cpp">
       <Filter>Source Files\Source\Engine\Types\Color</Filter>
     </ClCompile>
+    <ClCompile Include="src\Color4I.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color4I.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color3.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color3I.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color2.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color2I.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color1.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color1I.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color3.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color3I.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color2.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color2I.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color1.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Color1I.meta.cpp">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">
@@ -1395,6 +1437,27 @@
       <Filter>Source Files\Source\Engine\Types\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Color4.h">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color4I.h">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color3.h">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color3I.h">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color2.h">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color2I.h">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color1.h">
+      <Filter>Source Files\Source\Engine\Types\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color1I.h">
       <Filter>Source Files\Source\Engine\Types\Color</Filter>
     </ClInclude>
   </ItemGroup>

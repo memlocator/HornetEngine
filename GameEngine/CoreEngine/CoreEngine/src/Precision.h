@@ -4,6 +4,7 @@ typedef double Float;
 typedef int Int;
 
 constexpr Float operator ""_F(long double x) { return (Float)x; }
+constexpr unsigned char operator ""_b(unsigned long long int x) { return (unsigned char)x; }
 
 namespace std
 {

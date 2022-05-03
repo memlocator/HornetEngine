@@ -1,6 +1,69 @@
+#include "Color1.h"
+#include "Color1I.h"
+#include "Color2.h"
+#include "Color2I.h"
+#include "Color3.h"
+#include "Color3I.h"
 #include "Color4.h"
+#include "Color4I.h"
 
 import <sstream>;
+
+Color4::Color4(const Color1& color, float g, float b, float a)
+{
+	R = color.R;
+	G = g;
+	B = b;
+	A = a;
+}
+
+Color4::Color4(const Color1I& color, float g, float b, float a)
+{
+	R = (float)color.R / 255;
+	G = g;
+	B = b;
+	A = a;
+}
+
+Color4::Color4(const Color2& color, float b, float a)
+{
+	R = color.R;
+	G = color.G;
+	B = b;
+	A = a;
+}
+
+Color4::Color4(const Color2I& color, float b, float a)
+{
+	R = (float)color.R / 255;
+	G = (float)color.G / 255;
+	B = b;
+	A = a;
+}
+
+Color4::Color4(const Color3& color, float a)
+{
+	R = color.R;
+	G = color.G;
+	B = color.B;
+	A = a;
+}
+
+Color4::Color4(const Color3I& color, float a)
+{
+	R = (float)color.R / 255;
+	G = (float)color.G / 255;
+	B = (float)color.B / 255;
+	A = a;
+}
+
+Color4::Color4(const Color4I& color)
+{
+	R = (float)color.R / 255;
+	G = (float)color.G / 255;
+	B = (float)color.B / 255;
+	A = (float)color.A / 255;
+}
 
 Color4& Color4::Set(float r, float g, float b, float a)
 {
@@ -42,9 +105,44 @@ unsigned int Color4::ABGR() const
 		);
 }
 
+Color4 Color4::operator+(const Color4& other) const
+{
+	return Color4(R + other.R, G + other.G, B + other.B, A + other.A);
+}
+
+Color4 Color4::operator-(const Color4& other) const
+{
+	return Color4(R - other.R, G - other.G, B - other.B, A - other.A);
+}
+
+Color4 Color4::operator-() const
+{
+	return Color4(-R, -G, -B, -A);
+}
+
+Color4 Color4::operator*(const Color4& other) const
+{
+	return Color4(R * other.R, G * other.G, B * other.B, A * other.A);
+}
+
+Color4 Color4::operator*(float scalar) const
+{
+	return Color4(scalar * R, scalar * G, scalar * B, scalar * A);
+}
+
+Color4 Color4::operator/(const Color4& other) const
+{
+	return Color4(R / other.R, G / other.G, B / other.B, A / other.A);
+}
+
+Color4 Color4::operator/(float scalar) const
+{
+	return Color4(R / scalar, G / scalar, B / scalar, A / scalar);
+}
+
 bool Color4::operator==(const Color4& color) const
 {
-	return (R == color.R) && (G == color.G) && (B == color.B) && (A == color.A);
+	return Compare(R, color.R) && Compare(G, color.G) && Compare(B, color.B) && Compare(A, color.A);
 }
 
 bool Color4::operator!=(const Color4& color) const
@@ -81,6 +179,51 @@ Color4::operator std::string() const
 	out << *this;
 
 	return out.str();
+}
+
+Color4& Color4::operator+=(const Color4& color)
+{
+	return *this = *this + color;
+}
+
+Color4& Color4::operator-=(const Color4& color)
+{
+	return *this = *this - color;
+}
+
+Color4& Color4::operator*=(const Color4& color)
+{
+	return *this = *this * color;
+}
+
+Color4& Color4::operator*=(float scalar)
+{
+	return *this = *this * scalar;
+}
+
+Color4& Color4::operator/=(const Color4& color)
+{
+	return *this = *this / color;
+}
+
+Color4& Color4::operator/=(float scalar)
+{
+	return *this = *this / scalar;
+}
+
+bool Color4::Compare(float a, float b, float epsilon) const
+{
+	return std::abs(a - b) < epsilon;
+}
+
+Color4 operator*(float scalar, const Color4& color)
+{
+	return color * scalar;
+}
+
+Color4 operator/(float scalar, const Color4& color)
+{
+	return Color4(scalar / color.R, scalar / color.G, scalar / color.B, scalar / color.A);
 }
 
 std::ostream& operator<<(std::ostream& out, const Color4& color)
