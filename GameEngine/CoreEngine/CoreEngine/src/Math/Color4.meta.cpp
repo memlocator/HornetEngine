@@ -11,31 +11,25 @@
 #include "Vector3-decl.h"
 #include "Vector3S-decl.h"
 
-#include "Reflection/Reflection.h"
+#include "../Reflection/Reflection.h"
 
 namespace Engine
 {
 	namespace Reflection
 	{
 		template <>
-		void ReflectType<Color4I>()
+		void ReflectType<Color4>()
 		{
-			Reflect<Color4I>::Type(
-				"Color4I",
+			Reflect<Color4>::Type(
+				"Color4",
 
-				Member<Bind(&Color4I::R)>("R"),
-				Member<Bind(&Color4I::G)>("G"),
-				Member<Bind(&Color4I::B)>("B"),
-				Member<Bind(&Color4I::A)>("A"),
+				Member<Bind(&Color4::R)>("R"),
+				Member<Bind(&Color4::G)>("G"),
+				Member<Bind(&Color4::B)>("B"),
+				Member<Bind(&Color4::A)>("A"),
 
 				Constructor(
 					Overload(),
-					Overload(
-						Argument<unsigned char>("r"),
-						Argument<unsigned char>("g"),
-						Argument<unsigned char>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
-					),
 					Overload(
 						Argument<float>("r"),
 						Argument<float>("g"),
@@ -43,37 +37,43 @@ namespace Engine
 						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
+						Argument<unsigned char>("r"),
+						Argument<unsigned char>("g"),
+						Argument<unsigned char>("b"),
+						Argument<unsigned char, Default(255_b)>("a")
+					),
+					Overload(
 						Argument<unsigned int>("color")
 					),
 					Overload(
 						Argument<const Color1&>("color"),
-						Argument<unsigned char, Default(0_b)>("g"),
-						Argument<unsigned char, Default(0_b)>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(0.0f)>("g"),
+						Argument<float, Default(0.0f)>("b"),
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Color1I&>("color"),
-						Argument<unsigned char, Default(0_b)>("g"),
-						Argument<unsigned char, Default(0_b)>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(0.0f)>("g"),
+						Argument<float, Default(0.0f)>("b"),
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Color2&>("color"),
-						Argument<unsigned char, Default(0_b)>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(0.0f)>("b"),
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Color2I&>("color"),
-						Argument<unsigned char, Default(0_b)>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(0.0f)>("b"),
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Color3&>("color"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Color3I&>("color"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Color4&>("color")
@@ -83,30 +83,30 @@ namespace Engine
 					),
 					Overload(
 						Argument<const Vector2F&>("vector"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector2D&>("vector"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector2I&>("vector"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector2SF&>("vector"),
-						Argument<unsigned char, Default(0_b)>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(0.0f)>("b"),
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector2SD&>("vector"),
-						Argument<unsigned char, Default(0_b)>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(0.0f)>("b"),
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector2SI&>("vector"),
-						Argument<unsigned char, Default(0_b)>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(0.0f)>("b"),
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector3F&>("vector")
@@ -119,15 +119,15 @@ namespace Engine
 					),
 					Overload(
 						Argument<const Vector3SF&>("vector"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector3SD&>("vector"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					),
 					Overload(
 						Argument<const Vector3SI&>("vector"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<float, Default(1.0f)>("a")
 					)
 				),
 
@@ -135,10 +135,10 @@ namespace Engine
 					"Lerp",
 					Overload(
 						Const,
-						Returns<Color4I>(),
-						Argument<const Color4I&>("end"),
+						Returns<Color4>(),
+						Argument<const Color4&>("end"),
 						Argument<float>("t")
-					).Bind<Color4I, &Color4I::Lerp>()
+					).Bind<Color4, &Color4::Lerp>()
 				),
 
 				Function(
@@ -146,7 +146,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<Color4I, &Color4I::ARGB>()
+					).Bind<Color4, &Color4::ARGB>()
 				),
 
 				Function(
@@ -154,7 +154,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<Color4I, &Color4I::ABGR>()
+					).Bind<Color4, &Color4::ABGR>()
 				),
 
 				Function(
@@ -162,7 +162,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<Color4I, &Color4I::operator unsigned int>()
+					).Bind<Color4, &Color4::operator unsigned int>()
 				),
 
 				Function(
@@ -170,7 +170,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Vector3>()
-					).Bind<Color4I, &Color4I::operator Vector3>()
+					).Bind<Color4, &Color4::operator Vector3>()
 				),
 
 				Function(
@@ -178,7 +178,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<std::string>()
-					).Bind<Color4I, &Color4I::operator std::string>()
+					).Bind<Color4, &Color4::operator std::string>()
 				),
 
 				Function(
@@ -186,8 +186,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const Color4I&>("other")
-					).Bind<Color4I, &Color4I::operator==>()
+						Argument<const Color4&>("other")
+					).Bind<Color4, &Color4::operator==>()
 				),
 
 				Function(
@@ -195,8 +195,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const Color4I&>("other")
-					).Bind<Color4I, &Color4I::operator!=>()
+						Argument<const Color4&>("other")
+					).Bind<Color4, &Color4::operator!=>()
 				)
 			);
 		}

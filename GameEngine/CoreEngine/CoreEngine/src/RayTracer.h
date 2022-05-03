@@ -9,7 +9,7 @@ import <mutex>;
 import <random>;
 
 #include "Object.h"
-#include "Color4.h"
+#include "Math/Color4.h"
 #include "Ray.h"
 #include "SceneRayCastResults.h"
 #include "RayAcceleration.h"

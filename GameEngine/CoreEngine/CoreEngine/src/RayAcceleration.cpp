@@ -2,7 +2,7 @@
 
 import <iostream>;
 
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "Scene.h"
 #include "AabbTree.h"
 #include "Model.h"

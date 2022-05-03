@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "InputEnums.h"
 
 namespace Engine

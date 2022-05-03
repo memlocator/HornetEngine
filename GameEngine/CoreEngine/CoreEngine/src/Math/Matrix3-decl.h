@@ -5,7 +5,7 @@ import <cmath>;
 import <iostream>;
 
 #include "Vector2-decl.h"
-#include "Precision.h"
+#include "../Precision.h"
 
 template <typename Number>
 class Matrix4Type;

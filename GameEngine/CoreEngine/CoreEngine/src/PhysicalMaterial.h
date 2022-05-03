@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Color4.h"
+#include "Math/Color4.h"
 #include "Object.h"
 
 namespace GraphicsEngine

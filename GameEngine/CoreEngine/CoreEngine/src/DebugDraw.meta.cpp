@@ -3,7 +3,7 @@
 #include "ModelAsset.h"
 #include "Material.h"
 #include "Scene.h"
-#include "Color4.h"
+#include "Math/Color4.h"
 
 #include "Reflection/Reflection.h"
 

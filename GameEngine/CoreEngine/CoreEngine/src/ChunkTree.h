@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PageAllocator.h"
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "Coordinates.h"
 #include "Aabb.h"
 

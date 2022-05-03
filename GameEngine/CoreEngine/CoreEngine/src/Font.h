@@ -3,7 +3,7 @@
 import <string>;
 import <map>;
 
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "Object.h"
 
 namespace GraphicsEngine

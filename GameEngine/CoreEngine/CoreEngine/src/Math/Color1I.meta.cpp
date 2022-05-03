@@ -11,7 +11,7 @@
 #include "Vector3-decl.h"
 #include "Vector3S-decl.h"
 
-#include "Reflection/Reflection.h"
+#include "../Reflection/Reflection.h"
 
 namespace Engine
 {

@@ -2,9 +2,9 @@
 
 #include "RenderOperation.h"
 #include "Object.h"
-#include "Color4.h"
+#include "Math/Color4.h"
 #include "Aabb.h"
-#include "Matrix4.h"
+#include "Math/Matrix4.h"
 #include "InputEnums.h"
 #include "Constants.h"
 

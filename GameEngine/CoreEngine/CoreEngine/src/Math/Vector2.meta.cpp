@@ -1,18 +1,18 @@
-#include "Vector3S.h"
+#include "Vector2.h"
 
 #include "Vector2-decl.h"
 #include "Vector2S-decl.h"
 #include "Vector3-decl.h"
 #include "Vector3S-decl.h"
 
-#include "Reflection/Reflection.h"
+#include "../Reflection/Reflection.h"
 
 namespace Engine
 {
 	namespace Reflection
 	{
 		template <typename Vector, typename Number, typename DistanceType, typename... Allowed>
-		void ReflectVector3S(const char* name, const char* alias)
+		void ReflectVector2(const char* name, const char* alias)
 		{
 			std::vector<std::string> aliases;
 
@@ -82,15 +82,6 @@ namespace Engine
 						Returns<DistanceType>(),
 						Argument<const Vector&>("other")
 					).Bind<Vector, &Vector::Dot>()
-				),
-
-				Function(
-					"Cross",
-					Overload(
-						Const,
-						Returns<Vector>(),
-						Argument<const Vector&>("other")
-					).Bind<Vector, &Vector::Cross>()
 				),
 
 				Function(
@@ -190,23 +181,23 @@ namespace Engine
 		}
 
 		template <typename T>
-		struct Vector3STypeAlias
+		struct Vector2TypeAlias
 		{
 			static inline bool ShouldAlias = false;
 		};
 
 		template <>
-		struct Vector3STypeAlias<Float>
+		struct Vector2TypeAlias<Float>
 		{
 			static inline bool ShouldAlias = true;
 		};
 
 		template <>
-		void ReflectType<Vector3S>()
+		void ReflectType<Vector2>()
 		{
-			ReflectVector3S<Vector3SF, float, float>("Vector3SF", Vector3STypeAlias<float>::ShouldAlias ? "Vector3S" : nullptr);
-			ReflectVector3S<Vector3SD, double, double>("Vector3SD", Vector3STypeAlias<double>::ShouldAlias ? "Vector3S" : nullptr);
-			ReflectVector3S<Vector3SI, int, float>("Vector3SI", nullptr);
+			ReflectVector2<Vector2F, float, float>("Vector2F", Vector2TypeAlias<float>::ShouldAlias ? "Vector2" : nullptr);
+			ReflectVector2<Vector2D, double, double>("Vector2D", Vector2TypeAlias<double>::ShouldAlias ? "Vector2" : nullptr);
+			ReflectVector2<Vector2I, int, float>("Vector2I", nullptr);
 		}
 	}
 }

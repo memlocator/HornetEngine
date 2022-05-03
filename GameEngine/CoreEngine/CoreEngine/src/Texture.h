@@ -5,8 +5,8 @@ extern "C" {
 #include "glew.h"
 }
 
-#include "Vector3.h"
-#include "Color4.h"
+#include "Math/Vector3.h"
+#include "Math/Color4.h"
 #include "Object.h"
 #include "Dimensions.h"
 

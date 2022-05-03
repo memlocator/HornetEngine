@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Matrix4.h"
-#include "Color4.h"
+#include "Math/Matrix4.h"
+#include "Math/Color4.h"
 #include "MeshLoader.h"
 
 #define InitializeProgram(name) ProgramInitializer Initializer = ProgramInitializer(this, name)

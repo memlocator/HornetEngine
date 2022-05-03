@@ -2,12 +2,12 @@
 
 import <vector>;
 
-#include "Vector3.h"
+#include "Math/Vector3.h"
 #include "Constants.h"
 #include "Object.h"
 #include "AabbTree.h"
 #include "Dimensions.h"
-#include "Color4.h"
+#include "Math/Color4.h"
 
 namespace GraphicsEngine
 {

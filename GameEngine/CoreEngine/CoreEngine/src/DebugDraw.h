@@ -3,9 +3,9 @@
 import <memory>;
 
 #include "Object.h"
-#include "Vector3.h"
-#include "Color4.h"
-#include "Matrix4.h"
+#include "Math/Vector3.h"
+#include "Math/Color4.h"
+#include "Math/Matrix4.h"
 
 namespace Engine
 {

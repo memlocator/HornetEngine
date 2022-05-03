@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Mesh.h"
-#include "Color4.h"
+#include "Math/Color4.h"
 #include "Scene.h"
 
 namespace Engine

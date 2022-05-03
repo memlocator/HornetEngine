@@ -9,7 +9,7 @@ contains declaration of Matrix class
 #pragma once
 
 #include "Vector3-decl.h"
-#include "Precision.h"
+#include "../Precision.h"
 
 template <typename Number>
 class Matrix3Type;

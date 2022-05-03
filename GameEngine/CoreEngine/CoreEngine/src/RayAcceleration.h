@@ -3,8 +3,8 @@ import <map>;
 import <memory>;
 import <functional>;
 
-#include "Vector3.h"
-#include "Color4.h"
+#include "Math/Vector3.h"
+#include "Math/Color4.h"
 #include "AabbTree.h"
 #include "Light.h"
 #include "AcceleratedKDTree.h"

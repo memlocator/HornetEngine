@@ -7,7 +7,7 @@ import <vector>;
 
 #include "TaskScheduler.h"
 #include "InputEnums.h"
-#include "Vector3.h"
+#include "Math/Vector3.h"
 
 class InputHandler;
 

@@ -11,36 +11,33 @@
 #include "Vector3-decl.h"
 #include "Vector3S-decl.h"
 
-#include "Reflection/Reflection.h"
+#include "../Reflection/Reflection.h"
 
 namespace Engine
 {
 	namespace Reflection
 	{
 		template <>
-		void ReflectType<Color4>()
+		void ReflectType<Color3>()
 		{
-			Reflect<Color4>::Type(
-				"Color4",
+			Reflect<Color3>::Type(
+				"Color3",
 
-				Member<Bind(&Color4::R)>("R"),
-				Member<Bind(&Color4::G)>("G"),
-				Member<Bind(&Color4::B)>("B"),
-				Member<Bind(&Color4::A)>("A"),
+				Member<Bind(&Color3::R)>("R"),
+				Member<Bind(&Color3::G)>("G"),
+				Member<Bind(&Color3::B)>("B"),
 
 				Constructor(
 					Overload(),
 					Overload(
 						Argument<float>("r"),
 						Argument<float>("g"),
-						Argument<float>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float>("b")
 					),
 					Overload(
 						Argument<unsigned char>("r"),
 						Argument<unsigned char>("g"),
-						Argument<unsigned char>("b"),
-						Argument<unsigned char, Default(255_b)>("a")
+						Argument<unsigned char>("b")
 					),
 					Overload(
 						Argument<unsigned int>("color")
@@ -48,32 +45,26 @@ namespace Engine
 					Overload(
 						Argument<const Color1&>("color"),
 						Argument<float, Default(0.0f)>("g"),
-						Argument<float, Default(0.0f)>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float, Default(0.0f)>("b")
 					),
 					Overload(
 						Argument<const Color1I&>("color"),
 						Argument<float, Default(0.0f)>("g"),
-						Argument<float, Default(0.0f)>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float, Default(0.0f)>("b")
 					),
 					Overload(
 						Argument<const Color2&>("color"),
-						Argument<float, Default(0.0f)>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float, Default(0.0f)>("b")
 					),
 					Overload(
 						Argument<const Color2I&>("color"),
-						Argument<float, Default(0.0f)>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float, Default(0.0f)>("b")
 					),
 					Overload(
-						Argument<const Color3&>("color"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Color3&>("color")
 					),
 					Overload(
-						Argument<const Color3I&>("color"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Color3I&>("color")
 					),
 					Overload(
 						Argument<const Color4&>("color")
@@ -82,31 +73,25 @@ namespace Engine
 						Argument<const Color4I&>("color")
 					),
 					Overload(
-						Argument<const Vector2F&>("vector"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Vector2F&>("vector")
 					),
 					Overload(
-						Argument<const Vector2D&>("vector"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Vector2D&>("vector")
 					),
 					Overload(
-						Argument<const Vector2I&>("vector"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Vector2I&>("vector")
 					),
 					Overload(
 						Argument<const Vector2SF&>("vector"),
-						Argument<float, Default(0.0f)>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float, Default(0.0f)>("b")
 					),
 					Overload(
 						Argument<const Vector2SD&>("vector"),
-						Argument<float, Default(0.0f)>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float, Default(0.0f)>("b")
 					),
 					Overload(
 						Argument<const Vector2SI&>("vector"),
-						Argument<float, Default(0.0f)>("b"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<float, Default(0.0f)>("b")
 					),
 					Overload(
 						Argument<const Vector3F&>("vector")
@@ -118,16 +103,13 @@ namespace Engine
 						Argument<const Vector3I&>("vector")
 					),
 					Overload(
-						Argument<const Vector3SF&>("vector"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Vector3SF&>("vector")
 					),
 					Overload(
-						Argument<const Vector3SD&>("vector"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Vector3SD&>("vector")
 					),
 					Overload(
-						Argument<const Vector3SI&>("vector"),
-						Argument<float, Default(1.0f)>("a")
+						Argument<const Vector3SI&>("vector")
 					)
 				),
 
@@ -135,10 +117,10 @@ namespace Engine
 					"Lerp",
 					Overload(
 						Const,
-						Returns<Color4>(),
-						Argument<const Color4&>("end"),
+						Returns<Color3>(),
+						Argument<const Color3&>("end"),
 						Argument<float>("t")
-					).Bind<Color4, &Color4::Lerp>()
+					).Bind<Color3, &Color3::Lerp>()
 				),
 
 				Function(
@@ -146,7 +128,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<Color4, &Color4::ARGB>()
+					).Bind<Color3, &Color3::ARGB>()
 				),
 
 				Function(
@@ -154,7 +136,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<Color4, &Color4::ABGR>()
+					).Bind<Color3, &Color3::ABGR>()
 				),
 
 				Function(
@@ -162,7 +144,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<unsigned int>()
-					).Bind<Color4, &Color4::operator unsigned int>()
+					).Bind<Color3, &Color3::operator unsigned int>()
 				),
 
 				Function(
@@ -170,7 +152,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<Vector3>()
-					).Bind<Color4, &Color4::operator Vector3>()
+					).Bind<Color3, &Color3::operator Vector3>()
 				),
 
 				Function(
@@ -178,7 +160,7 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<std::string>()
-					).Bind<Color4, &Color4::operator std::string>()
+					).Bind<Color3, &Color3::operator std::string>()
 				),
 
 				Function(
@@ -186,8 +168,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const Color4&>("other")
-					).Bind<Color4, &Color4::operator==>()
+						Argument<const Color3&>("other")
+					).Bind<Color3, &Color3::operator==>()
 				),
 
 				Function(
@@ -195,8 +177,8 @@ namespace Engine
 					Overload(
 						Const,
 						Returns<bool>(),
-						Argument<const Color4&>("other")
-					).Bind<Color4, &Color4::operator!=>()
+						Argument<const Color3&>("other")
+					).Bind<Color3, &Color3::operator!=>()
 				)
 			);
 		}

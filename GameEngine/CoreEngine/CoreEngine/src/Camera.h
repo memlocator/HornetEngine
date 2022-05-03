@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ShaderProgram.h"
-#include "Matrix4.h"
+#include "Math/Matrix4.h"
 #include "Object.h"
 #include "Frustum.h"
 #include "Ray.h"

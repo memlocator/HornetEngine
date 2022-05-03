@@ -2,7 +2,7 @@
 
 import <iostream>;
 
-#include "Precision.h"
+#include "../Precision.h"
 
 template <typename Number, typename DistanceType>
 class Vector2SType;

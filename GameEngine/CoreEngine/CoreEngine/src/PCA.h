@@ -1,8 +1,8 @@
 #pragma once
 
 import <vector>;
-#include "Vector3.h"
-#include "Matrix4.h"
+#include "Math/Vector3.h"
+#include "Math/Matrix4.h"
 
 struct VertexData;
 

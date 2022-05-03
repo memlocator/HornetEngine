@@ -1,18 +1,18 @@
-#include "Vector2S.h"
+#include "Vector3S.h"
 
 #include "Vector2-decl.h"
 #include "Vector2S-decl.h"
 #include "Vector3-decl.h"
 #include "Vector3S-decl.h"
 
-#include "Reflection/Reflection.h"
+#include "../Reflection/Reflection.h"
 
 namespace Engine
 {
 	namespace Reflection
 	{
 		template <typename Vector, typename Number, typename DistanceType, typename... Allowed>
-		void ReflectVector2S(const char* name, const char* alias)
+		void ReflectVector3S(const char* name, const char* alias)
 		{
 			std::vector<std::string> aliases;
 
@@ -26,11 +26,13 @@ namespace Engine
 
 				Member<Bind(&Vector::X)>("X"),
 				Member<Bind(&Vector::Y)>("Y"),
+				Member<Bind(&Vector::Z)>("Z"),
 
 				Constructor(
 					Overload(
 						Argument<Number, Default((Number)0.0)>("x"),
-						Argument<Number, Default((Number)0.0)>("y")
+						Argument<Number, Default((Number)0.0)>("y"),
+						Argument<Number, Default((Number)0.0)>("z")
 					),
 					Overload(
 						Argument<const Vector2Type<float, float>&>("vector")
@@ -42,13 +44,16 @@ namespace Engine
 						Argument<const Vector2Type<int, float>&>("vector")
 					),
 					Overload(
-						Argument<const Vector2SType<float, float>&>("vector")
+						Argument<const Vector2SType<float, float>&>("vector"),
+						Argument<Number>("z")
 					),
 					Overload(
-						Argument<const Vector2SType<double, double>&>("vector")
+						Argument<const Vector2SType<double, double>&>("vector"),
+						Argument<Number>("z")
 					),
 					Overload(
-						Argument<const Vector2SType<int, float>&>("vector")
+						Argument<const Vector2SType<int, float>&>("vector"),
+						Argument<Number>("z")
 					),
 					Overload(
 						Argument<const Vector3Type<float, float>&>("vector")
@@ -77,6 +82,15 @@ namespace Engine
 						Returns<DistanceType>(),
 						Argument<const Vector&>("other")
 					).Bind<Vector, &Vector::Dot>()
+				),
+
+				Function(
+					"Cross",
+					Overload(
+						Const,
+						Returns<Vector>(),
+						Argument<const Vector&>("other")
+					).Bind<Vector, &Vector::Cross>()
 				),
 
 				Function(
@@ -176,23 +190,23 @@ namespace Engine
 		}
 
 		template <typename T>
-		struct Vector2STypeAlias
+		struct Vector3STypeAlias
 		{
 			static inline bool ShouldAlias = false;
 		};
 
 		template <>
-		struct Vector2STypeAlias<Float>
+		struct Vector3STypeAlias<Float>
 		{
 			static inline bool ShouldAlias = true;
 		};
 
 		template <>
-		void ReflectType<Vector2S>()
+		void ReflectType<Vector3S>()
 		{
-			ReflectVector2S<Vector2SF, float, float>("Vector2SF", Vector2STypeAlias<float>::ShouldAlias ? "Vector2S" : nullptr);
-			ReflectVector2S<Vector2SD, double, double>("Vector2SD", Vector2STypeAlias<double>::ShouldAlias ? "Vector2S" : nullptr);
-			ReflectVector2S<Vector2SI, int, float>("Vector2SI", nullptr);
+			ReflectVector3S<Vector3SF, float, float>("Vector3SF", Vector3STypeAlias<float>::ShouldAlias ? "Vector3S" : nullptr);
+			ReflectVector3S<Vector3SD, double, double>("Vector3SD", Vector3STypeAlias<double>::ShouldAlias ? "Vector3S" : nullptr);
+			ReflectVector3S<Vector3SI, int, float>("Vector3SI", nullptr);
 		}
 	}
 }

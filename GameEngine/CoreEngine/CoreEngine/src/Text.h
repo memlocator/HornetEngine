@@ -2,7 +2,7 @@
 
 #include "Object.h"
 #include "DeviceVector.h"
-#include "Color4.h"
+#include "Math/Color4.h"
 #include "Alignment.h"
 
 namespace GraphicsEngine

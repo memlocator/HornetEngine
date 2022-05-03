@@ -4,7 +4,7 @@ extern "C" {
 #include <SDL.h>
 }
 
-#include "Matrix4.h"
+#include "Math/Matrix4.h"
 #include "Input.h"
 #include "InputEvent.h"
 
